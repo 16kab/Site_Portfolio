@@ -195,19 +195,6 @@ export default function Home({ showSplash }: HomeProps) {
         <span>Voir mes projets</span>
         <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
       </Link>
-
-      {/* Footer Text - Fixed at bottom */}
-      <p 
-        className="fixed left-1/2 -translate-x-1/2 tracking-[-0.05em] z-10 px-4 text-center text-[12px] sm:text-[16px]"
-        style={{
-          bottom: '1.5rem',
-          fontFamily: 'Manrope, sans-serif',
-          fontWeight: 400,
-          color: 'var(--home-footer-text)'
-        }}
-      >
-        Made with Figma Make.
-      </p>
     </section>
   );
 }
