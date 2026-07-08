@@ -1,0 +1,10 @@
+.shuffle-text {
+  display: inline-block;
+  white-space: nowrap;
+  position: relative;
+}
+
+.shuffle-char {
+  display: inline-block;
+  line-height: inherit;
+}

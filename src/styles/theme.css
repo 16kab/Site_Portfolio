@@ -1,0 +1,185 @@
+@custom-variant dark (&:is(.dark *));
+
+/* View Transition API - Required for AnimatedThemeToggler */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+:root {
+  /* Portfolio Custom Variables - Light Mode */
+  --portfolio-bg: #FFFFFF;
+  --portfolio-card-bg: #F8F8F8;
+  --portfolio-card-border: #E0E0E0;
+  --portfolio-text-primary: #1A1A1A;
+  --portfolio-text-secondary: #666666;
+  --portfolio-text-description: #4A4A4A;
+  --portfolio-text-muted: #8A8A8A;
+  --portfolio-text-large: #1A1A1A;
+  --portfolio-badge-bg: #E8E8E8;
+  --portfolio-badge-border: #E8E8E8;
+  --portfolio-button-bg: #1A1A1A;
+  --portfolio-button-bg-hover: #2A2A2A;
+  --portfolio-button-text: #FFFFFF;
+  
+  /* Switch Menu Variables - Light Mode */
+  --switch-bg-default: #F8F8F8;
+  --switch-bg-scrolled: #121312;
+  --switch-border-default: #E3E3E3;
+  --switch-border-scrolled: #1C1D1C;
+  --switch-text-default: #121312;
+  --switch-text-scrolled: #EAEAEA;
+  --switch-icon-default: #121312;
+  --switch-icon-scrolled: #EAEAEA;
+  --switch-active-bg-default: #121312;
+  --switch-active-bg-scrolled: #EAEAEA;
+  --switch-active-text-default: #EAEAEA;
+  --switch-active-text-scrolled: #121312;
+  
+  /* Header Variables - Light Mode */
+  --header-bg-default: #EAEAEA;
+  --header-bg-scrolled: #121312;
+  --header-border-default: #E3E3E3;
+  --header-border-scrolled: #1C1D1C;
+  --header-text-default: #151615;
+  --header-text-scrolled: #EAEAEA;
+  --header-logo-default: #151615;
+  --header-logo-scrolled: #EAEAEA;
+  --header-button-bg-default: #151615;
+  --header-button-bg-scrolled: #EAEAEA;
+  --header-button-text-default: #EAEAEA;
+  --header-button-text-scrolled: #121312;
+  --theme-toggle-color-default: #121312;
+  --theme-toggle-color-scrolled: #EAEAEA;
+  --theme-toggle-bg-hover: rgba(0, 0, 0, 0.08);
+  
+  /* Home Page Text Variables - Light Mode */
+  --home-text-primary: #000000;
+  --home-button-bg: #151615;
+  --home-button-border: #1C1D1C;
+  --home-button-text: #EAEAEA;
+  --home-button-bg-hover: #1C1D1C;
+  --home-button-border-hover: #2A2B2A;
+  --home-footer-text: #000000;
+  
+  /* Page Transition Variables - Light Mode */
+  --logo-invert: 0;
+}
+
+.dark {
+  /* Portfolio Custom Variables - Dark Mode */
+  --portfolio-bg: #121312;
+  --portfolio-card-bg: #151615;
+  --portfolio-card-border: #1C1D1C;
+  --portfolio-text-primary: #F1F1F1;
+  --portfolio-text-secondary: #BABABA;
+  --portfolio-text-description: #D6D6D6;
+  --portfolio-text-muted: #9f9f9f;
+  --portfolio-text-large: #EAEAEA;
+  --portfolio-badge-bg: #232423;
+  --portfolio-badge-border: #232423;
+  --portfolio-button-bg: #EAEAEA;
+  --portfolio-button-bg-hover: #f0f0f0;
+  --portfolio-button-text: #000000;
+  
+  /* Switch Menu Variables - Dark Mode */
+  --switch-bg-default: #151615;
+  --switch-bg-scrolled: #EAEAEA;
+  --switch-border-default: #1C1D1C;
+  --switch-border-scrolled: #E3E3E3;
+  --switch-text-default: #EAEAEA;
+  --switch-text-scrolled: #121312;
+  --switch-icon-default: #EAEAEA;
+  --switch-icon-scrolled: #121312;
+  --switch-active-bg-default: #121312;
+  --switch-active-bg-scrolled: #121312;
+  --switch-active-text-default: #EAEAEA;
+  --switch-active-text-scrolled: #EAEAEA;
+  
+  /* Header Variables - Dark Mode */
+  --header-bg-default: #151615;
+  --header-bg-scrolled: #EAEAEA;
+  --header-border-default: #1C1D1C;
+  --header-border-scrolled: #E3E3E3;
+  --header-text-default: #EAEAEA;
+  --header-text-scrolled: #151615;
+  --header-logo-default: #D5D6D5;
+  --header-logo-scrolled: #151615;
+  --header-button-bg-default: #EAEAEA;
+  --header-button-bg-scrolled: #151615;
+  --header-button-text-default: #000000;
+  --header-button-text-scrolled: #EAEAEA;
+  --theme-toggle-color-default: #EAEAEA;
+  --theme-toggle-color-scrolled: #121312;
+  
+  /* Home Page Text Variables - Dark Mode */
+  --home-text-primary: #EAEAEA;
+  --home-button-bg: #151615;
+  --home-button-border: #1C1D1C;
+  --home-button-text: #EAEAEA;
+  --home-button-bg-hover: #1C1D1C;
+  --home-button-border-hover: #2A2B2A;
+  --home-footer-text: #EAEAEA;
+  
+  /* Page Transition Variables - Dark Mode */
+  --logo-invert: 1;
+}
+
+@layer base {
+  html {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+    background: var(--portfolio-bg);
+    color: var(--portfolio-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* App container */
+  .app-container {
+    min-height: 100vh;
+    background-color: transparent;
+  }
+
+  /* Grainient wrapper - Fixed background for home page */
+  .grainient-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Home section - Full screen */
+  .home-section {
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Animated background canvas */
+  .animated-bg-canvas {
+    width: 100vw !important;
+    height: 100vh !important;
+  }
+}

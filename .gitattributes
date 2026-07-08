@@ -1,0 +1,11 @@
+# Normaliser les fins de ligne : LF dans le dépôt pour tous les fichiers texte
+* text=auto eol=lf
+
+# Fichiers binaires (pas de normalisation)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
