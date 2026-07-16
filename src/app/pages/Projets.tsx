@@ -82,7 +82,12 @@ export default function Projets() {
           {/* Tous les projets - List simple */}
           <div className="space-y-6">
             {tousProjets.map((projet, index) => (
-              <ScrollFadeIn key={index} delay={0.1 + index * 0.05}>
+              <ScrollFadeIn
+                key={projet.link}
+                delay={Math.min(0.025 + index * 0.025, 0.1)}
+                amount={0.15}
+                margin="0px 0px 10% 0px"
+              >
                 <NewProjectCard
                   link={projet.link}
                   number={projet.number}
@@ -90,7 +95,9 @@ export default function Projets() {
                   description={projet.description}
                   tags={projet.tags}
                   image={projet.image}
-                  ref={(ref) => { cardRefs.current[projet.link] = ref; }}
+                  ref={(imageElement) => {
+                    cardRefs.current[projet.link] = imageElement;
+                  }}
                 />
               </ScrollFadeIn>
             ))}
