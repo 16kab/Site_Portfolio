@@ -5,8 +5,8 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(GSAPSplitText, useGSAP);
 
-export const getCharacterMaskPadding = (width: number) =>
-  Math.min(12, Math.max(4, width * 0.04));
+export const getCharacterMaskPadding = (width: number, enabled = false) =>
+  enabled ? Math.min(12, Math.max(4, width * 0.04)) : 0;
 
 interface ShuffleProps {
   text: string;
@@ -21,6 +21,7 @@ interface ShuffleProps {
   loop?: boolean;
   loopDelay?: number;
   initialDelay?: number;
+  useCharacterMaskPadding?: boolean;
 }
 
 const Shuffle: React.FC<ShuffleProps> = ({
@@ -35,7 +36,8 @@ const Shuffle: React.FC<ShuffleProps> = ({
   stagger = 0.05,
   loop = false,
   loopDelay = 3,
-  initialDelay = 0.2
+  initialDelay = 0.2,
+  useCharacterMaskPadding = false
 }) => {
   const ref = useRef<HTMLElement>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -101,17 +103,22 @@ const Shuffle: React.FC<ShuffleProps> = ({
         if (!w && !h) return;
 
         const spacingMultiplier = 1.15; // Espacement entre les lettres dupliquées
-        const maskPadding = getCharacterMaskPadding(w);
+        const maskPadding = getCharacterMaskPadding(w, useCharacterMaskPadding);
 
         // Wrapper principal
         const wrapper = document.createElement('span');
         wrapper.style.display = 'inline-block';
         wrapper.style.overflow = 'hidden';
         wrapper.style.verticalAlign = 'top';
-        wrapper.style.boxSizing = 'content-box';
-        wrapper.style.marginLeft = `-${maskPadding}px`;
-        wrapper.style.marginRight = `-${maskPadding}px`;
-        wrapper.style.padding = `0 ${maskPadding}px`;
+        if (maskPadding > 0) {
+          wrapper.style.boxSizing = 'content-box';
+          wrapper.style.marginLeft = `-${maskPadding}px`;
+          wrapper.style.marginRight = `-${maskPadding}px`;
+          wrapper.style.padding = `0 ${maskPadding}px`;
+        } else {
+          wrapper.style.margin = '0';
+          wrapper.style.padding = '0';
+        }
         wrapper.style.width = (w + 4) + 'px'; // Ajouter 4px pour éviter que les lettres soient coupées
         wrapper.style.height = h + 'px';
 
@@ -271,7 +278,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
         split.revert();
       };
     },
-    { dependencies: [text, fontsLoaded, shuffleDirection, duration, ease, shuffleTimes, stagger, loop, loopDelay, resizeKey], scope: ref }
+    { dependencies: [text, fontsLoaded, shuffleDirection, duration, ease, shuffleTimes, stagger, loop, loopDelay, resizeKey, useCharacterMaskPadding], scope: ref }
   );
 
   const Tag = tag;

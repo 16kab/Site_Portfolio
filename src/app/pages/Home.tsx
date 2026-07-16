@@ -60,6 +60,7 @@ export default function Home({ showSplash }: HomeProps) {
             loop={true}
             loopDelay={5}
             initialDelay={shuffleDelay1}
+            useCharacterMaskPadding
           />
 
           {/* brand - Top Right (Italic) */}
