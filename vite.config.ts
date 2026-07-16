@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -32,6 +32,13 @@ export default defineConfig({
       'three': path.resolve(__dirname, './node_modules/three'),
     },
     dedupe: ['three'],
+  },
+
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test/setup.ts'],
+    css: true,
   },
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
