@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
-import { AppContent } from './App';
+import { AppContent, getSafariChromeColor } from './App';
 
 vi.mock('./pages/Home', () => ({
   default: ({ showSplash }: { showSplash: boolean }) => (
@@ -18,5 +18,12 @@ describe('AppContent', () => {
     );
 
     expect(screen.getByTestId('home-splash-state')).toHaveTextContent('false');
+  });
+});
+
+describe('getSafariChromeColor', () => {
+  it('returns a chrome color consistent with the active theme', () => {
+    expect(getSafariChromeColor(false)).toBe('#F2F2F2');
+    expect(getSafariChromeColor(true)).toBe('#111111');
   });
 });

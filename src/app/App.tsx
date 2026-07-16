@@ -17,6 +17,9 @@ import { PageTransitionProvider } from './context/PageTransitionContext';
 import { PageTransitionOverlay } from './components/PageTransitionOverlay';
 import SplashScreen from './components/SplashScreen';
 
+export const getSafariChromeColor = (isDarkMode: boolean) =>
+  isDarkMode ? '#111111' : '#F2F2F2';
+
 export function AppContent({ showSplash }: { showSplash: boolean }) {
   const location = useLocation();
 
@@ -99,6 +102,12 @@ function BackgroundWrapper({ showSplash }: { showSplash: boolean }) {
     
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    document
+      .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+      ?.setAttribute('content', getSafariChromeColor(isDarkMode));
+  }, [isDarkMode]);
   
   // Don't render any background on Projets pages (they have their own background color)
   if (isProjetsPage) {
