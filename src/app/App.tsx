@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import { Toaster } from 'sonner';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import Header from './components/Header';
@@ -57,6 +59,8 @@ export default function App() {
         <div className="min-h-screen app-container">
           {/* Toast Notifications */}
           <Toaster {...TOAST_CONFIG} />
+          <Analytics />
+          <SpeedInsights />
 
           {/* Global Header */}
           <Header showSplash={showSplash} />
