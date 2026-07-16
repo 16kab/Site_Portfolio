@@ -1,0 +1,117 @@
+.border-glow-card {
+  --edge-proximity: 0;
+  --cursor-angle: 45deg;
+  --edge-sensitivity: 6;
+  --color-sensitivity: calc(var(--edge-sensitivity) + 14);
+  --border-radius: 12px;
+  --glow-padding: 18px;
+  --cone-spread: 12;
+  position: relative;
+  display: grid;
+  isolation: isolate;
+  border: 1px solid var(--portfolio-card-border);
+  border-radius: var(--border-radius);
+  background: var(--card-bg);
+  transform: translate3d(0, 0, 0.01px);
+}
+
+.border-glow-card::before,
+.border-glow-card > .edge-light {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 250ms ease-out;
+}
+
+.border-glow-card::before {
+  inset: -1px;
+  z-index: 0;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  background:
+    linear-gradient(var(--card-bg) 0 100%) padding-box,
+    conic-gradient(
+      from var(--cursor-angle),
+      var(--glow-strong),
+      var(--glow-medium) calc(var(--cone-spread) * 1%),
+      transparent calc((var(--cone-spread) + 15) * 1%),
+      transparent calc((100 - var(--cone-spread) - 15) * 1%),
+      var(--glow-medium) calc((100 - var(--cone-spread)) * 1%),
+      var(--glow-strong)
+    ) border-box;
+  mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+}
+
+.border-glow-card > .edge-light {
+  inset: calc(var(--glow-padding) * -1);
+  z-index: 0;
+  border-radius: inherit;
+  mask-image: conic-gradient(
+    from var(--cursor-angle),
+    black 2%,
+    transparent 10%,
+    transparent 90%,
+    black 98%
+  );
+  -webkit-mask-image: conic-gradient(
+    from var(--cursor-angle),
+    black 2%,
+    transparent 10%,
+    transparent 90%,
+    black 98%
+  );
+}
+
+.border-glow-card > .edge-light::before {
+  content: '';
+  position: absolute;
+  inset: var(--glow-padding);
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px var(--glow-strong),
+    inset 0 0 8px var(--glow-medium),
+    0 0 8px var(--glow-medium),
+    0 0 18px var(--glow-faint);
+}
+
+.border-glow-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .border-glow-card:hover::before {
+    opacity: clamp(
+      0,
+      calc(
+        (var(--edge-proximity) - var(--color-sensitivity)) /
+          (100 - var(--color-sensitivity))
+      ),
+      1
+    );
+  }
+
+  .border-glow-card:hover > .edge-light {
+    opacity: clamp(
+      0,
+      calc(
+        (var(--edge-proximity) - var(--edge-sensitivity)) /
+          (100 - var(--edge-sensitivity))
+      ),
+      1
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .border-glow-card::before,
+  .border-glow-card > .edge-light {
+    transition-duration: 0.01ms;
+  }
+}
