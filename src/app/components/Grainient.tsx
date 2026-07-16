@@ -218,9 +218,9 @@ const Grainient = ({
       const mesh = new Mesh(gl, { geometry, program });
 
       const setSize = () => {
-        // Utiliser window.innerWidth/innerHeight pour forcer la couverture complète du viewport
-        const width = Math.max(1, Math.floor(window.innerWidth));
-        const height = Math.max(1, Math.floor(window.innerHeight));
+        const bounds = container.getBoundingClientRect();
+        const width = Math.max(1, Math.floor(bounds.width));
+        const height = Math.max(1, Math.floor(bounds.height));
         renderer!.setSize(width, height);
         const res = program.uniforms.iResolution.value as Float32Array;
         res[0] = gl.drawingBufferWidth;

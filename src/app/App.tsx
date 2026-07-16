@@ -17,12 +17,8 @@ import { PageTransitionProvider } from './context/PageTransitionContext';
 import { PageTransitionOverlay } from './components/PageTransitionOverlay';
 import SplashScreen from './components/SplashScreen';
 
-function AppContent() {
+export function AppContent({ showSplash }: { showSplash: boolean }) {
   const location = useLocation();
-  const [hadSplash] = useState(() => {
-    const isHomePage = window.location.pathname === '/';
-    return isHomePage;
-  });
 
   return (
     <>
@@ -30,7 +26,7 @@ function AppContent() {
       <ScrollToTop />
       
       <Routes location={location}>
-        <Route path="/" element={<Home showSplash={hadSplash} />} />
+        <Route path="/" element={<Home showSplash={showSplash} />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/apropos" element={<APropos />} />
         <Route path="/projets" element={<Projets />} />
@@ -69,7 +65,7 @@ export default function App() {
           <BackgroundWrapper showSplash={showSplash} />
           
           {/* App Content */}
-          <AppContent />
+          <AppContent showSplash={showSplash} />
 
           {/* Page Transition Overlay */}
           <PageTransitionOverlay />

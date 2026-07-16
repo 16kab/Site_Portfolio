@@ -110,7 +110,10 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
     <>
       <motion.header 
         className="fixed left-1/2 -translate-x-1/2 z-[200] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24 w-full max-w-[1920px]"
-        style={{ top: 0, paddingTop: '2rem' }}
+        style={{
+          top: 0,
+          paddingTop: 'max(2rem, calc(env(safe-area-inset-top, 0px) + 1rem))',
+        }}
         initial={{ filter: 'blur(10px)', opacity: 0 }}
         animate={{ 
           filter: showSplash ? 'blur(10px)' : 'blur(0px)', 

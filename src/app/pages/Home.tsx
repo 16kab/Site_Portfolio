@@ -2,23 +2,34 @@ import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import Shuffle from '../components/Shuffle';
 import { motion } from 'motion/react';
+import { useEffect } from 'react';
 
 interface HomeProps {
   showSplash: boolean;
 }
 
+export const HOME_BODY_CLASS = 'home-page-active';
+
+export function getHomeAnimationDelays(showSplash: boolean) {
+  return showSplash
+    ? { textDelay: 2.4, shuffleDelay1: 0.2, shuffleDelay2: 2 }
+    : { textDelay: 0.1, shuffleDelay1: 0, shuffleDelay2: 0.1 };
+}
+
 export default function Home({ showSplash }: HomeProps) {
-  // Délais d'animation conditionnels
-  // Si splash : logo se charge en 1.5s + pause 0.3s + panel descend 0.8s = 2.6s total
-  // Sinon : apparition immédiate
-  const textDelay = showSplash ? 2.8 : 0.3;
-  const shuffleDelay1 = showSplash ? 0.2 : 0;
-  const shuffleDelay2 = showSplash ? 2 : 0.15;
+  const { textDelay, shuffleDelay1, shuffleDelay2 } = getHomeAnimationDelays(showSplash);
+
+  useEffect(() => {
+    document.body.classList.add(HOME_BODY_CLASS);
+    document.body.scrollTop = 0;
+
+    return () => document.body.classList.remove(HOME_BODY_CLASS);
+  }, []);
   
   return (
     <section className="relative overflow-hidden home-section">
       {/* Hero Content */}
-      <div className="relative z-10 flex items-center justify-center h-screen px-4 sm:px-6 md:px-8" style={{ transform: 'translateY(-3%)' }}>
+      <div className="relative z-10 flex h-full items-center justify-center px-4 sm:px-6 md:px-8" style={{ transform: 'translateY(-3%)' }}>
         {/* Desktop: layout avec positions absolues */}
         <motion.div 
           className="hidden lg:block relative w-full" 
@@ -171,7 +182,7 @@ export default function Home({ showSplash }: HomeProps) {
         to="/projets"
         className="lg:hidden fixed left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-6 py-3 transition-all duration-300 group"
         style={{
-          bottom: '5rem',
+          bottom: 'max(5rem, calc(env(safe-area-inset-bottom, 0px) + 2rem))',
           fontFamily: 'Manrope, sans-serif',
           fontWeight: 500,
           fontSize: '15px',

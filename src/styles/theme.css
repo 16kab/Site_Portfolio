@@ -156,23 +156,40 @@
   /* App container */
   .app-container {
     min-height: 100vh;
+    min-height: 100dvh;
     background-color: transparent;
+  }
+
+  body.home-page-active {
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: hidden;
+  }
+
+  body.home-page-active .app-container {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
   }
 
   /* Grainient wrapper - Fixed background for home page */
   .grainient-wrapper {
     position: fixed;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
+    height: 100dvh;
     z-index: 0;
     pointer-events: none;
   }
 
   /* Home section - Full screen */
   .home-section {
-    min-height: 100vh;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
     position: relative;
     z-index: 1;
   }
@@ -181,5 +198,6 @@
   .animated-bg-canvas {
     width: 100vw !important;
     height: 100vh !important;
+    height: 100dvh !important;
   }
 }

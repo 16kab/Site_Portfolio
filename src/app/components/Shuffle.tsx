@@ -5,6 +5,9 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(GSAPSplitText, useGSAP);
 
+export const getCharacterMaskPadding = (width: number) =>
+  Math.min(12, Math.max(4, width * 0.04));
+
 interface ShuffleProps {
   text: string;
   className?: string;
@@ -98,14 +101,17 @@ const Shuffle: React.FC<ShuffleProps> = ({
         if (!w && !h) return;
 
         const spacingMultiplier = 1.15; // Espacement entre les lettres dupliquées
+        const maskPadding = getCharacterMaskPadding(w);
 
         // Wrapper principal
         const wrapper = document.createElement('span');
         wrapper.style.display = 'inline-block';
         wrapper.style.overflow = 'hidden';
         wrapper.style.verticalAlign = 'top';
-        wrapper.style.margin = '0';
-        wrapper.style.padding = '0';
+        wrapper.style.boxSizing = 'content-box';
+        wrapper.style.marginLeft = `-${maskPadding}px`;
+        wrapper.style.marginRight = `-${maskPadding}px`;
+        wrapper.style.padding = `0 ${maskPadding}px`;
         wrapper.style.width = (w + 4) + 'px'; // Ajouter 4px pour éviter que les lettres soient coupées
         wrapper.style.height = h + 'px';
 
