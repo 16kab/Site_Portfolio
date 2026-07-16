@@ -13,6 +13,18 @@ import refonteSiteHeroImage from 'figma:asset/89a2b71b88620b2f445d74ac6a7eb076e1
 import refonteSiteFullImage from 'figma:asset/757ee9914eb93d187ed398303b571c38964f5a5a.webp';
 import crmBBScreensImage from 'figma:asset/83b3683a5d5bcebec542073ac4a14544cc8fb248.webp';
 import crmBBHeroImage from 'figma:asset/5d851b07767ac527e2d425c5b16fb04013d6005c.webp';
+// Nouveaux projets
+import mauniHeroImage from 'figma:asset/mauni-hero.webp';
+import mauniOnboardingImage from 'figma:asset/mauni-onboarding.webp';
+import mauniLightImage from 'figma:asset/mauni-light.webp';
+import mauniDarkImage from 'figma:asset/mauni-dark.webp';
+import onboardingRhHeroImage from 'figma:asset/onboarding-rh-hero.webp';
+import onboardingRhAdminImage from 'figma:asset/onboarding-rh-admin.webp';
+import onboardingRhArrivantImage from 'figma:asset/onboarding-rh-arrivant.webp';
+import symaHeroImage from 'figma:asset/syma-hero.webp';
+import symaScreensImage from 'figma:asset/syma-screens.webp';
+import trackitHeroImage from 'figma:asset/trackit-hero.webp';
+import trackitScreensImage from 'figma:asset/trackit-screens.webp';
 
 export interface Projet {
   id: string;
@@ -38,6 +50,138 @@ export interface Projet {
 }
 
 export const projetsData: Projet[] = [
+  // ─ Nouveaux projets (contenu texte provisoire, à rédiger) ─────
+  {
+    id: 'mauni',
+    title: 'Mauni',
+    subtitle: '[Texte provisoire] Sous-titre du projet Mauni, à rédiger ultérieurement.',
+    year: '2025',
+    description: '[Texte provisoire] Courte description du projet Mauni affichée sur la carte. À remplacer par le contenu final.',
+    tags: ['UX/UI Design', 'Product Design', 'À compléter'],
+    brand: 'Mauni',
+    natureProduit: 'Application mobile',
+    utilisateurPrincipal: '[Texte provisoire]',
+    objectifProduit: '[Texte provisoire] Objectif du produit à préciser.',
+    contexte: '[Texte provisoire] Paragraphe de contexte décrivant le point de départ du projet.\n\nSecond paragraphe de contexte à compléter avec les informations réelles du projet.',
+    problematique: '[Texte provisoire] Description de la problématique principale.\n\nLes points clés :\n\n• Premier point à compléter\n• Deuxième point à compléter\n• Troisième point à compléter',
+    role: '[Texte provisoire] Description du rôle occupé sur le projet.',
+    interventions: [
+      '[Provisoire] Première intervention',
+      '[Provisoire] Deuxième intervention',
+      '[Provisoire] Troisième intervention',
+      '[Provisoire] Quatrième intervention'
+    ],
+    demarche: [
+      { title: '[Provisoire] Étape 1', content: '[Texte provisoire] Description de la première étape de la démarche.' },
+      { title: '[Provisoire] Étape 2', content: '[Texte provisoire] Description de la deuxième étape de la démarche.' },
+      { title: '[Provisoire] Étape 3', content: '[Texte provisoire] Description de la troisième étape de la démarche.' },
+      { title: '[Provisoire] Étape 4', content: '[Texte provisoire] Description de la quatrième étape de la démarche.' }
+    ],
+    impact: '[Texte provisoire] Description de l\'impact du projet.\n\n• Premier résultat à compléter\n• Deuxième résultat à compléter\n• Troisième résultat à compléter',
+    image: mauniHeroImage,
+    gallery: [
+      mauniOnboardingImage,
+      mauniLightImage,
+      mauniDarkImage,
+    ]
+  },
+  {
+    id: 'onboarding-rh',
+    title: 'Onboarding RH',
+    subtitle: '[Texte provisoire] Sous-titre du projet Onboarding RH, à rédiger ultérieurement.',
+    year: '2025',
+    description: '[Texte provisoire] Courte description du projet Onboarding RH affichée sur la carte. À remplacer par le contenu final.',
+    tags: ['UX/UI Design', 'Product Design', 'À compléter'],
+    brand: 'Onboarding RH',
+    natureProduit: 'Plateforme web interne',
+    utilisateurPrincipal: '[Texte provisoire]',
+    objectifProduit: '[Texte provisoire] Objectif du produit à préciser.',
+    contexte: '[Texte provisoire] Paragraphe de contexte décrivant le point de départ du projet.\n\nSecond paragraphe de contexte à compléter avec les informations réelles du projet.',
+    problematique: '[Texte provisoire] Description de la problématique principale.\n\nLes points clés :\n\n• Premier point à compléter\n• Deuxième point à compléter\n• Troisième point à compléter',
+    role: '[Texte provisoire] Description du rôle occupé sur le projet.',
+    interventions: [
+      '[Provisoire] Première intervention',
+      '[Provisoire] Deuxième intervention',
+      '[Provisoire] Troisième intervention',
+      '[Provisoire] Quatrième intervention'
+    ],
+    demarche: [
+      { title: '[Provisoire] Étape 1', content: '[Texte provisoire] Description de la première étape de la démarche.' },
+      { title: '[Provisoire] Étape 2', content: '[Texte provisoire] Description de la deuxième étape de la démarche.' },
+      { title: '[Provisoire] Étape 3', content: '[Texte provisoire] Description de la troisième étape de la démarche.' },
+      { title: '[Provisoire] Étape 4', content: '[Texte provisoire] Description de la quatrième étape de la démarche.' }
+    ],
+    impact: '[Texte provisoire] Description de l\'impact du projet.\n\n• Premier résultat à compléter\n• Deuxième résultat à compléter\n• Troisième résultat à compléter',
+    image: onboardingRhHeroImage,
+    gallery: [
+      onboardingRhAdminImage,
+      onboardingRhArrivantImage,
+    ]
+  },
+  {
+    id: 'syma',
+    title: 'SYMA',
+    subtitle: '[Texte provisoire] Sous-titre du projet SYMA, à rédiger ultérieurement.',
+    year: '2025',
+    description: '[Texte provisoire] Courte description du projet SYMA affichée sur la carte. À remplacer par le contenu final.',
+    tags: ['UX/UI Design', 'Product Design', 'À compléter'],
+    brand: 'SYMA',
+    natureProduit: 'Site web',
+    utilisateurPrincipal: '[Texte provisoire]',
+    objectifProduit: '[Texte provisoire] Objectif du produit à préciser.',
+    contexte: '[Texte provisoire] Paragraphe de contexte décrivant le point de départ du projet.\n\nSecond paragraphe de contexte à compléter avec les informations réelles du projet.',
+    problematique: '[Texte provisoire] Description de la problématique principale.\n\nLes points clés :\n\n• Premier point à compléter\n• Deuxième point à compléter\n• Troisième point à compléter',
+    role: '[Texte provisoire] Description du rôle occupé sur le projet.',
+    interventions: [
+      '[Provisoire] Première intervention',
+      '[Provisoire] Deuxième intervention',
+      '[Provisoire] Troisième intervention',
+      '[Provisoire] Quatrième intervention'
+    ],
+    demarche: [
+      { title: '[Provisoire] Étape 1', content: '[Texte provisoire] Description de la première étape de la démarche.' },
+      { title: '[Provisoire] Étape 2', content: '[Texte provisoire] Description de la deuxième étape de la démarche.' },
+      { title: '[Provisoire] Étape 3', content: '[Texte provisoire] Description de la troisième étape de la démarche.' },
+      { title: '[Provisoire] Étape 4', content: '[Texte provisoire] Description de la quatrième étape de la démarche.' }
+    ],
+    impact: '[Texte provisoire] Description de l\'impact du projet.\n\n• Premier résultat à compléter\n• Deuxième résultat à compléter\n• Troisième résultat à compléter',
+    image: symaHeroImage,
+    gallery: [
+      symaScreensImage,
+    ]
+  },
+  {
+    id: 'trackit',
+    title: 'Trackit',
+    subtitle: '[Texte provisoire] Sous-titre du projet Trackit, à rédiger ultérieurement.',
+    year: '2025',
+    description: '[Texte provisoire] Courte description du projet Trackit affichée sur la carte. À remplacer par le contenu final.',
+    tags: ['UX/UI Design', 'Product Design', 'À compléter'],
+    brand: 'Trackit',
+    natureProduit: 'Application web',
+    utilisateurPrincipal: '[Texte provisoire]',
+    objectifProduit: '[Texte provisoire] Objectif du produit à préciser.',
+    contexte: '[Texte provisoire] Paragraphe de contexte décrivant le point de départ du projet.\n\nSecond paragraphe de contexte à compléter avec les informations réelles du projet.',
+    problematique: '[Texte provisoire] Description de la problématique principale.\n\nLes points clés :\n\n• Premier point à compléter\n• Deuxième point à compléter\n• Troisième point à compléter',
+    role: '[Texte provisoire] Description du rôle occupé sur le projet.',
+    interventions: [
+      '[Provisoire] Première intervention',
+      '[Provisoire] Deuxième intervention',
+      '[Provisoire] Troisième intervention',
+      '[Provisoire] Quatrième intervention'
+    ],
+    demarche: [
+      { title: '[Provisoire] Étape 1', content: '[Texte provisoire] Description de la première étape de la démarche.' },
+      { title: '[Provisoire] Étape 2', content: '[Texte provisoire] Description de la deuxième étape de la démarche.' },
+      { title: '[Provisoire] Étape 3', content: '[Texte provisoire] Description de la troisième étape de la démarche.' },
+      { title: '[Provisoire] Étape 4', content: '[Texte provisoire] Description de la quatrième étape de la démarche.' }
+    ],
+    impact: '[Texte provisoire] Description de l\'impact du projet.\n\n• Premier résultat à compléter\n• Deuxième résultat à compléter\n• Troisième résultat à compléter',
+    image: trackitHeroImage,
+    gallery: [
+      trackitScreensImage,
+    ]
+  },
   {
     id: 'parcours-spvieassurances',
     title: 'Refonte du parcours de souscription SPVIE',
