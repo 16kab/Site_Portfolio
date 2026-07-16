@@ -24,6 +24,7 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
   projectId,
 }, ref) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const navigate = useNavigate();
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const { 
@@ -32,11 +33,12 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
     setTransitionImageRect,
     setIsReverse 
   } = usePageTransition();
+  const isInteractive = isHovered || isFocused;
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     // Only on desktop/laptop (>= 1024px) - use transition
     if (window.innerWidth >= 1024 && image && imageContainerRef.current) {
-      e.preventDefault();
+      event.preventDefault();
       
       const rect = imageContainerRef.current.getBoundingClientRect();
       
@@ -58,18 +60,22 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
       setIsTransitioning(true);
       
       // Navigate after image has grown and stayed in place (just before fade out starts)
-      setTimeout(() => {
+      window.setTimeout(() => {
         navigate(link);
       }, 1000);
-    } else {
-      // On mobile/tablet - navigate directly without transition
-      navigate(link);
     }
   };
 
   return (
-    <div
-      className="group relative flex flex-col md:flex-row gap-6 md:gap-8 p-6 md:p-8 rounded-[12px] transition-all duration-300"
+    <Link
+      to={link}
+      aria-label={`Voir le projet ${title}`}
+      onClick={handleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
+      className="project-card group relative flex flex-col md:flex-row gap-6 md:gap-8 p-6 md:p-8 rounded-[12px] transition-colors duration-300 cursor-pointer"
       style={{
         backgroundColor: 'var(--portfolio-card-bg)',
         border: '1px solid var(--portfolio-card-border)'
@@ -153,29 +159,26 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
         </div>
 
         {/* Button - Same as "Entrer en contact" */}
-        <button
-          className="inline-flex items-center gap-2 px-6 py-3 transition-all duration-300 self-start cursor-pointer"
+        <span
+          className="inline-flex items-center gap-2 px-6 py-3 transition-colors duration-300 self-start"
           style={{
-            backgroundColor: isHovered ? 'var(--portfolio-button-bg-hover)' : 'var(--portfolio-button-bg)',
+            backgroundColor: isInteractive ? 'var(--portfolio-button-bg-hover)' : 'var(--portfolio-button-bg)',
             color: 'var(--portfolio-button-text)',
             fontFamily: 'Manrope, sans-serif',
             fontWeight: 500,
             fontSize: '14px',
             borderRadius: '5px'
           }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onClick={handleClick}
         >
-          <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+          <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16" aria-hidden="true">
             <path d={svgPaths.p2fe73000} fill="currentColor" />
           </svg>
           <RollingText 
             text="Voir le projet" 
-            inView={isHovered}
+            inView={isInteractive}
             transition={{ duration: 0.3, delay: 0.02, ease: "easeOut" }}
           />
-        </button>
+        </span>
       </div>
 
       {/* Right Image */}
@@ -183,14 +186,15 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
         <div className="lg:w-[543px] lg:h-[400px] h-[250px] flex-shrink-0">
           <div ref={imageContainerRef} className="w-full h-full rounded-[8px] overflow-hidden">
             <img
+              ref={ref}
               src={image}
-              alt=""
-              className="w-full h-full object-cover object-center"
+              alt={title}
+              className="project-card-image w-full h-full object-cover object-center"
             />
           </div>
         </div>
       )}
-    </div>
+    </Link>
   );
 });
 

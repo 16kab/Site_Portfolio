@@ -12,6 +12,9 @@
   --portfolio-bg: #FFFFFF;
   --portfolio-card-bg: #F8F8F8;
   --portfolio-card-border: #E0E0E0;
+  --portfolio-card-glow: rgba(255, 255, 255, 0.98);
+  --portfolio-card-glow-shadow: rgba(255, 255, 255, 0.55);
+  --portfolio-card-focus: #1A1A1A;
   --portfolio-text-primary: #1A1A1A;
   --portfolio-text-secondary: #666666;
   --portfolio-text-description: #4A4A4A;
@@ -72,6 +75,9 @@
   --portfolio-bg: #121312;
   --portfolio-card-bg: #151615;
   --portfolio-card-border: #1C1D1C;
+  --portfolio-card-glow: rgba(234, 234, 234, 0.9);
+  --portfolio-card-glow-shadow: rgba(234, 234, 234, 0.32);
+  --portfolio-card-focus: #EAEAEA;
   --portfolio-text-primary: #F1F1F1;
   --portfolio-text-secondary: #BABABA;
   --portfolio-text-description: #D6D6D6;
