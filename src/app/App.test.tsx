@@ -1,7 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
-import { AppContent, getSafariChromeColor } from './App';
+import {
+  AppContent,
+  getSafariChromeColor,
+  syncSafariChromeColor,
+} from './App';
 
 vi.mock('./pages/Home', () => ({
   default: ({ showSplash }: { showSplash: boolean }) => (
@@ -25,5 +29,19 @@ describe('getSafariChromeColor', () => {
   it('returns a chrome color consistent with the active theme', () => {
     expect(getSafariChromeColor(false)).toBe('#F2F2F2');
     expect(getSafariChromeColor(true)).toBe('#111111');
+  });
+
+  it('synchronizes the Safari chrome meta tag with theme changes', () => {
+    const meta = document.createElement('meta');
+    meta.name = 'theme-color';
+    document.head.append(meta);
+
+    syncSafariChromeColor(true);
+    expect(meta.content).toBe('#111111');
+
+    syncSafariChromeColor(false);
+    expect(meta.content).toBe('#F2F2F2');
+
+    meta.remove();
   });
 });

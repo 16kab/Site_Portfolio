@@ -20,6 +20,15 @@ import SplashScreen from './components/SplashScreen';
 export const getSafariChromeColor = (isDarkMode: boolean) =>
   isDarkMode ? '#111111' : '#F2F2F2';
 
+export const syncSafariChromeColor = (
+  isDarkMode: boolean,
+  targetDocument: Document = document,
+) => {
+  targetDocument
+    .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+    ?.setAttribute('content', getSafariChromeColor(isDarkMode));
+};
+
 export function AppContent({ showSplash }: { showSplash: boolean }) {
   const location = useLocation();
 
@@ -104,9 +113,7 @@ function BackgroundWrapper({ showSplash }: { showSplash: boolean }) {
   }, []);
 
   useEffect(() => {
-    document
-      .querySelector<HTMLMetaElement>('meta[name="theme-color"]')
-      ?.setAttribute('content', getSafariChromeColor(isDarkMode));
+    syncSafariChromeColor(isDarkMode);
   }, [isDarkMode]);
   
   // Don't render any background on Projets pages (they have their own background color)
