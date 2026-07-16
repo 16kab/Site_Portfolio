@@ -36,6 +36,16 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
   const isInteractive = isHovered || isFocused;
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    const shouldKeepNativeNavigation =
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      event.currentTarget.target === '_blank';
+
+    if (shouldKeepNativeNavigation) return;
+
     // Only on desktop/laptop (>= 1024px) - use transition
     if (window.innerWidth >= 1024 && image && imageContainerRef.current) {
       event.preventDefault();

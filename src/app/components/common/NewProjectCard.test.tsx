@@ -1,7 +1,7 @@
 import { createRef } from 'react';
-import { fireEvent, render, screen, within } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
-import { describe, expect, it, vi } from 'vitest';
+import { createEvent, fireEvent, render, screen, within } from '@testing-library/react';
+import { MemoryRouter, useLocation } from 'react-router';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PageTransitionProvider } from '../../context/PageTransitionContext';
 import NewProjectCard from './NewProjectCard';
 
@@ -14,6 +14,11 @@ vi.mock('../RollingText', () => ({
 }));
 
 const renderCard = (ref = createRef<HTMLImageElement>()) => {
+  const LocationProbe = () => {
+    const location = useLocation();
+    return <span data-testid="location">{location.pathname}</span>;
+  };
+
   const view = render(
     <MemoryRouter>
       <PageTransitionProvider>
@@ -27,11 +32,16 @@ const renderCard = (ref = createRef<HTMLImageElement>()) => {
           image="/test.webp"
         />
       </PageTransitionProvider>
+      <LocationProbe />
     </MemoryRouter>,
   );
 
   return { ...view, ref };
 };
+
+afterEach(() => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1024 });
+});
 
 describe('NewProjectCard', () => {
   it('uses one accessible link for the whole card without a nested button', () => {
@@ -61,5 +71,35 @@ describe('NewProjectCard', () => {
     const { ref } = renderCard();
 
     expect(ref.current).toBe(screen.getByRole('img', { name: 'Projet test' }));
+  });
+
+  it('keeps modifier clicks native on desktop', () => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
+    renderCard();
+    const link = screen.getByRole('link', { name: 'Voir le projet Projet test' });
+    const event = createEvent.click(link, { button: 0, ctrlKey: true });
+    let preventedByCard = true;
+    document.addEventListener(
+      'click',
+      (nativeEvent) => {
+        preventedByCard = nativeEvent.defaultPrevented;
+        nativeEvent.preventDefault();
+      },
+      { once: true },
+    );
+
+    fireEvent(link, event);
+
+    expect(preventedByCard).toBe(false);
+    expect(screen.getByTestId('location')).toHaveTextContent('/');
+  });
+
+  it('uses immediate link navigation on mobile', () => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    renderCard();
+
+    fireEvent.click(screen.getByRole('link', { name: 'Voir le projet Projet test' }));
+
+    expect(screen.getByTestId('location')).toHaveTextContent('/projets/test');
   });
 });
