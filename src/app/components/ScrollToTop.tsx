@@ -24,7 +24,7 @@ export const isTransitionRoute = (
 
 export function ScrollToTop() {
   const { pathname } = useLocation();
-  const { snapshot, isTransitioning, clearTransition } = usePageTransition();
+  const { snapshot, clearTransition } = usePageTransition();
   const handledPathRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -37,14 +37,10 @@ export function ScrollToTop() {
   }, [pathname, snapshot]);
 
   useEffect(() => {
-    if (
-      snapshot &&
-      !isTransitioning &&
-      !isTransitionRoute(pathname, snapshot)
-    ) {
+    if (snapshot && !isTransitionRoute(pathname, snapshot)) {
       clearTransition();
     }
-  }, [pathname, snapshot, isTransitioning, clearTransition]);
+  }, [pathname, snapshot, clearTransition]);
 
   return null;
 }
