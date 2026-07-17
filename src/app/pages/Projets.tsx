@@ -121,6 +121,7 @@ export default function Projets() {
                   description={projet.description}
                   tags={projet.tags}
                   image={projet.image}
+                  priority={index < 2}
                   ref={(imageElement) => {
                     cardRefs.current[projet.link] = imageElement;
                   }}

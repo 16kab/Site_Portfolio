@@ -17,6 +17,8 @@ interface NewProjectCardProps {
   description: string;
   tags: string[];
   image?: string;
+  /** true pour les cartes au-dessus de la ligne de flottaison (chargement immédiat) */
+  priority?: boolean;
 }
 
 const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
@@ -26,6 +28,7 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
   description,
   tags,
   image,
+  priority = false,
 }, ref) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -216,6 +219,8 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
               ref={ref}
               src={image}
               alt={title}
+              loading={priority ? undefined : 'lazy'}
+              decoding="async"
               className="project-card-image w-full h-full object-cover object-center"
             />
           </div>
