@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
+import { toast } from 'sonner';
 import { EMAILJS_CONFIG } from '../config';
 
 export interface FormData {
@@ -75,11 +76,20 @@ export function useEmailForm() {
 
   /**
    * Submit form to EmailJS
+   *
+   * @param honeypot Valeur du champ piège invisible : un humain le laisse
+   * vide, un bot le remplit. Rempli ⇒ on simule un succès sans rien envoyer.
    */
-  const submitForm = async (formData: FormData): Promise<boolean> => {
+  const submitForm = async (formData: FormData, honeypot?: string): Promise<boolean> => {
+    // Anti-spam : soumission de bot, on ne fait rien
+    if (honeypot && honeypot.trim() !== '') {
+      setShowSuccessPopup(true);
+      return true;
+    }
+
     // Validate form
     const validationErrors = validateForm(formData);
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return false;
@@ -109,6 +119,9 @@ export function useEmailForm() {
       return true;
     } catch (error) {
       console.error('Email send error:', error);
+      toast.error(
+        "L'envoi a échoué. Réessayez ou écrivez-moi directement à kabiche.alexis@gmail.com.",
+      );
       return false;
     } finally {
       setIsSubmitting(false);

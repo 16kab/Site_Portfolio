@@ -1,10 +1,13 @@
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, MessageCircle } from 'lucide-react';
 import { RollingText } from './RollingText';
 import { useState, useEffect, useRef } from 'react';
 import Magnet from './Magnet';
 import { AnimatedThemeToggler } from './AnimatedThemeToggler';
+
+// Lien react-router animable par motion (couleurs du bouton contact)
+const MotionLink = motion.create(Link);
 
 export type HeaderMenuItem = 'projets' | 'apropos' | 'contact' | 'theme';
 
@@ -18,8 +21,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
   const [hoveredItem, setHoveredItem] = useState<HeaderMenuItem | null>(null);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleMouseEnter = (item: HeaderMenuItem) => {
     if (hoverTimeoutRef.current) {
@@ -97,11 +99,6 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
       document.body.style.overflowY = '';
     };
   }, [isMobileMenuOpen]);
-
-  const scrollToContact = () => {
-    setIsMobileMenuOpen(false);
-    navigate('/contact');
-  };
 
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
@@ -220,8 +217,9 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 onFocus={() => handleMouseEnter('contact')}
                 onBlur={handleMouseLeave}
               >
-                <motion.button
-                  onClick={scrollToContact}
+                <MotionLink
+                  to="/contact"
+                  onClick={handleLinkClick}
                   className="flex px-6 py-3 rounded-[5px] items-center gap-2 cursor-pointer transition-all duration-300"
                   animate={{
                     backgroundColor: isScrolled ? 'var(--header-button-bg-scrolled)' : 'var(--header-button-bg-default)',
@@ -245,7 +243,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                       transition={{ duration: 0.3, delay: 0.02, ease: "easeOut" }}
                     />
                   </motion.div>
-                </motion.button>
+                </MotionLink>
               </motion.div>
 
               <motion.div
@@ -355,11 +353,12 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 </motion.h1>
               </Link>
 
-              <button
-                onClick={scrollToContact}
+              <Link
+                to="/contact"
                 className="pointer-events-auto cursor-pointer"
+                onClick={handleLinkClick}
               >
-                <motion.h1 
+                <motion.h1
                   className="font-bold text-white text-5xl sm:text-6xl md:text-7xl tracking-wider"
                   style={{ fontFamily: 'Manrope, sans-serif' }}
                   initial={{ opacity: 0, y: 20 }}
@@ -368,7 +367,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 >
                   Contact
                 </motion.h1>
-              </button>
+              </Link>
             </motion.div>
           </>
         )}

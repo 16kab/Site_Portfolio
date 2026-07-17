@@ -7,27 +7,6 @@ import { Send } from 'lucide-react';
 import { useState } from 'react';
 import RollingText from '../components/RollingText';
 
-const recommendations = [
-  {
-    name: "Alexandre Chen",
-    position: "Directeur Technique",
-    company: "WebCorp",
-    text: "Excellent développeur avec une vraie passion pour le code propre et les interfaces élégantes. Sa rigueur et son professionnalisme sont remarquables."
-  },
-  {
-    name: "Julie Moreau",
-    position: "Product Manager",
-    company: "StartupX",
-    text: "Un collaborateur exceptionnel qui sait traduire les besoins métier en solutions techniques innovantes. Je recommande vivement ses services."
-  },
-  {
-    name: "Marc Lefebvre",
-    position: "CEO",
-    company: "Digital Solutions",
-    text: "Sa créativité et son expertise technique ont transformé notre vision en un produit dépassant toutes nos attentes. Un vrai talent."
-  }
-];
-
 export default function Contact() {
   const [isSendButtonHovered, setIsSendButtonHovered] = useState(false);
   const {
@@ -50,8 +29,9 @@ export default function Contact() {
       objet: (form.elements.namedItem('objet') as HTMLInputElement).value.trim(),
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value.trim(),
     };
+    const honeypot = (form.elements.namedItem('site_web') as HTMLInputElement).value;
 
-    const success = await submitForm(formData);
+    const success = await submitForm(formData, honeypot);
     if (success) {
       form.reset();
     }
@@ -64,116 +44,12 @@ export default function Contact() {
         description="Contactez Alexis Kabiche, Product & Brand Designer à Paris, pour un projet, une mission ou une collaboration."
         path="/contact"
       />
-      {/* Références Section */}
-      <section style={{ paddingTop: 'var(--page-padding-top)' }} className="pb-16 md:pb-20">
-        <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
-          {/* Header */}
-          <div className="mb-6">
-            <ScrollRevealTitle delay={0}>
-              <p 
-                style={{ 
-                  fontFamily: 'Manrope, sans-serif',
-                  fontWeight: 500,
-                  fontSize: 'clamp(0.8125rem, 0.75rem + 0.3125vw, 0.9375rem)',
-                  lineHeight: '1.6',
-                  color: 'var(--portfolio-text-secondary)',
-                  marginBottom: '0px',
-                  letterSpacing: '0.5px'
-                }}
-              >
-                Ce que disent mes collaborateurs
-              </p>
-            </ScrollRevealTitle>
-            <ScrollRevealTitle delay={0.05}>
-              <h2 
-                style={{ 
-                  fontFamily: 'Manrope, sans-serif',
-                  fontWeight: 700,
-                  fontSize: 'clamp(2rem, 1rem + 5vw, 3rem)',
-                  lineHeight: '1.1',
-                  letterSpacing: '-1.4px',
-                  color: 'var(--portfolio-text-primary)'
-                }}
-              >
-                Références
-              </h2>
-            </ScrollRevealTitle>
-          </div>
-
-          {/* Recommendations Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-            {recommendations.map((rec, index) => (
-              <ScrollFadeIn key={index} delay={0.1 + index * 0.05}>
-                <div
-                  className="p-8 flex flex-col h-full"
-                  style={{
-                    backgroundColor: 'var(--portfolio-card-bg)',
-                    borderRadius: '12px',
-                    border: '1px solid var(--portfolio-card-border)'
-                  }}
-                >
-                  {/* Content */}
-                  <div className="flex-1 flex flex-col">
-                    {/* Testimonial Text */}
-                    <p 
-                      className="flex-1"
-                      style={{ 
-                        fontFamily: 'Manrope, sans-serif',
-                        fontWeight: 400,
-                        fontSize: 'clamp(0.875rem, 0.8125rem + 0.3125vw, 1rem)',
-                        lineHeight: '1.7',
-                        color: 'var(--portfolio-text-secondary)',
-                        fontStyle: 'italic'
-                      }}
-                    >
-                      "{rec.text}"
-                    </p>
-
-                    {/* Author Info */}
-                    <div 
-                      className="pt-4 mt-4"
-                      style={{ 
-                        borderTop: '1px solid rgba(186, 186, 186, 0.15)' 
-                      }}
-                    >
-                      <p 
-                        style={{ 
-                          fontFamily: 'Manrope, sans-serif',
-                          fontWeight: 600,
-                          fontSize: 'clamp(1.125rem, 1rem + 0.625vw, 1.375rem)',
-                          lineHeight: '1.3',
-                          letterSpacing: '-0.5px',
-                          color: 'var(--portfolio-text-primary)'
-                        }}
-                      >
-                        {rec.name}
-                      </p>
-                      <p 
-                        style={{ 
-                          fontFamily: 'Manrope, sans-serif',
-                          fontWeight: 400,
-                          fontSize: 'clamp(0.8125rem, 0.75rem + 0.3125vw, 0.9375rem)',
-                          lineHeight: '1.5',
-                          color: 'var(--portfolio-text-secondary)'
-                        }}
-                      >
-                        {rec.position} - {rec.company}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </ScrollFadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Contact Content */}
-      <section className="pb-16 md:pb-32">
+      <section style={{ paddingTop: 'var(--page-padding-top)' }} className="pb-16 md:pb-32">
         <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
           {/* Header */}
           <div className="mb-16 md:mb-20 lg:mb-24">
-            <ScrollRevealTitle delay={0.2}>
+            <ScrollRevealTitle delay={0}>
               <p 
                 style={{ 
                   fontFamily: 'Manrope, sans-serif',
@@ -188,8 +64,8 @@ export default function Contact() {
                 Contact
               </p>
             </ScrollRevealTitle>
-            <ScrollRevealTitle delay={0.25}>
-              <h1 
+            <ScrollRevealTitle delay={0.05}>
+              <h1
                 style={{ 
                   fontFamily: 'Manrope, sans-serif',
                   fontWeight: 700,
@@ -230,6 +106,11 @@ export default function Contact() {
             {/* Right side - Form */}
             <ScrollFadeIn delay={0.4}>
               <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+                {/* Honeypot anti-spam : invisible pour les humains, rempli par les bots */}
+                <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}>
+                  <label htmlFor="site_web">Ne pas remplir ce champ</label>
+                  <input type="text" id="site_web" name="site_web" tabIndex={-1} autoComplete="off" />
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label 
@@ -250,9 +131,12 @@ export default function Contact() {
                       type="text"
                       id="nom"
                       name="nom"
-                      className={`w-full px-4 py-3 focus:outline-none transition-all ${
-                        errors.nom 
-                          ? 'border-2 border-red-500/50' 
+                      required
+                      aria-invalid={!!errors.nom}
+                      aria-describedby={errors.nom ? 'erreur-nom' : undefined}
+                      className={`w-full px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--portfolio-card-focus)] transition-all ${
+                        errors.nom
+                          ? 'border-2 border-red-500/50'
                           : 'border-2 hover:border-[#2A2B2A] focus:border-[#3A3B3A]'
                       }`}
                       style={{
@@ -271,14 +155,14 @@ export default function Contact() {
                       }}
                     />
                     {errors.nom && (
-                      <p className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
+                      <p id="erreur-nom" role="alert" className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
                         Ce champ est requis
                       </p>
                     )}
                   </div>
-                  
+
                   <div>
-                    <label 
+                    <label
                       htmlFor="prenom"
                       style={{
                         fontFamily: 'Manrope, sans-serif',
@@ -296,9 +180,12 @@ export default function Contact() {
                       type="text"
                       id="prenom"
                       name="prenom"
-                      className={`w-full px-4 py-3 focus:outline-none transition-all ${
-                        errors.prenom 
-                          ? 'border-2 border-red-500/50' 
+                      required
+                      aria-invalid={!!errors.prenom}
+                      aria-describedby={errors.prenom ? 'erreur-prenom' : undefined}
+                      className={`w-full px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--portfolio-card-focus)] transition-all ${
+                        errors.prenom
+                          ? 'border-2 border-red-500/50'
                           : 'border-2 hover:border-[#2A2B2A] focus:border-[#3A3B3A]'
                       }`}
                       style={{
@@ -317,7 +204,7 @@ export default function Contact() {
                       }}
                     />
                     {errors.prenom && (
-                      <p className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
+                      <p id="erreur-prenom" role="alert" className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
                         Ce champ est requis
                       </p>
                     )}
@@ -343,9 +230,12 @@ export default function Contact() {
                     type="email"
                     id="email"
                     name="email"
-                    className={`w-full px-4 py-3 focus:outline-none transition-all ${
-                      errors.email 
-                        ? 'border-2 border-red-500/50' 
+                    required
+                    aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? 'erreur-email' : undefined}
+                    className={`w-full px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--portfolio-card-focus)] transition-all ${
+                      errors.email
+                        ? 'border-2 border-red-500/50'
                         : 'border-2 hover:border-[#2A2B2A] focus:border-[#3A3B3A]'
                     }`}
                     style={{
@@ -360,7 +250,7 @@ export default function Contact() {
                     placeholder="Votre email"
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
+                    <p id="erreur-email" role="alert" className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
                       Email invalide
                     </p>
                   )}
@@ -385,9 +275,12 @@ export default function Contact() {
                     type="text"
                     id="objet"
                     name="objet"
-                    className={`w-full px-4 py-3 focus:outline-none transition-all ${
-                      errors.objet 
-                        ? 'border-2 border-red-500/50' 
+                    required
+                    aria-invalid={!!errors.objet}
+                    aria-describedby={errors.objet ? 'erreur-objet' : undefined}
+                    className={`w-full px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--portfolio-card-focus)] transition-all ${
+                      errors.objet
+                        ? 'border-2 border-red-500/50'
                         : 'border-2 hover:border-[#2A2B2A] focus:border-[#3A3B3A]'
                     }`}
                     style={{
@@ -402,7 +295,7 @@ export default function Contact() {
                     placeholder="Objet de votre message"
                   />
                   {errors.objet && (
-                    <p className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
+                    <p id="erreur-objet" role="alert" className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
                       Ce champ est requis
                     </p>
                   )}
@@ -427,9 +320,12 @@ export default function Contact() {
                     id="message"
                     name="message"
                     rows={6}
-                    className={`w-full px-4 py-3 focus:outline-none transition-all resize-none ${
-                      errors.message 
-                        ? 'border-2 border-red-500/50' 
+                    required
+                    aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? 'erreur-message' : undefined}
+                    className={`w-full px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--portfolio-card-focus)] transition-all resize-none ${
+                      errors.message
+                        ? 'border-2 border-red-500/50'
                         : 'border-2 hover:border-[#2A2B2A] focus:border-[#3A3B3A]'
                     }`}
                     style={{
@@ -444,7 +340,7 @@ export default function Contact() {
                     placeholder="Votre message..."
                   />
                   {errors.message && (
-                    <p className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
+                    <p id="erreur-message" role="alert" className="text-red-500 text-sm mt-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
                       Ce champ est requis
                     </p>
                   )}

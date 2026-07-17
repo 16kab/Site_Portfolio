@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X, CheckCircle } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface SuccessPopupProps {
   isOpen: boolean;
@@ -15,7 +15,8 @@ export default function SuccessPopup({
   message = "Message envoyé avec succès",
   description = "Je vous répondrai dans les plus brefs délais.",
 }: SuccessPopupProps) {
-  
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   // Fermer avec Escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -23,10 +24,20 @@ export default function SuccessPopup({
         onClose();
       }
     };
-    
+
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
+
+  // Focus initial sur le bouton Fermer, restitué à la fermeture
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    return () => previouslyFocused?.focus();
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -46,10 +57,13 @@ export default function SuccessPopup({
 
           {/* Popup */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="success-popup-title"
             initial={{ opacity: 0, filter: 'blur(10px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, filter: 'blur(10px)' }}
-            transition={{ 
+            transition={{
               duration: 0.4,
               ease: "easeOut"
             }}
@@ -66,6 +80,7 @@ export default function SuccessPopup({
             >
               {/* Close button */}
               <button
+                ref={closeButtonRef}
                 onClick={onClose}
                 className="absolute top-4 right-4 p-2 text-[#BABABA] hover:text-[#F1F1F1] transition-colors cursor-pointer"
                 aria-label="Fermer"
@@ -82,7 +97,8 @@ export default function SuccessPopup({
               </div>
 
               {/* Message */}
-              <h3 
+              <h3
+                id="success-popup-title"
                 className="text-center mb-3"
                 style={{
                   fontFamily: 'Manrope, sans-serif',

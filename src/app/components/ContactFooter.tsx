@@ -3,13 +3,12 @@ import { motion, useInView } from 'motion/react';
 import { MessageCircle, Mail, Phone } from 'lucide-react';
 import ScrollFadeIn from './ScrollFadeIn';
 import ScrollRevealTitle from './ScrollRevealTitle';
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import RollingText from './RollingText';
 
 export default function ContactFooter() {
   const contactTextRef = useRef(null);
   const isContactTextInView = useInView(contactTextRef, { once: true, amount: 0.3 });
-  const navigate = useNavigate();
   const [isContactButtonHovered, setIsContactButtonHovered] = useState(false);
 
   return (
@@ -69,7 +68,8 @@ export default function ContactFooter() {
 
           {/* Contact Button - Centered below separator on mobile, Top Right above separator on desktop */}
           <ScrollFadeIn delay={0.2}>
-            <button
+            <Link
+              to="/contact"
               className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 md:left-auto md:translate-x-0 md:right-8 px-6 py-3 flex items-center gap-2 transition-colors duration-300 top-[165px] md:top-[45px] whitespace-nowrap z-10 cursor-pointer"
               style={{
                 backgroundColor: isContactButtonHovered ? 'var(--portfolio-button-bg-hover)' : 'var(--portfolio-button-bg)',
@@ -79,9 +79,10 @@ export default function ContactFooter() {
                 fontSize: '14px',
                 borderRadius: '5px'
               }}
-              onClick={() => navigate('/contact')}
               onMouseEnter={() => setIsContactButtonHovered(true)}
               onMouseLeave={() => setIsContactButtonHovered(false)}
+              onFocus={() => setIsContactButtonHovered(true)}
+              onBlur={() => setIsContactButtonHovered(false)}
             >
               <MessageCircle size={18} />
               <RollingText
@@ -89,7 +90,7 @@ export default function ContactFooter() {
                 inView={isContactButtonHovered}
                 transition={{ duration: 0.3, delay: 0.02, ease: "easeOut" }}
               />
-            </button>
+            </Link>
           </ScrollFadeIn>
 
           {/* Large CONTACT Text - Center, Cut off - Hidden on mobile */}
