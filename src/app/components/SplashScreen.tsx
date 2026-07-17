@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
+import { useIsDarkMode } from '../hooks';
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -8,9 +9,7 @@ interface SplashScreenProps {
 const WORDMARK = 'ALEXIS KABICHE';
 
 export default function SplashScreen({ onComplete }: SplashScreenProps) {
-  const [isDarkMode, setIsDarkMode] = useState(() =>
-    document.documentElement.classList.contains('dark'),
-  );
+  const isDarkMode = useIsDarkMode();
 
   // Respect de la préférence d'accessibilité (mouvement réduit)
   const prefersReduced = useMemo(
@@ -22,18 +21,6 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
 
   // Le wordmark quitte l'écran juste avant le rideau
   const [wordOut, setWordOut] = useState(false);
-
-  // Suivre les changements de thème (sombre/clair) pendant le splash
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'));
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-    return () => observer.disconnect();
-  }, []);
 
   // Orchestration de la timeline
   useEffect(() => {

@@ -12,6 +12,7 @@ import { PageTransitionProvider } from './context/PageTransitionContext';
 import { PageTransitionOverlay } from './components/PageTransitionOverlay';
 import SplashScreen from './components/SplashScreen';
 import ErrorBoundary from './components/ErrorBoundary';
+import { useIsDarkMode } from './hooks';
 
 // Code-splitting : chaque page secondaire est chargée à la demande
 const Projets = lazy(() => import('./pages/Projets'));
@@ -112,24 +113,8 @@ function BackgroundWrapper() {
     location.pathname === '/projets' ||
     location.pathname.startsWith('/projets/');
 
-  // Track dark mode state with reactive updates
-  const [isDarkMode, setIsDarkMode] = useState(() =>
-    document.documentElement.classList.contains('dark'),
-  );
-
-  // Listen for theme changes
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'));
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-
-    return () => observer.disconnect();
-  }, []);
+  // Suit le thème pour recolorer le fond et le chrome Safari
+  const isDarkMode = useIsDarkMode();
 
   useEffect(() => {
     syncSafariChromeColor(isDarkMode);
