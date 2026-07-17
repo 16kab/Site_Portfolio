@@ -8,7 +8,11 @@ interface ImageLightboxProps {
   onClose: () => void;
 }
 
-export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxProps) {
+export function ImageLightbox({
+  images,
+  currentIndex,
+  onClose,
+}: ImageLightboxProps) {
   const [index, setIndex] = useState(currentIndex);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -30,11 +34,15 @@ export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxPr
   }, []);
 
   const goToPrevious = useCallback(() => {
-    setIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+    setIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1,
+    );
   }, [images.length]);
 
   const goToNext = useCallback(() => {
-    setIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    setIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1,
+    );
   }, [images.length]);
 
   // Clavier au niveau du document : fonctionne sans dépendre du focus
@@ -126,7 +134,7 @@ export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxPr
               style={{
                 fontFamily: 'Manrope, sans-serif',
                 fontSize: '14px',
-                fontWeight: 500
+                fontWeight: 500,
               }}
             >
               {index + 1} / {images.length}

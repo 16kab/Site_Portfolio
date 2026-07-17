@@ -12,12 +12,16 @@ describe('PageMeta', () => {
     addHeadTag('<link rel="canonical" href="https://alexiskabiche.com/" />');
     addHeadTag('<meta property="og:title" content="initiale" />');
     addHeadTag('<meta property="og:description" content="initiale" />');
-    addHeadTag('<meta property="og:url" content="https://alexiskabiche.com/" />');
+    addHeadTag(
+      '<meta property="og:url" content="https://alexiskabiche.com/" />',
+    );
   });
 
   afterEach(() => {
     document.head
-      .querySelectorAll('meta[name="description"], link[rel="canonical"], meta[property^="og:"]')
+      .querySelectorAll(
+        'meta[name="description"], link[rel="canonical"], meta[property^="og:"]',
+      )
       .forEach((el) => {
         el.remove();
       });
@@ -39,16 +43,22 @@ describe('PageMeta', () => {
     );
 
     expect(
-      document.querySelector('meta[name="description"]')?.getAttribute('content'),
+      document
+        .querySelector('meta[name="description"]')
+        ?.getAttribute('content'),
     ).toBe('Une description de test.');
     expect(
       document.querySelector('link[rel="canonical"]')?.getAttribute('href'),
     ).toBe('https://alexiskabiche.com/contact');
     expect(
-      document.querySelector('meta[property="og:title"]')?.getAttribute('content'),
+      document
+        .querySelector('meta[property="og:title"]')
+        ?.getAttribute('content'),
     ).toBe('Contact — Alexis Kabiche');
     expect(
-      document.querySelector('meta[property="og:url"]')?.getAttribute('content'),
+      document
+        .querySelector('meta[property="og:url"]')
+        ?.getAttribute('content'),
     ).toBe('https://alexiskabiche.com/contact');
   });
 });

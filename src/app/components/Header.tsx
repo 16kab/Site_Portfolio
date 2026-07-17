@@ -56,13 +56,13 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
       const shouldBeScrolled = scrollY > 50;
       setIsScrolled(shouldBeScrolled);
     };
-    
+
     // Initial check
     handleScroll();
-    
+
     // Listen to scroll on the body element (not window!)
     document.body.addEventListener('scroll', handleScroll, { passive: true });
-    
+
     return () => {
       document.body.removeEventListener('scroll', handleScroll);
     };
@@ -108,24 +108,36 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
 
   return (
     <>
-      <motion.header 
+      <motion.header
         className="fixed left-1/2 -translate-x-1/2 z-[200] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24 w-full max-w-[1920px]"
         style={{
           top: 0,
           paddingTop: 'max(2rem, calc(env(safe-area-inset-top, 0px) + 1rem))',
         }}
         initial={{ filter: 'blur(10px)', opacity: 0 }}
-        animate={{ 
-          filter: showSplash ? 'blur(10px)' : 'blur(0px)', 
-          opacity: showSplash ? 0 : 1 
+        animate={{
+          filter: showSplash ? 'blur(10px)' : 'blur(0px)',
+          opacity: showSplash ? 0 : 1,
         }}
-        transition={{ duration: 0.8, delay: showSplash ? 3.2 : 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+        transition={{
+          duration: 0.8,
+          delay: showSplash ? 3.2 : 0.5,
+          ease: [0.25, 0.1, 0.25, 1],
+        }}
       >
         <motion.div
           className="h-[70px] rounded-[8px] relative"
           animate={{
-            backgroundColor: isMobileMenuOpen ? 'rgba(0,0,0,0)' : (isScrolled ? 'var(--header-bg-scrolled)' : 'var(--header-bg-default)'),
-            borderColor: isMobileMenuOpen ? 'rgba(0,0,0,0)' : (isScrolled ? 'var(--header-border-scrolled)' : 'var(--header-border-default)')
+            backgroundColor: isMobileMenuOpen
+              ? 'rgba(0,0,0,0)'
+              : isScrolled
+                ? 'var(--header-bg-scrolled)'
+                : 'var(--header-bg-default)',
+            borderColor: isMobileMenuOpen
+              ? 'rgba(0,0,0,0)'
+              : isScrolled
+                ? 'var(--header-border-scrolled)'
+                : 'var(--header-border-default)',
           }}
           transition={{ duration: 0.2 }}
           style={{
@@ -133,7 +145,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
           }}
         >
           {/* Logo - Left */}
-          <Link 
+          <Link
             to="/"
             className="absolute left-[22.58px] top-1/2 -translate-y-1/2 cursor-pointer"
             onClick={handleLinkClick}
@@ -142,20 +154,29 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
               <motion.p
                 className="font-['Manrope',sans-serif] font-semibold text-[16px] tracking-[2px] whitespace-nowrap leading-[21.6px] transition-opacity duration-300"
                 animate={{
-                  color: isMobileMenuOpen ? '#EAEAEA' : (isScrolled ? 'var(--header-logo-scrolled)' : 'var(--header-logo-default)')
+                  color: isMobileMenuOpen
+                    ? '#EAEAEA'
+                    : isScrolled
+                      ? 'var(--header-logo-scrolled)'
+                      : 'var(--header-logo-default)',
                 }}
                 style={{
-                  opacity: hoveredItem ? 0.4 : 1
+                  opacity: hoveredItem ? 0.4 : 1,
                 }}
-              >ALEXIS KABICHE</motion.p>
+              >
+                ALEXIS KABICHE
+              </motion.p>
             </Magnet>
           </Link>
 
           {/* Right side container - Desktop only */}
-          <nav aria-label="Navigation principale" className="hidden lg:flex absolute right-[22.58px] top-1/2 -translate-y-1/2 items-center gap-10">
+          <nav
+            aria-label="Navigation principale"
+            className="hidden lg:flex absolute right-[22.58px] top-1/2 -translate-y-1/2 items-center gap-10"
+          >
             {/* Navigation Menu Group */}
             <div className="flex gap-[27px] items-center">
-              <Link 
+              <Link
                 to="/projets"
                 data-menu-item="projets"
                 className="cursor-pointer transition-opacity duration-300"
@@ -168,27 +189,31 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 <motion.p
                   className="font-['Manrope',sans-serif] font-medium text-[15.9px] whitespace-nowrap leading-[21.6px] tracking-[0.04px] transition-opacity duration-300"
                   animate={{
-                    color: isScrolled ? 'var(--header-text-scrolled)' : 'var(--header-text-default)'
+                    color: isScrolled
+                      ? 'var(--header-text-scrolled)'
+                      : 'var(--header-text-default)',
                   }}
                 >
                   Projets
                 </motion.p>
               </Link>
-              
+
               <motion.p
                 aria-hidden="true"
                 className="font-['Arial',sans-serif] text-[16px] leading-[21.6px] transition-opacity duration-300"
                 animate={{
-                  color: isScrolled ? 'var(--header-text-scrolled)' : 'var(--header-text-default)'
+                  color: isScrolled
+                    ? 'var(--header-text-scrolled)'
+                    : 'var(--header-text-default)',
                 }}
                 style={{
-                  opacity: 0.4
+                  opacity: 0.4,
                 }}
               >
                 |
               </motion.p>
-              
-              <Link 
+
+              <Link
                 to="/apropos"
                 data-menu-item="apropos"
                 className="cursor-pointer transition-opacity duration-300"
@@ -201,7 +226,9 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 <motion.p
                   className="font-['Manrope',sans-serif] font-medium text-[16px] whitespace-nowrap leading-[21.6px] tracking-[0.04px] transition-opacity duration-300"
                   animate={{
-                    color: isScrolled ? 'var(--header-text-scrolled)' : 'var(--header-text-default)'
+                    color: isScrolled
+                      ? 'var(--header-text-scrolled)'
+                      : 'var(--header-text-default)',
                   }}
                 >
                   À propos
@@ -225,8 +252,12 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                   onClick={handleLinkClick}
                   className="flex px-6 py-3 rounded-[5px] items-center gap-2 cursor-pointer transition-all duration-300"
                   animate={{
-                    backgroundColor: isScrolled ? 'var(--header-button-bg-scrolled)' : 'var(--header-button-bg-default)',
-                    color: isScrolled ? 'var(--header-button-text-scrolled)' : 'var(--header-button-text-default)'
+                    backgroundColor: isScrolled
+                      ? 'var(--header-button-bg-scrolled)'
+                      : 'var(--header-button-bg-default)',
+                    color: isScrolled
+                      ? 'var(--header-button-text-scrolled)'
+                      : 'var(--header-button-text-default)',
                   }}
                   onMouseEnter={() => setIsButtonHovered(true)}
                   onMouseLeave={() => setIsButtonHovered(false)}
@@ -237,13 +268,19 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                   <motion.div
                     className="font-['Manrope',sans-serif] font-medium text-[14px] whitespace-nowrap"
                     animate={{
-                      color: isScrolled ? 'var(--header-button-text-scrolled)' : 'var(--header-button-text-default)'
+                      color: isScrolled
+                        ? 'var(--header-button-text-scrolled)'
+                        : 'var(--header-button-text-default)',
                     }}
                   >
                     <RollingText
                       text="Entrer en contact"
                       inView={isButtonHovered}
-                      transition={{ duration: 0.3, delay: 0.02, ease: "easeOut" }}
+                      transition={{
+                        duration: 0.3,
+                        delay: 0.02,
+                        ease: 'easeOut',
+                      }}
                     />
                   </motion.div>
                 </MotionLink>
@@ -277,7 +314,11 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
             aria-expanded={isMobileMenuOpen}
             aria-controls="menu-mobile"
             animate={{
-              color: isMobileMenuOpen ? '#EAEAEA' : (isScrolled ? 'var(--header-text-scrolled)' : 'var(--header-text-default)')
+              color: isMobileMenuOpen
+                ? '#EAEAEA'
+                : isScrolled
+                  ? 'var(--header-text-scrolled)'
+                  : 'var(--header-text-default)',
             }}
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -302,7 +343,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 width: '100vw',
                 height: '100vh',
                 margin: 0,
-                padding: 0
+                padding: 0,
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.95 }}
@@ -322,7 +363,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 right: 0,
                 bottom: 0,
                 width: '100vw',
-                height: '100vh'
+                height: '100vh',
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

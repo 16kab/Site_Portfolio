@@ -1,15 +1,15 @@
-"use client"
+'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react"
-import { Moon, Sun } from "lucide-react"
-import { flushSync } from "react-dom"
-import { motion, type HTMLMotionProps } from "motion/react"
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { flushSync } from 'react-dom';
+import { motion, type HTMLMotionProps } from 'motion/react';
 
-import { cn } from "../../lib/utils"
+import { cn } from '../../lib/utils';
 
-interface AnimatedThemeTogglerProps extends HTMLMotionProps<"button"> {
-  duration?: number
-  isScrolled?: boolean
+interface AnimatedThemeTogglerProps extends HTMLMotionProps<'button'> {
+  duration?: number;
+  isScrolled?: boolean;
 }
 
 export const AnimatedThemeToggler = ({
@@ -18,65 +18,65 @@ export const AnimatedThemeToggler = ({
   isScrolled = false,
   ...props
 }: AnimatedThemeTogglerProps) => {
-  const [isDark, setIsDark] = useState(false)
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const [isDark, setIsDark] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const updateTheme = () => {
-      setIsDark(document.documentElement.classList.contains("dark"))
-    }
+      setIsDark(document.documentElement.classList.contains('dark'));
+    };
 
     // Initialize dark mode by default if no preference is set
-    const savedTheme = localStorage.getItem("theme")
+    const savedTheme = localStorage.getItem('theme');
     if (!savedTheme) {
-      document.documentElement.classList.add("dark")
-      setIsDark(true)
-      localStorage.setItem("theme", "dark")
+      document.documentElement.classList.add('dark');
+      setIsDark(true);
+      localStorage.setItem('theme', 'dark');
     } else {
-      updateTheme()
+      updateTheme();
     }
 
-    const observer = new MutationObserver(updateTheme)
+    const observer = new MutationObserver(updateTheme);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["class"],
-    })
+      attributeFilter: ['class'],
+    });
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
 
   const toggleTheme = useCallback(() => {
-    const button = buttonRef.current
-    if (!button) return
+    const button = buttonRef.current;
+    if (!button) return;
 
-    const { top, left, width, height } = button.getBoundingClientRect()
-    const x = left + width / 2
-    const y = top + height / 2
-    const viewportWidth = window.visualViewport?.width ?? window.innerWidth
-    const viewportHeight = window.visualViewport?.height ?? window.innerHeight
+    const { top, left, width, height } = button.getBoundingClientRect();
+    const x = left + width / 2;
+    const y = top + height / 2;
+    const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
+    const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
     const maxRadius = Math.hypot(
       Math.max(x, viewportWidth - x),
-      Math.max(y, viewportHeight - y)
-    )
+      Math.max(y, viewportHeight - y),
+    );
 
     const applyTheme = () => {
-      const newTheme = !isDark
-      setIsDark(newTheme)
-      document.documentElement.classList.toggle("dark")
-      localStorage.setItem("theme", newTheme ? "dark" : "light")
-    }
+      const newTheme = !isDark;
+      setIsDark(newTheme);
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+    };
 
-    if (typeof document.startViewTransition !== "function") {
-      applyTheme()
-      return
+    if (typeof document.startViewTransition !== 'function') {
+      applyTheme();
+      return;
     }
 
     const transition = document.startViewTransition(() => {
-      flushSync(applyTheme)
-    })
+      flushSync(applyTheme);
+    });
 
-    const ready = transition?.ready
-    if (ready && typeof ready.then === "function") {
+    const ready = transition?.ready;
+    if (ready && typeof ready.then === 'function') {
       ready.then(() => {
         document.documentElement.animate(
           {
@@ -87,13 +87,13 @@ export const AnimatedThemeToggler = ({
           },
           {
             duration,
-            easing: "ease-in-out",
-            pseudoElement: "::view-transition-new(root)",
-          }
-        )
-      })
+            easing: 'ease-in-out',
+            pseudoElement: '::view-transition-new(root)',
+          },
+        );
+      });
     }
-  }, [isDark, duration])
+  }, [isDark, duration]);
 
   return (
     <motion.button
@@ -101,11 +101,13 @@ export const AnimatedThemeToggler = ({
       ref={buttonRef}
       onClick={toggleTheme}
       className={cn(
-        "p-2 rounded-md transition-colors duration-200 cursor-pointer",
-        className
+        'p-2 rounded-md transition-colors duration-200 cursor-pointer',
+        className,
       )}
       style={{
-        color: isScrolled ? 'var(--theme-toggle-color-scrolled)' : 'var(--theme-toggle-color-default)'
+        color: isScrolled
+          ? 'var(--theme-toggle-color-scrolled)'
+          : 'var(--theme-toggle-color-default)',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.backgroundColor = 'var(--theme-toggle-bg-hover)';
@@ -120,5 +122,5 @@ export const AnimatedThemeToggler = ({
         {isDark ? 'Activer le thème clair' : 'Activer le thème sombre'}
       </span>
     </motion.button>
-  )
-}
+  );
+};

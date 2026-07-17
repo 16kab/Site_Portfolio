@@ -9,7 +9,7 @@ const WORDMARK = 'ALEXIS KABICHE';
 
 export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const [isDarkMode, setIsDarkMode] = useState(() =>
-    document.documentElement.classList.contains('dark')
+    document.documentElement.classList.contains('dark'),
   );
 
   // Respect de la préférence d'accessibilité (mouvement réduit)
@@ -17,7 +17,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
     () =>
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    []
+    [],
   );
 
   // Le wordmark quitte l'écran juste avant le rideau
@@ -58,7 +58,10 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
   const exitAnim = prefersReduced ? { opacity: 0 } : { y: '-100%' };
   const exitTransition = prefersReduced
     ? { duration: 0.35, ease: 'easeInOut' as const }
-    : { duration: 0.8, ease: [0.76, 0, 0.24, 1] as [number, number, number, number] };
+    : {
+        duration: 0.8,
+        ease: [0.76, 0, 0.24, 1] as [number, number, number, number],
+      };
 
   return (
     <motion.div
@@ -96,16 +99,26 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                   <span
                     key={i}
                     aria-hidden="true"
-                    style={{ display: 'inline-block', overflow: 'hidden', lineHeight: 1.15 }}
+                    style={{
+                      display: 'inline-block',
+                      overflow: 'hidden',
+                      lineHeight: 1.15,
+                    }}
                   >
                     <motion.span
                       style={{ display: 'inline-block' }}
-                      initial={prefersReduced ? { y: 0, opacity: 0 } : { y: '115%' }}
+                      initial={
+                        prefersReduced ? { y: 0, opacity: 0 } : { y: '115%' }
+                      }
                       animate={{ y: 0, opacity: 1 }}
                       transition={
                         prefersReduced
                           ? { duration: 0.2, delay: i * 0.01 }
-                          : { duration: 0.6, delay: 0.12 + i * 0.04, ease: [0.16, 1, 0.3, 1] }
+                          : {
+                              duration: 0.6,
+                              delay: 0.12 + i * 0.04,
+                              ease: [0.16, 1, 0.3, 1],
+                            }
                       }
                     >
                       {ch}

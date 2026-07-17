@@ -11,7 +11,9 @@ function TransitionSeed() {
 
   return (
     <>
-      <output data-testid="transition-state">{isTransitioning ? 'active' : 'idle'}</output>
+      <output data-testid="transition-state">
+        {isTransitioning ? 'active' : 'idle'}
+      </output>
       <button
         type="button"
         onClick={() =>
@@ -32,12 +34,18 @@ function TransitionSeed() {
 
 afterEach(() => {
   vi.useRealTimers();
-  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1024 });
+  Object.defineProperty(window, 'innerWidth', {
+    configurable: true,
+    value: 1024,
+  });
 });
 
 describe('PageTransitionOverlay', () => {
   it('renders the shared project image during a mobile forward transition', () => {
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: 390,
+    });
 
     render(
       <PageTransitionProvider>
@@ -53,7 +61,10 @@ describe('PageTransitionOverlay', () => {
 
   it('completes and removes a mobile forward transition after 800ms', () => {
     vi.useFakeTimers();
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: 390,
+    });
 
     render(
       <PageTransitionProvider>

@@ -40,7 +40,7 @@ export function AppContent({ showSplash }: { showSplash: boolean }) {
     <>
       {/* Scroll to top on route change */}
       <ScrollToTop />
-      
+
       <Suspense fallback={null}>
         <Routes location={location}>
           <Route path="/" element={<Home showSplash={showSplash} />} />
@@ -67,36 +67,38 @@ export default function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <PageTransitionProvider>
-        {/* Splash Screen */}
-        <AnimatePresence>
-          {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
-        </AnimatePresence>
+          {/* Splash Screen */}
+          <AnimatePresence>
+            {showSplash && (
+              <SplashScreen onComplete={() => setShowSplash(false)} />
+            )}
+          </AnimatePresence>
 
-        <div className="min-h-screen app-container">
-          {/* Lien d'évitement pour la navigation clavier */}
-          <a href="#contenu" className="skip-link">
-            Aller au contenu
-          </a>
+          <div className="min-h-screen app-container">
+            {/* Lien d'évitement pour la navigation clavier */}
+            <a href="#contenu" className="skip-link">
+              Aller au contenu
+            </a>
 
-          {/* Toast Notifications */}
-          <Toaster {...TOAST_CONFIG} />
-          <Analytics />
-          <SpeedInsights />
+            {/* Toast Notifications */}
+            <Toaster {...TOAST_CONFIG} />
+            <Analytics />
+            <SpeedInsights />
 
-          {/* Global Header */}
-          <Header showSplash={showSplash} />
+            {/* Global Header */}
+            <Header showSplash={showSplash} />
 
-          {/* Background wrapper */}
-          <BackgroundWrapper />
+            {/* Background wrapper */}
+            <BackgroundWrapper />
 
-          {/* App Content */}
-          <main id="contenu">
-            <AppContent showSplash={showSplash} />
-          </main>
+            {/* App Content */}
+            <main id="contenu">
+              <AppContent showSplash={showSplash} />
+            </main>
 
-          {/* Page Transition Overlay */}
-          <PageTransitionOverlay />
-        </div>
+            {/* Page Transition Overlay */}
+            <PageTransitionOverlay />
+          </div>
         </PageTransitionProvider>
       </BrowserRouter>
     </ErrorBoundary>
@@ -107,51 +109,53 @@ export default function App() {
 function BackgroundWrapper() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
-  const isProjetsPage = location.pathname === '/projets' || location.pathname.startsWith('/projets/');
-  
+  const isProjetsPage =
+    location.pathname === '/projets' ||
+    location.pathname.startsWith('/projets/');
+
   // Track dark mode state with reactive updates
-  const [isDarkMode, setIsDarkMode] = useState(() => 
-    document.documentElement.classList.contains('dark')
+  const [isDarkMode, setIsDarkMode] = useState(() =>
+    document.documentElement.classList.contains('dark'),
   );
-  
+
   // Listen for theme changes
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setIsDarkMode(document.documentElement.classList.contains('dark'));
     });
-    
+
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class'],
     });
-    
+
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
     syncSafariChromeColor(isDarkMode);
   }, [isDarkMode]);
-  
+
   // Don't render any background on Projets pages (they have their own background color)
   if (isProjetsPage) {
     return null;
   }
-  
+
   // Render Grainient background on home page
   if (isHomePage) {
     // Define colors based on theme
-    const colors = isDarkMode 
+    const colors = isDarkMode
       ? {
-          color1: '#000000',  // Foncé
-          color2: '#545454',  // Gris clair
-          color3: '#bababa'   // Clair
+          color1: '#000000', // Foncé
+          color2: '#545454', // Gris clair
+          color3: '#bababa', // Clair
         }
       : {
-          color1: '#FFFFFF',  // Clair (inversé)
-          color2: '#6B6B6B',  // Gris moyen-foncé (inversé)
-          color3: '#2A2A2A'   // Foncé (inversé)
+          color1: '#FFFFFF', // Clair (inversé)
+          color2: '#6B6B6B', // Gris moyen-foncé (inversé)
+          color3: '#2A2A2A', // Foncé (inversé)
         };
-    
+
     return (
       <div className="grainient-wrapper">
         <Grainient
@@ -181,6 +185,6 @@ function BackgroundWrapper() {
       </div>
     );
   }
-  
+
   return null;
 }

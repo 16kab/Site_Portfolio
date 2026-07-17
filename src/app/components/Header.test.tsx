@@ -25,13 +25,19 @@ describe('Header menu attenuation', () => {
         </MemoryRouter>,
       );
 
-      const active = container.querySelector<HTMLElement>(`[data-menu-item="${activeItem}"]`);
+      const active = container.querySelector<HTMLElement>(
+        `[data-menu-item="${activeItem}"]`,
+      );
       expect(active).not.toBeNull();
       fireEvent.mouseEnter(active!);
 
       for (const item of ['projets', 'apropos', 'contact', 'theme']) {
-        const element = container.querySelector<HTMLElement>(`[data-menu-item="${item}"]`);
-        expect(element).toHaveStyle({ opacity: item === activeItem ? '1' : '0.4' });
+        const element = container.querySelector<HTMLElement>(
+          `[data-menu-item="${item}"]`,
+        );
+        expect(element).toHaveStyle({
+          opacity: item === activeItem ? '1' : '0.4',
+        });
       }
     },
   );

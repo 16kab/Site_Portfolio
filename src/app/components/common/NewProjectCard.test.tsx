@@ -1,5 +1,12 @@
 import { createRef } from 'react';
-import { act, createEvent, fireEvent, render, screen, within } from '@testing-library/react';
+import {
+  act,
+  createEvent,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from '@testing-library/react';
 import { MemoryRouter, useLocation } from 'react-router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -65,14 +72,19 @@ const renderCard = (
 afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
-  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1024 });
+  Object.defineProperty(window, 'innerWidth', {
+    configurable: true,
+    value: 1024,
+  });
 });
 
 describe('NewProjectCard', () => {
   it('wraps the single project link in a decorative glow', () => {
     const { container } = renderCard();
     const glow = container.querySelector('.border-glow-card');
-    const link = screen.getByRole('link', { name: 'Voir le projet Projet test' });
+    const link = screen.getByRole('link', {
+      name: 'Voir le projet Projet test',
+    });
 
     expect(glow).toContainElement(link);
     expect(within(glow as HTMLElement).getAllByRole('link')).toHaveLength(1);
@@ -81,7 +93,9 @@ describe('NewProjectCard', () => {
 
   it('uses one accessible link for the whole card without a nested button', () => {
     renderCard();
-    const link = screen.getByRole('link', { name: 'Voir le projet Projet test' });
+    const link = screen.getByRole('link', {
+      name: 'Voir le projet Projet test',
+    });
 
     expect(link).toHaveAttribute('href', '/projets/test');
     expect(within(link).queryByRole('button')).not.toBeInTheDocument();
@@ -89,7 +103,9 @@ describe('NewProjectCard', () => {
 
   it('activates the rolling label from the card hover and focus', () => {
     renderCard();
-    const link = screen.getByRole('link', { name: 'Voir le projet Projet test' });
+    const link = screen.getByRole('link', {
+      name: 'Voir le projet Projet test',
+    });
     const rolling = screen.getByTestId('rolling-text');
 
     expect(rolling).toHaveAttribute('data-active', 'false');
@@ -109,9 +125,14 @@ describe('NewProjectCard', () => {
   });
 
   it('keeps modifier clicks native on desktop', () => {
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: 1440,
+    });
     renderCard();
-    const link = screen.getByRole('link', { name: 'Voir le projet Projet test' });
+    const link = screen.getByRole('link', {
+      name: 'Voir le projet Projet test',
+    });
     const event = createEvent.click(link, { button: 0, ctrlKey: true });
     let preventedByCard = true;
     document.addEventListener(
@@ -131,14 +152,23 @@ describe('NewProjectCard', () => {
 
   it('starts the image transition before navigating on mobile', () => {
     vi.useFakeTimers();
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
-    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: false } as MediaQueryList);
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: 390,
+    });
+    vi.spyOn(window, 'matchMedia').mockReturnValue({
+      matches: false,
+    } as MediaQueryList);
     renderCard();
 
-    fireEvent.click(screen.getByRole('link', { name: 'Voir le projet Projet test' }));
+    fireEvent.click(
+      screen.getByRole('link', { name: 'Voir le projet Projet test' }),
+    );
 
     expect(screen.getByTestId('location')).toHaveTextContent('/');
-    expect(screen.getByTestId('transition-state')).toHaveTextContent('active:forward');
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      'active:forward',
+    );
 
     act(() => vi.advanceTimersByTime(419));
     expect(screen.getByTestId('location')).toHaveTextContent('/');
@@ -149,15 +179,24 @@ describe('NewProjectCard', () => {
 
   it('schedules only one navigation when the project card is clicked twice', () => {
     vi.useFakeTimers();
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
-    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: false } as MediaQueryList);
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: 390,
+    });
+    vi.spyOn(window, 'matchMedia').mockReturnValue({
+      matches: false,
+    } as MediaQueryList);
     renderCard();
-    const link = screen.getByRole('link', { name: 'Voir le projet Projet test' });
+    const link = screen.getByRole('link', {
+      name: 'Voir le projet Projet test',
+    });
 
     fireEvent.click(link);
     fireEvent.click(link);
 
-    expect(screen.getByTestId('transition-state')).toHaveTextContent('active:forward');
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      'active:forward',
+    );
     expect(vi.getTimerCount()).toBe(1);
 
     act(() => vi.advanceTimersByTime(420));
@@ -167,11 +206,18 @@ describe('NewProjectCard', () => {
 
   it('cancels its pending navigation when the card unmounts', () => {
     vi.useFakeTimers();
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
-    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: false } as MediaQueryList);
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: 390,
+    });
+    vi.spyOn(window, 'matchMedia').mockReturnValue({
+      matches: false,
+    } as MediaQueryList);
     const { unmount } = renderCard();
 
-    fireEvent.click(screen.getByRole('link', { name: 'Voir le projet Projet test' }));
+    fireEvent.click(
+      screen.getByRole('link', { name: 'Voir le projet Projet test' }),
+    );
     expect(vi.getTimerCount()).toBe(1);
 
     unmount();
@@ -180,15 +226,24 @@ describe('NewProjectCard', () => {
   });
 
   it('navigates immediately without a transition when motion is reduced', () => {
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
-    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: true } as MediaQueryList);
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: 390,
+    });
+    vi.spyOn(window, 'matchMedia').mockReturnValue({
+      matches: true,
+    } as MediaQueryList);
     document.body.scrollTop = 480;
     renderCard(createRef<HTMLImageElement>(), '/projets');
 
-    fireEvent.click(screen.getByRole('link', { name: 'Voir le projet Projet test' }));
+    fireEvent.click(
+      screen.getByRole('link', { name: 'Voir le projet Projet test' }),
+    );
 
     expect(screen.getByTestId('location')).toHaveTextContent('/projets/test');
-    expect(screen.getByTestId('transition-state')).toHaveTextContent('idle:none');
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      'idle:none',
+    );
     expect(screen.getByTestId('snapshot-state')).toHaveTextContent(
       '/projets:/projets/test:480',
     );

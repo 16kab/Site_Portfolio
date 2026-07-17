@@ -15,7 +15,11 @@ const projectSnapshot: ProjectTransitionSnapshot = {
   scrollTop: 480,
 };
 
-function Harness({ snapshot = projectSnapshot }: { snapshot?: ProjectTransitionSnapshot }) {
+function Harness({
+  snapshot = projectSnapshot,
+}: {
+  snapshot?: ProjectTransitionSnapshot;
+}) {
   const {
     isTransitioning,
     direction,
@@ -46,7 +50,9 @@ function Harness({ snapshot = projectSnapshot }: { snapshot?: ProjectTransitionS
         {isTransitioning ? 'active' : 'idle'}:{direction ?? 'none'}:
         {transitionSnapshot?.projectLink ?? 'none'}
       </output>
-      <output data-testid="snapshot">{JSON.stringify(transitionSnapshot)}</output>
+      <output data-testid="snapshot">
+        {JSON.stringify(transitionSnapshot)}
+      </output>
       <output data-testid="callbacks-stable">{String(callbacksStable)}</output>
       <output data-testid="api-ready">
         {String(
@@ -56,9 +62,7 @@ function Harness({ snapshot = projectSnapshot }: { snapshot?: ProjectTransitionS
             beginReverse,
             completeTransition,
             clearTransition,
-          ].every(
-            (callback) => typeof callback === 'function',
-          ),
+          ].every((callback) => typeof callback === 'function'),
         )}
       </output>
       <button type="button" onClick={() => beginForward(snapshot)}>
@@ -69,7 +73,9 @@ function Harness({ snapshot = projectSnapshot }: { snapshot?: ProjectTransitionS
       </button>
       <button
         type="button"
-        onClick={() => beginReverse({ left: 20, top: 30, width: 320, height: 220 })}
+        onClick={() =>
+          beginReverse({ left: 20, top: 30, width: 320, height: 220 })
+        }
       >
         Begin reverse
       </button>
@@ -111,15 +117,25 @@ describe('PageTransitionProvider', () => {
     expect(screen.getByTestId('state')).toHaveTextContent('idle:none:none');
 
     fireEvent.click(screen.getByRole('button', { name: 'Begin forward' }));
-    expect(screen.getByTestId('state')).toHaveTextContent('active:forward:/projets/test');
-    expect(screen.getByTestId('snapshot')).toHaveTextContent(JSON.stringify(projectSnapshot));
+    expect(screen.getByTestId('state')).toHaveTextContent(
+      'active:forward:/projets/test',
+    );
+    expect(screen.getByTestId('snapshot')).toHaveTextContent(
+      JSON.stringify(projectSnapshot),
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Complete' }));
-    expect(screen.getByTestId('state')).toHaveTextContent('idle:forward:/projets/test');
-    expect(screen.getByTestId('snapshot')).toHaveTextContent(JSON.stringify(projectSnapshot));
+    expect(screen.getByTestId('state')).toHaveTextContent(
+      'idle:forward:/projets/test',
+    );
+    expect(screen.getByTestId('snapshot')).toHaveTextContent(
+      JSON.stringify(projectSnapshot),
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Begin reverse' }));
-    expect(screen.getByTestId('state')).toHaveTextContent('active:reverse:/projets/test');
+    expect(screen.getByTestId('state')).toHaveTextContent(
+      'active:reverse:/projets/test',
+    );
     expect(screen.getByTestId('snapshot')).toHaveTextContent(
       JSON.stringify({
         ...projectSnapshot,
@@ -154,7 +170,9 @@ describe('PageTransitionProvider', () => {
     renderHarness();
 
     fireEvent.click(screen.getByRole('button', { name: 'Begin forward' }));
-    expect(screen.getByTestId('state')).toHaveTextContent('active:forward:/projets/test');
+    expect(screen.getByTestId('state')).toHaveTextContent(
+      'active:forward:/projets/test',
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Clear' }));
 
     expect(screen.getByTestId('state')).toHaveTextContent('idle:none:none');

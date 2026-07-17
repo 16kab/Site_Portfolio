@@ -42,13 +42,17 @@ export function useEmailForm() {
   /**
    * Handle input change and remove errors
    */
-  const handleInputChange = (name: string, value: string, isTextField: boolean = false) => {
+  const handleInputChange = (
+    name: string,
+    value: string,
+    isTextField: boolean = false,
+  ) => {
     // Remove numbers from names if needed
     const sanitizedValue = isTextField ? sanitizeTextInput(value) : value;
-    
+
     // Remove error when user starts typing
     if (errors[name] && value.trim()) {
-      setErrors(prev => ({ ...prev, [name]: false }));
+      setErrors((prev) => ({ ...prev, [name]: false }));
     }
 
     return sanitizedValue;
@@ -80,7 +84,10 @@ export function useEmailForm() {
    * @param honeypot Valeur du champ piège invisible : un humain le laisse
    * vide, un bot le remplit. Rempli ⇒ on simule un succès sans rien envoyer.
    */
-  const submitForm = async (formData: FormData, honeypot?: string): Promise<boolean> => {
+  const submitForm = async (
+    formData: FormData,
+    honeypot?: string,
+  ): Promise<boolean> => {
     // Anti-spam : soumission de bot, on ne fait rien
     if (honeypot && honeypot.trim() !== '') {
       setShowSuccessPopup(true);
@@ -110,7 +117,7 @@ export function useEmailForm() {
         EMAILJS_CONFIG.serviceId,
         EMAILJS_CONFIG.templateId,
         templateParams,
-        EMAILJS_CONFIG.publicKey
+        EMAILJS_CONFIG.publicKey,
       );
 
       // Success

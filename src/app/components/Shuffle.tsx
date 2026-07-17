@@ -35,7 +35,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
   loop = false,
   loopDelay = 3,
   initialDelay = 0.2,
-  useCharacterMaskPadding = false
+  useCharacterMaskPadding = false,
 }) => {
   const ref = useRef<HTMLElement>(null);
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -53,11 +53,11 @@ const Shuffle: React.FC<ShuffleProps> = ({
   // Écouter le resize pour recalculer les animations
   useEffect(() => {
     let resizeTimeout: NodeJS.Timeout;
-    
+
     const handleResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        setResizeKey(prev => prev + 1);
+        setResizeKey((prev) => prev + 1);
       }, 150);
     };
 
@@ -76,11 +76,11 @@ const Shuffle: React.FC<ShuffleProps> = ({
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       const el = ref.current;
-      
+
       // Split text en caractères
       const split = new GSAPSplitText(el, {
         type: 'chars',
-        charsClass: 'shuffle-char'
+        charsClass: 'shuffle-char',
       });
 
       const chars = (split.chars || []) as HTMLElement[];
@@ -120,7 +120,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
           wrapper.style.margin = '0';
           wrapper.style.padding = '0';
         }
-        wrapper.style.width = (w + 4) + 'px'; // Ajouter 4px pour éviter que les lettres soient coupées
+        wrapper.style.width = w + 4 + 'px'; // Ajouter 4px pour éviter que les lettres soient coupées
         wrapper.style.height = h + 'px';
 
         // Container interne qui va bouger
@@ -132,14 +132,14 @@ const Shuffle: React.FC<ShuffleProps> = ({
 
         // Pour direction 'right' : on met d'abord le P2 (à gauche hors champ), puis le P1 (visible)
         // Pour les autres directions : garder la logique originale
-        
+
         if (shuffleDirection === 'right') {
           // D'abord le P2 (qui sera hors champ à gauche)
           const duplicate = char.cloneNode(true) as HTMLElement;
           duplicate.style.display = 'inline-block';
           duplicate.style.width = w + 'px';
           duplicate.style.textAlign = 'center';
-          duplicate.style.marginRight = (w * (spacingMultiplier - 1)) + 'px'; // Espacement
+          duplicate.style.marginRight = w * (spacingMultiplier - 1) + 'px'; // Espacement
           inner.appendChild(duplicate);
 
           // Ensuite le P1 (qui sera visible)
@@ -167,19 +167,22 @@ const Shuffle: React.FC<ShuffleProps> = ({
             duplicate.style.display = 'inline-block';
             duplicate.style.width = w + 'px';
             duplicate.style.textAlign = 'center';
-            duplicate.style.marginLeft = (w * (spacingMultiplier - 1)) + 'px';
+            duplicate.style.marginLeft = w * (spacingMultiplier - 1) + 'px';
             inner.appendChild(duplicate);
           }
 
           char.style.display = 'inline-block';
           char.style.width = w + 'px';
           char.style.textAlign = 'center';
-          char.style.marginLeft = (w * (spacingMultiplier - 1)) + 'px';
+          char.style.marginLeft = w * (spacingMultiplier - 1) + 'px';
           inner.appendChild(char);
 
           const steps = shuffleTimes + 1;
           gsap.set(inner, { x: 0 });
-          inner.setAttribute('data-end', String(-steps * w * spacingMultiplier));
+          inner.setAttribute(
+            'data-end',
+            String(-steps * w * spacingMultiplier),
+          );
         } else {
           // Directions verticales (up/down)
           const originalChar = char.cloneNode(true) as HTMLElement;
@@ -205,7 +208,8 @@ const Shuffle: React.FC<ShuffleProps> = ({
           if (shuffleDirection === 'up') {
             gsap.set(inner, { y: 0 });
             inner.setAttribute('data-end', String(-steps * h));
-          } else { // down
+          } else {
+            // down
             gsap.set(inner, { y: -steps * h });
             inner.setAttribute('data-end', '0');
           }
@@ -213,7 +217,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
       });
 
       // Animation avec ordre aléatoire et délai de 3 secondes entre chaque lettre
-      const timeline = gsap.timeline({ 
+      const timeline = gsap.timeline({
         delay: initialDelay,
         repeat: loop ? -1 : 0,
         repeatDelay: loop ? loopDelay : 0,
@@ -222,9 +226,12 @@ const Shuffle: React.FC<ShuffleProps> = ({
           const newRandomOrder = chars.map((_, index) => index);
           for (let i = newRandomOrder.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [newRandomOrder[i], newRandomOrder[j]] = [newRandomOrder[j], newRandomOrder[i]];
+            [newRandomOrder[i], newRandomOrder[j]] = [
+              newRandomOrder[j],
+              newRandomOrder[i],
+            ];
           }
-          
+
           // Réinitialiser les positions selon la direction
           wrappers.forEach((inner) => {
             const startValue = inner.getAttribute('data-start');
@@ -243,34 +250,47 @@ const Shuffle: React.FC<ShuffleProps> = ({
                 }
               } else if (shuffleDirection === 'down') {
                 const steps = shuffleTimes + 1;
-                const h = parseFloat(inner.querySelector('*')?.getBoundingClientRect().height.toString() || '0');
+                const h = parseFloat(
+                  inner
+                    .querySelector('*')
+                    ?.getBoundingClientRect()
+                    .height.toString() || '0',
+                );
                 gsap.set(inner, { y: -steps * h });
               }
             }
           });
-        }
+        },
       });
       const wrappers = el.querySelectorAll('span > span');
 
       randomOrder.forEach((charIndex, animationIndex) => {
         const inner = wrappers[charIndex];
         if (!inner) return;
-        
+
         const endValue = parseFloat(inner.getAttribute('data-end') || '0');
         const delay = animationIndex * 5; // 5 secondes entre chaque lettre
 
         if (shuffleDirection === 'up' || shuffleDirection === 'down') {
-          timeline.to(inner, {
-            y: endValue,
-            duration,
-            ease
-          }, delay);
+          timeline.to(
+            inner,
+            {
+              y: endValue,
+              duration,
+              ease,
+            },
+            delay,
+          );
         } else {
-          timeline.to(inner, {
-            x: endValue,
-            duration,
-            ease
-          }, delay);
+          timeline.to(
+            inner,
+            {
+              x: endValue,
+              duration,
+              ease,
+            },
+            delay,
+          );
         }
       });
 
@@ -279,15 +299,33 @@ const Shuffle: React.FC<ShuffleProps> = ({
         split.revert();
       };
     },
-    { dependencies: [text, fontsLoaded, shuffleDirection, duration, ease, shuffleTimes, loop, loopDelay, resizeKey, useCharacterMaskPadding], scope: ref }
+    {
+      dependencies: [
+        text,
+        fontsLoaded,
+        shuffleDirection,
+        duration,
+        ease,
+        shuffleTimes,
+        loop,
+        loopDelay,
+        resizeKey,
+        useCharacterMaskPadding,
+      ],
+      scope: ref,
+    },
   );
 
   const Tag = tag;
-  return React.createElement(Tag, { 
-    ref, 
-    className: `shuffle-text ${className}`, 
-    style 
-  }, text);
+  return React.createElement(
+    Tag,
+    {
+      ref,
+      className: `shuffle-text ${className}`,
+      style,
+    },
+    text,
+  );
 };
 
 export default Shuffle;

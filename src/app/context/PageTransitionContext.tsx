@@ -1,4 +1,10 @@
-import { createContext, type ReactNode, useCallback, useContext, useState } from 'react';
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useState,
+} from 'react';
 import type {
   ProjectTransitionDirection,
   ProjectTransitionRect,
@@ -16,7 +22,9 @@ interface PageTransitionContextType {
   clearTransition: () => void;
 }
 
-const PageTransitionContext = createContext<PageTransitionContextType | undefined>(undefined);
+const PageTransitionContext = createContext<
+  PageTransitionContextType | undefined
+>(undefined);
 
 interface TransitionState {
   isTransitioning: boolean;
@@ -45,13 +53,16 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const beginForward = useCallback((nextSnapshot: ProjectTransitionSnapshot) => {
-    setTransitionState({
-      isTransitioning: true,
-      direction: 'forward',
-      snapshot: nextSnapshot,
-    });
-  }, []);
+  const beginForward = useCallback(
+    (nextSnapshot: ProjectTransitionSnapshot) => {
+      setTransitionState({
+        isTransitioning: true,
+        direction: 'forward',
+        snapshot: nextSnapshot,
+      });
+    },
+    [],
+  );
 
   const beginReverse = useCallback((targetRect: ProjectTransitionRect) => {
     setTransitionState((current) => {
@@ -72,7 +83,8 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
       isTransitioning: false,
       direction: current.direction,
       snapshot:
-        current.direction === 'forward' && current.snapshot?.originPath === '/projets'
+        current.direction === 'forward' &&
+        current.snapshot?.originPath === '/projets'
           ? current.snapshot
           : null,
     }));
@@ -103,7 +115,9 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
 export function usePageTransition() {
   const context = useContext(PageTransitionContext);
   if (context === undefined) {
-    throw new Error('usePageTransition must be used within a PageTransitionProvider');
+    throw new Error(
+      'usePageTransition must be used within a PageTransitionProvider',
+    );
   }
   return context;
 }

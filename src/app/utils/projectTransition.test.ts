@@ -45,7 +45,9 @@ describe('getProjectTransitionTiming', () => {
 
 describe('roundTransitionRect', () => {
   it('rounds each rectangle coordinate independently', () => {
-    expect(roundTransitionRect({ left: 1.4, top: 2.6, width: 99.5, height: 49.4 })).toEqual({
+    expect(
+      roundTransitionRect({ left: 1.4, top: 2.6, width: 99.5, height: 49.4 }),
+    ).toEqual({
       left: 1,
       top: 3,
       width: 100,
