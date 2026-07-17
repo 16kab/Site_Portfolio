@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import svgPaths from '../../../imports/svg-vvxa7ry2aa';
 import RollingText from '../RollingText';
 import { usePageTransition } from '../../context/PageTransitionContext';
+import BorderGlow from './BorderGlow';
 
 interface NewProjectCardProps {
   link: string;
@@ -77,20 +78,17 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
   };
 
   return (
-    <Link
-      to={link}
-      aria-label={`Voir le projet ${title}`}
-      onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
-      className="project-card group relative flex flex-col md:flex-row gap-6 md:gap-8 p-6 md:p-8 rounded-[12px] transition-colors duration-300 cursor-pointer"
-      style={{
-        backgroundColor: 'var(--portfolio-card-bg)',
-        border: '1px solid var(--portfolio-card-border)'
-      }}
-    >
+    <BorderGlow className="project-card-shell">
+      <Link
+        to={link}
+        aria-label={`Voir le projet ${title}`}
+        onClick={handleClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        className="project-card group relative flex w-full flex-col md:flex-row gap-6 md:gap-8 p-6 md:p-8 rounded-[12px] transition-colors duration-300 cursor-pointer"
+      >
       {/* Left Content */}
       <div className="flex-1 flex flex-col justify-between">
         <div>
@@ -204,7 +202,8 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
           </div>
         </div>
       )}
-    </Link>
+      </Link>
+    </BorderGlow>
   );
 });
 

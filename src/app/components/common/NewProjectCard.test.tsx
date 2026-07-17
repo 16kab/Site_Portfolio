@@ -44,6 +44,16 @@ afterEach(() => {
 });
 
 describe('NewProjectCard', () => {
+  it('wraps the single project link in a decorative glow', () => {
+    const { container } = renderCard();
+    const glow = container.querySelector('.border-glow-card');
+    const link = screen.getByRole('link', { name: 'Voir le projet Projet test' });
+
+    expect(glow).toContainElement(link);
+    expect(within(glow as HTMLElement).getAllByRole('link')).toHaveLength(1);
+    expect(glow).not.toHaveAttribute('role');
+  });
+
   it('uses one accessible link for the whole card without a nested button', () => {
     renderCard();
     const link = screen.getByRole('link', { name: 'Voir le projet Projet test' });
