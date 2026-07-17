@@ -2,11 +2,6 @@
   --page-padding-top: 160px;
 }
 
-body[style*="position: fixed"] {
-  width: 100vw !important;
-  overflow-y: scroll !important;
-}
-
 .project-card-shell {
   overflow: visible;
 }

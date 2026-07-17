@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import RollingText from '../components/RollingText';
 import PageMeta from '../components/PageMeta';
+import { scrollBodyTo } from '../utils/scrollBodyTo';
 import { Lightbulb, Compass, Users, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ExpertiseSection {
@@ -159,7 +160,8 @@ export default function APropos() {
   
   // Ref to track programmatic scrolling
   const isScrollingProgrammatically = useRef(false);
-  
+  const cancelScrollRef = useRef<(() => void) | null>(null);
+
   // Carousel states
   const [currentPrincipeIndex, setCurrentPrincipeIndex] = useState(0);
   const [currentEnvironnementIndex, setCurrentEnvironnementIndex] = useState(0);
@@ -212,51 +214,29 @@ export default function APropos() {
     setCurrentEnvironnementIndex(index);
   };
 
-  // Scroll to section
+  // Scroll to section (annulable, respecte prefers-reduced-motion)
   const scrollToSection = (section: 'expertises' | 'principes' | 'environnement') => {
     const ref = section === 'expertises' ? expertisesRef : section === 'principes' ? principesRef : environnementRef;
-    if (ref.current) {
-      // Set active section immediately
-      setActiveSection(section);
-      
-      // Block automatic detection during programmatic scroll
-      isScrollingProgrammatically.current = true;
-      
-      const offset = 140; // Offset pour le menu sticky
-      const elementPosition = ref.current.getBoundingClientRect().top;
-      const currentScroll = document.body.scrollTop || 0;
-      const offsetPosition = elementPosition + currentScroll - offset;
-      
-      // Smooth scroll with better easing for mobile
-      const start = currentScroll;
-      const change = offsetPosition - start;
-      const duration = 800; // Increased duration for smoother scroll
-      let startTime: number | null = null;
-      
-      const animateScroll = (timestamp: number) => {
-        if (!startTime) startTime = timestamp;
-        const progress = timestamp - startTime;
-        const percentage = Math.min(progress / duration, 1);
-        
-        // Easing function (ease-in-out-cubic for smoother feel)
-        const ease = percentage < 0.5
-          ? 4 * percentage * percentage * percentage
-          : 1 - Math.pow(-2 * percentage + 2, 3) / 2;
-        
-        document.body.scrollTop = start + (change * ease);
-        
-        if (progress < duration) {
-          requestAnimationFrame(animateScroll);
-        } else {
-          // Re-enable automatic detection after scroll completes
-          setTimeout(() => {
-            isScrollingProgrammatically.current = false;
-          }, 100); // Small delay to ensure scroll is fully settled
-        }
-      };
-      
-      requestAnimationFrame(animateScroll);
-    }
+    if (!ref.current) return;
+
+    // Set active section immediately
+    setActiveSection(section);
+
+    // Block automatic detection during programmatic scroll
+    isScrollingProgrammatically.current = true;
+
+    const offset = 140; // Offset pour le menu sticky
+    const elementPosition = ref.current.getBoundingClientRect().top;
+    const currentScroll = document.body.scrollTop || 0;
+    const offsetPosition = elementPosition + currentScroll - offset;
+
+    cancelScrollRef.current?.();
+    cancelScrollRef.current = scrollBodyTo(offsetPosition, 800, () => {
+      // Re-enable automatic detection after scroll completes
+      setTimeout(() => {
+        isScrollingProgrammatically.current = false;
+      }, 100);
+    });
   };
 
   // Dynamic section detection on scroll
@@ -311,8 +291,12 @@ export default function APropos() {
     // Listen to body scroll
     document.body.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Check initial position
-    
-    return () => document.body.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      document.body.removeEventListener('scroll', handleScroll);
+      // Stoppe une éventuelle animation de scroll en cours
+      cancelScrollRef.current?.();
+    };
   }, []);
 
   return (

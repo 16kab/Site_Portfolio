@@ -22,6 +22,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lockedScrollTopRef = useRef<number | null>(null);
 
   const handleMouseEnter = (item: HeaderMenuItem) => {
     if (hoverTimeoutRef.current) {
@@ -81,35 +82,22 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isMobileMenuOpen]);
 
-  // Lock scroll when mobile menu is open
+  // Lock scroll when mobile menu is open.
+  // Attention : le conteneur de scroll de l'app est <body> (html est fixed,
+  // cf. theme.css) — window.scrollY vaut toujours 0 ici.
   useEffect(() => {
     if (isMobileMenuOpen) {
-      // Save current scroll position
-      const scrollY = window.scrollY;
-      
-      // Lock scroll without changing viewport width
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.style.overflowY = 'scroll'; // Keep scrollbar space
+      lockedScrollTopRef.current = document.body.scrollTop;
+      document.body.style.overflowY = 'hidden';
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
       document.body.style.overflowY = '';
-      
-      // Restore the scroll position without scrolling
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      if (lockedScrollTopRef.current !== null) {
+        document.body.scrollTop = lockedScrollTopRef.current;
+        lockedScrollTopRef.current = null;
       }
     }
-    
+
     return () => {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
       document.body.style.overflowY = '';
     };
   }, [isMobileMenuOpen]);

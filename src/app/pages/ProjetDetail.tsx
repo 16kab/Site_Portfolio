@@ -9,25 +9,100 @@ import { projetsData, tousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
 import svgPaths from '../../imports/svg-jlpjaqyx1i';
 import PageMeta from '../components/PageMeta';
+import { ImageLightbox } from '../components/ImageLightbox';
+import { scrollBodyTo } from '../utils/scrollBodyTo';
 
 export default function ProjetDetail() {
   const { id } = useParams<{ id: string }>();
   const heroRef = useRef<HTMLDivElement>(null);
   const explanationRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
+  // Le conteneur de scroll de l'app est <body> (cf. theme.css), pas window
+  const bodyRef = useRef(document.body);
   const [activeSection, setActiveSection] = useState<'explanation' | 'gallery' | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // Ref to track programmatic scrolling
   const isScrollingProgrammatically = useRef(false);
+  const cancelScrollRef = useRef<(() => void) | null>(null);
 
   // Scroll animation for hero image zoom - MUST be called before any conditional returns
   const { scrollYProgress } = useScroll({
+    container: bodyRef,
     target: heroRef,
     offset: ["start start", "end start"]
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+
+  // Dynamic section detection on scroll — déclaré AVANT le return
+  // conditionnel (règle des hooks : ordre d'appel stable à chaque rendu)
+  useEffect(() => {
+    const handleScroll = () => {
+      // Skip automatic detection during programmatic scrolling
+      if (isScrollingProgrammatically.current) {
+        // Still update isScrolled state
+        setIsScrolled((document.body.scrollTop || 0) > 100);
+        return;
+      }
+
+      const scrollPosition = (document.body.scrollTop || 0) + 200; // Offset to trigger section change earlier
+
+      // Update isScrolled state (scroll > 100px)
+      setIsScrolled((document.body.scrollTop || 0) > 100);
+
+      // Check if we're in hero section (before explanation starts)
+      if (explanationRef.current) {
+        const explanationTop = explanationRef.current.offsetTop;
+
+        if (scrollPosition < explanationTop) {
+          setActiveSection(null);
+          return;
+        }
+      }
+
+      // Check if we're in gallery section
+      if (galleryRef.current) {
+        const galleryTop = galleryRef.current.offsetTop;
+
+        if (scrollPosition >= galleryTop) {
+          setActiveSection('gallery');
+          return;
+        }
+      }
+
+      // Otherwise we're in explanation section
+      if (explanationRef.current) {
+        const explanationTop = explanationRef.current.offsetTop;
+
+        if (scrollPosition >= explanationTop) {
+          setActiveSection('explanation');
+          return;
+        }
+      }
+    };
+
+    // Scroll to top on mount - instant scroll
+    document.body.style.scrollBehavior = 'auto';
+    document.body.scrollTop = 0;
+    // Restore smooth scroll after a brief delay
+    const restoreTimeout = setTimeout(() => {
+      document.body.style.scrollBehavior = '';
+    }, 50);
+
+    // Listen to body scroll
+    document.body.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial position
+
+    return () => {
+      document.body.removeEventListener('scroll', handleScroll);
+      clearTimeout(restoreTimeout);
+      // Stoppe une éventuelle animation de scroll en cours
+      cancelScrollRef.current?.();
+    };
+  }, []);
 
   // Find project
   const projet = projetsData.find(p => p.id === id);
@@ -40,112 +115,28 @@ export default function ProjetDetail() {
     return <Navigate to={ROUTES.PROJETS} replace />;
   }
 
-  // Scroll to section
+  // Scroll to section (annulable, respecte prefers-reduced-motion)
   const scrollToSection = (section: 'explanation' | 'gallery') => {
     const ref = section === 'explanation' ? explanationRef : galleryRef;
-    if (ref.current) {
-      // Set active section immediately
-      setActiveSection(section);
-      
-      // Block automatic detection during programmatic scroll
-      isScrollingProgrammatically.current = true;
-      
-      const offset = 120; // Offset pour le menu sticky
-      const currentScroll = document.body.scrollTop || 0;
-      const targetPosition = ref.current.offsetTop - offset;
-      
-      // Smooth scroll with better easing for mobile
-      const start = currentScroll;
-      const change = targetPosition - start;
-      const duration = 800; // Increased duration for smoother scroll
-      let startTime: number | null = null;
-      
-      const animateScroll = (timestamp: number) => {
-        if (!startTime) startTime = timestamp;
-        const progress = timestamp - startTime;
-        const percentage = Math.min(progress / duration, 1);
-        
-        // Easing function (ease-in-out-cubic for smoother feel)
-        const ease = percentage < 0.5
-          ? 4 * percentage * percentage * percentage
-          : 1 - Math.pow(-2 * percentage + 2, 3) / 2;
-        
-        document.body.scrollTop = start + (change * ease);
-        
-        if (progress < duration) {
-          requestAnimationFrame(animateScroll);
-        } else {
-          // Re-enable automatic detection after scroll completes
-          setTimeout(() => {
-            isScrollingProgrammatically.current = false;
-          }, 100); // Small delay to ensure scroll is fully settled
-        }
-      };
-      
-      requestAnimationFrame(animateScroll);
-    }
+    if (!ref.current) return;
+
+    // Set active section immediately
+    setActiveSection(section);
+
+    // Block automatic detection during programmatic scroll
+    isScrollingProgrammatically.current = true;
+
+    const offset = 120; // Offset pour le menu sticky
+    const targetPosition = ref.current.offsetTop - offset;
+
+    cancelScrollRef.current?.();
+    cancelScrollRef.current = scrollBodyTo(targetPosition, 800, () => {
+      // Re-enable automatic detection after scroll completes
+      setTimeout(() => {
+        isScrollingProgrammatically.current = false;
+      }, 100);
+    });
   };
-
-  // Dynamic section detection on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      // Skip automatic detection during programmatic scrolling
-      if (isScrollingProgrammatically.current) {
-        // Still update isScrolled state
-        setIsScrolled((document.body.scrollTop || 0) > 100);
-        return;
-      }
-      
-      const scrollPosition = (document.body.scrollTop || 0) + 200; // Offset to trigger section change earlier
-      
-      // Update isScrolled state (scroll > 100px)
-      setIsScrolled((document.body.scrollTop || 0) > 100);
-      
-      // Check if we're in hero section (before explanation starts)
-      if (explanationRef.current) {
-        const explanationTop = explanationRef.current.offsetTop;
-        
-        if (scrollPosition < explanationTop) {
-          setActiveSection(null);
-          return;
-        }
-      }
-      
-      // Check if we're in gallery section
-      if (galleryRef.current) {
-        const galleryTop = galleryRef.current.offsetTop;
-        
-        if (scrollPosition >= galleryTop) {
-          setActiveSection('gallery');
-          return;
-        }
-      }
-      
-      // Otherwise we're in explanation section
-      if (explanationRef.current) {
-        const explanationTop = explanationRef.current.offsetTop;
-        
-        if (scrollPosition >= explanationTop) {
-          setActiveSection('explanation');
-          return;
-        }
-      }
-    };
-
-    // Scroll to top on mount - instant scroll
-    document.body.style.scrollBehavior = 'auto';
-    document.body.scrollTop = 0;
-    // Restore smooth scroll after a brief delay
-    setTimeout(() => {
-      document.body.style.scrollBehavior = '';
-    }, 50);
-
-    // Listen to body scroll
-    document.body.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check initial position
-    
-    return () => document.body.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <div
@@ -712,17 +703,28 @@ export default function ProjetDetail() {
             </ScrollRevealTitle>
             {projet.gallery.map((image, index) => {
               return (
-                <div 
+                <div
                   key={`${projet.id}-gallery-${index}`}
                   className="w-full overflow-hidden rounded-[12px] mb-8"
                 >
-                  <img
-                    src={image}
-                    alt={`${projet.title} - Image ${index + 1}`}
-                    className="w-full h-auto"
-                    style={{ backgroundColor: 'var(--portfolio-card-bg)', display: 'block' }}
-                    loading="eager"
-                  />
+                  <button
+                    type="button"
+                    className="block w-full cursor-zoom-in focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--portfolio-card-focus)]"
+                    aria-label={`Agrandir l'image ${index + 1} du projet ${projet.title}`}
+                    onClick={() => {
+                      setLightboxIndex(index);
+                      setLightboxOpen(true);
+                    }}
+                  >
+                    <img
+                      src={image}
+                      alt={`${projet.title} — aperçu ${index + 1}`}
+                      className="w-full h-auto"
+                      style={{ backgroundColor: 'var(--portfolio-card-bg)', display: 'block' }}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
                 </div>
               );
             })}
@@ -770,6 +772,15 @@ export default function ProjetDetail() {
 
       {/* Contact Footer */}
       <ContactFooter />
+
+      {/* Lightbox */}
+      {lightboxOpen && projet.gallery && projet.gallery.length > 0 && (
+        <ImageLightbox
+          images={projet.gallery}
+          currentIndex={lightboxIndex}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -58,7 +58,6 @@ export default function Home({ showSplash }: HomeProps) {
             shuffleDirection="right"
             duration={1}
             ease="expo.out"
-            stagger={0.05}
             shuffleTimes={1}
             loop={true}
             loopDelay={5}
@@ -101,7 +100,6 @@ export default function Home({ showSplash }: HomeProps) {
             shuffleDirection="right"
             duration={1}
             ease="expo.out"
-            stagger={0.05}
             shuffleTimes={1}
             loop={true}
             loopDelay={7}
@@ -132,7 +130,6 @@ export default function Home({ showSplash }: HomeProps) {
             shuffleDirection="right"
             duration={1}
             ease="expo.out"
-            stagger={0.05}
             shuffleTimes={1}
             loop={true}
             loopDelay={5}
@@ -172,7 +169,6 @@ export default function Home({ showSplash }: HomeProps) {
             shuffleDirection="right"
             duration={1}
             ease="expo.out"
-            stagger={0.05}
             shuffleTimes={1}
             loop={true}
             loopDelay={7}

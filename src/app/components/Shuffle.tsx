@@ -17,7 +17,6 @@ interface ShuffleProps {
   ease?: string;
   tag?: keyof JSX.IntrinsicElements;
   shuffleTimes?: number;
-  stagger?: number;
   loop?: boolean;
   loopDelay?: number;
   initialDelay?: number;
@@ -33,7 +32,6 @@ const Shuffle: React.FC<ShuffleProps> = ({
   ease = 'expo.out',
   tag = 'p',
   shuffleTimes = 1,
-  stagger = 0.05,
   loop = false,
   loopDelay = 3,
   initialDelay = 0.2,
@@ -281,7 +279,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
         split.revert();
       };
     },
-    { dependencies: [text, fontsLoaded, shuffleDirection, duration, ease, shuffleTimes, stagger, loop, loopDelay, resizeKey, useCharacterMaskPadding], scope: ref }
+    { dependencies: [text, fontsLoaded, shuffleDirection, duration, ease, shuffleTimes, loop, loopDelay, resizeKey, useCharacterMaskPadding], scope: ref }
   );
 
   const Tag = tag;

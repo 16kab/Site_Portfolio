@@ -151,12 +151,26 @@ const Grainient = ({
 }: GrainientProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [webglError, setWebglError] = useState(false);
+  const programRef = useRef<Program | null>(null);
+  const renderFrameRef = useRef<(() => void) | null>(null);
+  const isStaticRef = useRef(false);
 
+  // Valeurs initiales figées pour la création (les mises à jour passent
+  // par l'effet « uniforms » ci-dessous, sans recréer le contexte WebGL)
+  const initialPropsRef = useRef({
+    timeSpeed, colorBalance, warpStrength, warpFrequency, warpSpeed,
+    warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale,
+    grainAmount, grainScale, grainAnimated, contrast, gamma, saturation,
+    centerX, centerY, zoom, color1, color2, color3,
+  });
+
+  // Initialisation WebGL : UNE SEULE fois par montage
   useEffect(() => {
     if (!containerRef.current) return;
 
     let renderer: Renderer | null = null;
     let canvas: HTMLCanvasElement | null = null;
+    const p = initialPropsRef.current;
 
     try {
       // Try to create WebGL2 renderer
@@ -168,7 +182,7 @@ const Grainient = ({
       });
 
       const gl = renderer.gl;
-      
+
       // Check if WebGL context was created successfully
       if (!gl || gl.isContextLost()) {
         throw new Error('WebGL context creation failed');
@@ -181,7 +195,7 @@ const Grainient = ({
 
       const container = containerRef.current;
       if (!container) return;
-      
+
       container.appendChild(canvas);
 
       const geometry = new Triangle(gl);
@@ -191,31 +205,33 @@ const Grainient = ({
         uniforms: {
           iTime: { value: 0 },
           iResolution: { value: new Float32Array([1, 1]) },
-          uTimeSpeed: { value: timeSpeed },
-          uColorBalance: { value: colorBalance },
-          uWarpStrength: { value: warpStrength },
-          uWarpFrequency: { value: warpFrequency },
-          uWarpSpeed: { value: warpSpeed },
-          uWarpAmplitude: { value: warpAmplitude },
-          uBlendAngle: { value: blendAngle },
-          uBlendSoftness: { value: blendSoftness },
-          uRotationAmount: { value: rotationAmount },
-          uNoiseScale: { value: noiseScale },
-          uGrainAmount: { value: grainAmount },
-          uGrainScale: { value: grainScale },
-          uGrainAnimated: { value: grainAnimated ? 1.0 : 0.0 },
-          uContrast: { value: contrast },
-          uGamma: { value: gamma },
-          uSaturation: { value: saturation },
-          uCenterOffset: { value: new Float32Array([centerX, centerY]) },
-          uZoom: { value: zoom },
-          uColor1: { value: new Float32Array(hexToRgb(color1)) },
-          uColor2: { value: new Float32Array(hexToRgb(color2)) },
-          uColor3: { value: new Float32Array(hexToRgb(color3)) }
+          uTimeSpeed: { value: p.timeSpeed },
+          uColorBalance: { value: p.colorBalance },
+          uWarpStrength: { value: p.warpStrength },
+          uWarpFrequency: { value: p.warpFrequency },
+          uWarpSpeed: { value: p.warpSpeed },
+          uWarpAmplitude: { value: p.warpAmplitude },
+          uBlendAngle: { value: p.blendAngle },
+          uBlendSoftness: { value: p.blendSoftness },
+          uRotationAmount: { value: p.rotationAmount },
+          uNoiseScale: { value: p.noiseScale },
+          uGrainAmount: { value: p.grainAmount },
+          uGrainScale: { value: p.grainScale },
+          uGrainAnimated: { value: p.grainAnimated ? 1.0 : 0.0 },
+          uContrast: { value: p.contrast },
+          uGamma: { value: p.gamma },
+          uSaturation: { value: p.saturation },
+          uCenterOffset: { value: new Float32Array([p.centerX, p.centerY]) },
+          uZoom: { value: p.zoom },
+          uColor1: { value: new Float32Array(hexToRgb(p.color1)) },
+          uColor2: { value: new Float32Array(hexToRgb(p.color2)) },
+          uColor3: { value: new Float32Array(hexToRgb(p.color3)) }
         }
       });
+      programRef.current = program;
 
       const mesh = new Mesh(gl, { geometry, program });
+      renderFrameRef.current = () => renderer?.render({ scene: mesh });
 
       const setSize = () => {
         const bounds = container.getBoundingClientRect();
@@ -225,6 +241,8 @@ const Grainient = ({
         const res = program.uniforms.iResolution.value as Float32Array;
         res[0] = gl.drawingBufferWidth;
         res[1] = gl.drawingBufferHeight;
+        // En mode statique, re-rendre après un redimensionnement
+        if (isStaticRef.current) renderFrameRef.current?.();
       };
 
       const ro = new ResizeObserver(setSize);
@@ -233,25 +251,38 @@ const Grainient = ({
 
       let raf = 0;
       const t0 = performance.now();
-      const loop = (t: number) => {
-        if (gl.isContextLost()) {
-          cancelAnimationFrame(raf);
-          setWebglError(true);
-          return;
-        }
-        program.uniforms.iTime.value = (t - t0) * 0.001;
-        renderer!.render({ scene: mesh });
+
+      // prefers-reduced-motion : une seule frame, pas de boucle d'animation
+      isStaticRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (isStaticRef.current) {
+        renderFrameRef.current?.();
+      } else {
+        const loop = (t: number) => {
+          if (gl.isContextLost()) {
+            cancelAnimationFrame(raf);
+            setWebglError(true);
+            return;
+          }
+          program.uniforms.iTime.value = (t - t0) * 0.001;
+          renderer!.render({ scene: mesh });
+          raf = requestAnimationFrame(loop);
+        };
         raf = requestAnimationFrame(loop);
-      };
-      raf = requestAnimationFrame(loop);
+      }
 
       return () => {
         cancelAnimationFrame(raf);
         ro.disconnect();
+        programRef.current = null;
+        renderFrameRef.current = null;
         try {
           if (container && canvas && container.contains(canvas)) {
             container.removeChild(canvas);
           }
+          // Libère explicitement le contexte WebGL (les navigateurs en
+          // limitent le nombre ; sans cela ils s'accumulent jusqu'au GC)
+          gl.getExtension('WEBGL_lose_context')?.loseContext();
         } catch {
           // Ignore
         }
@@ -259,7 +290,7 @@ const Grainient = ({
     } catch (error) {
       console.warn('WebGL initialization failed, using CSS fallback:', error);
       setWebglError(true);
-      
+
       // Cleanup if there was a partial initialization
       if (canvas && containerRef.current && containerRef.current.contains(canvas)) {
         try {
@@ -269,6 +300,38 @@ const Grainient = ({
         }
       }
     }
+  }, []);
+
+  // Mise à jour des uniforms quand les props changent (ex. bascule de
+  // thème : nouvelles couleurs) — sans recréer le contexte WebGL
+  useEffect(() => {
+    const program = programRef.current;
+    if (!program) return;
+
+    program.uniforms.uTimeSpeed.value = timeSpeed;
+    program.uniforms.uColorBalance.value = colorBalance;
+    program.uniforms.uWarpStrength.value = warpStrength;
+    program.uniforms.uWarpFrequency.value = warpFrequency;
+    program.uniforms.uWarpSpeed.value = warpSpeed;
+    program.uniforms.uWarpAmplitude.value = warpAmplitude;
+    program.uniforms.uBlendAngle.value = blendAngle;
+    program.uniforms.uBlendSoftness.value = blendSoftness;
+    program.uniforms.uRotationAmount.value = rotationAmount;
+    program.uniforms.uNoiseScale.value = noiseScale;
+    program.uniforms.uGrainAmount.value = grainAmount;
+    program.uniforms.uGrainScale.value = grainScale;
+    program.uniforms.uGrainAnimated.value = grainAnimated ? 1.0 : 0.0;
+    program.uniforms.uContrast.value = contrast;
+    program.uniforms.uGamma.value = gamma;
+    program.uniforms.uSaturation.value = saturation;
+    (program.uniforms.uCenterOffset.value as Float32Array).set([centerX, centerY]);
+    program.uniforms.uZoom.value = zoom;
+    (program.uniforms.uColor1.value as Float32Array).set(hexToRgb(color1));
+    (program.uniforms.uColor2.value as Float32Array).set(hexToRgb(color2));
+    (program.uniforms.uColor3.value as Float32Array).set(hexToRgb(color3));
+
+    // Sans boucle d'animation, rendre une frame pour refléter le changement
+    if (isStaticRef.current) renderFrameRef.current?.();
   }, [
     timeSpeed,
     colorBalance,
