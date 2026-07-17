@@ -20,18 +20,21 @@ function Harness({ snapshot = projectSnapshot }: { snapshot?: ProjectTransitionS
     isTransitioning,
     direction,
     snapshot: transitionSnapshot,
+    captureSnapshot,
     beginForward,
     beginReverse,
     completeTransition,
     clearTransition,
   } = usePageTransition();
   const initialCallbacks = useRef({
+    captureSnapshot,
     beginForward,
     beginReverse,
     completeTransition,
     clearTransition,
   });
   const callbacksStable =
+    initialCallbacks.current.captureSnapshot === captureSnapshot &&
     initialCallbacks.current.beginForward === beginForward &&
     initialCallbacks.current.beginReverse === beginReverse &&
     initialCallbacks.current.completeTransition === completeTransition &&
@@ -47,13 +50,22 @@ function Harness({ snapshot = projectSnapshot }: { snapshot?: ProjectTransitionS
       <output data-testid="callbacks-stable">{String(callbacksStable)}</output>
       <output data-testid="api-ready">
         {String(
-          [beginForward, beginReverse, completeTransition, clearTransition].every(
+          [
+            captureSnapshot,
+            beginForward,
+            beginReverse,
+            completeTransition,
+            clearTransition,
+          ].every(
             (callback) => typeof callback === 'function',
           ),
         )}
       </output>
       <button type="button" onClick={() => beginForward(snapshot)}>
         Begin forward
+      </button>
+      <button type="button" onClick={() => captureSnapshot?.(snapshot)}>
+        Capture snapshot
       </button>
       <button
         type="button"
@@ -79,6 +91,20 @@ const renderHarness = (snapshot?: ProjectTransitionSnapshot) =>
   );
 
 describe('PageTransitionProvider', () => {
+  it('captures a snapshot without starting a transition', () => {
+    renderHarness();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Capture snapshot' }));
+
+    expect(screen.getByTestId('api-ready')).toHaveTextContent('true');
+    expect(screen.getByTestId('state')).toHaveTextContent(
+      'idle:none:/projets/test',
+    );
+    expect(screen.getByTestId('snapshot')).toHaveTextContent(
+      JSON.stringify(projectSnapshot),
+    );
+  });
+
   it('retains a projects snapshot after forward completion and clears it after reverse completion', () => {
     renderHarness();
 

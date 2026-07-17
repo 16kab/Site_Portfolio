@@ -14,7 +14,7 @@ import {
 
 export default function Projets() {
   const location = useLocation();
-  const { snapshot, isTransitioning, beginReverse, clearTransition } =
+  const { snapshot, direction, beginReverse, clearTransition } =
     usePageTransition();
   const cardRefs = useRef<{ [key: string]: HTMLImageElement | null }>({});
   const [isReturnVisit] = useState(
@@ -23,7 +23,7 @@ export default function Projets() {
   );
   const [reduceReturnMotion] = useState(() => prefersReducedProjectMotion());
   const shouldStartReverse =
-    isReturnVisit && !isTransitioning && snapshot !== null;
+    isReturnVisit && snapshot !== null && direction !== 'reverse';
 
   useLayoutEffect(() => {
     if (!shouldStartReverse || !snapshot) return;

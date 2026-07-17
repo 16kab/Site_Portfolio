@@ -36,7 +36,7 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const navigationTimerRef = useRef<number | null>(null);
   const isNavigationPendingRef = useRef(false);
-  const { beginForward, isTransitioning } = usePageTransition();
+  const { captureSnapshot, beginForward, isTransitioning } = usePageTransition();
   const isInteractive = isHovered || isFocused;
 
   useEffect(
@@ -70,18 +70,25 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
       return;
     }
 
-    if (image && imageContainerRef.current && !prefersReducedProjectMotion()) {
-      event.preventDefault();
-
-      const timing = getProjectTransitionTiming(window.innerWidth, 'forward');
-      isNavigationPendingRef.current = true;
-      beginForward({
+    if (image && imageContainerRef.current) {
+      const nextSnapshot = {
         imageSrc: image,
         imageRect: roundTransitionRect(imageContainerRef.current.getBoundingClientRect()),
         projectLink: link,
         originPath: location.pathname,
         scrollTop: document.body.scrollTop,
-      });
+      };
+
+      if (prefersReducedProjectMotion()) {
+        captureSnapshot(nextSnapshot);
+        return;
+      }
+
+      event.preventDefault();
+
+      const timing = getProjectTransitionTiming(window.innerWidth, 'forward');
+      isNavigationPendingRef.current = true;
+      beginForward(nextSnapshot);
 
       navigationTimerRef.current = window.setTimeout(() => {
         navigationTimerRef.current = null;

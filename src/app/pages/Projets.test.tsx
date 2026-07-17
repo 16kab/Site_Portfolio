@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import type { PropsWithChildren, Ref } from 'react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Link, MemoryRouter, Route, Routes, useNavigate } from 'react-router';
 import {
   PageTransitionProvider,
@@ -100,10 +100,33 @@ vi.mock('motion/react', async () => {
           {children}
         </div>
       )),
+      img: forwardRef<
+        HTMLImageElement,
+        {
+          src: string;
+          alt: string;
+          initial: unknown;
+          animate: unknown;
+          transition: unknown;
+          className?: string;
+        }
+      >(({ src, alt, initial, animate, transition, className }, ref) => (
+        <img
+          ref={ref}
+          src={src}
+          alt={alt}
+          className={className}
+          data-testid="transition-image"
+          data-initial={JSON.stringify(initial)}
+          data-animate={JSON.stringify(animate)}
+          data-transition={JSON.stringify(transition)}
+        />
+      )),
     },
   };
 });
 
+import { PageTransitionOverlay } from '../components/PageTransitionOverlay';
 import Projets from './Projets';
 
 const existingProjectLink = tousProjets[0].link;
@@ -133,23 +156,27 @@ function TransitionState() {
 
 function ProjectDetailControls({ snapshotLink }: { snapshotLink: string }) {
   const navigate = useNavigate();
-  const { beginForward, completeTransition } = usePageTransition();
+  const { captureSnapshot, beginForward, completeTransition } =
+    usePageTransition();
+
+  const snapshot = {
+    imageSrc: '/test.webp',
+    imageRect: { left: 0, top: 0, width: 390, height: 844 },
+    projectLink: snapshotLink,
+    originPath: '/projets',
+    scrollTop: 480,
+  };
 
   return (
     <>
       <button
         type="button"
-        onClick={() =>
-          beginForward({
-            imageSrc: '/test.webp',
-            imageRect: { left: 0, top: 0, width: 390, height: 844 },
-            projectLink: snapshotLink,
-            originPath: '/projets',
-            scrollTop: 480,
-          })
-        }
+        onClick={() => beginForward(snapshot)}
       >
         Seed forward
+      </button>
+      <button type="button" onClick={() => captureSnapshot(snapshot)}>
+        Capture snapshot
       </button>
       <button type="button" onClick={completeTransition}>
         Complete forward
@@ -170,6 +197,7 @@ function renderReturn(snapshotLink = existingProjectLink) {
     >
       <PageTransitionProvider>
         <TransitionState />
+        <PageTransitionOverlay />
         <Routes>
           <Route path="/projets" element={<Projets />} />
           <Route
@@ -196,6 +224,14 @@ describe('Projets return transition', () => {
     window.matchMedia = vi.fn().mockReturnValue({ matches: false });
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: 1024,
+    });
+  });
+
   it.each([
     ['browser history', 'Browser back'],
     ['the header projects link', 'Header projects'],
@@ -218,6 +254,47 @@ describe('Projets return transition', () => {
     screen.getAllByTestId('scroll-fade').forEach((wrapper) => {
       expect(wrapper).toHaveAttribute('data-disabled', 'true');
     });
+  });
+
+  it('supersedes an active mobile forward transition with a fresh reverse timeline', () => {
+    vi.useFakeTimers();
+    Object.defineProperty(window, 'innerWidth', {
+      configurable: true,
+      value: 390,
+    });
+    renderReturn();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Seed forward' }));
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      `active:forward:${existingProjectLink}`,
+    );
+    act(() => vi.advanceTimersByTime(420));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Browser back' }));
+
+    expect(document.body.scrollTop).toBe(480);
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      `active:reverse:${existingProjectLink}`,
+    );
+    expect(screen.getByTestId('transition-image')).toHaveAttribute(
+      'data-transition',
+      JSON.stringify({
+        duration: 0.6,
+        ease: [0.76, 0, 0.24, 1],
+        delay: 0,
+      }),
+    );
+
+    act(() => vi.advanceTimersByTime(649));
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      `active:reverse:${existingProjectLink}`,
+    );
+
+    act(() => vi.advanceTimersByTime(1));
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      'idle:reverse:none',
+    );
+    expect(vi.getTimerCount()).toBe(0);
   });
 
   it('clears the snapshot and shows the fallback page when the target is absent', () => {
@@ -245,7 +322,10 @@ describe('Projets return transition', () => {
   it('clears immediately without reverse animation when motion is reduced', () => {
     window.matchMedia = vi.fn().mockReturnValue({ matches: true });
     renderReturn();
-    seedAndCompleteForward();
+    fireEvent.click(screen.getByRole('button', { name: 'Capture snapshot' }));
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      `idle:none:${existingProjectLink}`,
+    );
 
     fireEvent.click(screen.getByRole('link', { name: 'Header projects' }));
 

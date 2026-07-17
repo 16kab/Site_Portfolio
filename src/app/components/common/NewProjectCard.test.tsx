@@ -16,23 +16,33 @@ vi.mock('../RollingText', () => ({
   ),
 }));
 
-const renderCard = (ref = createRef<HTMLImageElement>()) => {
+const renderCard = (
+  ref = createRef<HTMLImageElement>(),
+  initialEntry = '/',
+) => {
   const LocationProbe = () => {
     const location = useLocation();
     return <span data-testid="location">{location.pathname}</span>;
   };
 
   const TransitionProbe = () => {
-    const { isTransitioning, direction } = usePageTransition();
+    const { isTransitioning, direction, snapshot } = usePageTransition();
     return (
-      <span data-testid="transition-state">
-        {isTransitioning ? 'active' : 'idle'}:{direction ?? 'none'}
-      </span>
+      <>
+        <span data-testid="transition-state">
+          {isTransitioning ? 'active' : 'idle'}:{direction ?? 'none'}
+        </span>
+        <span data-testid="snapshot-state">
+          {snapshot
+            ? `${snapshot.originPath}:${snapshot.projectLink}:${snapshot.scrollTop}`
+            : 'none'}
+        </span>
+      </>
     );
   };
 
   const view = render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialEntry]}>
       <PageTransitionProvider>
         <NewProjectCard
           ref={ref}
@@ -172,11 +182,15 @@ describe('NewProjectCard', () => {
   it('navigates immediately without a transition when motion is reduced', () => {
     Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
     vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: true } as MediaQueryList);
-    renderCard();
+    document.body.scrollTop = 480;
+    renderCard(createRef<HTMLImageElement>(), '/projets');
 
     fireEvent.click(screen.getByRole('link', { name: 'Voir le projet Projet test' }));
 
     expect(screen.getByTestId('location')).toHaveTextContent('/projets/test');
     expect(screen.getByTestId('transition-state')).toHaveTextContent('idle:none');
+    expect(screen.getByTestId('snapshot-state')).toHaveTextContent(
+      '/projets:/projets/test:480',
+    );
   });
 });

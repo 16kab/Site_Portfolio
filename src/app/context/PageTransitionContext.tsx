@@ -9,6 +9,7 @@ interface PageTransitionContextType {
   isTransitioning: boolean;
   direction: ProjectTransitionDirection | null;
   snapshot: ProjectTransitionSnapshot | null;
+  captureSnapshot: (snapshot: ProjectTransitionSnapshot) => void;
   beginForward: (snapshot: ProjectTransitionSnapshot) => void;
   beginReverse: (targetRect: ProjectTransitionRect) => void;
   completeTransition: () => void;
@@ -32,6 +33,17 @@ const initialTransitionState: TransitionState = {
 export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const [{ isTransitioning, direction, snapshot }, setTransitionState] =
     useState<TransitionState>(initialTransitionState);
+
+  const captureSnapshot = useCallback(
+    (nextSnapshot: ProjectTransitionSnapshot) => {
+      setTransitionState({
+        isTransitioning: false,
+        direction: null,
+        snapshot: nextSnapshot,
+      });
+    },
+    [],
+  );
 
   const beginForward = useCallback((nextSnapshot: ProjectTransitionSnapshot) => {
     setTransitionState({
@@ -76,6 +88,7 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
         isTransitioning,
         direction,
         snapshot,
+        captureSnapshot,
         beginForward,
         beginReverse,
         completeTransition,
