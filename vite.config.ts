@@ -28,10 +28,7 @@ export default defineConfig({
     alias: {
       // Alias @ to the src directory
       '@': path.resolve(__dirname, './src'),
-      // Force single Three.js instance
-      'three': path.resolve(__dirname, './node_modules/three'),
     },
-    dedupe: ['three'],
   },
 
   test: {

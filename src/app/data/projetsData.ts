@@ -461,9 +461,6 @@ export const projetsData: Projet[] = [
   }
 ];
 
-// Number of "projets principaux" (first N in the array)
-const PROJETS_PRINCIPAUX_COUNT = 3;
-
 // Tous les projets (plus de séparation)
 export const tousProjets = projetsData.map((projet, index) => ({
   link: `/projets/${projet.id}`,
@@ -474,26 +471,4 @@ export const tousProjets = projetsData.map((projet, index) => ({
   image: projet.image,
   brand: projet.brand,
   number: String(index + 1).padStart(3, '0')
-}));
-
-// Projets principaux (les 3 premiers) - conservé pour compatibilité
-export const projetsPrincipaux = projetsData.slice(0, PROJETS_PRINCIPAUX_COUNT).map(projet => ({
-  link: `/projets/${projet.id}`,
-  text: projet.title,
-  year: projet.year,
-  description: projet.description,
-  tags: projet.tags,
-  image: projet.image,
-  brand: projet.brand
-}));
-
-// Autres projets (tous les suivants) - conservé pour compatibilité
-export const autresProjets = projetsData.slice(PROJETS_PRINCIPAUX_COUNT).map(projet => ({
-  link: `/projets/${projet.id}`,
-  text: projet.title,
-  year: projet.year,
-  description: projet.description,
-  tags: projet.tags,
-  image: projet.image,
-  brand: projet.brand
 }));

@@ -8,10 +8,6 @@ import {
 } from '../context/PageTransitionContext';
 import { tousProjets } from '../data/projetsData';
 
-vi.mock('../components/PageHeader', () => ({
-  default: ({ children }: PropsWithChildren) => <header>{children}</header>,
-}));
-
 vi.mock('../components/ContactFooter', () => ({
   default: () => <footer>Contact footer</footer>,
 }));
