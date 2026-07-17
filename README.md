@@ -15,7 +15,8 @@ Site portfolio personnel de designer UX/UI. Application web statique
 - **OGL** — fond WebGL de la page d'accueil (Grainient)
 - **EmailJS** — formulaire de contact (côté client, honeypot anti-spam)
 - **@fontsource** — polices Manrope & Playfair Display auto-hébergées
-- **Vitest + Testing Library** — tests unitaires et de composants
+- **Biome** — lint + formatage
+- **Vitest + Testing Library** — tests unitaires · **Playwright** — E2E
 
 ## Développement
 
@@ -23,10 +24,18 @@ Site portfolio personnel de designer UX/UI. Application web statique
 npm install        # installer les dépendances
 npm run dev        # serveur de dev (http://localhost:5173)
 npm run typecheck  # vérification TypeScript seule
-npm test           # tests (mode watch)
+npm run lint       # Biome (lint)
+npm run format     # Biome (formatage, écrit les fichiers)
+npm test           # tests unitaires (mode watch)
+npm run test:e2e   # tests E2E Playwright (build + preview)
 npm run build      # type-check + build de production → dossier dist/
+npm run budget     # vérifie le poids du chunk d'entrée (gzip)
 npm run preview    # prévisualiser le build de production
 ```
+
+Architecture, flux de données et décisions : [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
+Intégration continue (typecheck, lint, tests, build, budget, E2E) :
+[`.github/workflows/ci.yml`](./.github/workflows/ci.yml).
 
 ## Déploiement
 
