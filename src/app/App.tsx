@@ -1,12 +1,11 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
-import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import Header from './components/Header';
 import Home from './pages/Home';
-import { TOAST_CONFIG } from './config';
+import ThemedToaster from './components/ThemedToaster';
 import Grainient from './components/Grainient';
 import { ScrollToTop } from './components/ScrollToTop';
 import { PageTransitionProvider } from './context/PageTransitionContext';
@@ -81,7 +80,7 @@ export default function App() {
             </a>
 
             {/* Toast Notifications */}
-            <Toaster {...TOAST_CONFIG} />
+            <ThemedToaster />
             <Analytics />
             <SpeedInsights />
 
