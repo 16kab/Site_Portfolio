@@ -25,6 +25,7 @@ import symaHeroImage from 'figma:asset/syma-hero.webp';
 import symaScreensImage from 'figma:asset/syma-screens.webp';
 import trackitHeroImage from 'figma:asset/trackit-hero.webp';
 import trackitScreensImage from 'figma:asset/trackit-screens.webp';
+import { ROUTES } from '../config';
 
 export interface Projet {
   id: string;
@@ -615,7 +616,7 @@ export const projetsData: Projet[] = [
 
 // Tous les projets (plus de séparation)
 export const tousProjets = projetsData.map((projet, index) => ({
-  link: `/projets/${projet.id}`,
+  link: ROUTES.PROJET_DETAIL(projet.id),
   text: projet.title,
   year: projet.year,
   description: projet.description,

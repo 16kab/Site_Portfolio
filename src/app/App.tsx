@@ -12,6 +12,7 @@ import { PageTransitionProvider } from './context/PageTransitionContext';
 import { PageTransitionOverlay } from './components/PageTransitionOverlay';
 import SplashScreen from './components/SplashScreen';
 import ErrorBoundary from './components/ErrorBoundary';
+import { ROUTES } from './config';
 import { useIsDarkMode } from './hooks';
 
 // Code-splitting : chaque page secondaire est chargée à la demande
@@ -43,11 +44,17 @@ export function AppContent({ showSplash }: { showSplash: boolean }) {
 
       <Suspense fallback={null}>
         <Routes location={location}>
-          <Route path="/" element={<Home showSplash={showSplash} />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/apropos" element={<APropos />} />
-          <Route path="/projets" element={<Projets />} />
-          <Route path="/projets/:id" element={<ProjetDetail />} />
+          <Route
+            path={ROUTES.HOME}
+            element={<Home showSplash={showSplash} />}
+          />
+          <Route path={ROUTES.CONTACT} element={<Contact />} />
+          <Route path={ROUTES.APROPOS} element={<APropos />} />
+          <Route path={ROUTES.PROJETS} element={<Projets />} />
+          <Route
+            path={ROUTES.PROJET_DETAIL_PATTERN}
+            element={<ProjetDetail />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

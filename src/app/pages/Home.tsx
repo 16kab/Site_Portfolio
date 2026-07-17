@@ -4,6 +4,7 @@ import Shuffle from '../components/Shuffle';
 import { motion } from 'motion/react';
 import { useEffect } from 'react';
 import PageMeta from '../components/PageMeta';
+import { ROUTES } from '../config';
 
 interface HomeProps {
   showSplash: boolean;
@@ -191,7 +192,7 @@ export default function Home({ showSplash }: HomeProps) {
 
       {/* Bouton "Voir mes projets" */}
       <Link
-        to="/projets"
+        to={ROUTES.PROJETS}
         className="lg:hidden fixed left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-6 py-3 transition-all duration-300 group"
         style={{
           bottom: 'max(5rem, calc(env(safe-area-inset-bottom, 0px) + 2rem))',

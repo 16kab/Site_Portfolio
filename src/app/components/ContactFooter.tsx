@@ -5,6 +5,7 @@ import ScrollFadeIn from './ScrollFadeIn';
 import ScrollRevealTitle from './ScrollRevealTitle';
 import { Link } from 'react-router';
 import RollingText from './RollingText';
+import { CONTACT_EMAIL_HREF, ROUTES, SITE_CONTACT } from '../config';
 
 export default function ContactFooter() {
   const contactTextRef = useRef(null);
@@ -41,24 +42,24 @@ export default function ContactFooter() {
               }}
             >
               <a
-                href="mailto:kabiche.alexis@gmail.com"
+                href={CONTACT_EMAIL_HREF}
                 className="flex items-center gap-2 transition-colors cursor-pointer"
                 style={{
                   color: 'var(--portfolio-text-secondary)',
                 }}
               >
                 <Mail size={16} />
-                <p>kabiche.alexis@gmail.com</p>
+                <p>{SITE_CONTACT.email}</p>
               </a>
               <a
-                href="tel:+33620447405"
+                href={SITE_CONTACT.phoneHref}
                 className="flex items-center gap-2 transition-colors cursor-pointer"
                 style={{
                   color: 'var(--portfolio-text-description)',
                 }}
               >
                 <Phone size={16} />
-                <p>06 20 44 74 05</p>
+                <p>{SITE_CONTACT.phoneDisplay}</p>
               </a>
             </div>
           </ScrollRevealTitle>
@@ -75,7 +76,7 @@ export default function ContactFooter() {
           {/* Contact Button - Centered below separator on mobile, Top Right above separator on desktop */}
           <ScrollFadeIn delay={0.2}>
             <Link
-              to="/contact"
+              to={ROUTES.CONTACT}
               className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 md:left-auto md:translate-x-0 md:right-8 px-6 py-3 flex items-center gap-2 transition-colors duration-300 top-[165px] md:top-[45px] whitespace-nowrap z-10 cursor-pointer"
               style={{
                 backgroundColor: isContactButtonHovered

@@ -5,6 +5,7 @@ import { RollingText } from './RollingText';
 import { useState, useEffect, useRef } from 'react';
 import Magnet from './Magnet';
 import { AnimatedThemeToggler } from './AnimatedThemeToggler';
+import { ROUTES } from '../config';
 
 // Lien react-router animable par motion (couleurs du bouton contact)
 const MotionLink = motion.create(Link);
@@ -146,7 +147,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
         >
           {/* Logo - Left */}
           <Link
-            to="/"
+            to={ROUTES.HOME}
             className="absolute left-[22.58px] top-1/2 -translate-y-1/2 cursor-pointer"
             onClick={handleLinkClick}
           >
@@ -177,7 +178,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
             {/* Navigation Menu Group */}
             <div className="flex gap-[27px] items-center">
               <Link
-                to="/projets"
+                to={ROUTES.PROJETS}
                 data-menu-item="projets"
                 className="cursor-pointer transition-opacity duration-300"
                 style={{ opacity: getMenuItemOpacity(hoveredItem, 'projets') }}
@@ -214,7 +215,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
               </motion.p>
 
               <Link
-                to="/apropos"
+                to={ROUTES.APROPOS}
                 data-menu-item="apropos"
                 className="cursor-pointer transition-opacity duration-300"
                 style={{ opacity: getMenuItemOpacity(hoveredItem, 'apropos') }}
@@ -248,7 +249,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 onBlur={handleMouseLeave}
               >
                 <MotionLink
-                  to="/contact"
+                  to={ROUTES.CONTACT}
                   onClick={handleLinkClick}
                   className="flex px-6 py-3 rounded-[5px] items-center gap-2 cursor-pointer transition-all duration-300"
                   animate={{
@@ -371,7 +372,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
               transition={{ duration: 0.3 }}
             >
               <Link
-                to="/projets"
+                to={ROUTES.PROJETS}
                 className="pointer-events-auto cursor-pointer"
                 onClick={handleLinkClick}
               >
@@ -387,7 +388,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
               </Link>
 
               <Link
-                to="/apropos"
+                to={ROUTES.APROPOS}
                 className="pointer-events-auto cursor-pointer"
                 onClick={handleLinkClick}
               >
@@ -403,7 +404,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
               </Link>
 
               <Link
-                to="/contact"
+                to={ROUTES.CONTACT}
                 className="pointer-events-auto cursor-pointer"
                 onClick={handleLinkClick}
               >

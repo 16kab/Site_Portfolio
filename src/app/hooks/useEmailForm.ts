@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { toast } from 'sonner';
-import { EMAILJS_CONFIG } from '../config';
+import { EMAILJS_CONFIG, SITE_CONTACT } from '../config';
 
 export interface FormData {
   nom: string;
@@ -108,7 +108,7 @@ export function useEmailForm() {
         from_email: formData.email,
         subject: formData.objet,
         message: formData.message,
-        to_email: 'kabiche.alexis@gmail.com',
+        to_email: SITE_CONTACT.email,
       };
 
       await emailjs.send(
@@ -125,7 +125,7 @@ export function useEmailForm() {
     } catch (error) {
       console.error('Email send error:', error);
       toast.error(
-        "L'envoi a échoué. Réessayez ou écrivez-moi directement à kabiche.alexis@gmail.com.",
+        `L'envoi a échoué. Réessayez ou écrivez-moi directement à ${SITE_CONTACT.email}.`,
       );
       return false;
     } finally {

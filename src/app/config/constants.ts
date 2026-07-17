@@ -32,3 +32,14 @@ export const EMAILJS_CONFIG = {
   templateId: 'Portfolio_contact',
   publicKey: 'QJkSflwEVb-vpg9UZ',
 } as const;
+
+// Coordonnées de contact (source unique, réutilisée par les pages Contact,
+// le footer et l'envoi EmailJS).
+export const SITE_CONTACT = {
+  email: 'kabiche.alexis@gmail.com',
+  phoneDisplay: '06 20 44 74 05',
+  phoneHref: 'tel:+33620447405',
+  location: 'Paris, France',
+} as const;
+
+export const CONTACT_EMAIL_HREF = `mailto:${SITE_CONTACT.email}` as const;

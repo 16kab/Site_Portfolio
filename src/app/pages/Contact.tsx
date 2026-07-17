@@ -3,6 +3,7 @@ import { ScrollFadeIn } from '../components/ScrollFadeIn';
 import PageMeta from '../components/PageMeta';
 import SuccessPopup from '../components/SuccessPopup';
 import { useEmailForm } from '../hooks';
+import { CONTACT_EMAIL_HREF, SITE_CONTACT } from '../config';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import RollingText from '../components/RollingText';
@@ -99,18 +100,21 @@ export default function Contact() {
             {/* Left side - Info */}
             <ScrollFadeIn delay={0.3}>
               <div className="space-y-8 lg:space-y-12">
-                <ContactInfo label="Localisation" value="Paris, France" />
+                <ContactInfo
+                  label="Localisation"
+                  value={SITE_CONTACT.location}
+                />
 
                 <ContactInfo
                   label="Email"
-                  value="kabiche.alexis@gmail.com"
-                  href="mailto:kabiche.alexis@gmail.com"
+                  value={SITE_CONTACT.email}
+                  href={CONTACT_EMAIL_HREF}
                 />
 
                 <ContactInfo
                   label="Téléphone"
-                  value="06 20 44 74 05"
-                  href="tel:+33620447405"
+                  value={SITE_CONTACT.phoneDisplay}
+                  href={SITE_CONTACT.phoneHref}
                 />
               </div>
             </ScrollFadeIn>

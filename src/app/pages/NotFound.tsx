@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-router';
 import { Home, ArrowLeft } from 'lucide-react';
 import PageMeta from '../components/PageMeta';
+import { ROUTES } from '../config';
 
 export default function NotFound() {
   const shouldReduceMotion = useReducedMotion();
@@ -88,7 +89,7 @@ export default function NotFound() {
             transition={{ delay: 0.7 }}
           >
             <Link
-              to="/"
+              to={ROUTES.HOME}
               className="group inline-flex items-center gap-2 px-8 py-4 bg-cyan-400 text-black font-semibold rounded-full hover:bg-white transition-all duration-300"
               data-cursor="hover"
               data-cursor-text="Accueil"
