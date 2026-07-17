@@ -40,4 +40,10 @@ export default defineConfig({
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
+
+  build: {
+    // Ne pas inliner les petits assets en base64 dans le CSS critique
+    // (sinon les sous-ensembles woff2 < 4 Ko y sont embarqués)
+    assetsInlineLimit: 0,
+  },
 })
