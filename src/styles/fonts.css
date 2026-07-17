@@ -1,8 +1,14 @@
-/* Manrope font family */
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+/* Manrope — auto-hébergée (@fontsource), plus de requête tierce */
+@import '@fontsource/manrope/400.css';
+@import '@fontsource/manrope/500.css';
+@import '@fontsource/manrope/600.css';
+@import '@fontsource/manrope/700.css';
+@import '@fontsource/manrope/800.css';
 
-/* Playfair Display font family */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/* Playfair Display — auto-hébergée (@fontsource) */
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/400-italic.css';
+@import '@fontsource/playfair-display/700.css';
 
 :root {
   --font-display: 'Playfair Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
