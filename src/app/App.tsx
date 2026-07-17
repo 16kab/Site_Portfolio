@@ -57,7 +57,7 @@ export default function App() {
   });
 
   return (
-    <BrowserRouter future={{ v7_startTransition: true }}>
+    <BrowserRouter>
       <PageTransitionProvider>
         {/* Splash Screen */}
         <AnimatePresence>
@@ -74,7 +74,7 @@ export default function App() {
           <Header showSplash={showSplash} />
           
           {/* Background wrapper */}
-          <BackgroundWrapper showSplash={showSplash} />
+          <BackgroundWrapper />
           
           {/* App Content */}
           <AppContent showSplash={showSplash} />
@@ -88,7 +88,7 @@ export default function App() {
 }
 
 // Background wrapper that shows Grainient only on home page
-function BackgroundWrapper({ showSplash }: { showSplash: boolean }) {
+function BackgroundWrapper() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const isProjetsPage = location.pathname === '/projets' || location.pathname.startsWith('/projets/');

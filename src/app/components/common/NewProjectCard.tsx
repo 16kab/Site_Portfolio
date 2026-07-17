@@ -17,7 +17,6 @@ interface NewProjectCardProps {
   description: string;
   tags: string[];
   image?: string;
-  projectId?: string;
 }
 
 const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
@@ -27,7 +26,6 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
   description,
   tags,
   image,
-  projectId,
 }, ref) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);

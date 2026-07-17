@@ -82,7 +82,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
         charsClass: 'shuffle-char'
       });
 
-      const chars = split.chars || [];
+      const chars = (split.chars || []) as HTMLElement[];
       if (!chars.length) return;
 
       // Créer un ordre aléatoire pour les animations
@@ -93,7 +93,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
       }
 
       // Créer les wrappers pour chaque caractère
-      chars.forEach((char: HTMLElement) => {
+      chars.forEach((char) => {
         const parent = char.parentElement;
         if (!parent) return;
 

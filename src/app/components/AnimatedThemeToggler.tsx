@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Moon, Sun } from "lucide-react"
 import { flushSync } from "react-dom"
-import { motion } from "motion/react"
+import { motion, type HTMLMotionProps } from "motion/react"
 
 import { cn } from "../../lib/utils"
 
-interface AnimatedThemeTogglerProps extends React.ComponentPropsWithoutRef<"button"> {
+interface AnimatedThemeTogglerProps extends HTMLMotionProps<"button"> {
   duration?: number
   isScrolled?: boolean
 }

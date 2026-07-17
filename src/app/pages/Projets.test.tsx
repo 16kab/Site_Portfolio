@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import type { PropsWithChildren, Ref } from 'react';
+import type { MutableRefObject, PropsWithChildren, Ref } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Link, MemoryRouter, Route, Routes, useNavigate } from 'react-router';
 import {
@@ -34,7 +34,7 @@ vi.mock('../components/common/NewProjectCard', async () => {
     if (typeof ref === 'function') {
       ref(image);
     } else if (ref) {
-      ref.current = image;
+      (ref as MutableRefObject<HTMLImageElement | null>).current = image;
     }
   };
 

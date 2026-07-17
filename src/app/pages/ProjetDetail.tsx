@@ -8,7 +8,6 @@ import NewProjectCard from '../components/common/NewProjectCard';
 import { projetsData, tousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
 import svgPaths from '../../imports/svg-jlpjaqyx1i';
-import { ImageLightbox } from '../components/ImageLightbox';
 
 export default function ProjetDetail() {
   const { id } = useParams<{ id: string }>();
@@ -17,8 +16,6 @@ export default function ProjetDetail() {
   const galleryRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState<'explanation' | 'gallery' | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // Ref to track programmatic scrolling
   const isScrollingProgrammatically = useRef(false);
@@ -26,8 +23,7 @@ export default function ProjetDetail() {
   // Scroll animation for hero image zoom - MUST be called before any conditional returns
   const { scrollYProgress } = useScroll({
     target: heroRef,
-    offset: ["start start", "end start"],
-    layoutEffect: false
+    offset: ["start start", "end start"]
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
@@ -768,15 +764,6 @@ export default function ProjetDetail() {
 
       {/* Contact Footer */}
       <ContactFooter />
-
-      {/* Lightbox */}
-      {lightboxOpen && (
-        <ImageLightbox
-          images={projet.gallery}
-          currentIndex={lightboxIndex}
-          onClose={() => setLightboxOpen(false)}
-        />
-      )}
     </div>
   );
 }

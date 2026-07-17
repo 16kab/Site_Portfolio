@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, MessageCircle } from 'lucide-react';
 import { RollingText } from './RollingText';
@@ -20,12 +20,6 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Get CSS variable values
-  const getHeaderColor = (varName: string) => {
-    if (typeof window === 'undefined') return '';
-    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-  };
 
   const handleMouseEnter = (item: HeaderMenuItem) => {
     if (hoverTimeoutRef.current) {
