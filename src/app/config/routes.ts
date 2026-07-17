@@ -8,8 +8,6 @@ export const ROUTES = {
   CONTACT: '/contact',
   PROJETS: '/projets',
   PROJET_DETAIL: (id: string) => `/projets/${id}`,
-  EXPERTISES: '/expertises',
-  EXPERIENCES: '/experiences',
 } as const;
 
 export type RouteKey = keyof typeof ROUTES;

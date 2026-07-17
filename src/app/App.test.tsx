@@ -26,6 +26,18 @@ describe('AppContent', () => {
 
     expect(screen.getByTestId('home-splash-state')).toHaveTextContent('false');
   });
+
+  it('renders the 404 page for an unknown URL', async () => {
+    render(
+      <MemoryRouter initialEntries={['/page-inexistante']}>
+        <PageTransitionProvider>
+          <AppContent showSplash={false} />
+        </PageTransitionProvider>
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText('404')).toBeInTheDocument();
+  });
 });
 
 describe('getSafariChromeColor', () => {

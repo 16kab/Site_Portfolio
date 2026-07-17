@@ -2,20 +2,24 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import Header from './components/Header';
 import Home from './pages/Home';
-import Contact from './pages/Contact';
-import APropos from './pages/APropos';
-import Projets from './pages/Projets';
-import ProjetDetail from './pages/ProjetDetail';
 import { TOAST_CONFIG } from './config';
 import Grainient from './components/Grainient';
 import { ScrollToTop } from './components/ScrollToTop';
 import { PageTransitionProvider } from './context/PageTransitionContext';
 import { PageTransitionOverlay } from './components/PageTransitionOverlay';
 import SplashScreen from './components/SplashScreen';
+import ErrorBoundary from './components/ErrorBoundary';
+
+// Code-splitting : chaque page secondaire est chargée à la demande
+const Projets = lazy(() => import('./pages/Projets'));
+const ProjetDetail = lazy(() => import('./pages/ProjetDetail'));
+const APropos = lazy(() => import('./pages/APropos'));
+const Contact = lazy(() => import('./pages/Contact'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 export const getSafariChromeColor = (isDarkMode: boolean) =>
   isDarkMode ? '#111111' : '#F2F2F2';
@@ -37,13 +41,16 @@ export function AppContent({ showSplash }: { showSplash: boolean }) {
       {/* Scroll to top on route change */}
       <ScrollToTop />
       
-      <Routes location={location}>
-        <Route path="/" element={<Home showSplash={showSplash} />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/apropos" element={<APropos />} />
-        <Route path="/projets" element={<Projets />} />
-        <Route path="/projets/:id" element={<ProjetDetail />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes location={location}>
+          <Route path="/" element={<Home showSplash={showSplash} />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/apropos" element={<APropos />} />
+          <Route path="/projets" element={<Projets />} />
+          <Route path="/projets/:id" element={<ProjetDetail />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }
@@ -57,8 +64,9 @@ export default function App() {
   });
 
   return (
-    <BrowserRouter>
-      <PageTransitionProvider>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <PageTransitionProvider>
         {/* Splash Screen */}
         <AnimatePresence>
           {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
@@ -82,8 +90,9 @@ export default function App() {
           {/* Page Transition Overlay */}
           <PageTransitionOverlay />
         </div>
-      </PageTransitionProvider>
-    </BrowserRouter>
+        </PageTransitionProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
