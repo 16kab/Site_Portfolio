@@ -26,6 +26,8 @@ export function getEdgeProximity(
   x: number,
   y: number,
 ) {
+  if (width <= 0 || height <= 0) return 0;
+
   const cx = width / 2;
   const cy = height / 2;
   const dx = Math.abs(x - cx) / cx;
