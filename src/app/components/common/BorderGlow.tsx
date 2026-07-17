@@ -1,7 +1,7 @@
 import {
-  CSSProperties,
-  HTMLAttributes,
-  ReactNode,
+  type CSSProperties,
+  type HTMLAttributes,
+  type ReactNode,
   useCallback,
   useRef,
 } from 'react';

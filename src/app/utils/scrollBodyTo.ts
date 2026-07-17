@@ -34,7 +34,7 @@ export function scrollBodyTo(
     const ease =
       progress < 0.5
         ? 4 * progress * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        : 1 - (-2 * progress + 2) ** 3 / 2;
 
     body.scrollTop = start + change * ease;
 

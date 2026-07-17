@@ -18,7 +18,9 @@ describe('PageMeta', () => {
   afterEach(() => {
     document.head
       .querySelectorAll('meta[name="description"], link[rel="canonical"], meta[property^="og:"]')
-      .forEach((el) => el.remove());
+      .forEach((el) => {
+        el.remove();
+      });
     document.title = '';
   });
 
