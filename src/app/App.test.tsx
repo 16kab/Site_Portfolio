@@ -6,6 +6,7 @@ import {
   getSafariChromeColor,
   syncSafariChromeColor,
 } from './App';
+import { PageTransitionProvider } from './context/PageTransitionContext';
 
 vi.mock('./pages/Home', () => ({
   default: ({ showSplash }: { showSplash: boolean }) => (
@@ -17,7 +18,9 @@ describe('AppContent', () => {
   it('passes the live splash state to Home', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
-        <AppContent showSplash={false} />
+        <PageTransitionProvider>
+          <AppContent showSplash={false} />
+        </PageTransitionProvider>
       </MemoryRouter>,
     );
 

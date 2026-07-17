@@ -9,6 +9,7 @@ interface ScrollFadeInProps {
   delay?: number
   amount?: UseInViewOptions["amount"]
   margin?: UseInViewOptions["margin"]
+  disabled?: boolean
 }
 
 const hiddenState = { opacity: 0, y: 50, filter: "blur(10px)" }
@@ -19,19 +20,21 @@ export default function ScrollFadeIn({
   className = "",
   delay = 0,
   amount = 0.3,
-  margin = "0px"
+  margin = "0px",
+  disabled = false
 }: ScrollFadeInProps) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount, margin })
   const shouldReduceMotion = useReducedMotion()
+  const shouldDisableAnimation = disabled || shouldReduceMotion
 
   return (
     <motion.div
       ref={ref}
-      initial={shouldReduceMotion ? false : hiddenState}
-      animate={shouldReduceMotion || isInView ? visibleState : hiddenState}
+      initial={shouldDisableAnimation ? false : hiddenState}
+      animate={shouldDisableAnimation || isInView ? visibleState : hiddenState}
       transition={
-        shouldReduceMotion
+        shouldDisableAnimation
           ? { duration: 0 }
           : {
               duration: 0.8,

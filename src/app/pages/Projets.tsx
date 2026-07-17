@@ -1,48 +1,67 @@
-import PageHeader from '../components/PageHeader';
+import { motion } from 'motion/react';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router';
 import ContactFooter from '../components/ContactFooter';
 import NewProjectCard from '../components/common/NewProjectCard';
 import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
 import { tousProjets } from '../data/projetsData';
 import { usePageTransition } from '../context/PageTransitionContext';
-import { useEffect, useRef } from 'react';
+import {
+  prefersReducedProjectMotion,
+  roundTransitionRect,
+} from '../utils/projectTransition';
 
 export default function Projets() {
-  const { setTransitionImageSrc, setTransitionImageRect, setIsTransitioning, setIsReverse } = usePageTransition();
+  const location = useLocation();
+  const { snapshot, isTransitioning, beginReverse, clearTransition } =
+    usePageTransition();
   const cardRefs = useRef<{ [key: string]: HTMLImageElement | null }>({});
-  
-  // Handle back navigation - trigger reverse animation
-  useEffect(() => {
-    const handlePopState = () => {
-      // Find the current project from URL
-      const currentPath = window.location.pathname;
-      const projectMatch = currentPath.match(/\/projets\/([^/]+)/);
-      
-      if (projectMatch) {
-        const projectId = projectMatch[1];
-        const projet = tousProjets.find(p => p.link === `/projets/${projectId}`);
-        
-        if (projet && projet.image && cardRefs.current[projet.link]) {
-          const imageElement = cardRefs.current[projet.link];
-          if (imageElement) {
-            const rect = imageElement.getBoundingClientRect();
-            
-            // Trigger reverse transition
-            setIsReverse(true);
-            setTransitionImageSrc(projet.image);
-            setTransitionImageRect(rect);
-            setIsTransitioning(true);
-          }
-        }
-      }
-    };
-    
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [setTransitionImageSrc, setTransitionImageRect, setIsTransitioning, setIsReverse]);
+  const [isReturnVisit] = useState(
+    () =>
+      snapshot?.originPath === '/projets' && location.pathname === '/projets',
+  );
+  const [reduceReturnMotion] = useState(() => prefersReducedProjectMotion());
+  const shouldStartReverse =
+    isReturnVisit && !isTransitioning && snapshot !== null;
+
+  useLayoutEffect(() => {
+    if (!shouldStartReverse || !snapshot) return;
+
+    document.body.scrollTop = snapshot.scrollTop;
+
+    if (reduceReturnMotion) {
+      clearTransition();
+      return;
+    }
+
+    const image = cardRefs.current[snapshot.projectLink];
+    if (!image) {
+      clearTransition();
+      return;
+    }
+
+    beginReverse(roundTransitionRect(image.getBoundingClientRect()));
+  }, [
+    beginReverse,
+    clearTransition,
+    reduceReturnMotion,
+    shouldStartReverse,
+    snapshot,
+  ]);
 
   return (
-    <div className="relative min-h-screen projets-page" style={{ backgroundColor: 'var(--portfolio-bg)' }}>
+    <motion.div
+      className="relative min-h-screen projets-page"
+      style={{ backgroundColor: 'var(--portfolio-bg)' }}
+      initial={
+        isReturnVisit && !reduceReturnMotion ? { opacity: 0 } : false
+      }
+      animate={{ opacity: 1 }}
+      transition={{
+        duration: isReturnVisit && !reduceReturnMotion ? 0.2 : 0,
+      }}
+    >
       {/* Projets Content */}
       <section style={{ paddingTop: 'var(--page-padding-top)' }} className="pb-32">
         <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
@@ -87,6 +106,7 @@ export default function Projets() {
                 delay={Math.min(0.025 + index * 0.025, 0.1)}
                 amount={0.15}
                 margin="0px 0px 10% 0px"
+                disabled={isReturnVisit}
               >
                 <NewProjectCard
                   link={projet.link}
@@ -107,6 +127,6 @@ export default function Projets() {
 
       {/* Contact Footer */}
       <ContactFooter />
-    </div>
+    </motion.div>
   );
 }

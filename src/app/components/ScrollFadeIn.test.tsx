@@ -16,13 +16,14 @@ vi.mock('motion/react', async () => {
     motion: {
       div: forwardRef<
         HTMLDivElement,
-        PropsWithChildren<{ initial: unknown; animate: unknown }>
-      >(({ children, initial, animate }, ref) => (
+        PropsWithChildren<{ initial: unknown; animate: unknown; transition: unknown }>
+      >(({ children, initial, animate, transition }, ref) => (
         <div
           ref={ref}
           data-testid="motion-wrapper"
           data-initial={JSON.stringify(initial)}
           data-animate={JSON.stringify(animate)}
+          data-transition={JSON.stringify(transition)}
         >
           {children}
         </div>
@@ -61,6 +62,21 @@ describe('ScrollFadeIn', () => {
     expect(screen.getByTestId('motion-wrapper')).toHaveAttribute(
       'data-animate',
       JSON.stringify({ opacity: 1, y: 0, filter: 'blur(0px)' }),
+    );
+  });
+
+  it('renders the visible state immediately when disabled', () => {
+    render(<ScrollFadeIn disabled>Card</ScrollFadeIn>);
+
+    const wrapper = screen.getByTestId('motion-wrapper');
+    expect(wrapper).toHaveAttribute('data-initial', 'false');
+    expect(wrapper).toHaveAttribute(
+      'data-animate',
+      JSON.stringify({ opacity: 1, y: 0, filter: 'blur(0px)' }),
+    );
+    expect(wrapper).toHaveAttribute(
+      'data-transition',
+      JSON.stringify({ duration: 0 }),
     );
   });
 });

@@ -13,15 +13,6 @@ interface PageTransitionContextType {
   beginReverse: (targetRect: ProjectTransitionRect) => void;
   completeTransition: () => void;
   clearTransition: () => void;
-
-  // Transitional compatibility for consumers that have not migrated to snapshots yet.
-  setIsTransitioning: (value: boolean) => void;
-  transitionImageSrc: string | null;
-  setTransitionImageSrc: (src: string | null) => void;
-  transitionImageRect: DOMRect | null;
-  setTransitionImageRect: (rect: DOMRect | null) => void;
-  isReverse: boolean;
-  setIsReverse: (value: boolean) => void;
 }
 
 const PageTransitionContext = createContext<PageTransitionContextType | undefined>(undefined);
@@ -41,15 +32,6 @@ const initialTransitionState: TransitionState = {
 export function PageTransitionProvider({ children }: { children: ReactNode }) {
   const [{ isTransitioning, direction, snapshot }, setTransitionState] =
     useState<TransitionState>(initialTransitionState);
-  const [transitionImageSrc, setTransitionImageSrc] = useState<string | null>(null);
-  const [transitionImageRect, setTransitionImageRect] = useState<DOMRect | null>(null);
-  const [isReverse, setIsReverse] = useState(false);
-
-  const setIsTransitioning = useCallback((value: boolean) => {
-    setTransitionState((current) =>
-      current.isTransitioning === value ? current : { ...current, isTransitioning: value },
-    );
-  }, []);
 
   const beginForward = useCallback((nextSnapshot: ProjectTransitionSnapshot) => {
     setTransitionState({
@@ -98,13 +80,6 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
         beginReverse,
         completeTransition,
         clearTransition,
-        setIsTransitioning,
-        transitionImageSrc,
-        setTransitionImageSrc,
-        transitionImageRect,
-        setTransitionImageRect,
-        isReverse,
-        setIsReverse,
       }}
     >
       {children}
