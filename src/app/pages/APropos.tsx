@@ -364,6 +364,7 @@ export default function APropos() {
 
             {/* Expertises Button */}
             <button
+              type="button"
               onClick={() => scrollToSection('expertises')}
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[136px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
@@ -405,6 +406,7 @@ export default function APropos() {
 
             {/* Principes Button */}
             <button
+              type="button"
               onClick={() => scrollToSection('principes')}
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[120px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
@@ -446,6 +448,7 @@ export default function APropos() {
 
             {/* Environnement Button */}
             <button
+              type="button"
               onClick={() => scrollToSection('environnement')}
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[160px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
@@ -557,6 +560,7 @@ export default function APropos() {
               </p>
 
               <button
+                type="button"
                 className="px-6 py-3 flex items-center gap-2 transition-colors duration-300 cursor-pointer relative z-10"
                 style={{
                   backgroundColor: isCVHovered ? 'var(--portfolio-button-bg-hover)' : 'var(--portfolio-button-bg)',
@@ -868,6 +872,7 @@ export default function APropos() {
                 {/* Navigation Arrows Below */}
                 <div className="flex items-center justify-center gap-3 mt-6">
                   <button 
+                    type="button"
                     onClick={() => goToPrincipe(currentPrincipeIndex - 1)}
                     disabled={currentPrincipeIndex === 0}
                     className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
@@ -880,6 +885,7 @@ export default function APropos() {
                   </button>
                   
                   <button 
+                    type="button"
                     onClick={() => goToPrincipe(currentPrincipeIndex + 1)}
                     disabled={currentPrincipeIndex === principlesData.length - 1}
                     className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
@@ -1055,6 +1061,7 @@ export default function APropos() {
                 {/* Navigation Arrows Below */}
                 <div className="flex items-center justify-center gap-3 mt-6">
                   <button 
+                    type="button"
                     onClick={() => goToEnvironnement(currentEnvironnementIndex - 1)}
                     disabled={currentEnvironnementIndex === 0}
                     className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
@@ -1067,6 +1074,7 @@ export default function APropos() {
                   </button>
                   
                   <button 
+                    type="button"
                     onClick={() => goToEnvironnement(currentEnvironnementIndex + 1)}
                     disabled={currentEnvironnementIndex === environmentData.length - 1}
                     className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"

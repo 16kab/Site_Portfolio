@@ -80,6 +80,7 @@ export default function SuccessPopup({
             >
               {/* Close button */}
               <button
+                type="button"
                 ref={closeButtonRef}
                 onClick={onClose}
                 className="absolute top-4 right-4 p-2 text-[#BABABA] hover:text-[#F1F1F1] transition-colors cursor-pointer"
@@ -128,6 +129,7 @@ export default function SuccessPopup({
 
               {/* Close button */}
               <button
+                type="button"
                 onClick={onClose}
                 className="w-full cursor-pointer px-6 py-3 transition-all duration-300 hover:bg-[#f0f0f0]"
                 style={{

@@ -75,6 +75,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
       >
         {/* Wordmark « ALEXIS KABICHE » — révélation lettre par lettre via masque */}
         <div
+          role="img"
           className="flex flex-wrap justify-center"
           style={{
             fontFamily: 'Manrope, sans-serif',

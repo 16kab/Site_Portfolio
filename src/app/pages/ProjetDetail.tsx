@@ -277,6 +277,7 @@ export default function ProjetDetail() {
                 
                 {/* Explication Button */}
                 <button
+                  type="button"
                   onClick={() => scrollToSection('explanation')}
                   className="relative z-10 transition-colors duration-300 cursor-pointer"
                   style={{
@@ -290,7 +291,8 @@ export default function ProjetDetail() {
                     width: '136px'
                   }}
                 >
-                  <svg 
+                  <svg
+                    aria-hidden="true"
                     className="shrink-0 transition-all duration-300"
                     width="18" 
                     height="18" 
@@ -361,6 +363,7 @@ export default function ProjetDetail() {
 
                 {/* Galerie Button */}
                 <button
+                  type="button"
                   onClick={() => scrollToSection('gallery')}
                   className="relative z-10 transition-colors duration-300 cursor-pointer"
                   style={{
@@ -374,7 +377,8 @@ export default function ProjetDetail() {
                     width: '104px'
                   }}
                 >
-                  <svg 
+                  <svg
+                    aria-hidden="true"
                     className="shrink-0 transition-all duration-300"
                     width="18" 
                     height="18" 

@@ -94,6 +94,7 @@ export default function NotFound() {
             </Link>
 
             <button
+              type="button"
               onClick={() => window.history.back()}
               className="group inline-flex items-center gap-2 px-8 py-4 border-2 border-white/20 text-white font-semibold rounded-full hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
               data-cursor="hover"
