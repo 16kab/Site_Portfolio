@@ -3,13 +3,8 @@ import { createRoot } from 'react-dom/client';
 import App from './app/App';
 import './styles/index.css';
 
-// Set dark mode as default theme
-if (!localStorage.getItem('theme')) {
-  document.documentElement.classList.add('dark');
-  localStorage.setItem('theme', 'dark');
-} else if (localStorage.getItem('theme') === 'dark') {
-  document.documentElement.classList.add('dark');
-}
+// Le thème initial est appliqué avant le premier rendu par /theme-init.js
+// (chargé depuis index.html) ; AnimatedThemeToggler gère la persistance.
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Failed to find the root element');
