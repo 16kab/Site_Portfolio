@@ -21,7 +21,11 @@ const EXIT_ANIMATION = {
 
 const formatCharacter = (char: string) => (char === ' ' ? '\u00A0' : char);
 
-type RollingTextProps = Omit<React.ComponentProps<'span'>, 'children'> & {
+type RollingTextProps = Omit<
+  React.ComponentProps<'span'>,
+  'children' | 'ref'
+> & {
+  ref?: React.Ref<HTMLSpanElement>;
   transition?: Transition;
   inView?: boolean;
   inViewMargin?: UseInViewOptions['margin'];
@@ -39,7 +43,7 @@ function RollingText({
   ...props
 }: RollingTextProps) {
   const localRef = React.useRef<HTMLSpanElement>(null);
-  React.useImperativeHandle(ref as any, () => localRef.current!);
+  React.useImperativeHandle(ref, () => localRef.current!);
 
   const inViewResult = useInView(localRef, {
     once: inViewOnce,
@@ -53,7 +57,7 @@ function RollingText({
   // Mouvement réduit : texte statique, sans rotation par lettre
   if (shouldReduceMotion) {
     return (
-      <span data-slot="rolling-text" {...(props as any)} ref={ref}>
+      <span data-slot="rolling-text" {...props} ref={ref}>
         {text}
       </span>
     );
@@ -62,7 +66,7 @@ function RollingText({
   return (
     <span
       data-slot="rolling-text"
-      {...(props as any)}
+      {...props}
       ref={ref}
       style={{ pointerEvents: 'none', position: 'relative' }}
     >

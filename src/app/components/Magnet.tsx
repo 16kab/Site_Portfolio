@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-interface MagnetProps {
+interface MagnetProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   padding?: number;
   disabled?: boolean;
@@ -9,7 +9,6 @@ interface MagnetProps {
   inactiveTransition?: string;
   wrapperClassName?: string;
   innerClassName?: string;
-  [key: string]: any;
 }
 
 const Magnet = ({

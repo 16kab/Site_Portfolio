@@ -52,7 +52,7 @@ const Shuffle: React.FC<ShuffleProps> = ({
 
   // Écouter le resize pour recalculer les animations
   useEffect(() => {
-    let resizeTimeout: NodeJS.Timeout;
+    let resizeTimeout: ReturnType<typeof setTimeout>;
 
     const handleResize = () => {
       clearTimeout(resizeTimeout);

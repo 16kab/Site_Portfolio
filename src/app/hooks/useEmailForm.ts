@@ -11,9 +11,7 @@ export interface FormData {
   message: string;
 }
 
-export interface FormErrors {
-  [key: string]: boolean;
-}
+export type FormErrors = Partial<Record<keyof FormData, boolean>>;
 
 /**
  * Custom hook for handling email form submission with EmailJS
@@ -43,7 +41,7 @@ export function useEmailForm() {
    * Handle input change and remove errors
    */
   const handleInputChange = (
-    name: string,
+    name: keyof FormData,
     value: string,
     isTextField: boolean = false,
   ) => {
