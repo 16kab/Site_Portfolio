@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, type Transition, type UseInViewOptions, useInView } from "motion/react"
+import { motion, type Transition, type UseInViewOptions, useInView, useReducedMotion } from "motion/react"
 import * as React from "react"
 
 const ENTRY_ANIMATION = {
@@ -40,8 +40,18 @@ function RollingText({
     margin: inViewMargin,
   })
   const isInView = !inView || inViewResult
+  const shouldReduceMotion = useReducedMotion()
 
   const characters = React.useMemo(() => text.split(""), [text])
+
+  // Mouvement réduit : texte statique, sans rotation par lettre
+  if (shouldReduceMotion) {
+    return (
+      <span data-slot="rolling-text" {...(props as any)} ref={ref}>
+        {text}
+      </span>
+    )
+  }
 
   return (
     <span data-slot="rolling-text" {...(props as any)} ref={ref} style={{ pointerEvents: 'none', position: 'relative' }}>

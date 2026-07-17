@@ -1,9 +1,11 @@
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-router';
 import { Home, ArrowLeft } from 'lucide-react';
 import PageMeta from '../components/PageMeta';
 
 export default function NotFound() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
       <PageMeta title="Page introuvable — Alexis Kabiche" description="Cette page n'existe pas ou a été déplacée." path="/404" />
@@ -12,13 +14,17 @@ export default function NotFound() {
       <div className="absolute inset-0">
         <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-400/10 rounded-full blur-[120px]"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
+          animate={
+            shouldReduceMotion
+              ? { scale: 1, opacity: 0.4 }
+              : {
+                  scale: [1, 1.2, 1],
+                  opacity: [0.3, 0.5, 0.3],
+                }
+          }
           transition={{
             duration: 8,
-            repeat: Infinity,
+            repeat: shouldReduceMotion ? 0 : Infinity,
             ease: 'easeInOut',
           }}
         />
@@ -34,12 +40,14 @@ export default function NotFound() {
           {/* 404 */}
           <motion.h1
             className="text-9xl md:text-[12rem] font-bold mb-8 bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent leading-none"
-            animate={{
-              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-            }}
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : { backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }
+            }
             transition={{
               duration: 5,
-              repeat: Infinity,
+              repeat: shouldReduceMotion ? 0 : Infinity,
               ease: 'linear',
             }}
             style={{

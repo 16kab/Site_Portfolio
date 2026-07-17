@@ -19,7 +19,7 @@
   --portfolio-text-primary: #1A1A1A;
   --portfolio-text-secondary: #666666;
   --portfolio-text-description: #4A4A4A;
-  --portfolio-text-muted: #8A8A8A;
+  --portfolio-text-muted: #6E6E6E; /* ≥ 4.5:1 sur fond blanc (AA) */
   --portfolio-text-large: #1A1A1A;
   --portfolio-badge-bg: #E8E8E8;
   --portfolio-badge-border: #E8E8E8;

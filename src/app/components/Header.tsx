@@ -67,6 +67,20 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
     };
   }, []);
 
+  // Fermer le menu mobile avec Escape
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isMobileMenuOpen]);
+
   // Lock scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -150,7 +164,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
           </Link>
 
           {/* Right side container - Desktop only */}
-          <div className="hidden lg:flex absolute right-[22.58px] top-1/2 -translate-y-1/2 items-center gap-10">
+          <nav aria-label="Navigation principale" className="hidden lg:flex absolute right-[22.58px] top-1/2 -translate-y-1/2 items-center gap-10">
             {/* Navigation Menu Group */}
             <div className="flex gap-[27px] items-center">
               <Link 
@@ -174,12 +188,13 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
               </Link>
               
               <motion.p
+                aria-hidden="true"
                 className="font-['Arial',sans-serif] text-[16px] leading-[21.6px] transition-opacity duration-300"
                 animate={{
                   color: isScrolled ? 'var(--header-text-scrolled)' : 'var(--header-text-default)'
                 }}
                 style={{
-                  opacity: hoveredItem ? 0.4 : 0.4
+                  opacity: 0.4
                 }}
               >
                 |
@@ -258,7 +273,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 <AnimatedThemeToggler isScrolled={isScrolled} />
               </motion.div>
             </div>
-          </div>
+          </nav>
 
           {/* Right side container - Mobile/Tablet only */}
           <div className="lg:hidden absolute right-14 top-1/2 -translate-y-1/2 flex items-center gap-3">
@@ -270,6 +285,9 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
           <motion.button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden absolute right-6 top-1/2 -translate-y-1/2 p-2 cursor-pointer z-10"
+            aria-label={isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="menu-mobile"
             animate={{
               color: isMobileMenuOpen ? '#EAEAEA' : (isScrolled ? 'var(--header-text-scrolled)' : 'var(--header-text-default)')
             }}
@@ -306,7 +324,9 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
             />
 
             {/* Menu Content */}
-            <motion.div
+            <motion.nav
+              id="menu-mobile"
+              aria-label="Navigation principale"
               className="fixed z-[195] flex flex-col items-start justify-center gap-8 px-8 sm:px-12 pointer-events-none"
               style={{
                 top: 0,
@@ -321,36 +341,36 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Link 
+              <Link
                 to="/projets"
                 className="pointer-events-auto cursor-pointer"
                 onClick={handleLinkClick}
               >
-                <motion.h1 
-                  className="font-bold text-white text-5xl sm:text-6xl md:text-7xl tracking-wider"
+                <motion.span
+                  className="block font-bold text-white text-5xl sm:text-6xl md:text-7xl tracking-wider"
                   style={{ fontFamily: 'Manrope, sans-serif' }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
                   Projets
-                </motion.h1>
+                </motion.span>
               </Link>
 
-              <Link 
+              <Link
                 to="/apropos"
                 className="pointer-events-auto cursor-pointer"
                 onClick={handleLinkClick}
               >
-                <motion.h1 
-                  className="font-bold text-white text-5xl sm:text-6xl md:text-7xl tracking-wider"
+                <motion.span
+                  className="block font-bold text-white text-5xl sm:text-6xl md:text-7xl tracking-wider"
                   style={{ fontFamily: 'Manrope, sans-serif' }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
                   À propos
-                </motion.h1>
+                </motion.span>
               </Link>
 
               <Link
@@ -358,17 +378,17 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 className="pointer-events-auto cursor-pointer"
                 onClick={handleLinkClick}
               >
-                <motion.h1
-                  className="font-bold text-white text-5xl sm:text-6xl md:text-7xl tracking-wider"
+                <motion.span
+                  className="block font-bold text-white text-5xl sm:text-6xl md:text-7xl tracking-wider"
                   style={{ fontFamily: 'Manrope, sans-serif' }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
                 >
                   Contact
-                </motion.h1>
+                </motion.span>
               </Link>
-            </motion.div>
+            </motion.nav>
           </>
         )}
       </AnimatePresence>

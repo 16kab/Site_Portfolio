@@ -73,6 +73,11 @@ export default function App() {
         </AnimatePresence>
 
         <div className="min-h-screen app-container">
+          {/* Lien d'évitement pour la navigation clavier */}
+          <a href="#contenu" className="skip-link">
+            Aller au contenu
+          </a>
+
           {/* Toast Notifications */}
           <Toaster {...TOAST_CONFIG} />
           <Analytics />
@@ -80,12 +85,14 @@ export default function App() {
 
           {/* Global Header */}
           <Header showSplash={showSplash} />
-          
+
           {/* Background wrapper */}
           <BackgroundWrapper />
-          
+
           {/* App Content */}
-          <AppContent showSplash={showSplash} />
+          <main id="contenu">
+            <AppContent showSplash={showSplash} />
+          </main>
 
           {/* Page Transition Overlay */}
           <PageTransitionOverlay />

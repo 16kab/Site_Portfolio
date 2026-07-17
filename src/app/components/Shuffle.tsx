@@ -74,6 +74,9 @@ const Shuffle: React.FC<ShuffleProps> = ({
     () => {
       if (!ref.current || !fontsLoaded || !text) return;
 
+      // Mouvement réduit : le texte reste statique, pas de shuffle
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
       const el = ref.current;
       
       // Split text en caractères

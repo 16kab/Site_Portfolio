@@ -3,6 +3,30 @@
 @import './theme.css';
 @import './portfolio.css';
 
+/* Lien d'évitement : hors écran, visible au focus clavier */
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translate(-50%, calc(-100% - 2rem));
+  z-index: 1000;
+  padding: 0.75rem 1.25rem;
+  border-radius: 5px;
+  background-color: var(--portfolio-button-bg);
+  color: var(--portfolio-button-text);
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translate(-50%, 0);
+  outline: 2px solid var(--portfolio-card-focus);
+  outline-offset: 2px;
+}
+
 /* Hide scrollbar for horizontal scroll */
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */

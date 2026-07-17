@@ -94,7 +94,8 @@ export default function ContactFooter() {
           </ScrollFadeIn>
 
           {/* Large CONTACT Text - Center, Cut off - Hidden on mobile */}
-          <motion.div 
+          <motion.div
+            aria-hidden="true"
             ref={contactTextRef}
             initial={{ filter: 'blur(20px)', opacity: 0 }}
             animate={isContactTextInView ? { filter: 'blur(0px)', opacity: 1 } : { filter: 'blur(20px)', opacity: 0 }}
