@@ -137,6 +137,38 @@ describe('NewProjectCard', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('/projets/test');
   });
 
+  it('schedules only one navigation when the project card is clicked twice', () => {
+    vi.useFakeTimers();
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: false } as MediaQueryList);
+    renderCard();
+    const link = screen.getByRole('link', { name: 'Voir le projet Projet test' });
+
+    fireEvent.click(link);
+    fireEvent.click(link);
+
+    expect(screen.getByTestId('transition-state')).toHaveTextContent('active:forward');
+    expect(vi.getTimerCount()).toBe(1);
+
+    act(() => vi.advanceTimersByTime(420));
+    expect(screen.getByTestId('location')).toHaveTextContent('/projets/test');
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('cancels its pending navigation when the card unmounts', () => {
+    vi.useFakeTimers();
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: false } as MediaQueryList);
+    const { unmount } = renderCard();
+
+    fireEvent.click(screen.getByRole('link', { name: 'Voir le projet Projet test' }));
+    expect(vi.getTimerCount()).toBe(1);
+
+    unmount();
+
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
   it('navigates immediately without a transition when motion is reduced', () => {
     Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
     vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: true } as MediaQueryList);

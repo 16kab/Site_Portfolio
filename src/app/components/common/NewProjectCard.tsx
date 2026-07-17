@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef } from 'react';
+import { useEffect, useState, useRef, forwardRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import svgPaths from '../../../imports/svg-vvxa7ry2aa';
 import RollingText from '../RollingText';
@@ -34,8 +34,21 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
   const navigate = useNavigate();
   const location = useLocation();
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const { beginForward } = usePageTransition();
+  const navigationTimerRef = useRef<number | null>(null);
+  const isNavigationPendingRef = useRef(false);
+  const { beginForward, isTransitioning } = usePageTransition();
   const isInteractive = isHovered || isFocused;
+
+  useEffect(
+    () => () => {
+      if (navigationTimerRef.current !== null) {
+        window.clearTimeout(navigationTimerRef.current);
+        navigationTimerRef.current = null;
+      }
+      isNavigationPendingRef.current = false;
+    },
+    [],
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const shouldKeepNativeNavigation =
@@ -48,10 +61,20 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
 
     if (shouldKeepNativeNavigation) return;
 
+    if (
+      navigationTimerRef.current !== null ||
+      isNavigationPendingRef.current ||
+      isTransitioning
+    ) {
+      event.preventDefault();
+      return;
+    }
+
     if (image && imageContainerRef.current && !prefersReducedProjectMotion()) {
       event.preventDefault();
 
       const timing = getProjectTransitionTiming(window.innerWidth, 'forward');
+      isNavigationPendingRef.current = true;
       beginForward({
         imageSrc: image,
         imageRect: roundTransitionRect(imageContainerRef.current.getBoundingClientRect()),
@@ -60,7 +83,9 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
         scrollTop: document.body.scrollTop,
       });
 
-      window.setTimeout(() => {
+      navigationTimerRef.current = window.setTimeout(() => {
+        navigationTimerRef.current = null;
+        isNavigationPendingRef.current = false;
         navigate(link);
       }, timing.navigateDelay);
     }
