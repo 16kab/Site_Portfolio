@@ -35,6 +35,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: true,
+    // Tests unitaires uniquement ; les specs Playwright vivent dans e2e/
+    include: ['src/**/*.test.{ts,tsx}'],
   },
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
