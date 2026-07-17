@@ -8,6 +8,7 @@ import NewProjectCard from '../components/common/NewProjectCard';
 import { projetsData, tousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
 import svgPaths from '../../imports/svg-jlpjaqyx1i';
+import PageMeta from '../components/PageMeta';
 
 export default function ProjetDetail() {
   const { id } = useParams<{ id: string }>();
@@ -147,10 +148,15 @@ export default function ProjetDetail() {
   }, []);
 
   return (
-    <div 
-      className="relative min-h-screen projet-detail-page" 
+    <div
+      className="relative min-h-screen projet-detail-page"
       style={{ backgroundColor: 'var(--portfolio-bg)' }}
     >
+      <PageMeta
+        title={`${projet.title} — Alexis Kabiche`}
+        description={projet.description}
+        path={`/projets/${projet.id}`}
+      />
       {/* Hero Section - Full Screen */}
       <section ref={heroRef} className="relative h-screen overflow-hidden" style={{ width: '100vw' }}>
         {/* Hero Image with Zoom Effect */}

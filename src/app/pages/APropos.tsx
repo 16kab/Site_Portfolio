@@ -4,6 +4,7 @@ import ScrollFadeIn from '../components/ScrollFadeIn';
 import { useState, useRef, useEffect } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import RollingText from '../components/RollingText';
+import PageMeta from '../components/PageMeta';
 import { Lightbulb, Compass, Users, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ExpertiseSection {
@@ -316,6 +317,11 @@ export default function APropos() {
 
   return (
     <div className="relative min-h-screen apropos-page" style={{ backgroundColor: 'var(--portfolio-bg)' }}>
+      <PageMeta
+        title="À propos — Alexis Kabiche"
+        description="Parcours, expertises et principes de travail d'Alexis Kabiche, Product & Brand Designer."
+        path="/apropos"
+      />
       {/* Fixed Switch Menu - Bottom Right on desktop, Bottom Center on mobile */}
       <div 
         className="fixed z-[199] left-0 right-0 md:top-[112px] md:bottom-auto"

@@ -1,11 +1,13 @@
 import { motion } from 'motion/react';
 import { Link } from 'react-router';
 import { Home, ArrowLeft } from 'lucide-react';
+import PageMeta from '../components/PageMeta';
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
-      
+      <PageMeta title="Page introuvable — Alexis Kabiche" description="Cette page n'existe pas ou a été déplacée." path="/404" />
+
       {/* Animated background */}
       <div className="absolute inset-0">
         <motion.div

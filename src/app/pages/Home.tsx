@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import Shuffle from '../components/Shuffle';
 import { motion } from 'motion/react';
 import { useEffect } from 'react';
+import PageMeta from '../components/PageMeta';
 
 interface HomeProps {
   showSplash: boolean;
@@ -28,6 +29,7 @@ export default function Home({ showSplash }: HomeProps) {
   
   return (
     <section className="relative overflow-hidden home-section">
+      <PageMeta title="Alexis Kabiche — Product & Brand Designer" path="/" />
       {/* Hero Content */}
       <div className="relative z-10 flex h-full items-center justify-center px-4 sm:px-6 md:px-8" style={{ transform: 'translateY(-3%)' }}>
         {/* Desktop: layout avec positions absolues */}

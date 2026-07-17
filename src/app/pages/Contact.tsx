@@ -1,5 +1,6 @@
 import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
+import PageMeta from '../components/PageMeta';
 import SuccessPopup from '../components/SuccessPopup';
 import { useEmailForm } from '../hooks';
 import { Send } from 'lucide-react';
@@ -58,6 +59,11 @@ export default function Contact() {
 
   return (
     <div className="relative min-h-screen contact-page" style={{ backgroundColor: 'var(--portfolio-bg)' }}>
+      <PageMeta
+        title="Contact — Alexis Kabiche"
+        description="Contactez Alexis Kabiche, Product & Brand Designer à Paris, pour un projet, une mission ou une collaboration."
+        path="/contact"
+      />
       {/* Références Section */}
       <section style={{ paddingTop: 'var(--page-padding-top)' }} className="pb-16 md:pb-20">
         <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">

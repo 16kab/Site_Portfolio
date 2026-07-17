@@ -3,6 +3,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import ContactFooter from '../components/ContactFooter';
 import NewProjectCard from '../components/common/NewProjectCard';
+import PageMeta from '../components/PageMeta';
 import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
 import { tousProjets } from '../data/projetsData';
@@ -62,6 +63,11 @@ export default function Projets() {
         duration: isReturnVisit && !reduceReturnMotion ? 0.2 : 0,
       }}
     >
+      <PageMeta
+        title="Projets — Alexis Kabiche"
+        description="Tous les projets UX/UI d'Alexis Kabiche : applications métier, refontes, design systems et identité de marque."
+        path="/projets"
+      />
       {/* Projets Content */}
       <section style={{ paddingTop: 'var(--page-padding-top)' }} className="pb-32">
         <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
