@@ -1,8 +1,11 @@
 import { createRef } from 'react';
-import { createEvent, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, createEvent, fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter, useLocation } from 'react-router';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PageTransitionProvider } from '../../context/PageTransitionContext';
+import {
+  PageTransitionProvider,
+  usePageTransition,
+} from '../../context/PageTransitionContext';
 import NewProjectCard from './NewProjectCard';
 
 vi.mock('../RollingText', () => ({
@@ -19,6 +22,15 @@ const renderCard = (ref = createRef<HTMLImageElement>()) => {
     return <span data-testid="location">{location.pathname}</span>;
   };
 
+  const TransitionProbe = () => {
+    const { isTransitioning, direction } = usePageTransition();
+    return (
+      <span data-testid="transition-state">
+        {isTransitioning ? 'active' : 'idle'}:{direction ?? 'none'}
+      </span>
+    );
+  };
+
   const view = render(
     <MemoryRouter>
       <PageTransitionProvider>
@@ -31,6 +43,7 @@ const renderCard = (ref = createRef<HTMLImageElement>()) => {
           tags={['UX', 'UI']}
           image="/test.webp"
         />
+        <TransitionProbe />
       </PageTransitionProvider>
       <LocationProbe />
     </MemoryRouter>,
@@ -40,6 +53,8 @@ const renderCard = (ref = createRef<HTMLImageElement>()) => {
 };
 
 afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
   Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1024 });
 });
 
@@ -104,12 +119,32 @@ describe('NewProjectCard', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('/');
   });
 
-  it('uses immediate link navigation on mobile', () => {
+  it('starts the image transition before navigating on mobile', () => {
+    vi.useFakeTimers();
     Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: false } as MediaQueryList);
+    renderCard();
+
+    fireEvent.click(screen.getByRole('link', { name: 'Voir le projet Projet test' }));
+
+    expect(screen.getByTestId('location')).toHaveTextContent('/');
+    expect(screen.getByTestId('transition-state')).toHaveTextContent('active:forward');
+
+    act(() => vi.advanceTimersByTime(419));
+    expect(screen.getByTestId('location')).toHaveTextContent('/');
+
+    act(() => vi.advanceTimersByTime(1));
+    expect(screen.getByTestId('location')).toHaveTextContent('/projets/test');
+  });
+
+  it('navigates immediately without a transition when motion is reduced', () => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: true } as MediaQueryList);
     renderCard();
 
     fireEvent.click(screen.getByRole('link', { name: 'Voir le projet Projet test' }));
 
     expect(screen.getByTestId('location')).toHaveTextContent('/projets/test');
+    expect(screen.getByTestId('transition-state')).toHaveTextContent('idle:none');
   });
 });

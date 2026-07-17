@@ -1,8 +1,13 @@
 import { useState, useRef, forwardRef } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import svgPaths from '../../../imports/svg-vvxa7ry2aa';
 import RollingText from '../RollingText';
 import { usePageTransition } from '../../context/PageTransitionContext';
+import {
+  getProjectTransitionTiming,
+  prefersReducedProjectMotion,
+  roundTransitionRect,
+} from '../../utils/projectTransition';
 import BorderGlow from './BorderGlow';
 
 interface NewProjectCardProps {
@@ -27,13 +32,9 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const { 
-    setIsTransitioning, 
-    setTransitionImageSrc, 
-    setTransitionImageRect,
-    setIsReverse 
-  } = usePageTransition();
+  const { beginForward } = usePageTransition();
   const isInteractive = isHovered || isFocused;
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -47,33 +48,21 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(({
 
     if (shouldKeepNativeNavigation) return;
 
-    // Only on desktop/laptop (>= 1024px) - use transition
-    if (window.innerWidth >= 1024 && image && imageContainerRef.current) {
+    if (image && imageContainerRef.current && !prefersReducedProjectMotion()) {
       event.preventDefault();
-      
-      const rect = imageContainerRef.current.getBoundingClientRect();
-      
-      // Round values to avoid sub-pixel rendering issues
-      const roundedRect = {
-        left: Math.round(rect.left),
-        top: Math.round(rect.top),
-        width: Math.round(rect.width),
-        height: Math.round(rect.height),
-        right: Math.round(rect.right),
-        bottom: Math.round(rect.bottom),
-        x: Math.round(rect.x),
-        y: Math.round(rect.y),
-      } as DOMRect;
-      
-      setIsReverse(false); // Forward navigation
-      setTransitionImageSrc(image);
-      setTransitionImageRect(roundedRect);
-      setIsTransitioning(true);
-      
-      // Navigate after image has grown and stayed in place (just before fade out starts)
+
+      const timing = getProjectTransitionTiming(window.innerWidth, 'forward');
+      beginForward({
+        imageSrc: image,
+        imageRect: roundTransitionRect(imageContainerRef.current.getBoundingClientRect()),
+        projectLink: link,
+        originPath: location.pathname,
+        scrollTop: document.body.scrollTop,
+      });
+
       window.setTimeout(() => {
         navigate(link);
-      }, 1000);
+      }, timing.navigateDelay);
     }
   };
 

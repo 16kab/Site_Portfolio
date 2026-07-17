@@ -9,7 +9,6 @@ import { projetsData, tousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
 import svgPaths from '../../imports/svg-jlpjaqyx1i';
 import { ImageLightbox } from '../components/ImageLightbox';
-import { usePageTransition } from '../context/PageTransitionContext';
 
 export default function ProjetDetail() {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +19,6 @@ export default function ProjetDetail() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  const { isTransitioning, setIsTransitioning, setTransitionImageSrc, setTransitionImageRect, setIsReverse } = usePageTransition();
 
   // Ref to track programmatic scrolling
   const isScrollingProgrammatically = useRef(false);
