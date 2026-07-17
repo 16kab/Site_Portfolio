@@ -426,7 +426,7 @@ export const projetsData: Projet[] = [
       },
     ],
     impact:
-      "Le projet a permis de :\\n\\n• Créer l'identité complète de la marque AGPT\\n• Lancer la plateforme digitale\\n• Structurer l'univers visuel de la marque\\n\\nL'identité est aujourd'hui utilisée sur l'ensemble des supports de communication de la marque, ainsi que lors de ses événements et activités communautaires.",
+      "Le projet a permis de :\n\n• Créer l'identité complète de la marque AGPT\n• Lancer la plateforme digitale\n• Structurer l'univers visuel de la marque\n\nL'identité est aujourd'hui utilisée sur l'ensemble des supports de communication de la marque, ainsi que lors de ses événements et activités communautaires.",
     image: agptFullImage,
     gallery: [agptGalleryImage],
     websiteUrl: 'https://www.agirpourtoutes.com',
@@ -489,9 +489,7 @@ export const projetsData: Projet[] = [
     impact:
       "La proposition a été validée par le DSI et constitue aujourd'hui une base de réflexion pour l'évolution future du site.\n\nCertaines idées issues de cette refonte ont déjà été intégrées dans l'écosystème digital du groupe, notamment sur des éléments de navigation comme le menu et le footer.",
     image: refonteSiteHeroImage,
-    gallery: [
-      refonteSiteFullImage, // Temporairement utiliser l'image hero car refonteSiteFullImage ne charge pas
-    ],
+    gallery: [refonteSiteFullImage],
   },
   {
     id: 'charte-spvie',
