@@ -252,10 +252,14 @@ const Grainient = ({
       let raf = 0;
       const t0 = performance.now();
 
-      // prefers-reduced-motion : une seule frame, pas de boucle d'animation
+      // prefers-reduced-motion : une seule frame, pas de boucle d'animation.
+      // On fige sur t=7s (composition équilibrée du dégradé) : à t=0 la
+      // frame est dominée par la couleur sombre — fond quasi noir.
+      const STATIC_TIME = 7;
       isStaticRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       if (isStaticRef.current) {
+        program.uniforms.iTime.value = STATIC_TIME;
         renderFrameRef.current?.();
       } else {
         const loop = (t: number) => {
