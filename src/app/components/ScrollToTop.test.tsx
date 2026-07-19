@@ -198,7 +198,7 @@ describe('ScrollToTop', () => {
     fireEvent.click(
       screen.getByRole('link', { name: 'Voir le projet Projet test' }),
     );
-    act(() => vi.advanceTimersByTime(420));
+    act(() => vi.advanceTimersByTime(550));
 
     expect(screen.getByTestId('location')).toHaveTextContent('/projets/test');
     expect(screen.getByTestId('transition-state')).toHaveTextContent(

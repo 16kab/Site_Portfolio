@@ -16,6 +16,7 @@ import {
   resolveInitialProjetsScroll,
   saveProjetsScroll,
 } from '../utils/projetsScroll';
+import { preloadProjetDetail } from './preloadProjetDetail';
 
 export default function Projets() {
   const location = useLocation();
@@ -46,6 +47,13 @@ export default function Projets() {
     const onScroll = () => saveProjetsScroll(document.body.scrollTop);
     document.body.addEventListener('scroll', onScroll, { passive: true });
     return () => document.body.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Précharge le chunk de la page détail en tâche de fond : la transition
+  // « morph » ne doit jamais attendre le réseau au moment du clic.
+  useEffect(() => {
+    const timer = setTimeout(preloadProjetDetail, 300);
+    return () => clearTimeout(timer);
   }, []);
 
   // Animation de retour (morph) — le scroll est déjà restauré ci-dessus

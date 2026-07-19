@@ -1,5 +1,5 @@
 import { Navigate, useParams } from 'react-router';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import ContactFooter from '../components/ContactFooter';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
@@ -11,6 +11,7 @@ import svgPaths from '../../imports/svg-jlpjaqyx1i';
 import PageMeta from '../components/PageMeta';
 import { ImageLightbox } from '../components/ImageLightbox';
 import { useScrollSpy } from '../hooks';
+import { usePageTransition } from '../context/PageTransitionContext';
 
 export default function ProjetDetail() {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +22,7 @@ export default function ProjetDetail() {
   const bodyRef = useRef(document.body);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const { markArrival } = usePageTransition();
 
   // Scroll animation for hero image zoom - MUST be called before any conditional returns
   const { scrollYProgress } = useScroll({
@@ -30,6 +32,12 @@ export default function ProjetDetail() {
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+
+  // Signale à l'overlay de transition que la page est montée : la
+  // révélation ne doit pas avoir lieu avant (chunk lazy chargé).
+  useLayoutEffect(() => {
+    markArrival();
+  }, [markArrival]);
 
   // Réinitialise le scroll au montage. Déclaré AVANT useScrollSpy pour que
   // le body soit à 0 avant la première détection du hook.

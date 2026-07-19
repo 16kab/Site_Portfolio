@@ -77,3 +77,31 @@ test.describe('Transition projets — restauration du scroll', () => {
     expect(apres).toBeGreaterThan(1000);
   });
 });
+
+// En plein mouvement : l'overlay « morph » ne doit se dissiper qu'une fois
+// la page détail réellement montée (les pages sont lazy-loadées — sans la
+// poignée de main hasArrived, l'overlay révélait l'ancienne page).
+test('plein mouvement : la page détail est prête quand l’overlay disparaît', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'desktop');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+
+  await page.goto('/projets');
+  await expect(
+    page.getByRole('heading', { name: 'Projets', level: 1 }),
+  ).toBeVisible();
+
+  const carte = page.getByRole('link', { name: /Voir le projet/ }).nth(2);
+  await carte.scrollIntoViewIfNeeded();
+  await carte.click();
+
+  // L'overlay apparaît puis se dissipe
+  const overlay = page.locator('img[alt=""]').first();
+  await overlay.waitFor({ state: 'attached', timeout: 3000 });
+  await overlay.waitFor({ state: 'detached', timeout: 6000 });
+
+  // À l'instant où il disparaît, la page détail est déjà là
+  expect(page.url()).toMatch(/\/projets\/.+/);
+  await expect(page.locator('h1')).toBeVisible({ timeout: 500 });
+});

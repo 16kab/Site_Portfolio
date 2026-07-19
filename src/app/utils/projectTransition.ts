@@ -26,10 +26,11 @@ export function roundTransitionRect(
   };
 }
 
-// Timings resserrés : l'overlay se termine juste après la fin du morph
-// (overlayDuration ≈ morphDuration + fenêtre de révélation), et la navigation
-// est déclenchée avant, pour que la page soit prête au moment du fondu. Plus
-// de temps mort entre « l'image a fini de grandir » et « on voit la page ».
+// Aller : la navigation part à la FIN du morph (navigateDelay =
+// morphDuration) pour que le montage de la page d'arrivée ne fasse pas
+// saccader l'animation ; la révélation (fadeDuration) n'a lieu que quand la
+// page est montée (poignée de main `hasArrived`), overlayDuration servant de
+// filet de sécurité. Retour : overlayDuration est la durée totale réelle.
 export function getProjectTransitionTiming(
   width: number,
   direction: ProjectTransitionDirection,
@@ -37,14 +38,16 @@ export function getProjectTransitionTiming(
   if (width < 1024) {
     return direction === 'forward'
       ? {
-          navigateDelay: 400,
+          navigateDelay: 550,
           morphDuration: 0.55,
-          overlayDuration: 650,
+          fadeDuration: 0.2,
+          overlayDuration: 3000,
           reverseDelay: 0,
         }
       : {
           navigateDelay: 0,
           morphDuration: 0.5,
+          fadeDuration: 0.2,
           overlayDuration: 600,
           reverseDelay: 0,
         };
@@ -52,14 +55,16 @@ export function getProjectTransitionTiming(
 
   return direction === 'forward'
     ? {
-        navigateDelay: 550,
+        navigateDelay: 700,
         morphDuration: 0.7,
-        overlayDuration: 800,
+        fadeDuration: 0.25,
+        overlayDuration: 3000,
         reverseDelay: 0,
       }
     : {
         navigateDelay: 0,
         morphDuration: 0.6,
+        fadeDuration: 0.25,
         overlayDuration: 700,
         reverseDelay: 0,
       };

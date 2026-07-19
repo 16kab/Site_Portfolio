@@ -8,6 +8,7 @@ import {
   prefersReducedProjectMotion,
   roundTransitionRect,
 } from '../../utils/projectTransition';
+import { preloadProjetDetail } from '../../pages/preloadProjetDetail';
 import BorderGlow from './BorderGlow';
 
 interface NewProjectCardProps {
@@ -104,9 +105,15 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(
           to={link}
           aria-label={`Voir le projet ${title}`}
           onClick={handleClick}
-          onMouseEnter={() => setIsHovered(true)}
+          onMouseEnter={() => {
+            setIsHovered(true);
+            preloadProjetDetail();
+          }}
           onMouseLeave={() => setIsHovered(false)}
-          onFocus={() => setIsFocused(true)}
+          onFocus={() => {
+            setIsFocused(true);
+            preloadProjetDetail();
+          }}
           onBlur={() => setIsFocused(false)}
           className="project-card group relative flex w-full flex-col md:flex-row gap-6 md:gap-8 p-6 md:p-8 rounded-[12px] transition-colors duration-300 cursor-pointer"
         >

@@ -8,18 +8,27 @@ import {
 describe('getProjectTransitionTiming', () => {
   it('uses compact forward timings on a 390px viewport', () => {
     expect(getProjectTransitionTiming(390, 'forward')).toEqual({
-      navigateDelay: 400,
+      navigateDelay: 550,
       morphDuration: 0.55,
-      overlayDuration: 650,
+      fadeDuration: 0.2,
+      overlayDuration: 3000,
       reverseDelay: 0,
     });
   });
 
+  it('navigates at the end of the morph so mounting never janks it', () => {
+    for (const width of [390, 1440]) {
+      const timing = getProjectTransitionTiming(width, 'forward');
+      expect(timing.navigateDelay).toBe(timing.morphDuration * 1000);
+    }
+  });
+
   it('uses desktop forward timings on a 1440px viewport', () => {
     expect(getProjectTransitionTiming(1440, 'forward')).toEqual({
-      navigateDelay: 550,
+      navigateDelay: 700,
       morphDuration: 0.7,
-      overlayDuration: 800,
+      fadeDuration: 0.25,
+      overlayDuration: 3000,
       reverseDelay: 0,
     });
   });
@@ -28,6 +37,7 @@ describe('getProjectTransitionTiming', () => {
     expect(getProjectTransitionTiming(390, 'reverse')).toEqual({
       navigateDelay: 0,
       morphDuration: 0.5,
+      fadeDuration: 0.2,
       overlayDuration: 600,
       reverseDelay: 0,
     });
@@ -37,6 +47,7 @@ describe('getProjectTransitionTiming', () => {
     expect(getProjectTransitionTiming(1440, 'reverse')).toEqual({
       navigateDelay: 0,
       morphDuration: 0.6,
+      fadeDuration: 0.25,
       overlayDuration: 700,
       reverseDelay: 0,
     });
