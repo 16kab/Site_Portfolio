@@ -134,13 +134,13 @@ export function CardCarousel({
           voisines (peek). La transform compense le peek (7,5 %) et la gouttière. */}
       <div className="overflow-hidden">
         <div
-          className="flex gap-4 transition-transform duration-500 ease-out"
+          className="flex gap-2 transition-transform duration-500 ease-out"
           style={{
-            transform: `translateX(calc(7.5% - ${index * 85}% - ${index * 1}rem))`,
+            transform: `translateX(calc(5% - ${index * 90}% - ${index * 0.5}rem))`,
           }}
         >
           {items.map((item, i) => (
-            <div key={item.title} className="w-[85%] flex-shrink-0">
+            <div key={item.title} className="w-[90%] flex-shrink-0">
               <InfoCard
                 number={item.number}
                 title={item.title}
