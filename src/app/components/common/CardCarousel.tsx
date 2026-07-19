@@ -80,6 +80,8 @@ interface CardCarouselProps {
   items: InfoCardData[];
   /** Classe de visibilité du carrousel (ex. « md:hidden », « xl:hidden ») */
   className?: string;
+  /** Libellé accessible de la région (ex. « Principes ») */
+  label?: string;
 }
 
 const arrowStyle = {
@@ -95,7 +97,11 @@ const arrowClassName =
  * hauteurs de cartes (mesure au montage et au redimensionnement) et la
  * navigation par flèches.
  */
-export function CardCarousel({ items, className = '' }: CardCarouselProps) {
+export function CardCarousel({
+  items,
+  className = '',
+  label,
+}: CardCarouselProps) {
   const [index, setIndex] = useState(0);
   const [maxHeight, setMaxHeight] = useState(0);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -116,7 +122,11 @@ export function CardCarousel({ items, className = '' }: CardCarouselProps) {
   }, []);
 
   return (
-    <div className={`${className} relative`.trim()}>
+    <section
+      className={`${className} relative`.trim()}
+      aria-roledescription="carrousel"
+      aria-label={label}
+    >
       {/* Cards Container */}
       <div className="overflow-hidden">
         <div
@@ -145,6 +155,7 @@ export function CardCarousel({ items, className = '' }: CardCarouselProps) {
           type="button"
           onClick={() => setIndex(index - 1)}
           disabled={index === 0}
+          aria-label="Précédent"
           className={arrowClassName}
           style={arrowStyle}
         >
@@ -158,6 +169,7 @@ export function CardCarousel({ items, className = '' }: CardCarouselProps) {
           type="button"
           onClick={() => setIndex(index + 1)}
           disabled={index === items.length - 1}
+          aria-label="Suivant"
           className={arrowClassName}
           style={arrowStyle}
         >
@@ -167,6 +179,6 @@ export function CardCarousel({ items, className = '' }: CardCarouselProps) {
           />
         </button>
       </div>
-    </div>
+    </section>
   );
 }

@@ -822,7 +822,11 @@ export default function APropos() {
               </div>
 
               {/* Mobile : carrousel */}
-              <CardCarousel items={principlesData} className="md:hidden" />
+              <CardCarousel
+                items={principlesData}
+                className="md:hidden"
+                label="Principes"
+              />
             </ScrollFadeIn>
           </div>
         </section>
@@ -881,7 +885,11 @@ export default function APropos() {
               </div>
 
               {/* Mobile / tablette : carrousel */}
-              <CardCarousel items={environmentData} className="xl:hidden" />
+              <CardCarousel
+                items={environmentData}
+                className="xl:hidden"
+                label="Environnement"
+              />
             </ScrollFadeIn>
           </div>
         </section>
