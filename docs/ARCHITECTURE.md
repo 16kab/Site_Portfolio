@@ -124,11 +124,6 @@ Vérifié en CI par [`scripts/check-bundle-budget.mjs`](../scripts/check-bundle-
 
 ## Dette technique connue (différée)
 
-- **Purge des branches mortes de `Shuffle`** : seules les directions `'right'`
-  sont utilisées ; `'left'/'up'/'down'` sont du code mort (~80 lignes). Le
-  retrait est sûr côté runtime mais entrelacé avec le chemin vivant, sur
-  l'animation signature de la home — à faire avec une **revue visuelle
-  avant/après** (l'E2E tourne en mouvement réduit, où Shuffle ne s'anime pas).
 - **Lazy-load de Grainient/Shuffle** (bundle) : sortirait ~47 kB gzip du
   démarrage pour les visiteurs arrivant en direct sur une sous-page, mais
   provoque un flash du hero lors d'une navigation SPA vers l'accueil (pas de
@@ -140,6 +135,9 @@ Vérifié en CI par [`scripts/check-bundle-budget.mjs`](../scripts/check-bundle-
   de `ProjetDetail` et `APropos` est factorisée dans `useScrollSpy` +
   `resolveActiveSection` (fonction pure unit-testée).
 - **Carrousels d'`APropos`** factorisés en `InfoCard` + `CardCarousel`.
+- **Purge de `Shuffle`** : seule la direction `'right'` était utilisée ; les
+  branches `'left'/'up'/'down'` (~80 lignes) et les props `shuffleDirection` /
+  `shuffleTimes` sont supprimées, le chemin `'right'` conservé à l'identique.
 
 ## Commandes
 
