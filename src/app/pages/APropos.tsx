@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import RollingText from '../components/RollingText';
 import PageMeta from '../components/PageMeta';
-import { scrollBodyTo } from '../utils/scrollBodyTo';
+import { useScrollSpy } from '../hooks';
 import { CardCarousel, InfoCard } from '../components/common/CardCarousel';
 import { Lightbulb, Compass, Users, FileText } from 'lucide-react';
 
@@ -167,25 +167,31 @@ const environmentData: EnvironmentCard[] = [
 
 export default function APropos() {
   const [isCVHovered, setIsCVHovered] = useState(false);
-  const [activeSection, setActiveSection] = useState<
-    'expertises' | 'principes' | 'environnement' | null
-  >(null);
-  const [isScrolled, setIsScrolled] = useState(false);
 
   const expertisesRef = useRef<HTMLDivElement>(null);
   const principesRef = useRef<HTMLDivElement>(null);
   const environnementRef = useRef<HTMLDivElement>(null);
-
-  // Ref to track programmatic scrolling
-  const isScrollingProgrammatically = useRef(false);
-  const cancelScrollRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     // Scroll to top on mount - body is the scrolling element
     document.body.scrollTop = 0;
   }, []);
 
-  // Scroll to section (annulable, respecte prefers-reduced-motion)
+  // Menu sticky à détection de section (voir aussi la page Détail projet)
+  const {
+    activeSection,
+    isScrolled,
+    scrollToSection: scrollSpyTo,
+  } = useScrollSpy<'expertises' | 'principes' | 'environnement'>(
+    [
+      { key: 'expertises', ref: expertisesRef },
+      { key: 'principes', ref: principesRef },
+      { key: 'environnement', ref: environnementRef },
+    ],
+    250,
+  );
+
+  // Scroll to section : offset de 140 px, cible relative au conteneur de scroll
   const scrollToSection = (
     section: 'expertises' | 'principes' | 'environnement',
   ) => {
@@ -196,86 +202,12 @@ export default function APropos() {
           ? principesRef
           : environnementRef;
     if (!ref.current) return;
-
-    // Set active section immediately
-    setActiveSection(section);
-
-    // Block automatic detection during programmatic scroll
-    isScrollingProgrammatically.current = true;
-
-    const offset = 140; // Offset pour le menu sticky
-    const elementPosition = ref.current.getBoundingClientRect().top;
-    const currentScroll = document.body.scrollTop || 0;
-    const offsetPosition = elementPosition + currentScroll - offset;
-
-    cancelScrollRef.current?.();
-    cancelScrollRef.current = scrollBodyTo(offsetPosition, 800, () => {
-      // Re-enable automatic detection after scroll completes
-      setTimeout(() => {
-        isScrollingProgrammatically.current = false;
-      }, 100);
-    });
+    const targetTop =
+      ref.current.getBoundingClientRect().top +
+      (document.body.scrollTop || 0) -
+      140;
+    scrollSpyTo(section, targetTop);
   };
-
-  // Dynamic section detection on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      // Skip automatic detection during programmatic scrolling
-      if (isScrollingProgrammatically.current) {
-        // Still update isScrolled state
-        setIsScrolled((document.body.scrollTop || 0) > 100);
-        return;
-      }
-
-      const scrollPosition = (document.body.scrollTop || 0) + 250; // Offset to trigger section change
-
-      // Update isScrolled state (scroll > 100px)
-      setIsScrolled((document.body.scrollTop || 0) > 100);
-
-      // Check if we're in environnement section
-      if (environnementRef.current) {
-        const environnementTop = environnementRef.current.offsetTop;
-
-        if (scrollPosition >= environnementTop) {
-          setActiveSection('environnement');
-          return;
-        }
-      }
-
-      // Check if we're in principes section
-      if (principesRef.current) {
-        const principesTop = principesRef.current.offsetTop;
-
-        if (scrollPosition >= principesTop) {
-          setActiveSection('principes');
-          return;
-        }
-      }
-
-      // Check if we're in expertises section
-      if (expertisesRef.current) {
-        const expertisesTop = expertisesRef.current.offsetTop;
-
-        if (scrollPosition >= expertisesTop) {
-          setActiveSection('expertises');
-          return;
-        }
-      }
-
-      // If we're above all sections (in the Philosophie section), set to null
-      setActiveSection(null);
-    };
-
-    // Listen to body scroll
-    document.body.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check initial position
-
-    return () => {
-      document.body.removeEventListener('scroll', handleScroll);
-      // Stoppe une éventuelle animation de scroll en cours
-      cancelScrollRef.current?.();
-    };
-  }, []);
 
   return (
     <div
