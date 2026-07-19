@@ -127,14 +127,17 @@ export function CardCarousel({
       aria-roledescription="carrousel"
       aria-label={label}
     >
-      {/* Cards Container */}
+      {/* Cards Container : cartes à 85 %, centrées, laissant entrevoir les
+          voisines (peek). La transform compense le peek (7,5 %) et la gouttière. */}
       <div className="overflow-hidden">
         <div
-          className="flex transition-transform duration-500 ease-out"
-          style={{ transform: `translateX(-${index * 100}%)` }}
+          className="flex gap-4 transition-transform duration-500 ease-out"
+          style={{
+            transform: `translateX(calc(7.5% - ${index * 85}% - ${index * 1}rem))`,
+          }}
         >
           {items.map((item, i) => (
-            <div key={item.title} className="w-full flex-shrink-0">
+            <div key={item.title} className="w-[85%] flex-shrink-0">
               <InfoCard
                 number={item.number}
                 title={item.title}
@@ -149,8 +152,8 @@ export function CardCarousel({
         </div>
       </div>
 
-      {/* Navigation Arrows Below */}
-      <div className="flex items-center justify-center gap-3 mt-6">
+      {/* Contrôles : flèches + points indicateurs */}
+      <div className="flex items-center justify-center gap-4 mt-6">
         <button
           type="button"
           onClick={() => setIndex(index - 1)}
@@ -164,6 +167,26 @@ export function CardCarousel({
             style={{ color: 'var(--portfolio-text-secondary)' }}
           />
         </button>
+
+        <div className="flex items-center gap-2">
+          {items.map((item, i) => (
+            <button
+              key={item.title}
+              type="button"
+              onClick={() => setIndex(i)}
+              aria-label={`Aller à la carte ${i + 1}`}
+              aria-current={i === index}
+              className="h-2 rounded-full transition-all duration-300"
+              style={{
+                width: i === index ? '1.25rem' : '0.5rem',
+                backgroundColor:
+                  i === index
+                    ? 'var(--portfolio-text-primary)'
+                    : 'var(--portfolio-text-muted)',
+              }}
+            />
+          ))}
+        </div>
 
         <button
           type="button"
