@@ -8,8 +8,6 @@ export interface InfoCardData {
 }
 
 interface InfoCardProps extends InfoCardData {
-  /** Hauteur imposée (carrousel, pour égaliser les cartes) ; absente = auto */
-  heightPx?: number;
   /** Padding réduit (carrousel mobile, pour limiter la hauteur) */
   compact?: boolean;
   innerRef?: (el: HTMLDivElement | null) => void;
@@ -23,7 +21,6 @@ export function InfoCard({
   number,
   title,
   description,
-  heightPx,
   compact = false,
   innerRef,
 }: InfoCardProps) {
@@ -34,9 +31,6 @@ export function InfoCard({
         backgroundColor: 'var(--portfolio-card-bg)',
         borderRadius: '12px',
         border: '1px solid var(--portfolio-card-border)',
-        ...(heightPx !== undefined
-          ? { height: heightPx > 0 ? `${heightPx}px` : 'auto' }
-          : {}),
       }}
       ref={innerRef}
     >
@@ -106,17 +100,12 @@ export function CardCarousel({
   label,
 }: CardCarouselProps) {
   const [index, setIndex] = useState(0);
-  const [maxHeight, setMaxHeight] = useState(0);
+  const [heights, setHeights] = useState<number[]>([]);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const measure = () => {
-      const heights = cardsRef.current
-        .filter((card): card is HTMLDivElement => card !== null)
-        .map((card) => card.scrollHeight);
-      if (heights.length > 0) {
-        setMaxHeight(Math.max(...heights));
-      }
+      setHeights(cardsRef.current.map((card) => card?.offsetHeight ?? 0));
     };
 
     measure();
@@ -124,17 +113,23 @@ export function CardCarousel({
     return () => window.removeEventListener('resize', measure);
   }, []);
 
+  // Hauteur ajustée à la carte courante (les cartes gardent leur taille réelle)
+  const currentHeight = heights[index];
+
   return (
     <section
       className={`${className} relative`.trim()}
       aria-roledescription="carrousel"
       aria-label={label}
     >
-      {/* Cards Container : cartes à 85 %, centrées, laissant entrevoir les
-          voisines (peek). La transform compense le peek (7,5 %) et la gouttière. */}
-      <div className="overflow-hidden">
+      {/* Cards Container : cartes à 90 %, centrées, laissant entrevoir les
+          voisines (peek). Hauteur ajustée à la carte affichée. */}
+      <div
+        className="overflow-hidden transition-[height] duration-500 ease-out"
+        style={currentHeight ? { height: `${currentHeight}px` } : undefined}
+      >
         <div
-          className="flex gap-2 transition-transform duration-500 ease-out"
+          className="flex items-start gap-2 transition-transform duration-500 ease-out"
           style={{
             transform: `translateX(calc(5% - ${index * 90}% - ${index * 0.5}rem))`,
           }}
@@ -145,7 +140,6 @@ export function CardCarousel({
                 number={item.number}
                 title={item.title}
                 description={item.description}
-                heightPx={maxHeight}
                 compact
                 innerRef={(el) => {
                   cardsRef.current[i] = el;
