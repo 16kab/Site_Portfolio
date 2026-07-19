@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import ContactFooter from '../components/ContactFooter';
 import NewProjectCard from '../components/common/NewProjectCard';
@@ -12,6 +12,10 @@ import {
   prefersReducedProjectMotion,
   roundTransitionRect,
 } from '../utils/projectTransition';
+import {
+  resolveInitialProjetsScroll,
+  saveProjetsScroll,
+} from '../utils/projetsScroll';
 
 export default function Projets() {
   const location = useLocation();
@@ -26,10 +30,27 @@ export default function Projets() {
   const shouldStartReverse =
     isReturnVisit && snapshot !== null && direction !== 'reverse';
 
+  // Position de la liste à restaurer, figée au montage. On n'utilise le
+  // scrollTop du snapshot que s'il provient bien de la liste ; sinon (ex.
+  // projet → autre projet → liste, où le snapshot vient d'une page détail)
+  // on s'appuie sur la mémoire dédiée à la liste.
+  const initialScrollRef = useRef(resolveInitialProjetsScroll(snapshot));
+
+  // Restaure la position au montage (avant peinture, avant l'éventuel morph)
+  useLayoutEffect(() => {
+    document.body.scrollTop = initialScrollRef.current;
+  }, []);
+
+  // Mémorise la position pendant le défilement (pour un retour ultérieur)
+  useEffect(() => {
+    const onScroll = () => saveProjetsScroll(document.body.scrollTop);
+    document.body.addEventListener('scroll', onScroll, { passive: true });
+    return () => document.body.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Animation de retour (morph) — le scroll est déjà restauré ci-dessus
   useLayoutEffect(() => {
     if (!shouldStartReverse || !snapshot) return;
-
-    document.body.scrollTop = snapshot.scrollTop;
 
     if (reduceReturnMotion) {
       clearTransition();

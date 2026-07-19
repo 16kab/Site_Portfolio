@@ -126,9 +126,9 @@ function renderTransitionRoutes(initialEntry = '/projets') {
 }
 
 describe('ScrollToTop route decisions', () => {
-  it('restores project scroll only on the matching origin route', () => {
-    expect(shouldRestoreProjectScroll('/projets', snapshot)).toBe(true);
-    expect(shouldRestoreProjectScroll('/contact', snapshot)).toBe(false);
+  it('restores project scroll only on the projects route', () => {
+    expect(shouldRestoreProjectScroll('/projets')).toBe(true);
+    expect(shouldRestoreProjectScroll('/contact')).toBe(false);
   });
 
   it('recognizes only the transition origin and project target routes', () => {

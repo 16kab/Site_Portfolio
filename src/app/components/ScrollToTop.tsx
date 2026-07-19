@@ -8,10 +8,10 @@ type TransitionRoute = Pick<
   'originPath' | 'projectLink'
 >;
 
-export const shouldRestoreProjectScroll = (
-  pathname: string,
-  snapshot: TransitionRoute | null,
-) => snapshot?.originPath === '/projets' && pathname === '/projets';
+// La page Projets gère elle-même sa position de défilement (mémoire dédiée),
+// donc ScrollToTop ne la remet jamais en haut.
+export const shouldRestoreProjectScroll = (pathname: string) =>
+  pathname === '/projets';
 
 export const isTransitionRoute = (
   pathname: string,
@@ -31,10 +31,10 @@ export function ScrollToTop() {
     if (handledPathRef.current === pathname) return;
 
     handledPathRef.current = pathname;
-    if (!shouldRestoreProjectScroll(pathname, snapshot)) {
+    if (!shouldRestoreProjectScroll(pathname)) {
       document.body.scrollTop = 0;
     }
-  }, [pathname, snapshot]);
+  }, [pathname]);
 
   useEffect(() => {
     if (snapshot && !isTransitionRoute(pathname, snapshot)) {
