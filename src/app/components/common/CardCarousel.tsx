@@ -129,9 +129,13 @@ export function CardCarousel({
     >
       {/* Cards Container */}
       <div className="overflow-hidden">
+        {/* gap-6 : gouttière visible pendant le défilement ; la carte active
+            reste pleine largeur (la transform compense les gouttières). */}
         <div
-          className="flex transition-transform duration-500 ease-out"
-          style={{ transform: `translateX(-${index * 100}%)` }}
+          className="flex gap-6 transition-transform duration-500 ease-out"
+          style={{
+            transform: `translateX(calc(${-index * 100}% - ${index * 1.5}rem))`,
+          }}
         >
           {items.map((item, i) => (
             <div key={item.title} className="w-full flex-shrink-0">
