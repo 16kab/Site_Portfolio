@@ -1,0 +1,172 @@
+import { useEffect, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+export interface InfoCardData {
+  number: string;
+  title: string;
+  description: string;
+}
+
+interface InfoCardProps extends InfoCardData {
+  /** Hauteur imposée (carrousel, pour égaliser les cartes) ; absente = auto */
+  heightPx?: number;
+  innerRef?: (el: HTMLDivElement | null) => void;
+}
+
+/**
+ * Carte « (numéro) / titre / description » des sections Principes et
+ * Environnement de la page À propos (grilles desktop et carrousels mobiles).
+ */
+export function InfoCard({
+  number,
+  title,
+  description,
+  heightPx,
+  innerRef,
+}: InfoCardProps) {
+  return (
+    <div
+      className="p-8"
+      style={{
+        backgroundColor: 'var(--portfolio-card-bg)',
+        borderRadius: '12px',
+        border: '1px solid var(--portfolio-card-border)',
+        ...(heightPx !== undefined
+          ? { height: heightPx > 0 ? `${heightPx}px` : 'auto' }
+          : {}),
+      }}
+      ref={innerRef}
+    >
+      <p
+        className="mb-1"
+        style={{
+          fontFamily: 'Manrope, sans-serif',
+          fontSize: '14px',
+          fontWeight: 400,
+          letterSpacing: '0.037px',
+          lineHeight: '20px',
+          color: 'var(--portfolio-text-muted)',
+        }}
+      >
+        ({number})
+      </p>
+      <h3
+        className="mb-4"
+        style={{
+          fontFamily: 'Manrope, sans-serif',
+          fontSize: '24px',
+          fontWeight: 600,
+          letterSpacing: '-0.8px',
+          lineHeight: '28px',
+          color: 'var(--portfolio-text-primary)',
+        }}
+      >
+        {title}
+      </h3>
+      <p
+        className="leading-relaxed text-[15px]"
+        style={{
+          fontFamily: 'Manrope, sans-serif',
+          color: 'var(--portfolio-text-description)',
+        }}
+      >
+        {description}
+      </p>
+    </div>
+  );
+}
+
+interface CardCarouselProps {
+  items: InfoCardData[];
+  /** Classe de visibilité du carrousel (ex. « md:hidden », « xl:hidden ») */
+  className?: string;
+}
+
+const arrowStyle = {
+  backgroundColor: 'var(--portfolio-card-bg)',
+  border: '1px solid var(--portfolio-card-border)',
+} as const;
+
+const arrowClassName =
+  'flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80';
+
+/**
+ * Carrousel mobile auto-contenu : gère son index, l'égalisation des
+ * hauteurs de cartes (mesure au montage et au redimensionnement) et la
+ * navigation par flèches.
+ */
+export function CardCarousel({ items, className = '' }: CardCarouselProps) {
+  const [index, setIndex] = useState(0);
+  const [maxHeight, setMaxHeight] = useState(0);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const measure = () => {
+      const heights = cardsRef.current
+        .filter((card): card is HTMLDivElement => card !== null)
+        .map((card) => card.scrollHeight);
+      if (heights.length > 0) {
+        setMaxHeight(Math.max(...heights));
+      }
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
+
+  return (
+    <div className={`${className} relative`.trim()}>
+      {/* Cards Container */}
+      <div className="overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-out"
+          style={{ transform: `translateX(-${index * 100}%)` }}
+        >
+          {items.map((item, i) => (
+            <div key={item.title} className="w-full flex-shrink-0">
+              <InfoCard
+                number={item.number}
+                title={item.title}
+                description={item.description}
+                heightPx={maxHeight}
+                innerRef={(el) => {
+                  cardsRef.current[i] = el;
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Navigation Arrows Below */}
+      <div className="flex items-center justify-center gap-3 mt-6">
+        <button
+          type="button"
+          onClick={() => setIndex(index - 1)}
+          disabled={index === 0}
+          className={arrowClassName}
+          style={arrowStyle}
+        >
+          <ChevronLeft
+            className="w-5 h-5"
+            style={{ color: 'var(--portfolio-text-secondary)' }}
+          />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIndex(index + 1)}
+          disabled={index === items.length - 1}
+          className={arrowClassName}
+          style={arrowStyle}
+        >
+          <ChevronRight
+            className="w-5 h-5"
+            style={{ color: 'var(--portfolio-text-secondary)' }}
+          />
+        </button>
+      </div>
+    </div>
+  );
+}
