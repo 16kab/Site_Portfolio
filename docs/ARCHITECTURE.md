@@ -124,26 +124,22 @@ Vérifié en CI par [`scripts/check-bundle-budget.mjs`](../scripts/check-bundle-
 
 ## Dette technique connue (différée)
 
-Ces chantiers ont une vraie valeur de maintenance mais touchent des
-comportements (animation, scroll) difficiles à vérifier automatiquement en
-headless. À traiter avec une **revue visuelle avant/après** (dev server, thèmes
-clair/sombre, `prefers-reduced-motion`).
-
 - **Purge des branches mortes de `Shuffle`** : seules les directions `'right'`
-  sont utilisées ; `'left'/'up'/'down'` sont du code mort (~80 lignes). Retrait
-  sûr côté runtime mais entrelacé avec le chemin vivant → vérifier l'animation
-  du hero d'accueil.
-- **Déduplication du scroll-spy** : `ProjetDetail` et `APropos` dupliquent la
-  logique de menu sticky + détection de section (~90 lignes, implémentations
-  légèrement divergentes : offsets, `offsetTop` vs `getBoundingClientRect`).
-  Extraire un hook `useSectionScrollSpy` paramétré, en préservant le
-  comportement exact de chaque page.
-- **Carrousels d'`APropos`** : deux carrousels mobiles quasi identiques à
-  factoriser en un composant `Carousel`.
+  sont utilisées ; `'left'/'up'/'down'` sont du code mort (~80 lignes). Le
+  retrait est sûr côté runtime mais entrelacé avec le chemin vivant, sur
+  l'animation signature de la home — à faire avec une **revue visuelle
+  avant/après** (l'E2E tourne en mouvement réduit, où Shuffle ne s'anime pas).
 - **Lazy-load de Grainient/Shuffle** (bundle) : sortirait ~47 kB gzip du
   démarrage pour les visiteurs arrivant en direct sur une sous-page, mais
   provoque un flash du hero lors d'une navigation SPA vers l'accueil (pas de
   splash pour le masquer). Abandonné tant que le flash n'est pas éliminable.
+
+### Déjà traité (branche `refactor/dedup-differee`)
+
+- **Scroll-spy dédupliqué** : la logique de menu sticky + détection de section
+  de `ProjetDetail` et `APropos` est factorisée dans `useScrollSpy` +
+  `resolveActiveSection` (fonction pure unit-testée).
+- **Carrousels d'`APropos`** factorisés en `InfoCard` + `CardCarousel`.
 
 ## Commandes
 
