@@ -282,13 +282,13 @@ describe('Projets return transition', () => {
     expect(screen.getByTestId('transition-image')).toHaveAttribute(
       'data-transition',
       JSON.stringify({
-        duration: 0.6,
+        duration: 0.5,
         ease: [0.76, 0, 0.24, 1],
         delay: 0,
       }),
     );
 
-    act(() => vi.advanceTimersByTime(649));
+    act(() => vi.advanceTimersByTime(599));
     expect(screen.getByTestId('transition-state')).toHaveTextContent(
       `active:reverse:${existingProjectLink}`,
     );

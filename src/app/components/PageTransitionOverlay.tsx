@@ -36,6 +36,9 @@ export function PageTransitionOverlay() {
     duration: timing.morphDuration,
     ease: [0.76, 0, 0.24, 1] as const,
   };
+  // Le fondu de l'image commence pile à la fin du morph (pas de temps mort) ;
+  // il occupe la courte fenêtre restante de l'overlay.
+  const revealStart = timing.morphDuration / (timing.overlayDuration / 1000);
 
   return (
     <motion.div
@@ -65,7 +68,7 @@ export function PageTransitionOverlay() {
                 borderRadius: morphTransition,
                 opacity: {
                   duration: timing.overlayDuration / 1000,
-                  times: [0, 0.75, 1],
+                  times: [0, revealStart, 1],
                   ease: 'easeOut',
                 },
               }

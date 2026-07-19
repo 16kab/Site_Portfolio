@@ -26,6 +26,10 @@ export function roundTransitionRect(
   };
 }
 
+// Timings resserrés : l'overlay se termine juste après la fin du morph
+// (overlayDuration ≈ morphDuration + fenêtre de révélation), et la navigation
+// est déclenchée avant, pour que la page soit prête au moment du fondu. Plus
+// de temps mort entre « l'image a fini de grandir » et « on voit la page ».
 export function getProjectTransitionTiming(
   width: number,
   direction: ProjectTransitionDirection,
@@ -33,31 +37,31 @@ export function getProjectTransitionTiming(
   if (width < 1024) {
     return direction === 'forward'
       ? {
-          navigateDelay: 420,
-          morphDuration: 0.65,
-          overlayDuration: 800,
+          navigateDelay: 400,
+          morphDuration: 0.55,
+          overlayDuration: 650,
           reverseDelay: 0,
         }
       : {
           navigateDelay: 0,
-          morphDuration: 0.6,
-          overlayDuration: 650,
+          morphDuration: 0.5,
+          overlayDuration: 600,
           reverseDelay: 0,
         };
   }
 
   return direction === 'forward'
     ? {
-        navigateDelay: 1000,
-        morphDuration: 0.8,
-        overlayDuration: 2000,
+        navigateDelay: 550,
+        morphDuration: 0.7,
+        overlayDuration: 800,
         reverseDelay: 0,
       }
     : {
         navigateDelay: 0,
-        morphDuration: 0.8,
-        overlayDuration: 1000,
-        reverseDelay: 0.3,
+        morphDuration: 0.6,
+        overlayDuration: 700,
+        reverseDelay: 0,
       };
 }
 

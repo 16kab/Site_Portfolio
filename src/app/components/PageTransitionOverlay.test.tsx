@@ -59,7 +59,7 @@ describe('PageTransitionOverlay', () => {
     expect(screen.getByAltText('')).toHaveAttribute('src', '/test.webp');
   });
 
-  it('completes and removes a mobile forward transition after 800ms', () => {
+  it('completes and removes a mobile forward transition after 650ms', () => {
     vi.useFakeTimers();
     Object.defineProperty(window, 'innerWidth', {
       configurable: true,
@@ -77,7 +77,7 @@ describe('PageTransitionOverlay', () => {
     expect(screen.getByTestId('transition-state')).toHaveTextContent('active');
     expect(screen.getByAltText('')).toHaveAttribute('src', '/test.webp');
 
-    act(() => vi.advanceTimersByTime(799));
+    act(() => vi.advanceTimersByTime(649));
     expect(screen.getByAltText('')).toBeInTheDocument();
 
     act(() => vi.advanceTimersByTime(1));
