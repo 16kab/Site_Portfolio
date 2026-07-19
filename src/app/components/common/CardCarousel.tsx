@@ -10,6 +10,8 @@ export interface InfoCardData {
 interface InfoCardProps extends InfoCardData {
   /** Hauteur imposée (carrousel, pour égaliser les cartes) ; absente = auto */
   heightPx?: number;
+  /** Padding réduit (carrousel mobile, pour limiter la hauteur) */
+  compact?: boolean;
   innerRef?: (el: HTMLDivElement | null) => void;
 }
 
@@ -22,11 +24,12 @@ export function InfoCard({
   title,
   description,
   heightPx,
+  compact = false,
   innerRef,
 }: InfoCardProps) {
   return (
     <div
-      className="p-8"
+      className={compact ? 'p-6' : 'p-8'}
       style={{
         backgroundColor: 'var(--portfolio-card-bg)',
         borderRadius: '12px',
@@ -143,6 +146,7 @@ export function CardCarousel({
                 title={item.title}
                 description={item.description}
                 heightPx={maxHeight}
+                compact
                 innerRef={(el) => {
                   cardsRef.current[i] = el;
                 }}
