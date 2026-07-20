@@ -1,6 +1,20 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { X, CheckCircle } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { useT } from '../i18n';
+
+const STRINGS = {
+  fr: {
+    message: 'Message envoyé avec succès',
+    description: 'Je vous répondrai dans les plus brefs délais.',
+    close: 'Fermer',
+  },
+  en: {
+    message: 'Message sent successfully',
+    description: "I'll get back to you as soon as possible.",
+    close: 'Close',
+  },
+};
 
 interface SuccessPopupProps {
   isOpen: boolean;
@@ -12,9 +26,12 @@ interface SuccessPopupProps {
 export default function SuccessPopup({
   isOpen,
   onClose,
-  message = 'Message envoyé avec succès',
-  description = 'Je vous répondrai dans les plus brefs délais.',
+  message,
+  description,
 }: SuccessPopupProps) {
+  const t = useT(STRINGS);
+  const resolvedMessage = message ?? t.message;
+  const resolvedDescription = description ?? t.description;
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Fermer avec Escape
@@ -84,7 +101,7 @@ export default function SuccessPopup({
                 ref={closeButtonRef}
                 onClick={onClose}
                 className="absolute top-4 right-4 p-2 text-[#BABABA] hover:text-[#F1F1F1] transition-colors cursor-pointer"
-                aria-label="Fermer"
+                aria-label={t.close}
               >
                 <X className="w-5 h-5" />
               </button>
@@ -110,7 +127,7 @@ export default function SuccessPopup({
                   color: '#F1F1F1',
                 }}
               >
-                {message}
+                {resolvedMessage}
               </h3>
 
               {/* Description */}
@@ -124,7 +141,7 @@ export default function SuccessPopup({
                   color: '#BABABA',
                 }}
               >
-                {description}
+                {resolvedDescription}
               </p>
 
               {/* Close button */}
@@ -141,7 +158,7 @@ export default function SuccessPopup({
                   borderRadius: '5px',
                 }}
               >
-                Fermer
+                {t.close}
               </button>
             </div>
           </motion.div>

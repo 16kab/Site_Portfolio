@@ -9,8 +9,67 @@ import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import RollingText from '../components/RollingText';
+import { useT } from '../i18n';
+
+const STRINGS = {
+  fr: {
+    eyebrow: 'Contact',
+    title: 'Travaillons ensemble',
+    location: 'Localisation',
+    email: 'Email',
+    phone: 'Téléphone',
+    labelNom: 'Nom *',
+    labelPrenom: 'Prénom *',
+    labelEmail: 'Email *',
+    labelObjet: 'Objet *',
+    labelMessage: 'Message *',
+    phNom: 'Votre nom',
+    phPrenom: 'Votre prénom',
+    phEmail: 'Votre email',
+    phObjet: 'Objet de votre message',
+    phMessage: 'Votre message...',
+    errRequired: 'Ce champ est requis',
+    errEmail: 'Email invalide',
+    send: 'Envoyer',
+    sending: 'Envoi...',
+    requiredNote: 'Champs obligatoires',
+    honeypot: 'Ne pas remplir ce champ',
+    rgpdBefore:
+      'Les informations transmises servent uniquement à traiter votre demande. Voir les ',
+    rgpdLink: 'mentions légales',
+    rgpdAfter: '.',
+  },
+  en: {
+    eyebrow: 'Contact',
+    title: "Let's work together",
+    location: 'Location',
+    email: 'Email',
+    phone: 'Phone',
+    labelNom: 'Last name *',
+    labelPrenom: 'First name *',
+    labelEmail: 'Email *',
+    labelObjet: 'Subject *',
+    labelMessage: 'Message *',
+    phNom: 'Your last name',
+    phPrenom: 'Your first name',
+    phEmail: 'Your email',
+    phObjet: 'Subject of your message',
+    phMessage: 'Your message...',
+    errRequired: 'This field is required',
+    errEmail: 'Invalid email',
+    send: 'Send',
+    sending: 'Sending...',
+    requiredNote: 'Required fields',
+    honeypot: 'Do not fill in this field',
+    rgpdBefore:
+      'The information you provide is used solely to handle your request. See the ',
+    rgpdLink: 'legal notice',
+    rgpdAfter: '.',
+  },
+};
 
 export default function Contact() {
+  const t = useT(STRINGS);
   const [isSendButtonHovered, setIsSendButtonHovered] = useState(false);
   const {
     errors,
@@ -75,7 +134,7 @@ export default function Contact() {
                   letterSpacing: '0.5px',
                 }}
               >
-                Contact
+                {t.eyebrow}
               </p>
             </ScrollRevealTitle>
             <ScrollRevealTitle delay={0.05}>
@@ -89,7 +148,7 @@ export default function Contact() {
                   color: 'var(--portfolio-text-primary)',
                 }}
               >
-                Travaillons ensemble
+                {t.title}
               </h1>
             </ScrollRevealTitle>
           </div>
@@ -98,19 +157,16 @@ export default function Contact() {
             {/* Left side - Info */}
             <ScrollFadeIn delay={0.3}>
               <div className="space-y-8 lg:space-y-12">
-                <ContactInfo
-                  label="Localisation"
-                  value={SITE_CONTACT.location}
-                />
+                <ContactInfo label={t.location} value={SITE_CONTACT.location} />
 
                 <ContactInfo
-                  label="Email"
+                  label={t.email}
                   value={SITE_CONTACT.email}
                   href={CONTACT_EMAIL_HREF}
                 />
 
                 <ContactInfo
-                  label="Téléphone"
+                  label={t.phone}
                   value={SITE_CONTACT.phoneDisplay}
                   href={SITE_CONTACT.phoneHref}
                 />
@@ -131,7 +187,7 @@ export default function Contact() {
                     overflow: 'hidden',
                   }}
                 >
-                  <label htmlFor="site_web">Ne pas remplir ce champ</label>
+                  <label htmlFor="site_web">{t.honeypot}</label>
                   <input
                     type="text"
                     id="site_web"
@@ -154,7 +210,7 @@ export default function Contact() {
                         marginBottom: '12px',
                       }}
                     >
-                      Nom *
+                      {t.labelNom}
                     </label>
                     <input
                       type="text"
@@ -179,7 +235,7 @@ export default function Contact() {
                           : 'var(--portfolio-card-border)',
                         color: 'var(--portfolio-text-primary)',
                       }}
-                      placeholder="Votre nom"
+                      placeholder={t.phNom}
                       onInput={(e) => {
                         const input = e.currentTarget;
                         input.value = handleInputChange(
@@ -196,7 +252,7 @@ export default function Contact() {
                         className="text-red-500 text-sm mt-2"
                         style={{ fontFamily: 'Manrope, sans-serif' }}
                       >
-                        Ce champ est requis
+                        {t.errRequired}
                       </p>
                     )}
                   </div>
@@ -214,7 +270,7 @@ export default function Contact() {
                         marginBottom: '12px',
                       }}
                     >
-                      Prénom *
+                      {t.labelPrenom}
                     </label>
                     <input
                       type="text"
@@ -241,7 +297,7 @@ export default function Contact() {
                           : 'var(--portfolio-card-border)',
                         color: 'var(--portfolio-text-primary)',
                       }}
-                      placeholder="Votre prénom"
+                      placeholder={t.phPrenom}
                       onInput={(e) => {
                         const input = e.currentTarget;
                         input.value = handleInputChange(
@@ -258,7 +314,7 @@ export default function Contact() {
                         className="text-red-500 text-sm mt-2"
                         style={{ fontFamily: 'Manrope, sans-serif' }}
                       >
-                        Ce champ est requis
+                        {t.errRequired}
                       </p>
                     )}
                   </div>
@@ -277,7 +333,7 @@ export default function Contact() {
                       marginBottom: '12px',
                     }}
                   >
-                    Email *
+                    {t.labelEmail}
                   </label>
                   <input
                     type="email"
@@ -302,7 +358,7 @@ export default function Contact() {
                         : 'var(--portfolio-card-border)',
                       color: 'var(--portfolio-text-primary)',
                     }}
-                    placeholder="Votre email"
+                    placeholder={t.phEmail}
                   />
                   {errors.email && (
                     <p
@@ -311,7 +367,7 @@ export default function Contact() {
                       className="text-red-500 text-sm mt-2"
                       style={{ fontFamily: 'Manrope, sans-serif' }}
                     >
-                      Email invalide
+                      {t.errEmail}
                     </p>
                   )}
                 </div>
@@ -329,7 +385,7 @@ export default function Contact() {
                       marginBottom: '12px',
                     }}
                   >
-                    Objet *
+                    {t.labelObjet}
                   </label>
                   <input
                     type="text"
@@ -354,7 +410,7 @@ export default function Contact() {
                         : 'var(--portfolio-card-border)',
                       color: 'var(--portfolio-text-primary)',
                     }}
-                    placeholder="Objet de votre message"
+                    placeholder={t.phObjet}
                   />
                   {errors.objet && (
                     <p
@@ -381,7 +437,7 @@ export default function Contact() {
                       marginBottom: '12px',
                     }}
                   >
-                    Message *
+                    {t.labelMessage}
                   </label>
                   <textarea
                     id="message"
@@ -408,7 +464,7 @@ export default function Contact() {
                         : 'var(--portfolio-card-border)',
                       color: 'var(--portfolio-text-primary)',
                     }}
-                    placeholder="Votre message..."
+                    placeholder={t.phMessage}
                   />
                   {errors.message && (
                     <p
@@ -440,7 +496,7 @@ export default function Contact() {
                   >
                     <Send size={18} />
                     <RollingText
-                      text={isSubmitting ? 'Envoi...' : 'Envoyer'}
+                      text={isSubmitting ? t.sending : t.send}
                       inView={isSendButtonHovered && !isSubmitting}
                       transition={{
                         duration: 0.3,
@@ -463,7 +519,7 @@ export default function Contact() {
                   <span style={{ color: 'var(--portfolio-text-primary)' }}>
                     *
                   </span>{' '}
-                  Champs obligatoires
+                  {t.requiredNote}
                 </div>
 
                 {/* Note RGPD */}
@@ -475,15 +531,14 @@ export default function Contact() {
                     color: 'var(--portfolio-text-muted)',
                   }}
                 >
-                  Les informations transmises servent uniquement à traiter votre
-                  demande. Voir les{' '}
+                  {t.rgpdBefore}
                   <Link
                     to={ROUTES.MENTIONS}
                     className="underline underline-offset-2 hover:opacity-70 transition-opacity"
                   >
-                    mentions légales
+                    {t.rgpdLink}
                   </Link>
-                  .
+                  {t.rgpdAfter}
                 </p>
               </form>
             </ScrollFadeIn>
