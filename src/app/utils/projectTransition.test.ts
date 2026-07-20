@@ -8,18 +8,27 @@ import {
 describe('getProjectTransitionTiming', () => {
   it('uses compact forward timings on a 390px viewport', () => {
     expect(getProjectTransitionTiming(390, 'forward')).toEqual({
-      navigateDelay: 420,
-      morphDuration: 0.65,
-      overlayDuration: 800,
+      navigateDelay: 550,
+      morphDuration: 0.55,
+      fadeDuration: 0.2,
+      overlayDuration: 3000,
       reverseDelay: 0,
     });
   });
 
+  it('navigates at the end of the morph so mounting never janks it', () => {
+    for (const width of [390, 1440]) {
+      const timing = getProjectTransitionTiming(width, 'forward');
+      expect(timing.navigateDelay).toBe(timing.morphDuration * 1000);
+    }
+  });
+
   it('uses desktop forward timings on a 1440px viewport', () => {
     expect(getProjectTransitionTiming(1440, 'forward')).toEqual({
-      navigateDelay: 1000,
-      morphDuration: 0.8,
-      overlayDuration: 2000,
+      navigateDelay: 700,
+      morphDuration: 0.7,
+      fadeDuration: 0.25,
+      overlayDuration: 3000,
       reverseDelay: 0,
     });
   });
@@ -27,18 +36,20 @@ describe('getProjectTransitionTiming', () => {
   it('uses compact reverse timings on a 390px viewport', () => {
     expect(getProjectTransitionTiming(390, 'reverse')).toEqual({
       navigateDelay: 0,
-      morphDuration: 0.6,
-      overlayDuration: 650,
+      morphDuration: 0.5,
+      fadeDuration: 0.2,
+      overlayDuration: 600,
       reverseDelay: 0,
     });
   });
 
-  it('preserves the current desktop reverse timings on a 1440px viewport', () => {
+  it('uses desktop reverse timings on a 1440px viewport', () => {
     expect(getProjectTransitionTiming(1440, 'reverse')).toEqual({
       navigateDelay: 0,
-      morphDuration: 0.8,
-      overlayDuration: 1000,
-      reverseDelay: 0.3,
+      morphDuration: 0.6,
+      fadeDuration: 0.25,
+      overlayDuration: 700,
+      reverseDelay: 0,
     });
   });
 });

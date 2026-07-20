@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import ContactFooter from '../components/ContactFooter';
 import NewProjectCard from '../components/common/NewProjectCard';
@@ -12,6 +12,11 @@ import {
   prefersReducedProjectMotion,
   roundTransitionRect,
 } from '../utils/projectTransition';
+import {
+  resolveInitialProjetsScroll,
+  saveProjetsScroll,
+} from '../utils/projetsScroll';
+import { preloadProjetDetail } from './preloadProjetDetail';
 
 export default function Projets() {
   const location = useLocation();
@@ -23,20 +28,51 @@ export default function Projets() {
       snapshot?.originPath === '/projets' && location.pathname === '/projets',
   );
   const [reduceReturnMotion] = useState(() => prefersReducedProjectMotion());
+  // Figés au montage : l'animation de retour ne concerne que l'état présent
+  // à l'arrivée sur la page. Sans cela, un clic de carte depuis une liste
+  // « de retour » (beginForward → nouveau snapshot) relançait cet effet, qui
+  // écrasait l'aller par un reverse (image plein écran repliée sur la carte).
+  const [mountSnapshot] = useState(() => snapshot);
+  const [mountDirection] = useState(() => direction);
   const shouldStartReverse =
-    isReturnVisit && snapshot !== null && direction !== 'reverse';
+    isReturnVisit && mountSnapshot !== null && mountDirection !== 'reverse';
 
+  // Position de la liste à restaurer, figée au montage. On n'utilise le
+  // scrollTop du snapshot que s'il provient bien de la liste ; sinon (ex.
+  // projet → autre projet → liste, où le snapshot vient d'une page détail)
+  // on s'appuie sur la mémoire dédiée à la liste.
+  const initialScrollRef = useRef(resolveInitialProjetsScroll(snapshot));
+
+  // Restaure la position au montage (avant peinture, avant l'éventuel morph)
   useLayoutEffect(() => {
-    if (!shouldStartReverse || !snapshot) return;
+    document.body.scrollTop = initialScrollRef.current;
+  }, []);
 
-    document.body.scrollTop = snapshot.scrollTop;
+  // Mémorise la position pendant le défilement (pour un retour ultérieur)
+  useEffect(() => {
+    const onScroll = () => saveProjetsScroll(document.body.scrollTop);
+    document.body.addEventListener('scroll', onScroll, { passive: true });
+    return () => document.body.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Précharge le chunk de la page détail en tâche de fond : la transition
+  // « morph » ne doit jamais attendre le réseau au moment du clic.
+  useEffect(() => {
+    const timer = setTimeout(preloadProjetDetail, 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Animation de retour (morph) — le scroll est déjà restauré ci-dessus.
+  // Ne dépend que de valeurs figées au montage : s'exécute une seule fois.
+  useLayoutEffect(() => {
+    if (!shouldStartReverse || !mountSnapshot) return;
 
     if (reduceReturnMotion) {
       clearTransition();
       return;
     }
 
-    const image = cardRefs.current[snapshot.projectLink];
+    const image = cardRefs.current[mountSnapshot.projectLink];
     if (!image) {
       clearTransition();
       return;
@@ -48,7 +84,7 @@ export default function Projets() {
     clearTransition,
     reduceReturnMotion,
     shouldStartReverse,
-    snapshot,
+    mountSnapshot,
   ]);
 
   return (

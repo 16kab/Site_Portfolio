@@ -170,7 +170,7 @@ describe('NewProjectCard', () => {
       'active:forward',
     );
 
-    act(() => vi.advanceTimersByTime(419));
+    act(() => vi.advanceTimersByTime(549));
     expect(screen.getByTestId('location')).toHaveTextContent('/');
 
     act(() => vi.advanceTimersByTime(1));
@@ -199,7 +199,7 @@ describe('NewProjectCard', () => {
     );
     expect(vi.getTimerCount()).toBe(1);
 
-    act(() => vi.advanceTimersByTime(420));
+    act(() => vi.advanceTimersByTime(550));
     expect(screen.getByTestId('location')).toHaveTextContent('/projets/test');
     expect(vi.getTimerCount()).toBe(0);
   });

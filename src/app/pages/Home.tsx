@@ -64,10 +64,8 @@ export default function Home({ showSplash }: HomeProps) {
               transform: 'translateX(clamp(0px, 10vw, 95px))',
               color: 'var(--home-text-primary)',
             }}
-            shuffleDirection="right"
             duration={1}
             ease="expo.out"
-            shuffleTimes={1}
             loop={true}
             loopDelay={5}
             initialDelay={shuffleDelay1}
@@ -106,10 +104,8 @@ export default function Home({ showSplash }: HomeProps) {
               lineHeight: 1.4,
               color: 'var(--home-text-primary)',
             }}
-            shuffleDirection="right"
             duration={1}
             ease="expo.out"
-            shuffleTimes={1}
             loop={true}
             loopDelay={7}
             initialDelay={shuffleDelay2}
@@ -140,10 +136,8 @@ export default function Home({ showSplash }: HomeProps) {
               lineHeight: 1.2,
               color: 'var(--home-text-primary)',
             }}
-            shuffleDirection="right"
             duration={1}
             ease="expo.out"
-            shuffleTimes={1}
             loop={true}
             loopDelay={5}
             initialDelay={shuffleDelay1}
@@ -179,10 +173,8 @@ export default function Home({ showSplash }: HomeProps) {
               lineHeight: 1.2,
               color: 'var(--home-text-primary)',
             }}
-            shuffleDirection="right"
             duration={1}
             ease="expo.out"
-            shuffleTimes={1}
             loop={true}
             loopDelay={7}
             initialDelay={shuffleDelay2}

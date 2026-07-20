@@ -5,15 +5,9 @@ import { useState, useRef, useEffect } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import RollingText from '../components/RollingText';
 import PageMeta from '../components/PageMeta';
-import { scrollBodyTo } from '../utils/scrollBodyTo';
-import {
-  Lightbulb,
-  Compass,
-  Users,
-  FileText,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
+import { useScrollSpy } from '../hooks';
+import { CardCarousel, InfoCard } from '../components/common/CardCarousel';
+import { Lightbulb, Compass, Users, FileText } from 'lucide-react';
 
 interface ExpertiseSection {
   number: string;
@@ -173,72 +167,31 @@ const environmentData: EnvironmentCard[] = [
 
 export default function APropos() {
   const [isCVHovered, setIsCVHovered] = useState(false);
-  const [activeSection, setActiveSection] = useState<
-    'expertises' | 'principes' | 'environnement' | null
-  >(null);
-  const [isScrolled, setIsScrolled] = useState(false);
 
   const expertisesRef = useRef<HTMLDivElement>(null);
   const principesRef = useRef<HTMLDivElement>(null);
   const environnementRef = useRef<HTMLDivElement>(null);
-
-  // Ref to track programmatic scrolling
-  const isScrollingProgrammatically = useRef(false);
-  const cancelScrollRef = useRef<(() => void) | null>(null);
-
-  // Carousel states
-  const [currentPrincipeIndex, setCurrentPrincipeIndex] = useState(0);
-  const [currentEnvironnementIndex, setCurrentEnvironnementIndex] = useState(0);
-
-  // Card height states
-  const [maxPrincipleHeight, setMaxPrincipleHeight] = useState<number>(0);
-  const [maxEnvironmentHeight, setMaxEnvironmentHeight] = useState<number>(0);
-
-  // Refs for measuring card heights
-  const principleCardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const environmentCardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     // Scroll to top on mount - body is the scrolling element
     document.body.scrollTop = 0;
   }, []);
 
-  // Measure card heights
-  useEffect(() => {
-    const measureHeights = () => {
-      // Measure principle cards
-      const principleHeights = principleCardsRef.current
-        .filter((card) => card !== null)
-        .map((card) => card!.scrollHeight);
-      if (principleHeights.length > 0) {
-        setMaxPrincipleHeight(Math.max(...principleHeights));
-      }
+  // Menu sticky à détection de section (voir aussi la page Détail projet)
+  const {
+    activeSection,
+    isScrolled,
+    scrollToSection: scrollSpyTo,
+  } = useScrollSpy<'expertises' | 'principes' | 'environnement'>(
+    [
+      { key: 'expertises', ref: expertisesRef },
+      { key: 'principes', ref: principesRef },
+      { key: 'environnement', ref: environnementRef },
+    ],
+    250,
+  );
 
-      // Measure environment cards
-      const environmentHeights = environmentCardsRef.current
-        .filter((card) => card !== null)
-        .map((card) => card!.scrollHeight);
-      if (environmentHeights.length > 0) {
-        setMaxEnvironmentHeight(Math.max(...environmentHeights));
-      }
-    };
-
-    measureHeights();
-    window.addEventListener('resize', measureHeights);
-
-    return () => window.removeEventListener('resize', measureHeights);
-  }, []);
-
-  // Carousel navigation
-  const goToPrincipe = (index: number) => {
-    setCurrentPrincipeIndex(index);
-  };
-
-  const goToEnvironnement = (index: number) => {
-    setCurrentEnvironnementIndex(index);
-  };
-
-  // Scroll to section (annulable, respecte prefers-reduced-motion)
+  // Scroll to section : offset de 140 px, cible relative au conteneur de scroll
   const scrollToSection = (
     section: 'expertises' | 'principes' | 'environnement',
   ) => {
@@ -249,86 +202,12 @@ export default function APropos() {
           ? principesRef
           : environnementRef;
     if (!ref.current) return;
-
-    // Set active section immediately
-    setActiveSection(section);
-
-    // Block automatic detection during programmatic scroll
-    isScrollingProgrammatically.current = true;
-
-    const offset = 140; // Offset pour le menu sticky
-    const elementPosition = ref.current.getBoundingClientRect().top;
-    const currentScroll = document.body.scrollTop || 0;
-    const offsetPosition = elementPosition + currentScroll - offset;
-
-    cancelScrollRef.current?.();
-    cancelScrollRef.current = scrollBodyTo(offsetPosition, 800, () => {
-      // Re-enable automatic detection after scroll completes
-      setTimeout(() => {
-        isScrollingProgrammatically.current = false;
-      }, 100);
-    });
+    const targetTop =
+      ref.current.getBoundingClientRect().top +
+      (document.body.scrollTop || 0) -
+      140;
+    scrollSpyTo(section, targetTop);
   };
-
-  // Dynamic section detection on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      // Skip automatic detection during programmatic scrolling
-      if (isScrollingProgrammatically.current) {
-        // Still update isScrolled state
-        setIsScrolled((document.body.scrollTop || 0) > 100);
-        return;
-      }
-
-      const scrollPosition = (document.body.scrollTop || 0) + 250; // Offset to trigger section change
-
-      // Update isScrolled state (scroll > 100px)
-      setIsScrolled((document.body.scrollTop || 0) > 100);
-
-      // Check if we're in environnement section
-      if (environnementRef.current) {
-        const environnementTop = environnementRef.current.offsetTop;
-
-        if (scrollPosition >= environnementTop) {
-          setActiveSection('environnement');
-          return;
-        }
-      }
-
-      // Check if we're in principes section
-      if (principesRef.current) {
-        const principesTop = principesRef.current.offsetTop;
-
-        if (scrollPosition >= principesTop) {
-          setActiveSection('principes');
-          return;
-        }
-      }
-
-      // Check if we're in expertises section
-      if (expertisesRef.current) {
-        const expertisesTop = expertisesRef.current.offsetTop;
-
-        if (scrollPosition >= expertisesTop) {
-          setActiveSection('expertises');
-          return;
-        }
-      }
-
-      // If we're above all sections (in the Philosophie section), set to null
-      setActiveSection(null);
-    };
-
-    // Listen to body scroll
-    document.body.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check initial position
-
-    return () => {
-      document.body.removeEventListener('scroll', handleScroll);
-      // Stoppe une éventuelle animation de scroll en cours
-      cancelScrollRef.current?.();
-    };
-  }, []);
 
   return (
     <div
@@ -860,165 +739,26 @@ export default function APropos() {
 
             {/* Principles - Horizontal Scroll on Mobile, Grid on Desktop */}
             <ScrollFadeIn delay={0.5}>
-              {/* Desktop Grid */}
+              {/* Desktop : grille */}
               <div className="hidden md:block">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {principlesData.map((principle) => (
-                    <div
+                    <InfoCard
                       key={principle.title}
-                      className="p-8"
-                      style={{
-                        backgroundColor: 'var(--portfolio-card-bg)',
-                        borderRadius: '12px',
-                        border: '1px solid var(--portfolio-card-border)',
-                      }}
-                    >
-                      <p
-                        className="mb-1"
-                        style={{
-                          fontFamily: 'Manrope, sans-serif',
-                          fontSize: '14px',
-                          fontWeight: 400,
-                          letterSpacing: '0.037px',
-                          lineHeight: '20px',
-                          color: 'var(--portfolio-text-muted)',
-                        }}
-                      >
-                        ({principle.number})
-                      </p>
-                      <h3
-                        className="mb-4"
-                        style={{
-                          fontFamily: 'Manrope, sans-serif',
-                          fontSize: '24px',
-                          fontWeight: 600,
-                          letterSpacing: '-0.8px',
-                          lineHeight: '28px',
-                          color: 'var(--portfolio-text-primary)',
-                        }}
-                      >
-                        {principle.title}
-                      </h3>
-                      <p
-                        className="leading-relaxed text-[15px]"
-                        style={{
-                          fontFamily: 'Manrope, sans-serif',
-                          color: 'var(--portfolio-text-description)',
-                        }}
-                      >
-                        {principle.description}
-                      </p>
-                    </div>
+                      number={principle.number}
+                      title={principle.title}
+                      description={principle.description}
+                    />
                   ))}
                 </div>
               </div>
 
-              {/* Mobile Carousel */}
-              <div className="md:hidden relative">
-                {/* Cards Container */}
-                <div className="overflow-hidden">
-                  <div
-                    className="flex transition-transform duration-500 ease-out"
-                    style={{
-                      transform: `translateX(-${currentPrincipeIndex * 100}%)`,
-                    }}
-                  >
-                    {principlesData.map((principle, index) => (
-                      <div
-                        key={principle.title}
-                        className="w-full flex-shrink-0"
-                      >
-                        <div
-                          className="p-8"
-                          style={{
-                            backgroundColor: 'var(--portfolio-card-bg)',
-                            borderRadius: '12px',
-                            border: '1px solid var(--portfolio-card-border)',
-                            height:
-                              maxPrincipleHeight > 0
-                                ? `${maxPrincipleHeight}px`
-                                : 'auto',
-                          }}
-                          ref={(el) => (principleCardsRef.current[index] = el)}
-                        >
-                          <p
-                            className="mb-1"
-                            style={{
-                              fontFamily: 'Manrope, sans-serif',
-                              fontSize: '14px',
-                              fontWeight: 400,
-                              letterSpacing: '0.037px',
-                              lineHeight: '20px',
-                              color: 'var(--portfolio-text-muted)',
-                            }}
-                          >
-                            ({principle.number})
-                          </p>
-                          <h3
-                            className="mb-4"
-                            style={{
-                              fontFamily: 'Manrope, sans-serif',
-                              fontSize: '24px',
-                              fontWeight: 600,
-                              letterSpacing: '-0.8px',
-                              lineHeight: '28px',
-                              color: 'var(--portfolio-text-primary)',
-                            }}
-                          >
-                            {principle.title}
-                          </h3>
-                          <p
-                            className="leading-relaxed text-[15px]"
-                            style={{
-                              fontFamily: 'Manrope, sans-serif',
-                              color: 'var(--portfolio-text-description)',
-                            }}
-                          >
-                            {principle.description}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Navigation Arrows Below */}
-                <div className="flex items-center justify-center gap-3 mt-6">
-                  <button
-                    type="button"
-                    onClick={() => goToPrincipe(currentPrincipeIndex - 1)}
-                    disabled={currentPrincipeIndex === 0}
-                    className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
-                    style={{
-                      backgroundColor: 'var(--portfolio-card-bg)',
-                      border: '1px solid var(--portfolio-card-border)',
-                    }}
-                  >
-                    <ChevronLeft
-                      className="w-5 h-5"
-                      style={{ color: 'var(--portfolio-text-secondary)' }}
-                    />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => goToPrincipe(currentPrincipeIndex + 1)}
-                    disabled={
-                      currentPrincipeIndex === principlesData.length - 1
-                    }
-                    className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
-                    style={{
-                      backgroundColor: 'var(--portfolio-card-bg)',
-                      border: '1px solid var(--portfolio-card-border)',
-                    }}
-                  >
-                    <ChevronRight
-                      className="w-5 h-5"
-                      style={{ color: 'var(--portfolio-text-secondary)' }}
-                    />
-                  </button>
-                </div>
-              </div>
+              {/* Mobile : carrousel */}
+              <CardCarousel
+                items={principlesData}
+                className="md:hidden"
+                label="Principes"
+              />
             </ScrollFadeIn>
           </div>
         </section>
@@ -1062,171 +802,26 @@ export default function APropos() {
 
             {/* Desktop Grid 2x3 / Mobile Carousel */}
             <ScrollFadeIn delay={0.8}>
-              {/* Desktop Grid - 2 columns */}
+              {/* Desktop : grille 2 colonnes */}
               <div className="hidden xl:block">
                 <div className="grid grid-cols-2 gap-6">
                   {environmentData.map((environment) => (
-                    <div
+                    <InfoCard
                       key={environment.title}
-                      className="p-8"
-                      style={{
-                        backgroundColor: 'var(--portfolio-card-bg)',
-                        borderRadius: '12px',
-                        border: '1px solid var(--portfolio-card-border)',
-                      }}
-                    >
-                      <p
-                        className="mb-1"
-                        style={{
-                          fontFamily: 'Manrope, sans-serif',
-                          fontSize: '14px',
-                          fontWeight: 400,
-                          letterSpacing: '0.037px',
-                          lineHeight: '20px',
-                          color: 'var(--portfolio-text-muted)',
-                        }}
-                      >
-                        ({environment.number})
-                      </p>
-                      <h3
-                        className="mb-4"
-                        style={{
-                          fontFamily: 'Manrope, sans-serif',
-                          fontSize: '24px',
-                          fontWeight: 600,
-                          letterSpacing: '-0.8px',
-                          lineHeight: '28px',
-                          color: 'var(--portfolio-text-primary)',
-                        }}
-                      >
-                        {environment.title}
-                      </h3>
-                      <p
-                        className="leading-relaxed text-[15px]"
-                        style={{
-                          fontFamily: 'Manrope, sans-serif',
-                          color: 'var(--portfolio-text-description)',
-                        }}
-                      >
-                        {environment.description}
-                      </p>
-                    </div>
+                      number={environment.number}
+                      title={environment.title}
+                      description={environment.description}
+                    />
                   ))}
                 </div>
               </div>
 
-              {/* Mobile/Tablet Carousel */}
-              <div className="xl:hidden relative">
-                {/* Cards Container */}
-                <div className="overflow-hidden">
-                  <div
-                    className="flex transition-transform duration-500 ease-out"
-                    style={{
-                      transform: `translateX(-${currentEnvironnementIndex * 100}%)`,
-                    }}
-                  >
-                    {environmentData.map((environment, index) => (
-                      <div
-                        key={environment.title}
-                        className="w-full flex-shrink-0"
-                      >
-                        <div
-                          className="p-8"
-                          style={{
-                            backgroundColor: 'var(--portfolio-card-bg)',
-                            borderRadius: '12px',
-                            border: '1px solid var(--portfolio-card-border)',
-                            height:
-                              maxEnvironmentHeight > 0
-                                ? `${maxEnvironmentHeight}px`
-                                : 'auto',
-                          }}
-                          ref={(el) =>
-                            (environmentCardsRef.current[index] = el)
-                          }
-                        >
-                          <p
-                            className="mb-1"
-                            style={{
-                              fontFamily: 'Manrope, sans-serif',
-                              fontSize: '14px',
-                              fontWeight: 400,
-                              letterSpacing: '0.037px',
-                              lineHeight: '20px',
-                              color: 'var(--portfolio-text-muted)',
-                            }}
-                          >
-                            ({environment.number})
-                          </p>
-                          <h3
-                            className="mb-4"
-                            style={{
-                              fontFamily: 'Manrope, sans-serif',
-                              fontSize: '24px',
-                              fontWeight: 600,
-                              letterSpacing: '-0.8px',
-                              lineHeight: '28px',
-                              color: 'var(--portfolio-text-primary)',
-                            }}
-                          >
-                            {environment.title}
-                          </h3>
-                          <p
-                            className="leading-relaxed text-[15px]"
-                            style={{
-                              fontFamily: 'Manrope, sans-serif',
-                              color: 'var(--portfolio-text-description)',
-                            }}
-                          >
-                            {environment.description}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Navigation Arrows Below */}
-                <div className="flex items-center justify-center gap-3 mt-6">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      goToEnvironnement(currentEnvironnementIndex - 1)
-                    }
-                    disabled={currentEnvironnementIndex === 0}
-                    className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
-                    style={{
-                      backgroundColor: 'var(--portfolio-card-bg)',
-                      border: '1px solid var(--portfolio-card-border)',
-                    }}
-                  >
-                    <ChevronLeft
-                      className="w-5 h-5"
-                      style={{ color: 'var(--portfolio-text-secondary)' }}
-                    />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      goToEnvironnement(currentEnvironnementIndex + 1)
-                    }
-                    disabled={
-                      currentEnvironnementIndex === environmentData.length - 1
-                    }
-                    className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
-                    style={{
-                      backgroundColor: 'var(--portfolio-card-bg)',
-                      border: '1px solid var(--portfolio-card-border)',
-                    }}
-                  >
-                    <ChevronRight
-                      className="w-5 h-5"
-                      style={{ color: 'var(--portfolio-text-secondary)' }}
-                    />
-                  </button>
-                </div>
-              </div>
+              {/* Mobile / tablette : carrousel */}
+              <CardCarousel
+                items={environmentData}
+                className="xl:hidden"
+                label="Environnement"
+              />
             </ScrollFadeIn>
           </div>
         </section>

@@ -1,5 +1,5 @@
 import { Navigate, useParams } from 'react-router';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import ContactFooter from '../components/ContactFooter';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
@@ -10,7 +10,8 @@ import { ROUTES } from '../config';
 import svgPaths from '../../imports/svg-jlpjaqyx1i';
 import PageMeta from '../components/PageMeta';
 import { ImageLightbox } from '../components/ImageLightbox';
-import { scrollBodyTo } from '../utils/scrollBodyTo';
+import { useScrollSpy } from '../hooks';
+import { usePageTransition } from '../context/PageTransitionContext';
 
 export default function ProjetDetail() {
   const { id } = useParams<{ id: string }>();
@@ -19,16 +20,9 @@ export default function ProjetDetail() {
   const galleryRef = useRef<HTMLDivElement>(null);
   // Le conteneur de scroll de l'app est <body> (cf. theme.css), pas window
   const bodyRef = useRef(document.body);
-  const [activeSection, setActiveSection] = useState<
-    'explanation' | 'gallery' | null
-  >(null);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-
-  // Ref to track programmatic scrolling
-  const isScrollingProgrammatically = useRef(false);
-  const cancelScrollRef = useRef<(() => void) | null>(null);
+  const { markArrival } = usePageTransition();
 
   // Scroll animation for hero image zoom - MUST be called before any conditional returns
   const { scrollYProgress } = useScroll({
@@ -39,72 +33,35 @@ export default function ProjetDetail() {
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
 
-  // Dynamic section detection on scroll — déclaré AVANT le return
-  // conditionnel (règle des hooks : ordre d'appel stable à chaque rendu)
+  // Signale à l'overlay de transition que la page est montée : la
+  // révélation ne doit pas avoir lieu avant (chunk lazy chargé).
+  useLayoutEffect(() => {
+    markArrival();
+  }, [markArrival]);
+
+  // Réinitialise le scroll au montage. Déclaré AVANT useScrollSpy pour que
+  // le body soit à 0 avant la première détection du hook.
   useEffect(() => {
-    const handleScroll = () => {
-      // Skip automatic detection during programmatic scrolling
-      if (isScrollingProgrammatically.current) {
-        // Still update isScrolled state
-        setIsScrolled((document.body.scrollTop || 0) > 100);
-        return;
-      }
-
-      const scrollPosition = (document.body.scrollTop || 0) + 200; // Offset to trigger section change earlier
-
-      // Update isScrolled state (scroll > 100px)
-      setIsScrolled((document.body.scrollTop || 0) > 100);
-
-      // Check if we're in hero section (before explanation starts)
-      if (explanationRef.current) {
-        const explanationTop = explanationRef.current.offsetTop;
-
-        if (scrollPosition < explanationTop) {
-          setActiveSection(null);
-          return;
-        }
-      }
-
-      // Check if we're in gallery section
-      if (galleryRef.current) {
-        const galleryTop = galleryRef.current.offsetTop;
-
-        if (scrollPosition >= galleryTop) {
-          setActiveSection('gallery');
-          return;
-        }
-      }
-
-      // Otherwise we're in explanation section
-      if (explanationRef.current) {
-        const explanationTop = explanationRef.current.offsetTop;
-
-        if (scrollPosition >= explanationTop) {
-          setActiveSection('explanation');
-          return;
-        }
-      }
-    };
-
-    // Scroll to top on mount - instant scroll
     document.body.style.scrollBehavior = 'auto';
     document.body.scrollTop = 0;
-    // Restore smooth scroll after a brief delay
     const restoreTimeout = setTimeout(() => {
       document.body.style.scrollBehavior = '';
     }, 50);
-
-    // Listen to body scroll
-    document.body.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check initial position
-
-    return () => {
-      document.body.removeEventListener('scroll', handleScroll);
-      clearTimeout(restoreTimeout);
-      // Stoppe une éventuelle animation de scroll en cours
-      cancelScrollRef.current?.();
-    };
+    return () => clearTimeout(restoreTimeout);
   }, []);
+
+  // Menu sticky à détection de section (voir aussi la page À propos)
+  const {
+    activeSection,
+    isScrolled,
+    scrollToSection: scrollSpyTo,
+  } = useScrollSpy<'explanation' | 'gallery'>(
+    [
+      { key: 'explanation', ref: explanationRef },
+      { key: 'gallery', ref: galleryRef },
+    ],
+    200,
+  );
 
   // Find project
   const projet = projetsData.find((p) => p.id === id);
@@ -119,27 +76,11 @@ export default function ProjetDetail() {
     return <Navigate to={ROUTES.PROJETS} replace />;
   }
 
-  // Scroll to section (annulable, respecte prefers-reduced-motion)
+  // Scroll to section : offset de 120 px pour le menu sticky
   const scrollToSection = (section: 'explanation' | 'gallery') => {
     const ref = section === 'explanation' ? explanationRef : galleryRef;
     if (!ref.current) return;
-
-    // Set active section immediately
-    setActiveSection(section);
-
-    // Block automatic detection during programmatic scroll
-    isScrollingProgrammatically.current = true;
-
-    const offset = 120; // Offset pour le menu sticky
-    const targetPosition = ref.current.offsetTop - offset;
-
-    cancelScrollRef.current?.();
-    cancelScrollRef.current = scrollBodyTo(targetPosition, 800, () => {
-      // Re-enable automatic detection after scroll completes
-      setTimeout(() => {
-        isScrollingProgrammatically.current = false;
-      }, 100);
-    });
+    scrollSpyTo(section, ref.current.offsetTop - 120);
   };
 
   return (

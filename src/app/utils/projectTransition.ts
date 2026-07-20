@@ -26,6 +26,11 @@ export function roundTransitionRect(
   };
 }
 
+// Aller : la navigation part à la FIN du morph (navigateDelay =
+// morphDuration) pour que le montage de la page d'arrivée ne fasse pas
+// saccader l'animation ; la révélation (fadeDuration) n'a lieu que quand la
+// page est montée (poignée de main `hasArrived`), overlayDuration servant de
+// filet de sécurité. Retour : overlayDuration est la durée totale réelle.
 export function getProjectTransitionTiming(
   width: number,
   direction: ProjectTransitionDirection,
@@ -33,31 +38,35 @@ export function getProjectTransitionTiming(
   if (width < 1024) {
     return direction === 'forward'
       ? {
-          navigateDelay: 420,
-          morphDuration: 0.65,
-          overlayDuration: 800,
+          navigateDelay: 550,
+          morphDuration: 0.55,
+          fadeDuration: 0.2,
+          overlayDuration: 3000,
           reverseDelay: 0,
         }
       : {
           navigateDelay: 0,
-          morphDuration: 0.6,
-          overlayDuration: 650,
+          morphDuration: 0.5,
+          fadeDuration: 0.2,
+          overlayDuration: 600,
           reverseDelay: 0,
         };
   }
 
   return direction === 'forward'
     ? {
-        navigateDelay: 1000,
-        morphDuration: 0.8,
-        overlayDuration: 2000,
+        navigateDelay: 700,
+        morphDuration: 0.7,
+        fadeDuration: 0.25,
+        overlayDuration: 3000,
         reverseDelay: 0,
       }
     : {
         navigateDelay: 0,
-        morphDuration: 0.8,
-        overlayDuration: 1000,
-        reverseDelay: 0.3,
+        morphDuration: 0.6,
+        fadeDuration: 0.25,
+        overlayDuration: 700,
+        reverseDelay: 0,
       };
 }
 
