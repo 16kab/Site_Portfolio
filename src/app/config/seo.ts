@@ -1,13 +1,12 @@
-import { projetsData } from '../data/projetsData';
 import { ROUTES } from './routes';
 
 /**
- * Source unique des métadonnées de référencement et de partage social.
+ * Métadonnées de référencement et de partage social — partie STATIQUE.
  *
- * Consommée à la fois côté client (les pages passent ces valeurs à PageMeta)
- * et au build (scripts/prerender-meta.mjs génère un index.html par route avec
- * ces meta, pour que les robots de partage — LinkedIn, WhatsApp, Slack… —
- * qui n'exécutent pas le JS voient le bon titre/description).
+ * Ce module ne dépend PAS de projetsData, pour que les pages chargées au
+ * premier rendu (Home) puissent lire leurs meta sans tirer tout le contenu
+ * des projets dans le bundle d'entrée. Les meta dérivées des projets vivent
+ * dans seoRoutes.ts (importé seulement par les pages lazy et le build).
  */
 export const SITE = {
   baseUrl: 'https://alexiskabiche.com',
@@ -58,21 +57,3 @@ export const ROUTE_META = {
 } satisfies Record<string, RouteMeta>;
 
 export const STATIC_ROUTE_META: RouteMeta[] = Object.values(ROUTE_META);
-
-/** Métadonnées dérivées des pages de détail projet. */
-export function getProjectRouteMeta(): RouteMeta[] {
-  return projetsData.map((projet) => ({
-    path: ROUTES.PROJET_DETAIL(projet.id),
-    title: `${projet.title} — ${SITE.name}`,
-    description: projet.description,
-  }));
-}
-
-/** Toutes les routes indexables (statiques + détails projet). */
-export function getAllRouteMeta(): RouteMeta[] {
-  return [...STATIC_ROUTE_META, ...getProjectRouteMeta()];
-}
-
-export function getRouteMeta(path: string): RouteMeta | null {
-  return getAllRouteMeta().find((meta) => meta.path === path) ?? null;
-}

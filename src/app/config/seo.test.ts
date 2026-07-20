@@ -1,13 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { projetsData } from '../data/projetsData';
 import { ROUTES } from './routes';
-import {
-  getAllRouteMeta,
-  getRouteMeta,
-  ROUTE_META,
-  SITE,
-  STATIC_ROUTE_META,
-} from './seo';
+import { ROUTE_META, SITE, STATIC_ROUTE_META } from './seo';
+import { getAllRouteMeta, getRouteMeta } from './seoRoutes';
 
 describe('métadonnées SEO', () => {
   it('couvre chaque route statique avec un titre et une description', () => {

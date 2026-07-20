@@ -11,7 +11,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 export async function loadSeo() {
   const result = await build({
-    entryPoints: [path.join(root, 'src/app/config/seo.ts')],
+    entryPoints: [path.join(root, 'src/app/config/seoRoutes.ts')],
     bundle: true,
     write: false,
     format: 'esm',
