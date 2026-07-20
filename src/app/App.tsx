@@ -1,18 +1,19 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
-import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import Header from './components/Header';
 import Home from './pages/Home';
-import { TOAST_CONFIG } from './config';
+import ThemedToaster from './components/ThemedToaster';
 import Grainient from './components/Grainient';
 import { ScrollToTop } from './components/ScrollToTop';
 import { PageTransitionProvider } from './context/PageTransitionContext';
 import { PageTransitionOverlay } from './components/PageTransitionOverlay';
 import SplashScreen from './components/SplashScreen';
 import ErrorBoundary from './components/ErrorBoundary';
+import { ROUTES } from './config';
+import { useIsDarkMode } from './hooks';
 
 // Code-splitting : chaque page secondaire est chargée à la demande
 const Projets = lazy(() => import('./pages/Projets'));
@@ -40,14 +41,20 @@ export function AppContent({ showSplash }: { showSplash: boolean }) {
     <>
       {/* Scroll to top on route change */}
       <ScrollToTop />
-      
+
       <Suspense fallback={null}>
         <Routes location={location}>
-          <Route path="/" element={<Home showSplash={showSplash} />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/apropos" element={<APropos />} />
-          <Route path="/projets" element={<Projets />} />
-          <Route path="/projets/:id" element={<ProjetDetail />} />
+          <Route
+            path={ROUTES.HOME}
+            element={<Home showSplash={showSplash} />}
+          />
+          <Route path={ROUTES.CONTACT} element={<Contact />} />
+          <Route path={ROUTES.APROPOS} element={<APropos />} />
+          <Route path={ROUTES.PROJETS} element={<Projets />} />
+          <Route
+            path={ROUTES.PROJET_DETAIL_PATTERN}
+            element={<ProjetDetail />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
@@ -67,36 +74,38 @@ export default function App() {
     <ErrorBoundary>
       <BrowserRouter>
         <PageTransitionProvider>
-        {/* Splash Screen */}
-        <AnimatePresence>
-          {showSplash && <SplashScreen onComplete={() => setShowSplash(false)} />}
-        </AnimatePresence>
+          {/* Splash Screen */}
+          <AnimatePresence>
+            {showSplash && (
+              <SplashScreen onComplete={() => setShowSplash(false)} />
+            )}
+          </AnimatePresence>
 
-        <div className="min-h-screen app-container">
-          {/* Lien d'évitement pour la navigation clavier */}
-          <a href="#contenu" className="skip-link">
-            Aller au contenu
-          </a>
+          <div className="min-h-screen app-container">
+            {/* Lien d'évitement pour la navigation clavier */}
+            <a href="#contenu" className="skip-link">
+              Aller au contenu
+            </a>
 
-          {/* Toast Notifications */}
-          <Toaster {...TOAST_CONFIG} />
-          <Analytics />
-          <SpeedInsights />
+            {/* Toast Notifications */}
+            <ThemedToaster />
+            <Analytics />
+            <SpeedInsights />
 
-          {/* Global Header */}
-          <Header showSplash={showSplash} />
+            {/* Global Header */}
+            <Header showSplash={showSplash} />
 
-          {/* Background wrapper */}
-          <BackgroundWrapper />
+            {/* Background wrapper */}
+            <BackgroundWrapper />
 
-          {/* App Content */}
-          <main id="contenu">
-            <AppContent showSplash={showSplash} />
-          </main>
+            {/* App Content */}
+            <main id="contenu">
+              <AppContent showSplash={showSplash} />
+            </main>
 
-          {/* Page Transition Overlay */}
-          <PageTransitionOverlay />
-        </div>
+            {/* Page Transition Overlay */}
+            <PageTransitionOverlay />
+          </div>
         </PageTransitionProvider>
       </BrowserRouter>
     </ErrorBoundary>
@@ -107,51 +116,37 @@ export default function App() {
 function BackgroundWrapper() {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
-  const isProjetsPage = location.pathname === '/projets' || location.pathname.startsWith('/projets/');
-  
-  // Track dark mode state with reactive updates
-  const [isDarkMode, setIsDarkMode] = useState(() => 
-    document.documentElement.classList.contains('dark')
-  );
-  
-  // Listen for theme changes
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'));
-    });
-    
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-    
-    return () => observer.disconnect();
-  }, []);
+  const isProjetsPage =
+    location.pathname === '/projets' ||
+    location.pathname.startsWith('/projets/');
+
+  // Suit le thème pour recolorer le fond et le chrome Safari
+  const isDarkMode = useIsDarkMode();
 
   useEffect(() => {
     syncSafariChromeColor(isDarkMode);
   }, [isDarkMode]);
-  
+
   // Don't render any background on Projets pages (they have their own background color)
   if (isProjetsPage) {
     return null;
   }
-  
+
   // Render Grainient background on home page
   if (isHomePage) {
     // Define colors based on theme
-    const colors = isDarkMode 
+    const colors = isDarkMode
       ? {
-          color1: '#000000',  // Foncé
-          color2: '#545454',  // Gris clair
-          color3: '#bababa'   // Clair
+          color1: '#000000', // Foncé
+          color2: '#545454', // Gris clair
+          color3: '#bababa', // Clair
         }
       : {
-          color1: '#FFFFFF',  // Clair (inversé)
-          color2: '#6B6B6B',  // Gris moyen-foncé (inversé)
-          color3: '#2A2A2A'   // Foncé (inversé)
+          color1: '#FFFFFF', // Clair (inversé)
+          color2: '#6B6B6B', // Gris moyen-foncé (inversé)
+          color3: '#2A2A2A', // Foncé (inversé)
         };
-    
+
     return (
       <div className="grainient-wrapper">
         <Grainient
@@ -181,6 +176,6 @@ function BackgroundWrapper() {
       </div>
     );
   }
-  
+
   return null;
 }

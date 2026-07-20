@@ -8,7 +8,11 @@ interface ImageLightboxProps {
   onClose: () => void;
 }
 
-export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxProps) {
+export function ImageLightbox({
+  images,
+  currentIndex,
+  onClose,
+}: ImageLightboxProps) {
   const [index, setIndex] = useState(currentIndex);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -30,11 +34,15 @@ export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxPr
   }, []);
 
   const goToPrevious = useCallback(() => {
-    setIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+    setIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1,
+    );
   }, [images.length]);
 
   const goToNext = useCallback(() => {
-    setIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    setIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1,
+    );
   }, [images.length]);
 
   // Clavier au niveau du document : fonctionne sans dépendre du focus
@@ -71,6 +79,7 @@ export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxPr
 
         {/* Close Button */}
         <button
+          type="button"
           onClick={onClose}
           className="absolute top-6 right-6 z-[310] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
           aria-label="Fermer la visionneuse"
@@ -81,6 +90,7 @@ export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxPr
         {/* Previous Button */}
         {images.length > 1 && (
           <button
+            type="button"
             onClick={goToPrevious}
             className="absolute left-6 z-[310] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
             aria-label="Image précédente"
@@ -92,6 +102,7 @@ export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxPr
         {/* Next Button */}
         {images.length > 1 && (
           <button
+            type="button"
             onClick={goToNext}
             className="absolute right-6 z-[310] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
             aria-label="Image suivante"
@@ -110,7 +121,7 @@ export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxPr
         >
           <img
             src={images[index]}
-            alt={`Image ${index + 1} sur ${images.length}`}
+            alt={`Aperçu ${index + 1} sur ${images.length}`}
             className="max-w-full max-h-[90vh] object-contain rounded-lg"
           />
         </motion.div>
@@ -123,7 +134,7 @@ export function ImageLightbox({ images, currentIndex, onClose }: ImageLightboxPr
               style={{
                 fontFamily: 'Manrope, sans-serif',
                 fontSize: '14px',
-                fontWeight: 500
+                fontWeight: 500,
               }}
             >
               {index + 1} / {images.length}

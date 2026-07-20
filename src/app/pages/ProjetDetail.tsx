@@ -19,7 +19,9 @@ export default function ProjetDetail() {
   const galleryRef = useRef<HTMLDivElement>(null);
   // Le conteneur de scroll de l'app est <body> (cf. theme.css), pas window
   const bodyRef = useRef(document.body);
-  const [activeSection, setActiveSection] = useState<'explanation' | 'gallery' | null>(null);
+  const [activeSection, setActiveSection] = useState<
+    'explanation' | 'gallery' | null
+  >(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -32,7 +34,7 @@ export default function ProjetDetail() {
   const { scrollYProgress } = useScroll({
     container: bodyRef,
     target: heroRef,
-    offset: ["start start", "end start"]
+    offset: ['start start', 'end start'],
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
@@ -105,10 +107,12 @@ export default function ProjetDetail() {
   }, []);
 
   // Find project
-  const projet = projetsData.find(p => p.id === id);
+  const projet = projetsData.find((p) => p.id === id);
 
   // Get other projects (excluding current one)
-  const allOtherProjects = tousProjets.filter(p => p.link !== `/projets/${id}`);
+  const allOtherProjects = tousProjets.filter(
+    (p) => p.link !== `/projets/${id}`,
+  );
 
   // Redirect if project not found - AFTER all hooks
   if (!projet) {
@@ -149,12 +153,13 @@ export default function ProjetDetail() {
         path={`/projets/${projet.id}`}
       />
       {/* Hero Section - Full Screen */}
-      <section ref={heroRef} className="relative h-screen overflow-hidden" style={{ width: '100vw' }}>
+      <section
+        ref={heroRef}
+        className="relative h-screen overflow-hidden"
+        style={{ width: '100vw' }}
+      >
         {/* Hero Image with Zoom Effect */}
-        <motion.div 
-          style={{ scale }}
-          className="absolute inset-0"
-        >
+        <motion.div style={{ scale }} className="absolute inset-0">
           <img
             src={projet.image}
             alt={projet.title}
@@ -174,14 +179,14 @@ export default function ProjetDetail() {
                   key={index}
                   className="bg-[#232423] border border-[#232423] rounded-[3px] px-[8px] py-[2px]"
                 >
-                  <span 
+                  <span
                     className="text-[#9f9f9f]"
                     style={{
                       fontFamily: 'Manrope, sans-serif',
                       fontSize: '13px',
                       fontWeight: 400,
                       letterSpacing: '0.033px',
-                      lineHeight: '18px'
+                      lineHeight: '18px',
                     }}
                   >
                     {tag}
@@ -191,7 +196,7 @@ export default function ProjetDetail() {
             </div>
 
             {/* Title */}
-            <h1 
+            <h1
               className="text-white mb-4 break-words"
               style={{
                 fontFamily: 'Manrope, sans-serif',
@@ -199,7 +204,7 @@ export default function ProjetDetail() {
                 fontWeight: 700,
                 letterSpacing: '-1.4px',
                 lineHeight: '1.1',
-                maxWidth: '90%'
+                maxWidth: '90%',
               }}
             >
               {projet.title}
@@ -207,12 +212,12 @@ export default function ProjetDetail() {
 
             {/* Meta Info */}
             <div className="flex flex-wrap gap-3 text-white/90">
-              <p 
+              <p
                 style={{
                   fontFamily: 'Manrope, sans-serif',
                   fontSize: '16px',
                   fontWeight: 400,
-                  lineHeight: '1.5'
+                  lineHeight: '1.5',
                 }}
               >
                 {projet.year}
@@ -220,12 +225,12 @@ export default function ProjetDetail() {
               {projet.natureProduit && (
                 <>
                   <span style={{ color: 'rgba(255, 255, 255, 0.5)' }}>·</span>
-                  <p 
+                  <p
                     style={{
                       fontFamily: 'Manrope, sans-serif',
                       fontSize: '16px',
                       fontWeight: 400,
-                      lineHeight: '1.5'
+                      lineHeight: '1.5',
                     }}
                   >
                     {projet.natureProduit}
@@ -239,7 +244,7 @@ export default function ProjetDetail() {
 
       {/* Sticky Sub Menu Switch - Bottom Right of Header on desktop, Bottom Center on mobile */}
       {projet.gallery && projet.gallery.length > 0 && (
-        <motion.div 
+        <motion.div
           className="fixed z-[199] left-0 right-0 md:top-[112px] bottom-6 md:bottom-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -247,36 +252,45 @@ export default function ProjetDetail() {
         >
           <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
             <div className="flex justify-center md:justify-end">
-              <div 
+              <div
                 className="relative flex gap-2 rounded-lg p-2 transition-all duration-300"
                 style={{
-                  backgroundColor: isScrolled ? 'var(--switch-bg-scrolled)' : 'var(--switch-bg-default)',
-                  border: `1px solid ${isScrolled ? 'var(--switch-border-scrolled)' : 'var(--switch-border-default)'}`
+                  backgroundColor: isScrolled
+                    ? 'var(--switch-bg-scrolled)'
+                    : 'var(--switch-bg-default)',
+                  border: `1px solid ${isScrolled ? 'var(--switch-border-scrolled)' : 'var(--switch-border-default)'}`,
                 }}
               >
                 {/* Sliding Background - Only visible when a section is active */}
                 {activeSection && (
-                  <motion.div 
+                  <motion.div
                     className="absolute rounded-md"
                     initial={false}
                     style={{
-                      backgroundColor: isScrolled ? 'var(--switch-active-bg-scrolled)' : 'var(--switch-active-bg-default)',
-                      zIndex: 0
+                      backgroundColor: isScrolled
+                        ? 'var(--switch-active-bg-scrolled)'
+                        : 'var(--switch-active-bg-default)',
+                      zIndex: 0,
                     }}
                     animate={{
                       top: '8px',
                       bottom: '8px',
                       left: activeSection === 'explanation' ? '8px' : undefined,
                       right: activeSection === 'gallery' ? '8px' : undefined,
-                      width: activeSection === 'explanation' ? '136px' : '104px',
-                      x: activeSection === 'explanation' ? 0 : 'calc(136px + 8px)',
+                      width:
+                        activeSection === 'explanation' ? '136px' : '104px',
+                      x:
+                        activeSection === 'explanation'
+                          ? 0
+                          : 'calc(136px + 8px)',
                     }}
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   />
                 )}
-                
+
                 {/* Explication Button */}
                 <button
+                  type="button"
                   onClick={() => scrollToSection('explanation')}
                   className="relative z-10 transition-colors duration-300 cursor-pointer"
                   style={{
@@ -287,72 +301,108 @@ export default function ProjetDetail() {
                     paddingBottom: '10px',
                     paddingLeft: '16px',
                     paddingRight: '16px',
-                    width: '136px'
+                    width: '136px',
                   }}
                 >
-                  <svg 
+                  <svg
+                    aria-hidden="true"
                     className="shrink-0 transition-all duration-300"
-                    width="18" 
-                    height="18" 
-                    viewBox="0 0 18 18" 
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
                     fill="none"
                   >
-                    <path 
+                    <path
                       d={svgPaths.p1a3bbb00}
-                      stroke={activeSection === 'explanation' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)')}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="1.5" 
+                      stroke={
+                        activeSection === 'explanation'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)'
+                      }
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
                     />
-                    <path 
-                      d="M10.5 1.5V6H15" 
-                      stroke={activeSection === 'explanation' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)')}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="1.5" 
+                    <path
+                      d="M10.5 1.5V6H15"
+                      stroke={
+                        activeSection === 'explanation'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)'
+                      }
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
                     />
-                    <path 
-                      d="M12 9.75H6" 
-                      stroke={activeSection === 'explanation' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)')}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="1.5" 
+                    <path
+                      d="M12 9.75H6"
+                      stroke={
+                        activeSection === 'explanation'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)'
+                      }
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
                     />
-                    <path 
-                      d="M12 12.75H6" 
-                      stroke={activeSection === 'explanation' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)')}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="1.5" 
+                    <path
+                      d="M12 12.75H6"
+                      stroke={
+                        activeSection === 'explanation'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)'
+                      }
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
                     />
-                    <path 
-                      d="M7.5 6.75H6.75H6" 
-                      stroke={activeSection === 'explanation' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)')}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="1.5" 
+                    <path
+                      d="M7.5 6.75H6.75H6"
+                      stroke={
+                        activeSection === 'explanation'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)'
+                      }
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
                     />
                   </svg>
-                  <span 
+                  <span
                     style={{
                       fontFamily: 'Manrope, sans-serif',
                       fontWeight: 500,
                       fontSize: '15px',
                       letterSpacing: '0.04px',
-                      color: activeSection === 'explanation' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)'),
-                      whiteSpace: 'nowrap'
+                      color:
+                        activeSection === 'explanation'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)',
+                      whiteSpace: 'nowrap',
                     }}
                   >
                     Explication
@@ -361,6 +411,7 @@ export default function ProjetDetail() {
 
                 {/* Galerie Button */}
                 <button
+                  type="button"
                   onClick={() => scrollToSection('gallery')}
                   className="relative z-10 transition-colors duration-300 cursor-pointer"
                   style={{
@@ -371,54 +422,78 @@ export default function ProjetDetail() {
                     paddingBottom: '10px',
                     paddingLeft: '16px',
                     paddingRight: '16px',
-                    width: '104px'
+                    width: '104px',
                   }}
                 >
-                  <svg 
+                  <svg
+                    aria-hidden="true"
                     className="shrink-0 transition-all duration-300"
-                    width="18" 
-                    height="18" 
-                    viewBox="0 0 18 18" 
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
                     fill="none"
                   >
-                    <path 
+                    <path
                       d={svgPaths.p1a8e7980}
-                      stroke={activeSection === 'gallery' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)')}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="1.5" 
+                      stroke={
+                        activeSection === 'gallery'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)'
+                      }
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
                     />
-                    <path 
+                    <path
                       d={svgPaths.p11e0c80}
-                      stroke={activeSection === 'gallery' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)')}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="1.5" 
+                      stroke={
+                        activeSection === 'gallery'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)'
+                      }
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
                     />
-                    <path 
+                    <path
                       d={svgPaths.p3e6b7400}
-                      stroke={activeSection === 'gallery' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)')}
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="1.5" 
+                      stroke={
+                        activeSection === 'gallery'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)'
+                      }
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
                     />
                   </svg>
-                  <span 
+                  <span
                     style={{
                       fontFamily: 'Manrope, sans-serif',
                       fontWeight: 500,
                       fontSize: '15px',
                       letterSpacing: '0.04px',
-                      color: activeSection === 'gallery' 
-                        ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)') 
-                        : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)'),
-                      whiteSpace: 'nowrap'
+                      color:
+                        activeSection === 'gallery'
+                          ? isScrolled
+                            ? 'var(--switch-active-text-scrolled)'
+                            : 'var(--switch-active-text-default)'
+                          : isScrolled
+                            ? 'var(--switch-text-scrolled)'
+                            : 'var(--switch-text-default)',
+                      whiteSpace: 'nowrap',
                     }}
                   >
                     Galerie
@@ -438,16 +513,16 @@ export default function ProjetDetail() {
             {/* Problématique */}
             {projet.problematique && (
               <ScrollFadeIn delay={0.1}>
-                <div 
+                <div
                   className="p-8"
                   style={{
                     backgroundColor: 'var(--portfolio-card-bg)',
                     borderRadius: '12px',
                     border: '1px solid var(--portfolio-card-border)',
-                    height: '100%'
+                    height: '100%',
                   }}
                 >
-                  <h2 
+                  <h2
                     className="mb-6"
                     style={{
                       fontFamily: 'Manrope, sans-serif',
@@ -455,29 +530,35 @@ export default function ProjetDetail() {
                       fontSize: 'clamp(1.5rem, 1.25rem + 1.25vw, 2rem)',
                       lineHeight: '1.2',
                       letterSpacing: '-1.4px',
-                      color: 'var(--portfolio-text-primary)'
+                      color: 'var(--portfolio-text-primary)',
                     }}
                   >
                     Problématique
                   </h2>
-                  <div 
+                  <div
                     className="space-y-3"
                     style={{
                       fontFamily: 'Manrope, sans-serif',
                       fontSize: '15px',
                       fontWeight: 400,
                       lineHeight: '1.7',
-                      color: 'var(--portfolio-text-description)'
+                      color: 'var(--portfolio-text-description)',
                     }}
                   >
                     {projet.problematique.split('\n').map((line, index) => {
                       const trimmedLine = line.trim();
-                      if (trimmedLine === '') return <div key={index} className="h-2" />;
+                      if (trimmedLine === '')
+                        return <div key={index} className="h-2" />;
                       if (trimmedLine.startsWith('•')) {
                         const content = trimmedLine.substring(1).trim();
                         return (
                           <div key={index} className="flex gap-2 items-start">
-                            <span style={{ color: 'var(--portfolio-text-muted)' }} className="mt-1">•</span>
+                            <span
+                              style={{ color: 'var(--portfolio-text-muted)' }}
+                              className="mt-1"
+                            >
+                              •
+                            </span>
                             <span>{content}</span>
                           </div>
                         );
@@ -492,16 +573,16 @@ export default function ProjetDetail() {
             {/* Mon Rôle */}
             {projet.role && (
               <ScrollFadeIn delay={0.15}>
-                <div 
+                <div
                   className="p-8"
                   style={{
                     backgroundColor: 'var(--portfolio-card-bg)',
                     borderRadius: '12px',
                     border: '1px solid var(--portfolio-card-border)',
-                    height: '100%'
+                    height: '100%',
                   }}
                 >
-                  <h2 
+                  <h2
                     className="mb-6"
                     style={{
                       fontFamily: 'Manrope, sans-serif',
@@ -509,39 +590,44 @@ export default function ProjetDetail() {
                       fontSize: 'clamp(1.5rem, 1.25rem + 1.25vw, 2rem)',
                       lineHeight: '1.2',
                       letterSpacing: '-1.4px',
-                      color: 'var(--portfolio-text-primary)'
+                      color: 'var(--portfolio-text-primary)',
                     }}
                   >
                     Mon rôle
                   </h2>
-                  <p 
+                  <p
                     className="mb-6"
                     style={{
                       fontFamily: 'Manrope, sans-serif',
                       fontSize: '15px',
                       fontWeight: 400,
                       lineHeight: '1.7',
-                      color: 'var(--portfolio-text-description)'
+                      color: 'var(--portfolio-text-description)',
                     }}
                   >
                     {projet.role}
                   </p>
-                  
+
                   {projet.interventions && projet.interventions.length > 0 && (
                     <div className="space-y-2">
                       {projet.interventions.map((intervention, index) => (
-                        <div 
-                          key={index} 
+                        <div
+                          key={index}
                           className="flex gap-2 items-start"
                           style={{
                             fontFamily: 'Manrope, sans-serif',
                             fontSize: '15px',
                             fontWeight: 400,
                             lineHeight: '1.7',
-                            color: 'var(--portfolio-text-description)'
+                            color: 'var(--portfolio-text-description)',
                           }}
                         >
-                          <span style={{ color: 'var(--portfolio-text-muted)' }} className="mt-1">•</span>
+                          <span
+                            style={{ color: 'var(--portfolio-text-muted)' }}
+                            className="mt-1"
+                          >
+                            •
+                          </span>
                           <span>{intervention}</span>
                         </div>
                       ))}
@@ -555,15 +641,15 @@ export default function ProjetDetail() {
           {/* Impact - Full Width */}
           {projet.impact && (
             <ScrollFadeIn delay={0.2}>
-              <div 
+              <div
                 className="p-8 mt-8"
                 style={{
                   backgroundColor: 'var(--portfolio-card-bg)',
                   borderRadius: '12px',
-                  border: '1px solid var(--portfolio-card-border)'
+                  border: '1px solid var(--portfolio-card-border)',
                 }}
               >
-                <h2 
+                <h2
                   className="mb-6"
                   style={{
                     fontFamily: 'Manrope, sans-serif',
@@ -571,29 +657,35 @@ export default function ProjetDetail() {
                     fontSize: 'clamp(1.5rem, 1.25rem + 1.25vw, 2rem)',
                     lineHeight: '1.2',
                     letterSpacing: '-1.4px',
-                    color: 'var(--portfolio-text-primary)'
+                    color: 'var(--portfolio-text-primary)',
                   }}
                 >
                   Impact
                 </h2>
-                <div 
+                <div
                   className="space-y-3"
                   style={{
                     fontFamily: 'Manrope, sans-serif',
                     fontSize: '15px',
                     fontWeight: 400,
                     lineHeight: '1.7',
-                    color: 'var(--portfolio-text-description)'
+                    color: 'var(--portfolio-text-description)',
                   }}
                 >
                   {projet.impact.split('\n').map((line, index) => {
                     const trimmedLine = line.trim();
-                    if (trimmedLine === '') return <div key={index} className="h-2" />;
+                    if (trimmedLine === '')
+                      return <div key={index} className="h-2" />;
                     if (trimmedLine.startsWith('•')) {
                       const content = trimmedLine.substring(1).trim();
                       return (
                         <div key={index} className="flex gap-2 items-start">
-                          <span style={{ color: 'var(--portfolio-text-muted)' }} className="mt-1">•</span>
+                          <span
+                            style={{ color: 'var(--portfolio-text-muted)' }}
+                            className="mt-1"
+                          >
+                            •
+                          </span>
                           <span>{content}</span>
                         </div>
                       );
@@ -609,7 +701,7 @@ export default function ProjetDetail() {
           {projet.demarche && projet.demarche.length > 0 && (
             <div className="mt-16">
               <ScrollRevealTitle delay={0.25}>
-                <h2 
+                <h2
                   className="mb-8"
                   style={{
                     fontFamily: 'Manrope, sans-serif',
@@ -617,25 +709,25 @@ export default function ProjetDetail() {
                     fontSize: 'clamp(1.5rem, 1.25rem + 1.25vw, 2rem)',
                     lineHeight: '1.2',
                     letterSpacing: '-1.4px',
-                    color: 'var(--portfolio-text-primary)'
+                    color: 'var(--portfolio-text-primary)',
                   }}
                 >
                   Démarche
                 </h2>
               </ScrollRevealTitle>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {projet.demarche.map((step, index) => (
                   <ScrollFadeIn key={index} delay={0.3 + index * 0.05}>
-                    <div 
+                    <div
                       className="p-6 flex flex-col h-full"
                       style={{
                         backgroundColor: 'var(--portfolio-card-bg)',
                         borderRadius: '12px',
-                        border: '1px solid var(--portfolio-card-border)'
+                        border: '1px solid var(--portfolio-card-border)',
                       }}
                     >
-                      <p 
+                      <p
                         className="mb-2"
                         style={{
                           fontFamily: 'Manrope, sans-serif',
@@ -643,12 +735,12 @@ export default function ProjetDetail() {
                           fontSize: '13px',
                           lineHeight: '1.5',
                           color: 'var(--portfolio-text-muted)',
-                          letterSpacing: '0.5px'
+                          letterSpacing: '0.5px',
                         }}
                       >
                         ({String(index + 1).padStart(3, '0')})
                       </p>
-                      <h3 
+                      <h3
                         className="mb-3"
                         style={{
                           fontFamily: 'Manrope, sans-serif',
@@ -656,19 +748,19 @@ export default function ProjetDetail() {
                           fontSize: '18px',
                           lineHeight: '1.3',
                           letterSpacing: '-0.5px',
-                          color: 'var(--portfolio-text-primary)'
+                          color: 'var(--portfolio-text-primary)',
                         }}
                       >
                         {step.title}
                       </h3>
-                      <p 
+                      <p
                         className="flex-grow"
                         style={{
                           fontFamily: 'Manrope, sans-serif',
                           fontSize: '15px',
                           fontWeight: 400,
                           lineHeight: '1.7',
-                          color: 'var(--portfolio-text-description)'
+                          color: 'var(--portfolio-text-description)',
                         }}
                       >
                         {step.content}
@@ -687,7 +779,7 @@ export default function ProjetDetail() {
         <section ref={galleryRef} className="pb-20">
           <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
             <ScrollRevealTitle delay={0.05}>
-              <h2 
+              <h2
                 className="mb-8"
                 style={{
                   fontFamily: 'Manrope, sans-serif',
@@ -695,7 +787,7 @@ export default function ProjetDetail() {
                   fontSize: 'clamp(1.5rem, 1.25rem + 1.25vw, 2rem)',
                   lineHeight: '1.2',
                   letterSpacing: '-1.4px',
-                  color: 'var(--portfolio-text-primary)'
+                  color: 'var(--portfolio-text-primary)',
                 }}
               >
                 Galerie
@@ -720,7 +812,10 @@ export default function ProjetDetail() {
                       src={image}
                       alt={`${projet.title} — aperçu ${index + 1}`}
                       className="w-full h-auto"
-                      style={{ backgroundColor: 'var(--portfolio-card-bg)', display: 'block' }}
+                      style={{
+                        backgroundColor: 'var(--portfolio-card-bg)',
+                        display: 'block',
+                      }}
                       loading="lazy"
                       decoding="async"
                     />
@@ -737,7 +832,7 @@ export default function ProjetDetail() {
         <section className="py-20">
           <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
             <ScrollFadeIn delay={0.1}>
-              <h2 
+              <h2
                 className="mb-12"
                 style={{
                   fontFamily: 'Manrope, sans-serif',
@@ -745,13 +840,13 @@ export default function ProjetDetail() {
                   fontSize: 'clamp(1.5rem, 1.25rem + 1.25vw, 2rem)',
                   lineHeight: '1.2',
                   letterSpacing: '-1.4px',
-                  color: 'var(--portfolio-text-primary)'
+                  color: 'var(--portfolio-text-primary)',
                 }}
               >
                 Découvrir d'autres projets
               </h2>
             </ScrollFadeIn>
-            
+
             <div className="space-y-6">
               {allOtherProjects.map((projet, index) => (
                 <ScrollFadeIn key={index} delay={0.15 + index * 0.05}>

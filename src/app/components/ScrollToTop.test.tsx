@@ -1,12 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  Link,
-  MemoryRouter,
-  Route,
-  Routes,
-  useLocation,
-} from 'react-router';
+import { Link, MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import {
   PageTransitionProvider,
   usePageTransition,
@@ -56,8 +50,11 @@ function TransitionControls() {
 
 function TransitionState() {
   const { pathname } = useLocation();
-  const { isTransitioning, direction, snapshot: currentSnapshot } =
-    usePageTransition();
+  const {
+    isTransitioning,
+    direction,
+    snapshot: currentSnapshot,
+  } = usePageTransition();
 
   return (
     <>

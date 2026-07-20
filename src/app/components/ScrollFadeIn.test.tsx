@@ -16,7 +16,11 @@ vi.mock('motion/react', async () => {
     motion: {
       div: forwardRef<
         HTMLDivElement,
-        PropsWithChildren<{ initial: unknown; animate: unknown; transition: unknown }>
+        PropsWithChildren<{
+          initial: unknown;
+          animate: unknown;
+          transition: unknown;
+        }>
       >(({ children, initial, animate, transition }, ref) => (
         <div
           ref={ref}
@@ -58,7 +62,10 @@ describe('ScrollFadeIn', () => {
     motionMocks.useReducedMotion.mockReturnValue(true);
     render(<ScrollFadeIn>Card</ScrollFadeIn>);
 
-    expect(screen.getByTestId('motion-wrapper')).toHaveAttribute('data-initial', 'false');
+    expect(screen.getByTestId('motion-wrapper')).toHaveAttribute(
+      'data-initial',
+      'false',
+    );
     expect(screen.getByTestId('motion-wrapper')).toHaveAttribute(
       'data-animate',
       JSON.stringify({ opacity: 1, y: 0, filter: 'blur(0px)' }),

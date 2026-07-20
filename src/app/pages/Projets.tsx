@@ -55,9 +55,7 @@ export default function Projets() {
     <motion.div
       className="relative min-h-screen projets-page"
       style={{ backgroundColor: 'var(--portfolio-bg)' }}
-      initial={
-        isReturnVisit && !reduceReturnMotion ? { opacity: 0 } : false
-      }
+      initial={isReturnVisit && !reduceReturnMotion ? { opacity: 0 } : false}
       animate={{ opacity: 1 }}
       transition={{
         duration: isReturnVisit && !reduceReturnMotion ? 0.2 : 0,
@@ -69,34 +67,37 @@ export default function Projets() {
         path="/projets"
       />
       {/* Projets Content */}
-      <section style={{ paddingTop: 'var(--page-padding-top)' }} className="pb-32">
+      <section
+        style={{ paddingTop: 'var(--page-padding-top)' }}
+        className="pb-32"
+      >
         <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
           {/* Header */}
           <div className="mb-12">
             <ScrollRevealTitle delay={0}>
-              <p 
-                style={{ 
+              <p
+                style={{
                   fontFamily: 'Manrope, sans-serif',
                   fontWeight: 500,
                   fontSize: 'clamp(0.8125rem, 0.75rem + 0.3125vw, 0.9375rem)',
                   lineHeight: '1.6',
                   color: 'var(--portfolio-text-secondary)',
                   marginBottom: '0px',
-                  letterSpacing: '0.5px'
+                  letterSpacing: '0.5px',
                 }}
               >
                 Mes travaux
               </p>
             </ScrollRevealTitle>
             <ScrollRevealTitle delay={0.05}>
-              <h1 
-                style={{ 
+              <h1
+                style={{
                   fontFamily: 'Manrope, sans-serif',
                   fontWeight: 700,
                   fontSize: 'clamp(2rem, 1rem + 5vw, 3rem)',
                   lineHeight: '1.1',
                   letterSpacing: '-1.4px',
-                  color: 'var(--portfolio-text-primary)'
+                  color: 'var(--portfolio-text-primary)',
                 }}
               >
                 Projets

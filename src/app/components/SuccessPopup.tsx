@@ -12,8 +12,8 @@ interface SuccessPopupProps {
 export default function SuccessPopup({
   isOpen,
   onClose,
-  message = "Message envoyé avec succès",
-  description = "Je vous répondrai dans les plus brefs délais.",
+  message = 'Message envoyé avec succès',
+  description = 'Je vous répondrai dans les plus brefs délais.',
 }: SuccessPopupProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -65,21 +65,22 @@ export default function SuccessPopup({
             exit={{ opacity: 0, filter: 'blur(10px)' }}
             transition={{
               duration: 0.4,
-              ease: "easeOut"
+              ease: 'easeOut',
             }}
             className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[10001] w-[calc(100%-2rem)] max-w-md"
             onClick={(e) => e.stopPropagation()}
           >
-            <div 
+            <div
               className="relative p-8 sm:p-10"
               style={{
                 backgroundColor: '#151615',
                 borderRadius: '12px',
-                border: '1px solid #1C1D1C'
+                border: '1px solid #1C1D1C',
               }}
             >
               {/* Close button */}
               <button
+                type="button"
                 ref={closeButtonRef}
                 onClick={onClose}
                 className="absolute top-4 right-4 p-2 text-[#BABABA] hover:text-[#F1F1F1] transition-colors cursor-pointer"
@@ -90,8 +91,8 @@ export default function SuccessPopup({
 
               {/* Success Icon */}
               <div className="flex justify-center mb-6">
-                <CheckCircle 
-                  className="w-16 h-16" 
+                <CheckCircle
+                  className="w-16 h-16"
                   style={{ color: '#EAEAEA' }}
                 />
               </div>
@@ -106,21 +107,21 @@ export default function SuccessPopup({
                   fontSize: 'clamp(1.25rem, 1.125rem + 0.625vw, 1.5rem)',
                   lineHeight: '1.3',
                   letterSpacing: '-0.5px',
-                  color: '#F1F1F1'
+                  color: '#F1F1F1',
                 }}
               >
                 {message}
               </h3>
 
               {/* Description */}
-              <p 
+              <p
                 className="text-center mb-8"
                 style={{
                   fontFamily: 'Manrope, sans-serif',
                   fontSize: '15px',
                   fontWeight: 400,
                   lineHeight: '1.7',
-                  color: '#BABABA'
+                  color: '#BABABA',
                 }}
               >
                 {description}
@@ -128,6 +129,7 @@ export default function SuccessPopup({
 
               {/* Close button */}
               <button
+                type="button"
                 onClick={onClose}
                 className="w-full cursor-pointer px-6 py-3 transition-all duration-300 hover:bg-[#f0f0f0]"
                 style={{
@@ -136,7 +138,7 @@ export default function SuccessPopup({
                   fontFamily: 'Manrope, sans-serif',
                   fontWeight: 500,
                   fontSize: '14px',
-                  borderRadius: '5px'
+                  borderRadius: '5px',
                 }}
               >
                 Fermer

@@ -2,13 +2,18 @@ import { motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-router';
 import { Home, ArrowLeft } from 'lucide-react';
 import PageMeta from '../components/PageMeta';
+import { ROUTES } from '../config';
 
 export default function NotFound() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
-      <PageMeta title="Page introuvable — Alexis Kabiche" description="Cette page n'existe pas ou a été déplacée." path="/404" />
+      <PageMeta
+        title="Page introuvable — Alexis Kabiche"
+        description="Cette page n'existe pas ou a été déplacée."
+        path="/404"
+      />
 
       {/* Animated background */}
       <div className="absolute inset-0">
@@ -84,7 +89,7 @@ export default function NotFound() {
             transition={{ delay: 0.7 }}
           >
             <Link
-              to="/"
+              to={ROUTES.HOME}
               className="group inline-flex items-center gap-2 px-8 py-4 bg-cyan-400 text-black font-semibold rounded-full hover:bg-white transition-all duration-300"
               data-cursor="hover"
               data-cursor-text="Accueil"
@@ -94,6 +99,7 @@ export default function NotFound() {
             </Link>
 
             <button
+              type="button"
               onClick={() => window.history.back()}
               className="group inline-flex items-center gap-2 px-8 py-4 border-2 border-white/20 text-white font-semibold rounded-full hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
               data-cursor="hover"

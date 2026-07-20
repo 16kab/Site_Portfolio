@@ -12,7 +12,10 @@ interface ErrorBoundaryState {
  * Filet de sécurité global : évite la page blanche en cas d'erreur
  * de rendu non interceptée.
  */
-export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export default class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   state: ErrorBoundaryState = { hasError: false };
 
   static getDerivedStateFromError(): ErrorBoundaryState {
@@ -35,10 +38,20 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
             fontFamily: 'Manrope, sans-serif',
           }}
         >
-          <h1 style={{ fontSize: 'clamp(1.5rem, 1rem + 2vw, 2.5rem)', fontWeight: 700 }}>
+          <h1
+            style={{
+              fontSize: 'clamp(1.5rem, 1rem + 2vw, 2.5rem)',
+              fontWeight: 700,
+            }}
+          >
             Une erreur est survenue
           </h1>
-          <p style={{ color: 'var(--portfolio-text-secondary)', maxWidth: '32rem' }}>
+          <p
+            style={{
+              color: 'var(--portfolio-text-secondary)',
+              maxWidth: '32rem',
+            }}
+          >
             Quelque chose s'est mal passé lors de l'affichage de cette page.
             Vous pouvez recharger ou revenir à l'accueil.
           </p>

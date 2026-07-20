@@ -4,6 +4,7 @@ import Shuffle from '../components/Shuffle';
 import { motion } from 'motion/react';
 import { useEffect } from 'react';
 import PageMeta from '../components/PageMeta';
+import { ROUTES } from '../config';
 
 interface HomeProps {
   showSplash: boolean;
@@ -18,7 +19,8 @@ export function getHomeAnimationDelays(showSplash: boolean) {
 }
 
 export default function Home({ showSplash }: HomeProps) {
-  const { textDelay, shuffleDelay1, shuffleDelay2 } = getHomeAnimationDelays(showSplash);
+  const { textDelay, shuffleDelay1, shuffleDelay2 } =
+    getHomeAnimationDelays(showSplash);
 
   useEffect(() => {
     document.body.classList.add(HOME_BODY_CLASS);
@@ -26,20 +28,27 @@ export default function Home({ showSplash }: HomeProps) {
 
     return () => document.body.classList.remove(HOME_BODY_CLASS);
   }, []);
-  
+
   return (
     <section className="relative overflow-hidden home-section">
       <PageMeta title="Alexis Kabiche — Product & Brand Designer" path="/" />
       <h1 className="sr-only">Alexis Kabiche, Product & Brand Designer</h1>
       {/* Hero Content */}
-      <div className="relative z-10 flex h-full items-center justify-center px-4 sm:px-6 md:px-8" style={{ transform: 'translateY(-3%)' }}>
+      <div
+        className="relative z-10 flex h-full items-center justify-center px-4 sm:px-6 md:px-8"
+        style={{ transform: 'translateY(-3%)' }}
+      >
         {/* Desktop: layout avec positions absolues */}
-        <motion.div 
-          className="hidden lg:block relative w-full" 
+        <motion.div
+          className="hidden lg:block relative w-full"
           style={{ maxWidth: '1920px', height: 'clamp(250px, 50vh, 750px)' }}
           initial={{ filter: 'blur(10px)', opacity: 0 }}
           animate={{ filter: 'blur(0px)', opacity: 1 }}
-          transition={{ duration: 1.2, delay: textDelay, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{
+            duration: 1.2,
+            delay: textDelay,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
         >
           {/* PRODUCT - Top Left */}
           <Shuffle
@@ -53,7 +62,7 @@ export default function Home({ showSplash }: HomeProps) {
               letterSpacing: '-0.052em',
               lineHeight: 1.4,
               transform: 'translateX(clamp(0px, 10vw, 95px))',
-              color: 'var(--home-text-primary)'
+              color: 'var(--home-text-primary)',
             }}
             shuffleDirection="right"
             duration={1}
@@ -66,7 +75,7 @@ export default function Home({ showSplash }: HomeProps) {
           />
 
           {/* brand - Top Right (Italic) */}
-          <p 
+          <p
             className="absolute leading-[1.4] whitespace-nowrap"
             style={{
               fontFamily: "'Playfair Display', serif",
@@ -76,7 +85,7 @@ export default function Home({ showSplash }: HomeProps) {
               letterSpacing: '-0.052em',
               left: 'clamp(200px, 69.8vw, 1342px)',
               top: 'clamp(15px, 5.6vw, 107px)',
-              color: 'var(--home-text-primary)'
+              color: 'var(--home-text-primary)',
             }}
           >
             brand
@@ -95,7 +104,7 @@ export default function Home({ showSplash }: HomeProps) {
               left: 'clamp(50px, 26.6vw, 511px)',
               top: 'clamp(45px, 11.6vw, 223px)',
               lineHeight: 1.4,
-              color: 'var(--home-text-primary)'
+              color: 'var(--home-text-primary)',
             }}
             shuffleDirection="right"
             duration={1}
@@ -108,11 +117,15 @@ export default function Home({ showSplash }: HomeProps) {
         </motion.div>
 
         {/* Mobile & Tablet: layout centré et empilé */}
-        <motion.div 
+        <motion.div
           className="lg:hidden flex flex-col items-center justify-center gap-1 text-center w-full"
           initial={{ filter: 'blur(10px)', opacity: 0 }}
           animate={{ filter: 'blur(0px)', opacity: 1 }}
-          transition={{ duration: 1.2, delay: textDelay, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{
+            duration: 1.2,
+            delay: textDelay,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
         >
           {/* PRODUCT */}
           <Shuffle
@@ -125,7 +138,7 @@ export default function Home({ showSplash }: HomeProps) {
               fontSize: 'clamp(40px, 12vw, 120px)',
               letterSpacing: '-0.052em',
               lineHeight: 1.2,
-              color: 'var(--home-text-primary)'
+              color: 'var(--home-text-primary)',
             }}
             shuffleDirection="right"
             duration={1}
@@ -137,7 +150,7 @@ export default function Home({ showSplash }: HomeProps) {
           />
 
           {/* and brand */}
-          <p 
+          <p
             className="whitespace-nowrap"
             style={{
               fontFamily: "'Playfair Display', serif",
@@ -147,7 +160,7 @@ export default function Home({ showSplash }: HomeProps) {
               letterSpacing: '-0.052em',
               lineHeight: 1.2,
               transform: 'translateY(-4px)',
-              color: 'var(--home-text-primary)'
+              color: 'var(--home-text-primary)',
             }}
           >
             and brand
@@ -164,7 +177,7 @@ export default function Home({ showSplash }: HomeProps) {
               fontSize: 'clamp(40px, 12vw, 120px)',
               letterSpacing: '-0.052em',
               lineHeight: 1.2,
-              color: 'var(--home-text-primary)'
+              color: 'var(--home-text-primary)',
             }}
             shuffleDirection="right"
             duration={1}
@@ -178,8 +191,8 @@ export default function Home({ showSplash }: HomeProps) {
       </div>
 
       {/* Bouton "Voir mes projets" */}
-      <Link 
-        to="/projets"
+      <Link
+        to={ROUTES.PROJETS}
         className="lg:hidden fixed left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-6 py-3 transition-all duration-300 group"
         style={{
           bottom: 'max(5rem, calc(env(safe-area-inset-bottom, 0px) + 2rem))',
@@ -192,7 +205,7 @@ export default function Home({ showSplash }: HomeProps) {
           borderWidth: '1px',
           borderStyle: 'solid',
           borderColor: 'var(--home-button-border)',
-          color: 'var(--home-button-text)'
+          color: 'var(--home-button-text)',
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = 'var(--home-button-bg-hover)';

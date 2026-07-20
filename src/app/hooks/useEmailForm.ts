@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { toast } from 'sonner';
-import { EMAILJS_CONFIG } from '../config';
+import { EMAILJS_CONFIG, SITE_CONTACT } from '../config';
 
 export interface FormData {
   nom: string;
@@ -11,9 +11,7 @@ export interface FormData {
   message: string;
 }
 
-export interface FormErrors {
-  [key: string]: boolean;
-}
+export type FormErrors = Partial<Record<keyof FormData, boolean>>;
 
 /**
  * Custom hook for handling email form submission with EmailJS
@@ -42,13 +40,17 @@ export function useEmailForm() {
   /**
    * Handle input change and remove errors
    */
-  const handleInputChange = (name: string, value: string, isTextField: boolean = false) => {
+  const handleInputChange = (
+    name: keyof FormData,
+    value: string,
+    isTextField: boolean = false,
+  ) => {
     // Remove numbers from names if needed
     const sanitizedValue = isTextField ? sanitizeTextInput(value) : value;
-    
+
     // Remove error when user starts typing
     if (errors[name] && value.trim()) {
-      setErrors(prev => ({ ...prev, [name]: false }));
+      setErrors((prev) => ({ ...prev, [name]: false }));
     }
 
     return sanitizedValue;
@@ -80,7 +82,10 @@ export function useEmailForm() {
    * @param honeypot Valeur du champ piège invisible : un humain le laisse
    * vide, un bot le remplit. Rempli ⇒ on simule un succès sans rien envoyer.
    */
-  const submitForm = async (formData: FormData, honeypot?: string): Promise<boolean> => {
+  const submitForm = async (
+    formData: FormData,
+    honeypot?: string,
+  ): Promise<boolean> => {
     // Anti-spam : soumission de bot, on ne fait rien
     if (honeypot && honeypot.trim() !== '') {
       setShowSuccessPopup(true);
@@ -103,14 +108,14 @@ export function useEmailForm() {
         from_email: formData.email,
         subject: formData.objet,
         message: formData.message,
-        to_email: 'kabiche.alexis@gmail.com',
+        to_email: SITE_CONTACT.email,
       };
 
       await emailjs.send(
         EMAILJS_CONFIG.serviceId,
         EMAILJS_CONFIG.templateId,
         templateParams,
-        EMAILJS_CONFIG.publicKey
+        EMAILJS_CONFIG.publicKey,
       );
 
       // Success
@@ -120,7 +125,7 @@ export function useEmailForm() {
     } catch (error) {
       console.error('Email send error:', error);
       toast.error(
-        "L'envoi a échoué. Réessayez ou écrivez-moi directement à kabiche.alexis@gmail.com.",
+        `L'envoi a échoué. Réessayez ou écrivez-moi directement à ${SITE_CONTACT.email}.`,
       );
       return false;
     } finally {

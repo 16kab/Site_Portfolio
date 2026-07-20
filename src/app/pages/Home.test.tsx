@@ -11,7 +11,10 @@ vi.mock('../components/Shuffle', () => ({
     text: string;
     useCharacterMaskPadding?: boolean;
   }) => (
-    <span data-testid={`shuffle-${text}`} data-mask-padding={String(useCharacterMaskPadding)}>
+    <span
+      data-testid={`shuffle-${text}`}
+      data-mask-padding={String(useCharacterMaskPadding)}
+    >
       {text}
     </span>
   ),

@@ -4,7 +4,11 @@ import { Renderer, Program, Mesh, Triangle } from 'ogl';
 const hexToRgb = (hex: string): number[] => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!result) return [1, 1, 1];
-  return [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255];
+  return [
+    parseInt(result[1], 16) / 255,
+    parseInt(result[2], 16) / 255,
+    parseInt(result[3], 16) / 255,
+  ];
 };
 
 const vertex = `#version 300 es
@@ -147,7 +151,7 @@ const Grainient = ({
   color1 = '#FF9FFC',
   color2 = '#5227FF',
   color3 = '#B19EEF',
-  className = ''
+  className = '',
 }: GrainientProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [webglError, setWebglError] = useState(false);
@@ -158,10 +162,28 @@ const Grainient = ({
   // Valeurs initiales figées pour la création (les mises à jour passent
   // par l'effet « uniforms » ci-dessous, sans recréer le contexte WebGL)
   const initialPropsRef = useRef({
-    timeSpeed, colorBalance, warpStrength, warpFrequency, warpSpeed,
-    warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale,
-    grainAmount, grainScale, grainAnimated, contrast, gamma, saturation,
-    centerX, centerY, zoom, color1, color2, color3,
+    timeSpeed,
+    colorBalance,
+    warpStrength,
+    warpFrequency,
+    warpSpeed,
+    warpAmplitude,
+    blendAngle,
+    blendSoftness,
+    rotationAmount,
+    noiseScale,
+    grainAmount,
+    grainScale,
+    grainAnimated,
+    contrast,
+    gamma,
+    saturation,
+    centerX,
+    centerY,
+    zoom,
+    color1,
+    color2,
+    color3,
   });
 
   // Initialisation WebGL : UNE SEULE fois par montage
@@ -178,7 +200,7 @@ const Grainient = ({
         webgl: 2,
         alpha: true,
         antialias: false,
-        dpr: Math.min(window.devicePixelRatio || 1, 2)
+        dpr: Math.min(window.devicePixelRatio || 1, 2),
       });
 
       const gl = renderer.gl;
@@ -225,8 +247,8 @@ const Grainient = ({
           uZoom: { value: p.zoom },
           uColor1: { value: new Float32Array(hexToRgb(p.color1)) },
           uColor2: { value: new Float32Array(hexToRgb(p.color2)) },
-          uColor3: { value: new Float32Array(hexToRgb(p.color3)) }
-        }
+          uColor3: { value: new Float32Array(hexToRgb(p.color3)) },
+        },
       });
       programRef.current = program;
 
@@ -256,7 +278,9 @@ const Grainient = ({
       // On fige sur t=7s (composition équilibrée du dégradé) : à t=0 la
       // frame est dominée par la couleur sombre — fond quasi noir.
       const STATIC_TIME = 7;
-      isStaticRef.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      isStaticRef.current = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      ).matches;
 
       if (isStaticRef.current) {
         program.uniforms.iTime.value = STATIC_TIME;
@@ -296,7 +320,11 @@ const Grainient = ({
       setWebglError(true);
 
       // Cleanup if there was a partial initialization
-      if (canvas && containerRef.current && containerRef.current.contains(canvas)) {
+      if (
+        canvas &&
+        containerRef.current &&
+        containerRef.current.contains(canvas)
+      ) {
         try {
           containerRef.current.removeChild(canvas);
         } catch {
@@ -328,7 +356,10 @@ const Grainient = ({
     program.uniforms.uContrast.value = contrast;
     program.uniforms.uGamma.value = gamma;
     program.uniforms.uSaturation.value = saturation;
-    (program.uniforms.uCenterOffset.value as Float32Array).set([centerX, centerY]);
+    (program.uniforms.uCenterOffset.value as Float32Array).set([
+      centerX,
+      centerY,
+    ]);
     program.uniforms.uZoom.value = zoom;
     (program.uniforms.uColor1.value as Float32Array).set(hexToRgb(color1));
     (program.uniforms.uColor2.value as Float32Array).set(hexToRgb(color2));
@@ -358,14 +389,14 @@ const Grainient = ({
     zoom,
     color1,
     color2,
-    color3
+    color3,
   ]);
 
   // CSS Fallback if WebGL fails
   if (webglError) {
     return (
-      <div 
-        className={`grainient-container ${className}`.trim()} 
+      <div
+        className={`grainient-container ${className}`.trim()}
         style={{
           position: 'absolute',
           top: 0,
@@ -376,16 +407,16 @@ const Grainient = ({
           margin: 0,
           padding: 0,
           background: `linear-gradient(135deg, ${color3} 0%, ${color2} 50%, ${color1} 100%)`,
-          opacity: 0.8
+          opacity: 0.8,
         }}
       />
     );
   }
 
   return (
-    <div 
-      ref={containerRef} 
-      className={`grainient-container ${className}`.trim()} 
+    <div
+      ref={containerRef}
+      className={`grainient-container ${className}`.trim()}
       style={{
         position: 'absolute',
         top: 0,
@@ -394,7 +425,7 @@ const Grainient = ({
         height: '100%',
         overflow: 'hidden',
         margin: 0,
-        padding: 0
+        padding: 0,
       }}
     />
   );

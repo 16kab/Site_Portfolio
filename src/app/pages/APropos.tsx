@@ -6,7 +6,14 @@ import ContactFooter from '../components/ContactFooter';
 import RollingText from '../components/RollingText';
 import PageMeta from '../components/PageMeta';
 import { scrollBodyTo } from '../utils/scrollBodyTo';
-import { Lightbulb, Compass, Users, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Lightbulb,
+  Compass,
+  Users,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 
 interface ExpertiseSection {
   number: string;
@@ -31,133 +38,150 @@ const expertiseSections: ExpertiseSection[] = [
   {
     number: '001',
     title: 'UX & Product Design',
-    description: 'Transformer des problématiques floues en interfaces claires et structurées. Intervention sur l\'ensemble du cycle produit, de la phase de découverte aux interactions finalisées, avec une attention constante portée aux usages réels.',
+    description:
+      "Transformer des problématiques floues en interfaces claires et structurées. Intervention sur l'ensemble du cycle produit, de la phase de découverte aux interactions finalisées, avec une attention constante portée aux usages réels.",
     badges: [
       'Conception produit de bout en bout',
       'Workflows complexes',
       'Multi-plateforme',
-      'Design d\'interaction',
+      "Design d'interaction",
       'Prototypage',
-      'Parcours utilisateurs'
-    ]
+      'Parcours utilisateurs',
+    ],
   },
   {
     number: '002',
     title: 'Brand & Visual Design',
-    description: 'Construire et faire évoluer des identités visuelles cohérentes, pensées pour s\'intégrer dans des environnements produits. L\'objectif n\'est pas uniquement esthétique, mais d\'assurer lisibilité, différenciation et continuité sur l\'ensemble des points de contact.',
+    description:
+      "Construire et faire évoluer des identités visuelles cohérentes, pensées pour s'intégrer dans des environnements produits. L'objectif n'est pas uniquement esthétique, mais d'assurer lisibilité, différenciation et continuité sur l'ensemble des points de contact.",
     badges: [
       'Direction artistique',
       'Identité de marque',
       'Charte graphique',
       'Systèmes visuels',
-      'Déclinaison multi-supports'
-    ]
+      'Déclinaison multi-supports',
+    ],
   },
   {
     number: '003',
-    title: 'Workflows augmentés par l\'IA',
-    description: 'Intégrer l\'IA comme un outil au service de la réflexion, et non comme une finalité. Elle intervient pour accélérer l\'exploration, structurer les idées, identifier des patterns ou challenger des hypothèses, tout en laissant la prise de décision ancrée dans une logique humaine et contextualisée.',
+    title: "Workflows augmentés par l'IA",
+    description:
+      "Intégrer l'IA comme un outil au service de la réflexion, et non comme une finalité. Elle intervient pour accélérer l'exploration, structurer les idées, identifier des patterns ou challenger des hypothèses, tout en laissant la prise de décision ancrée dans une logique humaine et contextualisée.",
     badges: [
       'Outils assistés par IA',
-      'Aide à la structuration et à l\'exploration',
+      "Aide à la structuration et à l'exploration",
       'Détection de patterns',
       'Support à la réflexion et à la décision',
-      'Interaction humain–IA'
-    ]
+      'Interaction humain–IA',
+    ],
   },
   {
     number: '004',
     title: 'Design Systems & Ops',
-    description: 'Mettre en place les fondations qui rendent le design fiable et reproductible. Bibliothèques de composants, architecture de tokens, modèles de gouvernance — des éléments structurants qui optimisent durablement les processus.',
+    description:
+      'Mettre en place les fondations qui rendent le design fiable et reproductible. Bibliothèques de composants, architecture de tokens, modèles de gouvernance — des éléments structurants qui optimisent durablement les processus.',
     badges: [
       'Architecture de composants',
       'Design tokens',
       'Gouvernance',
       'Modèles de contribution',
       'Organisation des équipes',
-      'Documentation'
-    ]
+      'Documentation',
+    ],
   },
   {
     number: '005',
     title: 'Recherche & Stratégie',
-    description: 'Prendre des décisions basées sur des données et des observations, plutôt que sur l\'intuition. Transformer des signaux qualitatifs et quantitatifs en orientations exploitables.',
+    description:
+      "Prendre des décisions basées sur des données et des observations, plutôt que sur l'intuition. Transformer des signaux qualitatifs et quantitatifs en orientations exploitables.",
     badges: [
       'Recherche utilisateur',
       'Synthèse',
-      'Architecture de l\'information',
+      "Architecture de l'information",
       'Stratégie produit',
       'Décisions pilotées par la donnée',
-      'Alignement des parties prenantes'
-    ]
-  }
+      'Alignement des parties prenantes',
+    ],
+  },
 ];
 
 const principlesData: PrincipleCard[] = [
   {
     number: '001',
     title: 'Moins, mais mieux',
-    description: 'Éliminer le superflu pour ne conserver que l\'essentiel. Chaque élément doit être justifié par sa fonction, pas par son apparence.'
+    description:
+      "Éliminer le superflu pour ne conserver que l'essentiel. Chaque élément doit être justifié par sa fonction, pas par son apparence.",
   },
   {
     number: '002',
-    title: 'Priorité à l\'usage',
-    description: 'Les décisions partent de situations réelles et de besoins concrets. L\'empathie n\'est pas une étape, c\'est un socle.'
+    title: "Priorité à l'usage",
+    description:
+      "Les décisions partent de situations réelles et de besoins concrets. L'empathie n'est pas une étape, c'est un socle.",
   },
   {
     number: '003',
     title: 'Efficacité structurée',
-    description: 'S\'appuyer sur des systèmes scalables, des composants réutilisables et de l\'automatisation lorsque c\'est pertinent. L\'efficacité traduit une bonne utilisation des ressources, pas un raccourci.'
+    description:
+      "S'appuyer sur des systèmes scalables, des composants réutilisables et de l'automatisation lorsque c'est pertinent. L'efficacité traduit une bonne utilisation des ressources, pas un raccourci.",
   },
   {
     number: '004',
     title: 'Clarté dans les échanges',
-    description: 'Un design pertinent doit pouvoir être expliqué. La qualité du raisonnement et sa transmission sont aussi importantes que l\'exécution visuelle.'
-  }
+    description:
+      "Un design pertinent doit pouvoir être expliqué. La qualité du raisonnement et sa transmission sont aussi importantes que l'exécution visuelle.",
+  },
 ];
 
 const environmentData: EnvironmentCard[] = [
   {
     number: '001',
     title: 'Impact plutôt que production',
-    description: 'Je cherche à travailler sur des sujets qui comptent réellement. Des équipes où les décisions design répondent à de vrais problèmes et sont évaluées sur des résultats concrets, pas sur un volume de livrables.'
+    description:
+      'Je cherche à travailler sur des sujets qui comptent réellement. Des équipes où les décisions design répondent à de vrais problèmes et sont évaluées sur des résultats concrets, pas sur un volume de livrables.',
   },
   {
     number: '002',
     title: 'Collaboration réelle',
-    description: 'Un fonctionnement transverse où design, produit et technique avancent en partenaires, sur un pied d\'égalité. Pas des passations, mais des échanges continus.'
+    description:
+      "Un fonctionnement transverse où design, produit et technique avancent en partenaires, sur un pied d'égalité. Pas des passations, mais des échanges continus.",
   },
   {
     number: '003',
     title: 'Maturité design',
-    description: 'Des organisations qui considèrent le design comme un levier stratégique, intégré aux décisions, et non comme une simple couche d\'exécution.'
+    description:
+      "Des organisations qui considèrent le design comme un levier stratégique, intégré aux décisions, et non comme une simple couche d'exécution.",
   },
   {
     number: '004',
     title: 'Problématiques complexes',
-    description: 'Un intérêt pour les environnements structurants où la complexité rend le travail de conception plus pertinent.'
+    description:
+      'Un intérêt pour les environnements structurants où la complexité rend le travail de conception plus pertinent.',
   },
   {
     number: '005',
-    title: 'Cadre d\'évolution',
-    description: 'Des contextes qui encouragent l\'expérimentation, l\'apprentissage continu et l\'exploration de nouvelles approches (IA, design systémique, nouvelles méthodes).'
+    title: "Cadre d'évolution",
+    description:
+      "Des contextes qui encouragent l'expérimentation, l'apprentissage continu et l'exploration de nouvelles approches (IA, design systémique, nouvelles méthodes).",
   },
   {
     number: '006',
     title: 'Culture centrée humain',
-    description: 'Des équipes qui appliquent en interne les principes qu\'elles défendent : confiance, transparence et conditions favorisant des échanges sains et efficaces.'
-  }
+    description:
+      "Des équipes qui appliquent en interne les principes qu'elles défendent : confiance, transparence et conditions favorisant des échanges sains et efficaces.",
+  },
 ];
 
 export default function APropos() {
   const [isCVHovered, setIsCVHovered] = useState(false);
-  const [activeSection, setActiveSection] = useState<'expertises' | 'principes' | 'environnement' | null>(null);
+  const [activeSection, setActiveSection] = useState<
+    'expertises' | 'principes' | 'environnement' | null
+  >(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  
+
   const expertisesRef = useRef<HTMLDivElement>(null);
   const principesRef = useRef<HTMLDivElement>(null);
   const environnementRef = useRef<HTMLDivElement>(null);
-  
+
   // Ref to track programmatic scrolling
   const isScrollingProgrammatically = useRef(false);
   const cancelScrollRef = useRef<(() => void) | null>(null);
@@ -169,7 +193,7 @@ export default function APropos() {
   // Card height states
   const [maxPrincipleHeight, setMaxPrincipleHeight] = useState<number>(0);
   const [maxEnvironmentHeight, setMaxEnvironmentHeight] = useState<number>(0);
-  
+
   // Refs for measuring card heights
   const principleCardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const environmentCardsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -184,16 +208,16 @@ export default function APropos() {
     const measureHeights = () => {
       // Measure principle cards
       const principleHeights = principleCardsRef.current
-        .filter(card => card !== null)
-        .map(card => card!.scrollHeight);
+        .filter((card) => card !== null)
+        .map((card) => card!.scrollHeight);
       if (principleHeights.length > 0) {
         setMaxPrincipleHeight(Math.max(...principleHeights));
       }
 
       // Measure environment cards
       const environmentHeights = environmentCardsRef.current
-        .filter(card => card !== null)
-        .map(card => card!.scrollHeight);
+        .filter((card) => card !== null)
+        .map((card) => card!.scrollHeight);
       if (environmentHeights.length > 0) {
         setMaxEnvironmentHeight(Math.max(...environmentHeights));
       }
@@ -201,7 +225,7 @@ export default function APropos() {
 
     measureHeights();
     window.addEventListener('resize', measureHeights);
-    
+
     return () => window.removeEventListener('resize', measureHeights);
   }, []);
 
@@ -215,8 +239,15 @@ export default function APropos() {
   };
 
   // Scroll to section (annulable, respecte prefers-reduced-motion)
-  const scrollToSection = (section: 'expertises' | 'principes' | 'environnement') => {
-    const ref = section === 'expertises' ? expertisesRef : section === 'principes' ? principesRef : environnementRef;
+  const scrollToSection = (
+    section: 'expertises' | 'principes' | 'environnement',
+  ) => {
+    const ref =
+      section === 'expertises'
+        ? expertisesRef
+        : section === 'principes'
+          ? principesRef
+          : environnementRef;
     if (!ref.current) return;
 
     // Set active section immediately
@@ -248,42 +279,42 @@ export default function APropos() {
         setIsScrolled((document.body.scrollTop || 0) > 100);
         return;
       }
-      
+
       const scrollPosition = (document.body.scrollTop || 0) + 250; // Offset to trigger section change
-      
+
       // Update isScrolled state (scroll > 100px)
       setIsScrolled((document.body.scrollTop || 0) > 100);
-      
+
       // Check if we're in environnement section
       if (environnementRef.current) {
         const environnementTop = environnementRef.current.offsetTop;
-        
+
         if (scrollPosition >= environnementTop) {
           setActiveSection('environnement');
           return;
         }
       }
-      
+
       // Check if we're in principes section
       if (principesRef.current) {
         const principesTop = principesRef.current.offsetTop;
-        
+
         if (scrollPosition >= principesTop) {
           setActiveSection('principes');
           return;
         }
       }
-      
+
       // Check if we're in expertises section
       if (expertisesRef.current) {
         const expertisesTop = expertisesRef.current.offsetTop;
-        
+
         if (scrollPosition >= expertisesTop) {
           setActiveSection('expertises');
           return;
         }
       }
-      
+
       // If we're above all sections (in the Philosophie section), set to null
       setActiveSection(null);
     };
@@ -300,103 +331,138 @@ export default function APropos() {
   }, []);
 
   return (
-    <div className="relative min-h-screen apropos-page" style={{ backgroundColor: 'var(--portfolio-bg)' }}>
+    <div
+      className="relative min-h-screen apropos-page"
+      style={{ backgroundColor: 'var(--portfolio-bg)' }}
+    >
       <PageMeta
         title="À propos — Alexis Kabiche"
         description="Parcours, expertises et principes de travail d'Alexis Kabiche, Product & Brand Designer."
         path="/apropos"
       />
       {/* Fixed Switch Menu - Bottom Right on desktop, Bottom Center on mobile */}
-      <div 
+      <div
         className="fixed z-[199] left-0 right-0 md:top-[112px] md:bottom-auto"
         style={{
           bottom: '1.5rem',
-          pointerEvents: 'none'
+          pointerEvents: 'none',
         }}
       >
         <div className="max-w-[1920px] mx-auto px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24 flex justify-center md:justify-end">
-          <div 
+          <div
             className="relative inline-flex gap-2 p-2 transition-all duration-300"
             style={{
-              backgroundColor: isScrolled ? 'var(--switch-bg-scrolled)' : 'var(--switch-bg-default)',
+              backgroundColor: isScrolled
+                ? 'var(--switch-bg-scrolled)'
+                : 'var(--switch-bg-default)',
               borderRadius: '8px',
               border: `1px solid ${isScrolled ? 'var(--switch-border-scrolled)' : 'var(--switch-border-default)'}`,
-              pointerEvents: 'auto'
+              pointerEvents: 'auto',
             }}
           >
             {/* Sliding Background */}
-            <motion.div 
+            <motion.div
               className="hidden md:block absolute rounded-md"
               initial={false}
               style={{
-                backgroundColor: isScrolled ? 'var(--switch-active-bg-scrolled)' : 'var(--switch-active-bg-default)',
-                zIndex: 0
+                backgroundColor: isScrolled
+                  ? 'var(--switch-active-bg-scrolled)'
+                  : 'var(--switch-active-bg-default)',
+                zIndex: 0,
               }}
               animate={{
                 top: '8px',
                 bottom: '8px',
                 left: activeSection === 'expertises' ? '8px' : undefined,
-                width: activeSection === 'expertises' ? '136px' : activeSection === 'principes' ? '120px' : '160px',
-                x: activeSection === 'expertises' ? 0 : activeSection === 'principes' ? 'calc(136px + 8px)' : 'calc(136px + 120px + 16px)',
-                opacity: activeSection === null ? 0 : 1
+                width:
+                  activeSection === 'expertises'
+                    ? '136px'
+                    : activeSection === 'principes'
+                      ? '120px'
+                      : '160px',
+                x:
+                  activeSection === 'expertises'
+                    ? 0
+                    : activeSection === 'principes'
+                      ? 'calc(136px + 8px)'
+                      : 'calc(136px + 120px + 16px)',
+                opacity: activeSection === null ? 0 : 1,
               }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             />
-            
+
             {/* Sliding Background Mobile - Only Icons */}
-            <motion.div 
+            <motion.div
               className="md:hidden absolute rounded-md"
               initial={false}
               style={{
-                backgroundColor: isScrolled ? 'var(--switch-active-bg-scrolled)' : 'var(--switch-active-bg-default)',
-                zIndex: 0
+                backgroundColor: isScrolled
+                  ? 'var(--switch-active-bg-scrolled)'
+                  : 'var(--switch-active-bg-default)',
+                zIndex: 0,
               }}
               animate={{
                 top: '8px',
                 bottom: '8px',
                 left: '8px',
                 width: '44px',
-                x: activeSection === 'expertises' ? 0 : activeSection === 'principes' ? 'calc(44px + 8px)' : 'calc(88px + 16px)',
-                opacity: activeSection === null ? 0 : 1
+                x:
+                  activeSection === 'expertises'
+                    ? 0
+                    : activeSection === 'principes'
+                      ? 'calc(44px + 8px)'
+                      : 'calc(88px + 16px)',
+                opacity: activeSection === null ? 0 : 1,
               }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
             />
 
             {/* Expertises Button */}
             <button
+              type="button"
               onClick={() => scrollToSection('expertises')}
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[136px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
                 paddingTop: '10px',
                 paddingBottom: '10px',
                 paddingLeft: '16px',
-                paddingRight: '16px'
+                paddingRight: '16px',
               }}
             >
-              <Lightbulb 
+              <Lightbulb
                 width={18}
                 height={18}
                 strokeWidth={1.5}
                 style={{
-                  color: activeSection === 'expertises' 
-                    ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)')
-                    : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)'),
-                  transition: 'color 0.3s'
+                  color:
+                    activeSection === 'expertises'
+                      ? isScrolled
+                        ? 'var(--switch-active-text-scrolled)'
+                        : 'var(--switch-active-text-default)'
+                      : isScrolled
+                        ? 'var(--switch-text-scrolled)'
+                        : 'var(--switch-text-default)',
+                  transition: 'color 0.3s',
                 }}
                 className="shrink-0"
               />
-              <span 
+              <span
                 className="hidden md:inline"
                 style={{
                   fontFamily: 'Manrope, sans-serif',
                   fontWeight: 500,
                   fontSize: '15px',
                   letterSpacing: '0.04px',
-                  color: activeSection === 'expertises' 
-                    ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)')
-                    : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)'),
+                  color:
+                    activeSection === 'expertises'
+                      ? isScrolled
+                        ? 'var(--switch-active-text-scrolled)'
+                        : 'var(--switch-active-text-default)'
+                      : isScrolled
+                        ? 'var(--switch-text-scrolled)'
+                        : 'var(--switch-text-default)',
                   whiteSpace: 'nowrap',
-                  transition: 'color 0.3s'
+                  transition: 'color 0.3s',
                 }}
               >
                 Expertises
@@ -405,39 +471,50 @@ export default function APropos() {
 
             {/* Principes Button */}
             <button
+              type="button"
               onClick={() => scrollToSection('principes')}
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[120px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
                 paddingTop: '10px',
                 paddingBottom: '10px',
                 paddingLeft: '16px',
-                paddingRight: '16px'
+                paddingRight: '16px',
               }}
             >
-              <Compass 
+              <Compass
                 width={18}
                 height={18}
                 strokeWidth={1.5}
                 style={{
-                  color: activeSection === 'principes' 
-                    ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)')
-                    : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)'),
-                  transition: 'color 0.3s'
+                  color:
+                    activeSection === 'principes'
+                      ? isScrolled
+                        ? 'var(--switch-active-text-scrolled)'
+                        : 'var(--switch-active-text-default)'
+                      : isScrolled
+                        ? 'var(--switch-text-scrolled)'
+                        : 'var(--switch-text-default)',
+                  transition: 'color 0.3s',
                 }}
                 className="shrink-0"
               />
-              <span 
+              <span
                 className="hidden md:inline"
                 style={{
                   fontFamily: 'Manrope, sans-serif',
                   fontWeight: 500,
                   fontSize: '15px',
                   letterSpacing: '0.04px',
-                  color: activeSection === 'principes' 
-                    ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)')
-                    : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)'),
+                  color:
+                    activeSection === 'principes'
+                      ? isScrolled
+                        ? 'var(--switch-active-text-scrolled)'
+                        : 'var(--switch-active-text-default)'
+                      : isScrolled
+                        ? 'var(--switch-text-scrolled)'
+                        : 'var(--switch-text-default)',
                   whiteSpace: 'nowrap',
-                  transition: 'color 0.3s'
+                  transition: 'color 0.3s',
                 }}
               >
                 Principes
@@ -446,39 +523,50 @@ export default function APropos() {
 
             {/* Environnement Button */}
             <button
+              type="button"
               onClick={() => scrollToSection('environnement')}
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[160px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
                 paddingTop: '10px',
                 paddingBottom: '10px',
                 paddingLeft: '16px',
-                paddingRight: '16px'
+                paddingRight: '16px',
               }}
             >
-              <Users 
+              <Users
                 width={18}
                 height={18}
                 strokeWidth={1.5}
                 style={{
-                  color: activeSection === 'environnement' 
-                    ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)')
-                    : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)'),
-                  transition: 'color 0.3s'
+                  color:
+                    activeSection === 'environnement'
+                      ? isScrolled
+                        ? 'var(--switch-active-text-scrolled)'
+                        : 'var(--switch-active-text-default)'
+                      : isScrolled
+                        ? 'var(--switch-text-scrolled)'
+                        : 'var(--switch-text-default)',
+                  transition: 'color 0.3s',
                 }}
                 className="shrink-0"
               />
-              <span 
+              <span
                 className="hidden md:inline"
                 style={{
                   fontFamily: 'Manrope, sans-serif',
                   fontWeight: 500,
                   fontSize: '15px',
                   letterSpacing: '0.04px',
-                  color: activeSection === 'environnement' 
-                    ? (isScrolled ? 'var(--switch-active-text-scrolled)' : 'var(--switch-active-text-default)')
-                    : (isScrolled ? 'var(--switch-text-scrolled)' : 'var(--switch-text-default)'),
+                  color:
+                    activeSection === 'environnement'
+                      ? isScrolled
+                        ? 'var(--switch-active-text-scrolled)'
+                        : 'var(--switch-active-text-default)'
+                      : isScrolled
+                        ? 'var(--switch-text-scrolled)'
+                        : 'var(--switch-text-default)',
                   whiteSpace: 'nowrap',
-                  transition: 'color 0.3s'
+                  transition: 'color 0.3s',
                 }}
               >
                 Environnement
@@ -491,31 +579,36 @@ export default function APropos() {
       {/* Main Content */}
       <div className="relative z-10">
         {/* Hero Section - Title */}
-<section style={{ paddingTop: 'var(--page-padding-top)' }} className="pb-12 md:pb-12">
-  <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
+        <section
+          style={{ paddingTop: 'var(--page-padding-top)' }}
+          className="pb-12 md:pb-12"
+        >
+          <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
             <div className="mb-0 md:mb-12">
               <ScrollRevealTitle delay={0}>
-                <p 
-                  style={{ 
+                <p
+                  style={{
                     fontFamily: 'Manrope, sans-serif',
                     fontWeight: 500,
                     fontSize: 'clamp(0.8125rem, 0.75rem + 0.3125vw, 0.9375rem)',
                     lineHeight: '1.6',
                     color: 'var(--portfolio-text-secondary)',
                     marginBottom: '0px',
-                    letterSpacing: '0.5px'
+                    letterSpacing: '0.5px',
                   }}
-                >Ma façon d'être</p>
+                >
+                  Ma façon d'être
+                </p>
               </ScrollRevealTitle>
               <ScrollRevealTitle delay={0.05}>
-                <h1 
-                  style={{ 
+                <h1
+                  style={{
                     fontFamily: 'Manrope, sans-serif',
                     fontWeight: 700,
                     fontSize: 'clamp(2rem, 1rem + 5vw, 3rem)',
                     lineHeight: '1.1',
                     letterSpacing: '-1.4px',
-                    color: 'var(--portfolio-text-primary)'
+                    color: 'var(--portfolio-text-primary)',
                   }}
                 >
                   À propos
@@ -529,7 +622,7 @@ export default function APropos() {
         <section className="pb-16 md:pb-20">
           <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
             <ScrollFadeIn delay={0.1}>
-              <h3 
+              <h3
                 className="mb-6"
                 style={{
                   fontFamily: 'Manrope, sans-serif',
@@ -537,35 +630,51 @@ export default function APropos() {
                   fontWeight: 600,
                   letterSpacing: '-0.8px',
                   lineHeight: '28px',
-                  color: 'var(--portfolio-text-primary)'
+                  color: 'var(--portfolio-text-primary)',
                 }}
               >
                 Philosophie
               </h3>
-              
-              <p 
+
+              <p
                 className="mb-8 text-[15px]"
                 style={{
                   fontFamily: 'Manrope, sans-serif',
                   lineHeight: '1.7',
-                  color: 'var(--portfolio-text-description)'
+                  color: 'var(--portfolio-text-description)',
                 }}
               >
-                Un bon design doit fonctionner de manière autonome au sein de l'entreprise. L'objectif est de construire des solutions que les équipes peuvent s'approprier, maintenir et faire évoluer dans la durée, indépendamment des personnes qui les ont conçues. La plupart des problèmes ne sont pas visuels, ils sont structurels. Le design ne corrige pas une réflexion insuffisante sur ce que le produit doit réellement accomplir.
-                <br /><br />
-                Le design doit s'effacer au profit de l'usage. Il anticipe les réalités internes : évolution des priorités, contraintes budgétaires, changements d'organisation. S'il dépend en permanence d'un soutien externe ou d'un expert pour fonctionner, alors il n'est pas robuste. Un design pertinent est celui qui s'intègre durablement dans les processus et continue de produire de la valeur sans dépendance.
+                Un bon design doit fonctionner de manière autonome au sein de
+                l'entreprise. L'objectif est de construire des solutions que les
+                équipes peuvent s'approprier, maintenir et faire évoluer dans la
+                durée, indépendamment des personnes qui les ont conçues. La
+                plupart des problèmes ne sont pas visuels, ils sont structurels.
+                Le design ne corrige pas une réflexion insuffisante sur ce que
+                le produit doit réellement accomplir.
+                <br />
+                <br />
+                Le design doit s'effacer au profit de l'usage. Il anticipe les
+                réalités internes : évolution des priorités, contraintes
+                budgétaires, changements d'organisation. S'il dépend en
+                permanence d'un soutien externe ou d'un expert pour fonctionner,
+                alors il n'est pas robuste. Un design pertinent est celui qui
+                s'intègre durablement dans les processus et continue de produire
+                de la valeur sans dépendance.
               </p>
 
               <button
+                type="button"
                 className="px-6 py-3 flex items-center gap-2 transition-colors duration-300 cursor-pointer relative z-10"
                 style={{
-                  backgroundColor: isCVHovered ? 'var(--portfolio-button-bg-hover)' : 'var(--portfolio-button-bg)',
+                  backgroundColor: isCVHovered
+                    ? 'var(--portfolio-button-bg-hover)'
+                    : 'var(--portfolio-button-bg)',
                   color: 'var(--portfolio-button-text)',
                   fontFamily: 'Manrope, sans-serif',
                   fontWeight: 500,
                   fontSize: '14px',
                   borderRadius: '5px',
-                  pointerEvents: 'auto'
+                  pointerEvents: 'auto',
                 }}
                 onMouseEnter={() => setIsCVHovered(true)}
                 onMouseLeave={() => setIsCVHovered(false)}
@@ -574,7 +683,7 @@ export default function APropos() {
                 <RollingText
                   text="Voir le Curriculum Vitae"
                   inView={isCVHovered}
-                  transition={{ duration: 0.3, delay: 0.02, ease: "easeOut" }}
+                  transition={{ duration: 0.3, delay: 0.02, ease: 'easeOut' }}
                 />
               </button>
             </ScrollFadeIn>
@@ -586,31 +695,31 @@ export default function APropos() {
           <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
             <div className="mb-6">
               <ScrollRevealTitle delay={0.1}>
-                <p 
-                  style={{ 
+                <p
+                  style={{
                     fontFamily: 'Manrope, sans-serif',
                     fontWeight: 500,
                     fontSize: 'clamp(0.8125rem, 0.75rem + 0.3125vw, 0.9375rem)',
                     lineHeight: '1.6',
                     color: 'var(--portfolio-text-secondary)',
                     marginBottom: '0px',
-                    letterSpacing: '0.5px'
+                    letterSpacing: '0.5px',
                   }}
                 >
                   Expertises
                 </p>
               </ScrollRevealTitle>
               <ScrollRevealTitle delay={0.1}>
-                <h2 
+                <h2
                   className="mb-6"
-                  style={{ 
+                  style={{
                     fontFamily: 'Manrope, sans-serif',
                     fontWeight: 600,
                     fontSize: 'clamp(1.5rem, 1.25rem + 1.25vw, 2rem)',
                     lineHeight: '1.2',
                     letterSpacing: '-1.4px',
                     color: 'var(--portfolio-text-primary)',
-                    textTransform: 'none'
+                    textTransform: 'none',
                   }}
                 >
                   Ce que je sais faire
@@ -622,18 +731,18 @@ export default function APropos() {
             <div className="space-y-6">
               {expertiseSections.map((section, index) => (
                 <ScrollFadeIn key={section.number} delay={0.15 + index * 0.05}>
-                  <div 
+                  <div
                     className="p-8"
                     style={{
                       backgroundColor: 'var(--portfolio-card-bg)',
                       borderRadius: '12px',
-                      border: '1px solid var(--portfolio-card-border)'
+                      border: '1px solid var(--portfolio-card-border)',
                     }}
                   >
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-12">
                       {/* Left Column - Number & Title */}
                       <div className="lg:col-span-4">
-                        <p 
+                        <p
                           className="mb-1"
                           style={{
                             fontFamily: 'Manrope, sans-serif',
@@ -641,12 +750,12 @@ export default function APropos() {
                             fontWeight: 400,
                             letterSpacing: '0.037px',
                             lineHeight: '20px',
-                            color: 'var(--portfolio-text-muted)'
+                            color: 'var(--portfolio-text-muted)',
                           }}
                         >
                           ({section.number})
                         </p>
-                        <h3 
+                        <h3
                           className="mb-6 lg:mb-0"
                           style={{
                             fontFamily: 'Manrope, sans-serif',
@@ -654,7 +763,7 @@ export default function APropos() {
                             fontWeight: 600,
                             letterSpacing: '-1.113px',
                             lineHeight: '34px',
-                            color: 'var(--portfolio-text-primary)'
+                            color: 'var(--portfolio-text-primary)',
                           }}
                         >
                           {section.title}
@@ -663,14 +772,14 @@ export default function APropos() {
 
                       {/* Right Column - Description & Badges */}
                       <div className="lg:col-span-8">
-                        <p 
+                        <p
                           className="mb-6 text-[15px]"
-                          style={{ 
+                          style={{
                             fontFamily: 'Manrope, sans-serif',
                             fontWeight: 400,
                             letterSpacing: '0.04px',
                             lineHeight: '22px',
-                            color: 'var(--portfolio-text-description)'
+                            color: 'var(--portfolio-text-description)',
                           }}
                         >
                           {section.description}
@@ -684,19 +793,22 @@ export default function APropos() {
                               className="rounded-[3px] px-[8px] py-[2px]"
                               style={{
                                 backgroundColor: 'var(--portfolio-badge-bg)',
-                                border: '1px solid var(--portfolio-badge-border)'
+                                border:
+                                  '1px solid var(--portfolio-badge-border)',
                               }}
                             >
-                              <span 
+                              <span
                                 style={{
                                   fontFamily: 'Manrope, sans-serif',
                                   fontSize: '13px',
                                   fontWeight: 400,
                                   letterSpacing: '0.033px',
                                   lineHeight: '18px',
-                                  color: 'var(--portfolio-text-muted)'
+                                  color: 'var(--portfolio-text-muted)',
                                 }}
-                              >{badge}</span>
+                              >
+                                {badge}
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -714,31 +826,31 @@ export default function APropos() {
           <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
             <div className="mb-6">
               <ScrollRevealTitle delay={0.4}>
-                <p 
-                  style={{ 
+                <p
+                  style={{
                     fontFamily: 'Manrope, sans-serif',
                     fontWeight: 500,
                     fontSize: 'clamp(0.8125rem, 0.75rem + 0.3125vw, 0.9375rem)',
                     lineHeight: '1.6',
                     color: 'var(--portfolio-text-secondary)',
                     marginBottom: '0px',
-                    letterSpacing: '0.5px'
+                    letterSpacing: '0.5px',
                   }}
                 >
                   Principes et valeurs
                 </p>
               </ScrollRevealTitle>
               <ScrollRevealTitle delay={0.45}>
-                <h2 
+                <h2
                   className="mb-6"
-                  style={{ 
+                  style={{
                     fontFamily: 'Manrope, sans-serif',
                     fontWeight: 600,
                     fontSize: 'clamp(1.5rem, 1.25rem + 1.25vw, 2rem)',
                     lineHeight: '1.2',
                     letterSpacing: '-1.4px',
                     color: 'var(--portfolio-text-primary)',
-                    textTransform: 'none'
+                    textTransform: 'none',
                   }}
                 >
                   Ce qui guide mon travail
@@ -752,16 +864,16 @@ export default function APropos() {
               <div className="hidden md:block">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {principlesData.map((principle) => (
-                    <div 
+                    <div
                       key={principle.title}
                       className="p-8"
                       style={{
                         backgroundColor: 'var(--portfolio-card-bg)',
                         borderRadius: '12px',
-                        border: '1px solid var(--portfolio-card-border)'
+                        border: '1px solid var(--portfolio-card-border)',
                       }}
                     >
-                      <p 
+                      <p
                         className="mb-1"
                         style={{
                           fontFamily: 'Manrope, sans-serif',
@@ -769,12 +881,12 @@ export default function APropos() {
                           fontWeight: 400,
                           letterSpacing: '0.037px',
                           lineHeight: '20px',
-                          color: 'var(--portfolio-text-muted)'
+                          color: 'var(--portfolio-text-muted)',
                         }}
                       >
                         ({principle.number})
                       </p>
-                      <h3 
+                      <h3
                         className="mb-4"
                         style={{
                           fontFamily: 'Manrope, sans-serif',
@@ -782,16 +894,16 @@ export default function APropos() {
                           fontWeight: 600,
                           letterSpacing: '-0.8px',
                           lineHeight: '28px',
-                          color: 'var(--portfolio-text-primary)'
+                          color: 'var(--portfolio-text-primary)',
                         }}
                       >
                         {principle.title}
                       </h3>
-                      <p 
+                      <p
                         className="leading-relaxed text-[15px]"
-                        style={{ 
+                        style={{
                           fontFamily: 'Manrope, sans-serif',
-                          color: 'var(--portfolio-text-description)'
+                          color: 'var(--portfolio-text-description)',
                         }}
                       >
                         {principle.description}
@@ -805,12 +917,14 @@ export default function APropos() {
               <div className="md:hidden relative">
                 {/* Cards Container */}
                 <div className="overflow-hidden">
-                  <div 
+                  <div
                     className="flex transition-transform duration-500 ease-out"
-                    style={{ transform: `translateX(-${currentPrincipeIndex * 100}%)` }}
+                    style={{
+                      transform: `translateX(-${currentPrincipeIndex * 100}%)`,
+                    }}
                   >
                     {principlesData.map((principle, index) => (
-                      <div 
+                      <div
                         key={principle.title}
                         className="w-full flex-shrink-0"
                       >
@@ -820,11 +934,14 @@ export default function APropos() {
                             backgroundColor: 'var(--portfolio-card-bg)',
                             borderRadius: '12px',
                             border: '1px solid var(--portfolio-card-border)',
-                            height: maxPrincipleHeight > 0 ? `${maxPrincipleHeight}px` : 'auto'
+                            height:
+                              maxPrincipleHeight > 0
+                                ? `${maxPrincipleHeight}px`
+                                : 'auto',
                           }}
-                          ref={(el) => principleCardsRef.current[index] = el}
+                          ref={(el) => (principleCardsRef.current[index] = el)}
                         >
-                          <p 
+                          <p
                             className="mb-1"
                             style={{
                               fontFamily: 'Manrope, sans-serif',
@@ -832,12 +949,12 @@ export default function APropos() {
                               fontWeight: 400,
                               letterSpacing: '0.037px',
                               lineHeight: '20px',
-                              color: 'var(--portfolio-text-muted)'
+                              color: 'var(--portfolio-text-muted)',
                             }}
                           >
                             ({principle.number})
                           </p>
-                          <h3 
+                          <h3
                             className="mb-4"
                             style={{
                               fontFamily: 'Manrope, sans-serif',
@@ -845,16 +962,16 @@ export default function APropos() {
                               fontWeight: 600,
                               letterSpacing: '-0.8px',
                               lineHeight: '28px',
-                              color: 'var(--portfolio-text-primary)'
+                              color: 'var(--portfolio-text-primary)',
                             }}
                           >
                             {principle.title}
                           </h3>
-                          <p 
+                          <p
                             className="leading-relaxed text-[15px]"
-                            style={{ 
+                            style={{
                               fontFamily: 'Manrope, sans-serif',
-                              color: 'var(--portfolio-text-description)'
+                              color: 'var(--portfolio-text-description)',
                             }}
                           >
                             {principle.description}
@@ -867,28 +984,38 @@ export default function APropos() {
 
                 {/* Navigation Arrows Below */}
                 <div className="flex items-center justify-center gap-3 mt-6">
-                  <button 
+                  <button
+                    type="button"
                     onClick={() => goToPrincipe(currentPrincipeIndex - 1)}
                     disabled={currentPrincipeIndex === 0}
                     className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
                     style={{
                       backgroundColor: 'var(--portfolio-card-bg)',
-                      border: '1px solid var(--portfolio-card-border)'
+                      border: '1px solid var(--portfolio-card-border)',
                     }}
                   >
-                    <ChevronLeft className="w-5 h-5" style={{ color: 'var(--portfolio-text-secondary)' }} />
+                    <ChevronLeft
+                      className="w-5 h-5"
+                      style={{ color: 'var(--portfolio-text-secondary)' }}
+                    />
                   </button>
-                  
-                  <button 
+
+                  <button
+                    type="button"
                     onClick={() => goToPrincipe(currentPrincipeIndex + 1)}
-                    disabled={currentPrincipeIndex === principlesData.length - 1}
+                    disabled={
+                      currentPrincipeIndex === principlesData.length - 1
+                    }
                     className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
                     style={{
                       backgroundColor: 'var(--portfolio-card-bg)',
-                      border: '1px solid var(--portfolio-card-border)'
+                      border: '1px solid var(--portfolio-card-border)',
                     }}
                   >
-                    <ChevronRight className="w-5 h-5" style={{ color: 'var(--portfolio-text-secondary)' }} />
+                    <ChevronRight
+                      className="w-5 h-5"
+                      style={{ color: 'var(--portfolio-text-secondary)' }}
+                    />
                   </button>
                 </div>
               </div>
@@ -901,31 +1028,31 @@ export default function APropos() {
           <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
             <div className="mb-6">
               <ScrollRevealTitle delay={0.7}>
-                <p 
-                  style={{ 
+                <p
+                  style={{
                     fontFamily: 'Manrope, sans-serif',
                     fontWeight: 500,
                     fontSize: 'clamp(0.8125rem, 0.75rem + 0.3125vw, 0.9375rem)',
                     lineHeight: '1.6',
                     color: 'var(--portfolio-text-secondary)',
                     marginBottom: '0px',
-                    letterSpacing: '0.5px'
+                    letterSpacing: '0.5px',
                   }}
                 >
                   Le bon environnement fait la différence
                 </p>
               </ScrollRevealTitle>
               <ScrollRevealTitle delay={0.75}>
-                <h2 
+                <h2
                   className="mb-6"
-                  style={{ 
+                  style={{
                     fontFamily: 'Manrope, sans-serif',
                     fontWeight: 600,
                     fontSize: 'clamp(1.5rem, 1.25rem + 1.25vw, 2rem)',
                     lineHeight: '1.2',
                     letterSpacing: '-1.4px',
                     color: 'var(--portfolio-text-primary)',
-                    textTransform: 'none'
+                    textTransform: 'none',
                   }}
                 >
                   Ce que je recherche
@@ -939,16 +1066,16 @@ export default function APropos() {
               <div className="hidden xl:block">
                 <div className="grid grid-cols-2 gap-6">
                   {environmentData.map((environment) => (
-                    <div 
+                    <div
                       key={environment.title}
                       className="p-8"
                       style={{
                         backgroundColor: 'var(--portfolio-card-bg)',
                         borderRadius: '12px',
-                        border: '1px solid var(--portfolio-card-border)'
+                        border: '1px solid var(--portfolio-card-border)',
                       }}
                     >
-                      <p 
+                      <p
                         className="mb-1"
                         style={{
                           fontFamily: 'Manrope, sans-serif',
@@ -956,12 +1083,12 @@ export default function APropos() {
                           fontWeight: 400,
                           letterSpacing: '0.037px',
                           lineHeight: '20px',
-                          color: 'var(--portfolio-text-muted)'
+                          color: 'var(--portfolio-text-muted)',
                         }}
                       >
                         ({environment.number})
                       </p>
-                      <h3 
+                      <h3
                         className="mb-4"
                         style={{
                           fontFamily: 'Manrope, sans-serif',
@@ -969,16 +1096,16 @@ export default function APropos() {
                           fontWeight: 600,
                           letterSpacing: '-0.8px',
                           lineHeight: '28px',
-                          color: 'var(--portfolio-text-primary)'
+                          color: 'var(--portfolio-text-primary)',
                         }}
                       >
                         {environment.title}
                       </h3>
-                      <p 
+                      <p
                         className="leading-relaxed text-[15px]"
-                        style={{ 
+                        style={{
                           fontFamily: 'Manrope, sans-serif',
-                          color: 'var(--portfolio-text-description)'
+                          color: 'var(--portfolio-text-description)',
                         }}
                       >
                         {environment.description}
@@ -992,12 +1119,14 @@ export default function APropos() {
               <div className="xl:hidden relative">
                 {/* Cards Container */}
                 <div className="overflow-hidden">
-                  <div 
+                  <div
                     className="flex transition-transform duration-500 ease-out"
-                    style={{ transform: `translateX(-${currentEnvironnementIndex * 100}%)` }}
+                    style={{
+                      transform: `translateX(-${currentEnvironnementIndex * 100}%)`,
+                    }}
                   >
                     {environmentData.map((environment, index) => (
-                      <div 
+                      <div
                         key={environment.title}
                         className="w-full flex-shrink-0"
                       >
@@ -1007,11 +1136,16 @@ export default function APropos() {
                             backgroundColor: 'var(--portfolio-card-bg)',
                             borderRadius: '12px',
                             border: '1px solid var(--portfolio-card-border)',
-                            height: maxEnvironmentHeight > 0 ? `${maxEnvironmentHeight}px` : 'auto'
+                            height:
+                              maxEnvironmentHeight > 0
+                                ? `${maxEnvironmentHeight}px`
+                                : 'auto',
                           }}
-                          ref={(el) => environmentCardsRef.current[index] = el}
+                          ref={(el) =>
+                            (environmentCardsRef.current[index] = el)
+                          }
                         >
-                          <p 
+                          <p
                             className="mb-1"
                             style={{
                               fontFamily: 'Manrope, sans-serif',
@@ -1019,12 +1153,12 @@ export default function APropos() {
                               fontWeight: 400,
                               letterSpacing: '0.037px',
                               lineHeight: '20px',
-                              color: 'var(--portfolio-text-muted)'
+                              color: 'var(--portfolio-text-muted)',
                             }}
                           >
                             ({environment.number})
                           </p>
-                          <h3 
+                          <h3
                             className="mb-4"
                             style={{
                               fontFamily: 'Manrope, sans-serif',
@@ -1032,16 +1166,16 @@ export default function APropos() {
                               fontWeight: 600,
                               letterSpacing: '-0.8px',
                               lineHeight: '28px',
-                              color: 'var(--portfolio-text-primary)'
+                              color: 'var(--portfolio-text-primary)',
                             }}
                           >
                             {environment.title}
                           </h3>
-                          <p 
+                          <p
                             className="leading-relaxed text-[15px]"
-                            style={{ 
+                            style={{
                               fontFamily: 'Manrope, sans-serif',
-                              color: 'var(--portfolio-text-description)'
+                              color: 'var(--portfolio-text-description)',
                             }}
                           >
                             {environment.description}
@@ -1054,28 +1188,42 @@ export default function APropos() {
 
                 {/* Navigation Arrows Below */}
                 <div className="flex items-center justify-center gap-3 mt-6">
-                  <button 
-                    onClick={() => goToEnvironnement(currentEnvironnementIndex - 1)}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      goToEnvironnement(currentEnvironnementIndex - 1)
+                    }
                     disabled={currentEnvironnementIndex === 0}
                     className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
                     style={{
                       backgroundColor: 'var(--portfolio-card-bg)',
-                      border: '1px solid var(--portfolio-card-border)'
+                      border: '1px solid var(--portfolio-card-border)',
                     }}
                   >
-                    <ChevronLeft className="w-5 h-5" style={{ color: 'var(--portfolio-text-secondary)' }} />
+                    <ChevronLeft
+                      className="w-5 h-5"
+                      style={{ color: 'var(--portfolio-text-secondary)' }}
+                    />
                   </button>
-                  
-                  <button 
-                    onClick={() => goToEnvironnement(currentEnvironnementIndex + 1)}
-                    disabled={currentEnvironnementIndex === environmentData.length - 1}
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      goToEnvironnement(currentEnvironnementIndex + 1)
+                    }
+                    disabled={
+                      currentEnvironnementIndex === environmentData.length - 1
+                    }
                     className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer transition-opacity disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
                     style={{
                       backgroundColor: 'var(--portfolio-card-bg)',
-                      border: '1px solid var(--portfolio-card-border)'
+                      border: '1px solid var(--portfolio-card-border)',
                     }}
                   >
-                    <ChevronRight className="w-5 h-5" style={{ color: 'var(--portfolio-text-secondary)' }} />
+                    <ChevronRight
+                      className="w-5 h-5"
+                      style={{ color: 'var(--portfolio-text-secondary)' }}
+                    />
                   </button>
                 </div>
               </div>

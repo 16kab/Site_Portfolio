@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Annule les exécutions obsolètes sur une même branche/PR
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Qualité (types, lint, tests, build, budget)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Vérification des types
+        run: npm run typecheck
+      - name: Lint (Biome)
+        run: npm run lint
+      - name: Formatage (Biome)
+        run: npm run format:check
+      - name: Tests unitaires
+        run: npx vitest run
+      - name: Build de production
+        run: npm run build
+      - name: Budget de bundle
+        run: npm run budget
+
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Installation du navigateur
+        run: npx playwright install --with-deps chromium
+      - name: Tests E2E
+        run: npm run test:e2e
+      - name: Rapport Playwright
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

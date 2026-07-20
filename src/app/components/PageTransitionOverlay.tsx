@@ -4,7 +4,8 @@ import { usePageTransition } from '../context/PageTransitionContext';
 import { getProjectTransitionTiming } from '../utils/projectTransition';
 
 export function PageTransitionOverlay() {
-  const { isTransitioning, snapshot, direction, completeTransition } = usePageTransition();
+  const { isTransitioning, snapshot, direction, completeTransition } =
+    usePageTransition();
 
   useEffect(() => {
     if (!isTransitioning || snapshot === null || direction === null) {

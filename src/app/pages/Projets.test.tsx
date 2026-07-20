@@ -30,7 +30,10 @@ vi.mock('../components/ScrollFadeIn', () => ({
 vi.mock('../components/common/NewProjectCard', async () => {
   const { forwardRef } = await import('react');
 
-  const setRef = (ref: Ref<HTMLImageElement>, image: HTMLImageElement | null) => {
+  const setRef = (
+    ref: Ref<HTMLImageElement>,
+    image: HTMLImageElement | null,
+  ) => {
     if (typeof ref === 'function') {
       ref(image);
     } else if (ref) {
@@ -165,10 +168,7 @@ function ProjectDetailControls({ snapshotLink }: { snapshotLink: string }) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => beginForward(snapshot)}
-      >
+      <button type="button" onClick={() => beginForward(snapshot)}>
         Seed forward
       </button>
       <button type="button" onClick={() => captureSnapshot(snapshot)}>
@@ -231,26 +231,33 @@ describe('Projets return transition', () => {
   it.each([
     ['browser history', 'Browser back'],
     ['the header projects link', 'Header projects'],
-  ])('restores scroll and starts reverse through %s', (_label, returnControl) => {
-    renderReturn();
-    seedAndCompleteForward();
+  ])(
+    'restores scroll and starts reverse through %s',
+    (_label, returnControl) => {
+      renderReturn();
+      seedAndCompleteForward();
 
-    fireEvent.click(screen.getByRole(returnControl === 'Browser back' ? 'button' : 'link', {
-      name: returnControl,
-    }));
+      fireEvent.click(
+        screen.getByRole(returnControl === 'Browser back' ? 'button' : 'link', {
+          name: returnControl,
+        }),
+      );
 
-    expect(document.body.scrollTop).toBe(480);
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      `active:reverse:${existingProjectLink}`,
-    );
-    expect(screen.getByTestId('transition-rect')).toHaveTextContent(
-      '20,160,350,250',
-    );
-    expect(screen.getAllByTestId('scroll-fade')).toHaveLength(tousProjets.length);
-    screen.getAllByTestId('scroll-fade').forEach((wrapper) => {
-      expect(wrapper).toHaveAttribute('data-disabled', 'true');
-    });
-  });
+      expect(document.body.scrollTop).toBe(480);
+      expect(screen.getByTestId('transition-state')).toHaveTextContent(
+        `active:reverse:${existingProjectLink}`,
+      );
+      expect(screen.getByTestId('transition-rect')).toHaveTextContent(
+        '20,160,350,250',
+      );
+      expect(screen.getAllByTestId('scroll-fade')).toHaveLength(
+        tousProjets.length,
+      );
+      screen.getAllByTestId('scroll-fade').forEach((wrapper) => {
+        expect(wrapper).toHaveAttribute('data-disabled', 'true');
+      });
+    },
+  );
 
   it('supersedes an active mobile forward transition with a fresh reverse timeline', () => {
     vi.useFakeTimers();

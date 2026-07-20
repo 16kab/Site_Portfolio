@@ -1,11 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
-import {
-  AppContent,
-  getSafariChromeColor,
-  syncSafariChromeColor,
-} from './App';
+import { AppContent, getSafariChromeColor, syncSafariChromeColor } from './App';
 import { PageTransitionProvider } from './context/PageTransitionContext';
 
 vi.mock('./pages/Home', () => ({
