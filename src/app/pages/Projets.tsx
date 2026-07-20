@@ -28,8 +28,14 @@ export default function Projets() {
       snapshot?.originPath === '/projets' && location.pathname === '/projets',
   );
   const [reduceReturnMotion] = useState(() => prefersReducedProjectMotion());
+  // Figés au montage : l'animation de retour ne concerne que l'état présent
+  // à l'arrivée sur la page. Sans cela, un clic de carte depuis une liste
+  // « de retour » (beginForward → nouveau snapshot) relançait cet effet, qui
+  // écrasait l'aller par un reverse (image plein écran repliée sur la carte).
+  const [mountSnapshot] = useState(() => snapshot);
+  const [mountDirection] = useState(() => direction);
   const shouldStartReverse =
-    isReturnVisit && snapshot !== null && direction !== 'reverse';
+    isReturnVisit && mountSnapshot !== null && mountDirection !== 'reverse';
 
   // Position de la liste à restaurer, figée au montage. On n'utilise le
   // scrollTop du snapshot que s'il provient bien de la liste ; sinon (ex.
@@ -56,16 +62,17 @@ export default function Projets() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Animation de retour (morph) — le scroll est déjà restauré ci-dessus
+  // Animation de retour (morph) — le scroll est déjà restauré ci-dessus.
+  // Ne dépend que de valeurs figées au montage : s'exécute une seule fois.
   useLayoutEffect(() => {
-    if (!shouldStartReverse || !snapshot) return;
+    if (!shouldStartReverse || !mountSnapshot) return;
 
     if (reduceReturnMotion) {
       clearTransition();
       return;
     }
 
-    const image = cardRefs.current[snapshot.projectLink];
+    const image = cardRefs.current[mountSnapshot.projectLink];
     if (!image) {
       clearTransition();
       return;
@@ -77,7 +84,7 @@ export default function Projets() {
     clearTransition,
     reduceReturnMotion,
     shouldStartReverse,
-    snapshot,
+    mountSnapshot,
   ]);
 
   return (

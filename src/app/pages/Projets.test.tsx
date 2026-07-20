@@ -153,6 +153,40 @@ function TransitionState() {
   );
 }
 
+// Contrôles disponibles quelle que soit la route (rendus hors <Routes>) :
+// simulent, depuis la liste montée, le clic d'une carte (beginForward) et la
+// fin d'une transition en cours (completeTransition).
+function GlobalControls() {
+  const { beginForward, completeTransition } = usePageTransition();
+
+  return (
+    <>
+      <button
+        type="button"
+        data-testid="begin-forward-global"
+        onClick={() =>
+          beginForward({
+            imageSrc: '/test-2.webp',
+            imageRect: { left: 20, top: 300, width: 350, height: 250 },
+            projectLink: tousProjets[1].link,
+            originPath: '/projets',
+            scrollTop: 480,
+          })
+        }
+      >
+        Begin forward global
+      </button>
+      <button
+        type="button"
+        data-testid="complete-global"
+        onClick={completeTransition}
+      >
+        Complete global
+      </button>
+    </>
+  );
+}
+
 function ProjectDetailControls({ snapshotLink }: { snapshotLink: string }) {
   const navigate = useNavigate();
   const { captureSnapshot, beginForward, completeTransition } =
@@ -193,6 +227,7 @@ function renderReturn(snapshotLink = existingProjectLink) {
     >
       <PageTransitionProvider>
         <TransitionState />
+        <GlobalControls />
         <PageTransitionOverlay />
         <Routes>
           <Route path="/projets" element={<Projets />} />
@@ -343,6 +378,29 @@ describe('Projets return transition', () => {
     expect(screen.getByTestId('motion-root')).toHaveAttribute(
       'data-transition',
       JSON.stringify({ duration: 0 }),
+    );
+  });
+
+  it('keeps a new forward transition after returning to the list', () => {
+    renderReturn();
+    seedAndCompleteForward();
+
+    // Retour à la liste : l'animation de retour se joue puis se termine
+    fireEvent.click(screen.getByRole('link', { name: 'Header projects' }));
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      `active:reverse:${existingProjectLink}`,
+    );
+    fireEvent.click(screen.getByTestId('complete-global'));
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      'idle:reverse:none',
+    );
+
+    // Nouveau clic de carte depuis cette même liste : l'aller doit rester un
+    // aller (régression : l'effet de retour re-déclenché l'écrasait par un
+    // reverse plein écran → carte)
+    fireEvent.click(screen.getByTestId('begin-forward-global'));
+    expect(screen.getByTestId('transition-state')).toHaveTextContent(
+      `active:forward:${tousProjets[1].link}`,
     );
   });
 });
