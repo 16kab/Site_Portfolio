@@ -6,10 +6,10 @@ import NewProjectCard from '../components/common/NewProjectCard';
 import PageMeta from '../components/PageMeta';
 import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
-import { tousProjets } from '../data/projetsData';
+import { getTousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
 import { ROUTE_META } from '../config/seo';
-import { useT } from '../i18n';
+import { useLang, useT } from '../i18n';
 import { usePageTransition } from '../context/PageTransitionContext';
 
 const STRINGS = {
@@ -28,6 +28,8 @@ import { preloadProjetDetail } from './preloadProjetDetail';
 
 export default function Projets() {
   const t = useT(STRINGS);
+  const { lang } = useLang();
+  const tousProjets = getTousProjets(lang);
   const location = useLocation();
   const { snapshot, direction, beginReverse, clearTransition } =
     usePageTransition();

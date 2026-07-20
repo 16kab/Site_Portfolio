@@ -5,15 +5,43 @@ import ContactFooter from '../components/ContactFooter';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
 import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import NewProjectCard from '../components/common/NewProjectCard';
-import { projetsData, tousProjets } from '../data/projetsData';
+import { getProjets, getTousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
 import svgPaths from '../../imports/svg-jlpjaqyx1i';
 import PageMeta from '../components/PageMeta';
 import { ImageLightbox } from '../components/ImageLightbox';
 import { useScrollSpy } from '../hooks';
 import { usePageTransition } from '../context/PageTransitionContext';
+import { useLang, useT } from '../i18n';
+
+const STRINGS = {
+  fr: {
+    explication: 'Explication',
+    galerie: 'Galerie',
+    problematique: 'Problématique',
+    role: 'Mon rôle',
+    impact: 'Impact',
+    demarche: 'Démarche',
+    others: "Découvrir d'autres projets",
+    enlarge: (i: number, title: string) =>
+      `Agrandir l'image ${i} du projet ${title}`,
+  },
+  en: {
+    explication: 'Overview',
+    galerie: 'Gallery',
+    problematique: 'Problem',
+    role: 'My role',
+    impact: 'Impact',
+    demarche: 'Approach',
+    others: 'Discover more projects',
+    enlarge: (i: number, title: string) =>
+      `Enlarge image ${i} of project ${title}`,
+  },
+};
 
 export default function ProjetDetail() {
+  const t = useT(STRINGS);
+  const { lang } = useLang();
   const { id } = useParams<{ id: string }>();
   const heroRef = useRef<HTMLDivElement>(null);
   const explanationRef = useRef<HTMLDivElement>(null);
@@ -64,10 +92,10 @@ export default function ProjetDetail() {
   );
 
   // Find project
-  const projet = projetsData.find((p) => p.id === id);
+  const projet = getProjets(lang).find((p) => p.id === id);
 
   // Get other projects (excluding current one)
-  const allOtherProjects = tousProjets.filter(
+  const allOtherProjects = getTousProjets(lang).filter(
     (p) => p.link !== `/projets/${id}`,
   );
 
@@ -348,7 +376,7 @@ export default function ProjetDetail() {
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    Explication
+                    {t.explication}
                   </span>
                 </button>
 
@@ -439,7 +467,7 @@ export default function ProjetDetail() {
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    Galerie
+                    {t.galerie}
                   </span>
                 </button>
               </div>
@@ -476,7 +504,7 @@ export default function ProjetDetail() {
                       color: 'var(--portfolio-text-primary)',
                     }}
                   >
-                    Problématique
+                    {t.problematique}
                   </h2>
                   <div
                     className="space-y-3"
@@ -536,7 +564,7 @@ export default function ProjetDetail() {
                       color: 'var(--portfolio-text-primary)',
                     }}
                   >
-                    Mon rôle
+                    {t.role}
                   </h2>
                   <p
                     className="mb-6"
@@ -603,7 +631,7 @@ export default function ProjetDetail() {
                     color: 'var(--portfolio-text-primary)',
                   }}
                 >
-                  Impact
+                  {t.impact}
                 </h2>
                 <div
                   className="space-y-3"
@@ -655,7 +683,7 @@ export default function ProjetDetail() {
                     color: 'var(--portfolio-text-primary)',
                   }}
                 >
-                  Démarche
+                  {t.demarche}
                 </h2>
               </ScrollRevealTitle>
 
@@ -733,7 +761,7 @@ export default function ProjetDetail() {
                   color: 'var(--portfolio-text-primary)',
                 }}
               >
-                Galerie
+                {t.galerie}
               </h2>
             </ScrollRevealTitle>
             {projet.gallery.map((image, index) => {
@@ -745,7 +773,7 @@ export default function ProjetDetail() {
                   <button
                     type="button"
                     className="block w-full cursor-zoom-in focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--portfolio-card-focus)]"
-                    aria-label={`Agrandir l'image ${index + 1} du projet ${projet.title}`}
+                    aria-label={t.enlarge(index + 1, projet.title)}
                     onClick={() => {
                       setLightboxIndex(index);
                       setLightboxOpen(true);
@@ -786,7 +814,7 @@ export default function ProjetDetail() {
                   color: 'var(--portfolio-text-primary)',
                 }}
               >
-                Découvrir d'autres projets
+                {t.others}
               </h2>
             </ScrollFadeIn>
 

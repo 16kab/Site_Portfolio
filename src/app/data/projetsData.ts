@@ -26,6 +26,8 @@ import symaScreensImage from 'figma:asset/syma-screens.webp';
 import trackitHeroImage from 'figma:asset/trackit-hero.webp';
 import trackitScreensImage from 'figma:asset/trackit-screens.webp';
 import { ROUTES } from '../config';
+import type { Lang } from '../i18n/types';
+import { projetsDataEn } from './projetsData.en';
 
 export interface Projet {
   id: string;
@@ -625,3 +627,50 @@ export const tousProjets = projetsData.map((projet, index) => ({
   brand: projet.brand,
   number: String(index + 1).padStart(3, '0'),
 }));
+
+// ─ Internationalisation ───────────────────────────────────────────────
+// Champs textuels traduisibles d'un projet (le reste — id, année, images,
+// urls — est partagé). Les traductions EN vivent dans projetsData.en.ts.
+export type ProjetTranslation = Pick<
+  Projet,
+  | 'title'
+  | 'subtitle'
+  | 'description'
+  | 'tags'
+  | 'contexte'
+  | 'problematique'
+  | 'role'
+  | 'interventions'
+  | 'demarche'
+  | 'impact'
+  | 'brand'
+  | 'natureProduit'
+  | 'utilisateurPrincipal'
+  | 'objectifProduit'
+>;
+
+/**
+ * Projets dans la langue demandée. Le FR est canonique (retour direct de
+ * `projetsData`, rendu inchangé) ; l'EN fusionne les traductions par id.
+ */
+export function getProjets(lang: Lang): Projet[] {
+  if (lang === 'fr') return projetsData;
+  return projetsData.map((projet) => {
+    const translation = projetsDataEn[projet.id];
+    return translation ? { ...projet, ...translation } : projet;
+  });
+}
+
+/** Version localisée de `tousProjets` (liste des cartes). */
+export function getTousProjets(lang: Lang) {
+  return getProjets(lang).map((projet, index) => ({
+    link: ROUTES.PROJET_DETAIL(projet.id),
+    text: projet.title,
+    year: projet.year,
+    description: projet.description,
+    tags: projet.tags,
+    image: projet.image,
+    brand: projet.brand,
+    number: String(index + 1).padStart(3, '0'),
+  }));
+}
