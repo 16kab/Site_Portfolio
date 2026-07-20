@@ -27,5 +27,8 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
-# Script de captures visuelles (local, non versionné)
-zz-shot.mjs
+# Scripts jetables locaux (captures visuelles, parsing) — non versionnés
+zz-*.mjs
+
+# Lighthouse CI (local)
+.lighthouseci/
