@@ -6,6 +6,12 @@ import { useEffect } from 'react';
 import PageMeta from '../components/PageMeta';
 import { ROUTES } from '../config';
 import { ROUTE_META } from '../config/seo';
+import { useT } from '../i18n';
+
+const STRINGS = {
+  fr: { cta: 'Voir mes projets' },
+  en: { cta: 'View my work' },
+};
 
 interface HomeProps {
   showSplash: boolean;
@@ -20,6 +26,7 @@ export function getHomeAnimationDelays(showSplash: boolean) {
 }
 
 export default function Home({ showSplash }: HomeProps) {
+  const t = useT(STRINGS);
   const { textDelay, shuffleDelay1, shuffleDelay2 } =
     getHomeAnimationDelays(showSplash);
 
@@ -209,7 +216,7 @@ export default function Home({ showSplash }: HomeProps) {
           e.currentTarget.style.borderColor = 'var(--home-button-border)';
         }}
       >
-        <span>Voir mes projets</span>
+        <span>{t.cta}</span>
         <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
       </Link>
     </section>

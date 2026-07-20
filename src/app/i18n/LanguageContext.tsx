@@ -64,12 +64,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// Contexte par défaut hors provider (tests, rendu isolé) : langue par défaut,
+// bascule sans effet. Évite de devoir envelopper chaque test.
+const FALLBACK: LanguageContextValue = {
+  lang: DEFAULT_LANG,
+  setLang: () => {},
+  toggleLang: () => {},
+};
+
 export function useLang(): LanguageContextValue {
-  const ctx = useContext(LanguageContext);
-  if (!ctx) {
-    throw new Error('useLang doit être utilisé dans un LanguageProvider');
-  }
-  return ctx;
+  return useContext(LanguageContext) ?? FALLBACK;
 }
 
 /**

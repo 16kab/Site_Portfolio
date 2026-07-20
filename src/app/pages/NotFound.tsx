@@ -5,6 +5,29 @@ import { useState } from 'react';
 import PageMeta from '../components/PageMeta';
 import RollingText from '../components/RollingText';
 import { ROUTES } from '../config';
+import { useT } from '../i18n';
+
+const STRINGS = {
+  fr: {
+    metaTitle: 'Page introuvable — Alexis Kabiche',
+    metaDescription: "Cette page n'existe pas ou a été déplacée.",
+    eyebrow: 'Erreur 404',
+    title: 'Page introuvable',
+    description: "La page que vous recherchez n'existe pas ou a été déplacée.",
+    home: "Retour à l'accueil",
+    back: 'Page précédente',
+  },
+  en: {
+    metaTitle: 'Page not found — Alexis Kabiche',
+    metaDescription: 'This page does not exist or has been moved.',
+    eyebrow: 'Error 404',
+    title: 'Page not found',
+    description:
+      'The page you are looking for does not exist or has been moved.',
+    home: 'Back to home',
+    back: 'Previous page',
+  },
+};
 
 /**
  * Page 404 alignée sur la direction artistique du site (tokens
@@ -12,6 +35,7 @@ import { ROUTES } from '../config';
  * en écho au « CONTACT » du footer, message et CTAs aux styles maison.
  */
 export default function NotFound() {
+  const t = useT(STRINGS);
   const shouldReduceMotion = useReducedMotion();
   const [isBackHovered, setIsBackHovered] = useState(false);
   const [isHomeHovered, setIsHomeHovered] = useState(false);
@@ -38,8 +62,8 @@ export default function NotFound() {
       }}
     >
       <PageMeta
-        title="Page introuvable — Alexis Kabiche"
-        description="Cette page n'existe pas ou a été déplacée."
+        title={t.metaTitle}
+        description={t.metaDescription}
         path="/404"
       />
 
@@ -78,7 +102,7 @@ export default function NotFound() {
             color: 'var(--portfolio-text-muted)',
           }}
         >
-          Erreur 404
+          {t.eyebrow}
         </motion.p>
 
         <motion.h1
@@ -90,7 +114,7 @@ export default function NotFound() {
             letterSpacing: '-0.01em',
           }}
         >
-          Page introuvable
+          {t.title}
         </motion.h1>
 
         <motion.p
@@ -103,7 +127,7 @@ export default function NotFound() {
             color: 'var(--portfolio-text-secondary)',
           }}
         >
-          La page que vous recherchez n'existe pas ou a été déplacée.
+          {t.description}
         </motion.p>
 
         <motion.div
@@ -131,7 +155,7 @@ export default function NotFound() {
           >
             <Home size={18} />
             <RollingText
-              text="Retour à l'accueil"
+              text={t.home}
               inView={isHomeHovered}
               transition={{ duration: 0.3, delay: 0.02, ease: 'easeOut' }}
             />
@@ -160,7 +184,7 @@ export default function NotFound() {
             data-cursor="hover"
           >
             <ArrowLeft size={18} />
-            Page précédente
+            {t.back}
           </button>
         </motion.div>
       </div>

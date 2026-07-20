@@ -9,7 +9,16 @@ import {
   roundTransitionRect,
 } from '../../utils/projectTransition';
 import { preloadProjetDetail } from '../../pages/preloadProjetDetail';
+import { useT } from '../../i18n';
 import BorderGlow from './BorderGlow';
+
+const STRINGS = {
+  fr: {
+    cta: 'Voir le projet',
+    aria: (title: string) => `Voir le projet ${title}`,
+  },
+  en: { cta: 'View project', aria: (title: string) => `View project ${title}` },
+};
 
 interface NewProjectCardProps {
   link: string;
@@ -27,6 +36,7 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(
     { link, number, title, description, tags, image, priority = false },
     ref,
   ) => {
+    const t = useT(STRINGS);
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const navigate = useNavigate();
@@ -103,7 +113,7 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(
       <BorderGlow className="project-card-shell">
         <Link
           to={link}
-          aria-label={`Voir le projet ${title}`}
+          aria-label={t.aria(title)}
           onClick={handleClick}
           onMouseEnter={() => {
             setIsHovered(true);
@@ -218,7 +228,7 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(
                 <path d={svgPaths.p2fe73000} fill="currentColor" />
               </svg>
               <RollingText
-                text="Voir le projet"
+                text={t.cta}
                 inView={isInteractive}
                 transition={{ duration: 0.3, delay: 0.02, ease: 'easeOut' }}
               />
