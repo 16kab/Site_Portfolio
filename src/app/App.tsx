@@ -14,6 +14,7 @@ import SplashScreen from './components/SplashScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import { ROUTES } from './config';
 import { useIsDarkMode } from './hooks';
+import { LanguageProvider } from './i18n';
 
 // Code-splitting : chaque page secondaire est chargée à la demande
 const Projets = lazy(() => import('./pages/Projets'));
@@ -75,40 +76,42 @@ export default function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <PageTransitionProvider>
-          {/* Splash Screen */}
-          <AnimatePresence>
-            {showSplash && (
-              <SplashScreen onComplete={() => setShowSplash(false)} />
-            )}
-          </AnimatePresence>
+        <LanguageProvider>
+          <PageTransitionProvider>
+            {/* Splash Screen */}
+            <AnimatePresence>
+              {showSplash && (
+                <SplashScreen onComplete={() => setShowSplash(false)} />
+              )}
+            </AnimatePresence>
 
-          <div className="min-h-screen app-container">
-            {/* Lien d'évitement pour la navigation clavier */}
-            <a href="#contenu" className="skip-link">
-              Aller au contenu
-            </a>
+            <div className="min-h-screen app-container">
+              {/* Lien d'évitement pour la navigation clavier */}
+              <a href="#contenu" className="skip-link">
+                Aller au contenu
+              </a>
 
-            {/* Toast Notifications */}
-            <ThemedToaster />
-            <Analytics />
-            <SpeedInsights />
+              {/* Toast Notifications */}
+              <ThemedToaster />
+              <Analytics />
+              <SpeedInsights />
 
-            {/* Global Header */}
-            <Header showSplash={showSplash} />
+              {/* Global Header */}
+              <Header showSplash={showSplash} />
 
-            {/* Background wrapper */}
-            <BackgroundWrapper />
+              {/* Background wrapper */}
+              <BackgroundWrapper />
 
-            {/* App Content */}
-            <main id="contenu">
-              <AppContent showSplash={showSplash} />
-            </main>
+              {/* App Content */}
+              <main id="contenu">
+                <AppContent showSplash={showSplash} />
+              </main>
 
-            {/* Page Transition Overlay */}
-            <PageTransitionOverlay />
-          </div>
-        </PageTransitionProvider>
+              {/* Page Transition Overlay */}
+              <PageTransitionOverlay />
+            </div>
+          </PageTransitionProvider>
+        </LanguageProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );

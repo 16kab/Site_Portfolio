@@ -5,7 +5,28 @@ import { RollingText } from './RollingText';
 import { useState, useEffect, useRef } from 'react';
 import Magnet from './Magnet';
 import { AnimatedThemeToggler } from './AnimatedThemeToggler';
+import { LanguageToggle } from './LanguageToggle';
 import { ROUTES } from '../config';
+import { useT } from '../i18n';
+
+const STRINGS = {
+  fr: {
+    projets: 'Projets',
+    apropos: 'À propos',
+    contactCta: 'Entrer en contact',
+    contact: 'Contact',
+    openMenu: 'Ouvrir le menu',
+    closeMenu: 'Fermer le menu',
+  },
+  en: {
+    projets: 'Work',
+    apropos: 'About',
+    contactCta: 'Get in touch',
+    contact: 'Contact',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
+  },
+};
 
 // Lien react-router animable par motion (couleurs du bouton contact)
 const MotionLink = motion.create(Link);
@@ -18,6 +39,7 @@ export const getMenuItemOpacity = (
 ) => (hoveredItem && hoveredItem !== item ? 0.4 : 1);
 
 export default function Header({ showSplash }: { showSplash?: boolean }) {
+  const t = useT(STRINGS);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<HeaderMenuItem | null>(null);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
@@ -195,7 +217,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                       : 'var(--header-text-default)',
                   }}
                 >
-                  Projets
+                  {t.projets}
                 </motion.p>
               </Link>
 
@@ -232,7 +254,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                       : 'var(--header-text-default)',
                   }}
                 >
-                  À propos
+                  {t.apropos}
                 </motion.p>
               </Link>
             </div>
@@ -275,7 +297,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                     }}
                   >
                     <RollingText
-                      text="Entrer en contact"
+                      text={t.contactCta}
                       inView={isButtonHovered}
                       transition={{
                         duration: 0.3,
@@ -286,6 +308,8 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                   </motion.div>
                 </MotionLink>
               </motion.div>
+
+              <LanguageToggle isScrolled={isScrolled} />
 
               <motion.div
                 data-menu-item="theme"
@@ -302,7 +326,8 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
           </nav>
 
           {/* Right side container - Mobile/Tablet only */}
-          <div className="lg:hidden absolute right-14 top-1/2 -translate-y-1/2 flex items-center gap-3">
+          <div className="lg:hidden absolute right-14 top-1/2 -translate-y-1/2 flex items-center gap-1">
+            <LanguageToggle isScrolled={isScrolled} />
             {/* Theme Toggler - Mobile */}
             <AnimatedThemeToggler isScrolled={isScrolled} />
           </div>
@@ -311,7 +336,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
           <motion.button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden absolute right-6 top-1/2 -translate-y-1/2 p-2 cursor-pointer z-10"
-            aria-label={isMobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-label={isMobileMenuOpen ? t.closeMenu : t.openMenu}
             aria-expanded={isMobileMenuOpen}
             aria-controls="menu-mobile"
             animate={{
@@ -383,7 +408,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  Projets
+                  {t.projets}
                 </motion.span>
               </Link>
 
@@ -399,7 +424,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
                 >
-                  À propos
+                  {t.apropos}
                 </motion.span>
               </Link>
 
@@ -415,7 +440,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
                 >
-                  Contact
+                  {t.contact}
                 </motion.span>
               </Link>
             </motion.nav>
