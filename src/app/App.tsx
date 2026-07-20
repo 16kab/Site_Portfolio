@@ -14,7 +14,19 @@ import SplashScreen from './components/SplashScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import { ROUTES } from './config';
 import { useIsDarkMode } from './hooks';
-import { LanguageProvider } from './i18n';
+import { LanguageProvider, useT } from './i18n';
+
+function SkipLink() {
+  const t = useT({
+    fr: { skip: 'Aller au contenu' },
+    en: { skip: 'Skip to content' },
+  });
+  return (
+    <a href="#contenu" className="skip-link">
+      {t.skip}
+    </a>
+  );
+}
 
 // Code-splitting : chaque page secondaire est chargée à la demande
 const Projets = lazy(() => import('./pages/Projets'));
@@ -87,9 +99,7 @@ export default function App() {
 
             <div className="min-h-screen app-container">
               {/* Lien d'évitement pour la navigation clavier */}
-              <a href="#contenu" className="skip-link">
-                Aller au contenu
-              </a>
+              <SkipLink />
 
               {/* Toast Notifications */}
               <ThemedToaster />

@@ -7,6 +7,7 @@ import RollingText from '../components/RollingText';
 import PageMeta from '../components/PageMeta';
 import { ROUTES } from '../config';
 import { ROUTE_META } from '../config/seo';
+import { useLang, useT } from '../i18n';
 import { useScrollSpy } from '../hooks';
 import { CardCarousel, InfoCard } from '../components/common/CardCarousel';
 import { Lightbulb, Compass, Users, FileText } from 'lucide-react';
@@ -167,7 +168,202 @@ const environmentData: EnvironmentCard[] = [
   },
 ];
 
+// ─ Traductions anglaises (le FR ci-dessus reste canonique) ─────────────
+const expertiseSectionsEn: ExpertiseSection[] = [
+  {
+    number: '001',
+    title: 'UX & Product Design',
+    description:
+      'Turning fuzzy problems into clear, structured interfaces. Involvement across the whole product cycle, from the discovery phase to finalised interactions, with constant attention to real-world usage.',
+    badges: [
+      'End-to-end product design',
+      'Complex workflows',
+      'Multi-platform',
+      'Interaction design',
+      'Prototyping',
+      'User journeys',
+    ],
+  },
+  {
+    number: '002',
+    title: 'Brand & Visual Design',
+    description:
+      'Building and evolving consistent visual identities, designed to fit within product environments. The goal is not purely aesthetic, but to ensure readability, differentiation and continuity across every touchpoint.',
+    badges: [
+      'Art direction',
+      'Brand identity',
+      'Brand guidelines',
+      'Visual systems',
+      'Multi-medium adaptation',
+    ],
+  },
+  {
+    number: '003',
+    title: 'AI-augmented workflows',
+    description:
+      'Bringing AI in as a tool that serves thinking, not as an end in itself. It helps speed up exploration, structure ideas, spot patterns or challenge assumptions, while keeping decision-making grounded in human, contextual reasoning.',
+    badges: [
+      'AI-assisted tools',
+      'Support for structuring and exploration',
+      'Pattern detection',
+      'Support for reasoning and decisions',
+      'Human–AI interaction',
+    ],
+  },
+  {
+    number: '004',
+    title: 'Design Systems & Ops',
+    description:
+      'Putting in place the foundations that make design reliable and repeatable. Component libraries, token architecture, governance models — structuring elements that improve processes over the long term.',
+    badges: [
+      'Component architecture',
+      'Design tokens',
+      'Governance',
+      'Contribution models',
+      'Team organisation',
+      'Documentation',
+    ],
+  },
+  {
+    number: '005',
+    title: 'Research & Strategy',
+    description:
+      'Making decisions based on data and observation rather than intuition. Turning qualitative and quantitative signals into actionable direction.',
+    badges: [
+      'User research',
+      'Synthesis',
+      'Information architecture',
+      'Product strategy',
+      'Data-driven decisions',
+      'Stakeholder alignment',
+    ],
+  },
+];
+
+const principlesDataEn: PrincipleCard[] = [
+  {
+    number: '001',
+    title: 'Less, but better',
+    description:
+      'Cutting the superfluous to keep only the essential. Every element must be justified by its function, not its appearance.',
+  },
+  {
+    number: '002',
+    title: 'Usage first',
+    description:
+      'Decisions start from real situations and concrete needs. Empathy is not a step, it is a foundation.',
+  },
+  {
+    number: '003',
+    title: 'Structured efficiency',
+    description:
+      'Relying on scalable systems, reusable components and automation where relevant. Efficiency reflects a good use of resources, not a shortcut.',
+  },
+  {
+    number: '004',
+    title: 'Clarity in exchanges',
+    description:
+      'Relevant design must be explainable. The quality of the reasoning and how it is conveyed matter as much as the visual execution.',
+  },
+];
+
+const environmentDataEn: EnvironmentCard[] = [
+  {
+    number: '001',
+    title: 'Impact over output',
+    description:
+      'I seek to work on things that genuinely matter. Teams where design decisions address real problems and are measured on concrete outcomes, not on a volume of deliverables.',
+  },
+  {
+    number: '002',
+    title: 'Real collaboration',
+    description:
+      'A cross-functional way of working where design, product and engineering move forward as equal partners. Not handoffs, but continuous exchange.',
+  },
+  {
+    number: '003',
+    title: 'Design maturity',
+    description:
+      'Organisations that treat design as a strategic lever, embedded in decisions, rather than a mere execution layer.',
+  },
+  {
+    number: '004',
+    title: 'Complex problems',
+    description:
+      'An interest in structuring environments where complexity makes design work more meaningful.',
+  },
+  {
+    number: '005',
+    title: 'Room to grow',
+    description:
+      'Contexts that encourage experimentation, continuous learning and the exploration of new approaches (AI, systemic design, new methods).',
+  },
+  {
+    number: '006',
+    title: 'Human-centred culture',
+    description:
+      'Teams that apply internally the principles they advocate: trust, transparency and conditions that foster healthy, effective exchanges.',
+  },
+];
+
+const STRINGS = {
+  fr: {
+    switchExpertises: 'Expertises',
+    switchPrincipes: 'Principes',
+    switchEnvironnement: 'Environnement',
+    ariaExpertises: 'Aller à la section Expertises',
+    ariaPrincipes: 'Aller à la section Principes',
+    ariaEnvironnement: 'Aller à la section Environnement',
+    heroEyebrow: "Ma façon d'être",
+    heroTitle: 'À propos',
+    philosophieHeading: 'Philosophie',
+    philosophieP1:
+      "Un bon design doit fonctionner de manière autonome au sein de l'entreprise. L'objectif est de construire des solutions que les équipes peuvent s'approprier, maintenir et faire évoluer dans la durée, indépendamment des personnes qui les ont conçues. La plupart des problèmes ne sont pas visuels, ils sont structurels. Le design ne corrige pas une réflexion insuffisante sur ce que le produit doit réellement accomplir.",
+    philosophieP2:
+      "Le design doit s'effacer au profit de l'usage. Il anticipe les réalités internes : évolution des priorités, contraintes budgétaires, changements d'organisation. S'il dépend en permanence d'un soutien externe ou d'un expert pour fonctionner, alors il n'est pas robuste. Un design pertinent est celui qui s'intègre durablement dans les processus et continue de produire de la valeur sans dépendance.",
+    cvButton: 'Voir le Curriculum Vitae',
+    expertiseEyebrow: 'Expertises',
+    expertiseTitle: 'Ce que je sais faire',
+    principesEyebrow: 'Principes et valeurs',
+    principesTitle: 'Ce qui guide mon travail',
+    envEyebrow: 'Le bon environnement fait la différence',
+    envTitle: 'Ce que je recherche',
+    carouselPrincipes: 'Principes',
+    carouselEnvironnement: 'Environnement',
+  },
+  en: {
+    switchExpertises: 'Expertise',
+    switchPrincipes: 'Principles',
+    switchEnvironnement: 'Environment',
+    ariaExpertises: 'Go to the Expertise section',
+    ariaPrincipes: 'Go to the Principles section',
+    ariaEnvironnement: 'Go to the Environment section',
+    heroEyebrow: 'How I work',
+    heroTitle: 'About',
+    philosophieHeading: 'Philosophy',
+    philosophieP1:
+      'Good design should work on its own within the company. The goal is to build solutions that teams can own, maintain and evolve over time, independently of the people who designed them. Most problems are not visual, they are structural. Design does not fix insufficient thinking about what the product should actually achieve.',
+    philosophieP2:
+      'Design should step back in favour of usage. It anticipates internal realities: shifting priorities, budget constraints, organisational change. If it constantly depends on external support or an expert to function, then it is not robust. Relevant design is the kind that integrates durably into processes and keeps producing value without dependency.',
+    cvButton: 'View resume',
+    expertiseEyebrow: 'Expertise',
+    expertiseTitle: 'What I do',
+    principesEyebrow: 'Principles and values',
+    principesTitle: 'What guides my work',
+    envEyebrow: 'The right environment makes the difference',
+    envTitle: "What I'm looking for",
+    carouselPrincipes: 'Principles',
+    carouselEnvironnement: 'Environment',
+  },
+};
+
 export default function APropos() {
+  const t = useT(STRINGS);
+  const { lang } = useLang();
+  const expertiseSectionsL =
+    lang === 'fr' ? expertiseSections : expertiseSectionsEn;
+  const principlesDataL = lang === 'fr' ? principlesData : principlesDataEn;
+  const environmentDataL = lang === 'fr' ? environmentData : environmentDataEn;
   const [isCVHovered, setIsCVHovered] = useState(false);
 
   const expertisesRef = useRef<HTMLDivElement>(null);
@@ -298,7 +494,7 @@ export default function APropos() {
             <button
               type="button"
               onClick={() => scrollToSection('expertises')}
-              aria-label="Aller à la section Expertises"
+              aria-label={t.ariaExpertises}
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[136px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
                 paddingTop: '10px',
@@ -343,7 +539,7 @@ export default function APropos() {
                   transition: 'color 0.3s',
                 }}
               >
-                Expertises
+                {t.switchExpertises}
               </span>
             </button>
 
@@ -351,7 +547,7 @@ export default function APropos() {
             <button
               type="button"
               onClick={() => scrollToSection('principes')}
-              aria-label="Aller à la section Principes"
+              aria-label={t.ariaPrincipes}
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[120px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
                 paddingTop: '10px',
@@ -396,7 +592,7 @@ export default function APropos() {
                   transition: 'color 0.3s',
                 }}
               >
-                Principes
+                {t.switchPrincipes}
               </span>
             </button>
 
@@ -404,7 +600,7 @@ export default function APropos() {
             <button
               type="button"
               onClick={() => scrollToSection('environnement')}
-              aria-label="Aller à la section Environnement"
+              aria-label={t.ariaEnvironnement}
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[160px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
                 paddingTop: '10px',
@@ -449,7 +645,7 @@ export default function APropos() {
                   transition: 'color 0.3s',
                 }}
               >
-                Environnement
+                {t.switchEnvironnement}
               </span>
             </button>
           </div>
@@ -477,7 +673,7 @@ export default function APropos() {
                     letterSpacing: '0.5px',
                   }}
                 >
-                  Ma façon d'être
+                  {t.heroEyebrow}
                 </p>
               </ScrollRevealTitle>
               <ScrollRevealTitle delay={0.05}>
@@ -491,7 +687,7 @@ export default function APropos() {
                     color: 'var(--portfolio-text-primary)',
                   }}
                 >
-                  À propos
+                  {t.heroTitle}
                 </h1>
               </ScrollRevealTitle>
             </div>
@@ -513,7 +709,7 @@ export default function APropos() {
                   color: 'var(--portfolio-text-primary)',
                 }}
               >
-                Philosophie
+                {t.philosophieHeading}
               </h3>
 
               <p
@@ -524,22 +720,10 @@ export default function APropos() {
                   color: 'var(--portfolio-text-description)',
                 }}
               >
-                Un bon design doit fonctionner de manière autonome au sein de
-                l'entreprise. L'objectif est de construire des solutions que les
-                équipes peuvent s'approprier, maintenir et faire évoluer dans la
-                durée, indépendamment des personnes qui les ont conçues. La
-                plupart des problèmes ne sont pas visuels, ils sont structurels.
-                Le design ne corrige pas une réflexion insuffisante sur ce que
-                le produit doit réellement accomplir.
+                {t.philosophieP1}
                 <br />
                 <br />
-                Le design doit s'effacer au profit de l'usage. Il anticipe les
-                réalités internes : évolution des priorités, contraintes
-                budgétaires, changements d'organisation. S'il dépend en
-                permanence d'un soutien externe ou d'un expert pour fonctionner,
-                alors il n'est pas robuste. Un design pertinent est celui qui
-                s'intègre durablement dans les processus et continue de produire
-                de la valeur sans dépendance.
+                {t.philosophieP2}
               </p>
 
               <button
@@ -561,7 +745,7 @@ export default function APropos() {
               >
                 <FileText size={18} />
                 <RollingText
-                  text="Voir le Curriculum Vitae"
+                  text={t.cvButton}
                   inView={isCVHovered}
                   transition={{ duration: 0.3, delay: 0.02, ease: 'easeOut' }}
                 />
@@ -586,7 +770,7 @@ export default function APropos() {
                     letterSpacing: '0.5px',
                   }}
                 >
-                  Expertises
+                  {t.expertiseEyebrow}
                 </p>
               </ScrollRevealTitle>
               <ScrollRevealTitle delay={0.1}>
@@ -602,14 +786,14 @@ export default function APropos() {
                     textTransform: 'none',
                   }}
                 >
-                  Ce que je sais faire
+                  {t.expertiseTitle}
                 </h2>
               </ScrollRevealTitle>
             </div>
 
             {/* Expertise Cards */}
             <div className="space-y-6">
-              {expertiseSections.map((section, index) => (
+              {expertiseSectionsL.map((section, index) => (
                 <ScrollFadeIn key={section.number} delay={0.15 + index * 0.05}>
                   <div
                     className="p-8"
@@ -717,7 +901,7 @@ export default function APropos() {
                     letterSpacing: '0.5px',
                   }}
                 >
-                  Principes et valeurs
+                  {t.principesEyebrow}
                 </p>
               </ScrollRevealTitle>
               <ScrollRevealTitle delay={0.45}>
@@ -733,7 +917,7 @@ export default function APropos() {
                     textTransform: 'none',
                   }}
                 >
-                  Ce qui guide mon travail
+                  {t.principesTitle}
                 </h2>
               </ScrollRevealTitle>
             </div>
@@ -743,7 +927,7 @@ export default function APropos() {
               {/* Desktop : grille */}
               <div className="hidden md:block">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {principlesData.map((principle) => (
+                  {principlesDataL.map((principle) => (
                     <InfoCard
                       key={principle.title}
                       number={principle.number}
@@ -756,9 +940,9 @@ export default function APropos() {
 
               {/* Mobile : carrousel */}
               <CardCarousel
-                items={principlesData}
+                items={principlesDataL}
                 className="md:hidden"
-                label="Principes"
+                label={t.carouselPrincipes}
               />
             </ScrollFadeIn>
           </div>
@@ -780,7 +964,7 @@ export default function APropos() {
                     letterSpacing: '0.5px',
                   }}
                 >
-                  Le bon environnement fait la différence
+                  {t.envEyebrow}
                 </p>
               </ScrollRevealTitle>
               <ScrollRevealTitle delay={0.75}>
@@ -796,7 +980,7 @@ export default function APropos() {
                     textTransform: 'none',
                   }}
                 >
-                  Ce que je recherche
+                  {t.envTitle}
                 </h2>
               </ScrollRevealTitle>
             </div>
@@ -806,7 +990,7 @@ export default function APropos() {
               {/* Desktop : grille 2 colonnes */}
               <div className="hidden xl:block">
                 <div className="grid grid-cols-2 gap-6">
-                  {environmentData.map((environment) => (
+                  {environmentDataL.map((environment) => (
                     <InfoCard
                       key={environment.title}
                       number={environment.number}
@@ -819,9 +1003,9 @@ export default function APropos() {
 
               {/* Mobile / tablette : carrousel */}
               <CardCarousel
-                items={environmentData}
+                items={environmentDataL}
                 className="xl:hidden"
-                label="Environnement"
+                label={t.carouselEnvironnement}
               />
             </ScrollFadeIn>
           </div>
