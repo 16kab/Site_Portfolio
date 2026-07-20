@@ -56,7 +56,11 @@ export default function NotFound() {
           color: 'var(--portfolio-text-large)',
           opacity: 0.05,
         }}
-        initial={shouldReduceMotion ? { opacity: 0.05 } : { filter: 'blur(24px)', opacity: 0 }}
+        initial={
+          shouldReduceMotion
+            ? { opacity: 0.05 }
+            : { filter: 'blur(24px)', opacity: 0 }
+        }
         animate={{ filter: 'blur(0px)', opacity: 0.05 }}
         transition={{ duration: 1, ease: 'easeOut' }}
       >
