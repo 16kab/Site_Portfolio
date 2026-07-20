@@ -26,3 +26,6 @@ yarn-error.log*
 # Système / éditeur
 .DS_Store
 Thumbs.db
+
+# Script de captures visuelles (local, non versionné)
+zz-shot.mjs

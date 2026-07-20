@@ -3,9 +3,10 @@ import { ScrollFadeIn } from '../components/ScrollFadeIn';
 import PageMeta from '../components/PageMeta';
 import SuccessPopup from '../components/SuccessPopup';
 import { useEmailForm } from '../hooks';
-import { CONTACT_EMAIL_HREF, SITE_CONTACT } from '../config';
+import { CONTACT_EMAIL_HREF, ROUTES, SITE_CONTACT } from '../config';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router';
 import RollingText from '../components/RollingText';
 
 export default function Contact() {
@@ -467,6 +468,26 @@ export default function Contact() {
                   </span>{' '}
                   Champs obligatoires
                 </div>
+
+                {/* Note RGPD */}
+                <p
+                  style={{
+                    fontFamily: 'Manrope, sans-serif',
+                    fontSize: '0.8125rem',
+                    lineHeight: 1.6,
+                    color: 'var(--portfolio-text-muted)',
+                  }}
+                >
+                  Les informations transmises servent uniquement à traiter votre
+                  demande. Voir les{' '}
+                  <Link
+                    to={ROUTES.MENTIONS}
+                    className="underline underline-offset-2 hover:opacity-70 transition-opacity"
+                  >
+                    mentions légales
+                  </Link>
+                  .
+                </p>
               </form>
             </ScrollFadeIn>
           </div>

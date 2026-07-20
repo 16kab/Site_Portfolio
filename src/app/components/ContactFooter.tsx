@@ -130,6 +130,25 @@ export default function ContactFooter() {
             <p>CONTACT</p>
           </motion.div>
         </div>
+
+        {/* Barre légale */}
+        <div
+          className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-2"
+          style={{
+            fontFamily: 'Manrope, sans-serif',
+            fontWeight: 400,
+            fontSize: '13px',
+            color: 'var(--portfolio-text-muted)',
+          }}
+        >
+          <p>© {new Date().getFullYear()} Alexis Kabiche</p>
+          <Link
+            to={ROUTES.MENTIONS}
+            className="hover:opacity-70 transition-opacity cursor-pointer"
+          >
+            Mentions légales
+          </Link>
+        </div>
       </div>
     </footer>
   );
