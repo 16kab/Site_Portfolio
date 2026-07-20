@@ -12,18 +12,14 @@ const STRINGS = {
     eyebrow: 'Informations légales',
     title: 'Mentions légales',
     editor: 'Éditeur du site',
-    editorIntroBefore: 'Le présent site est édité par ',
+    editorIntroBefore:
+      'Le présent site est un portfolio personnel édité à titre non professionnel par ',
     editorIntroAfter: ', Product & Brand Designer.',
-    rowStatus: 'Statut',
-    statusValue:
-      '[À compléter : statut juridique — ex. entrepreneur individuel / micro-entreprise]',
-    rowSiret: 'SIRET',
-    siretValue: '[À compléter : numéro SIRET]',
-    rowAddress: 'Adresse',
-    addressValue: '[À compléter : adresse professionnelle]',
     rowLocation: 'Localisation',
     rowEmail: 'Email',
     rowPhone: 'Téléphone',
+    editorNote:
+      "Ce site est un portfolio personnel, sans activité commerciale. En tant qu'éditeur non professionnel (particulier), les informations d'entreprise (SIRET, adresse professionnelle) ne s'appliquent pas. Conformément à l'article 6 III 2 de la loi pour la confiance dans l'économie numérique (LCEN), mon adresse personnelle n'est pas rendue publique ; elle est communiquée à l'hébergeur du site.",
     director: 'Directeur de la publication',
     directorValue: 'Alexis Kabiche.',
     hosting: 'Hébergement',
@@ -53,18 +49,14 @@ const STRINGS = {
     eyebrow: 'Legal information',
     title: 'Legal notice',
     editor: 'Site publisher',
-    editorIntroBefore: 'This site is published by ',
+    editorIntroBefore:
+      'This site is a personal portfolio published on a non-professional basis by ',
     editorIntroAfter: ', Product & Brand Designer.',
-    rowStatus: 'Status',
-    statusValue:
-      '[To complete: legal status — e.g. sole proprietor / micro-enterprise]',
-    rowSiret: 'SIRET',
-    siretValue: '[To complete: SIRET number]',
-    rowAddress: 'Address',
-    addressValue: '[To complete: business address]',
     rowLocation: 'Location',
     rowEmail: 'Email',
     rowPhone: 'Phone',
+    editorNote:
+      'This is a personal portfolio with no commercial activity. As a non-professional (private individual) publisher, business details (company number, business address) do not apply. Under Article 6 III 2 of the French Digital Economy Act (LCEN), my personal address is not made public; it is provided to the site host.',
     director: 'Publication director',
     directorValue: 'Alexis Kabiche.',
     hosting: 'Hosting',
@@ -93,11 +85,9 @@ const STRINGS = {
 };
 
 /**
- * Mentions légales (obligation légale française pour un site professionnel).
- *
- * ⚠️ Les champs marqués « [À compléter] » nécessitent des informations que
- * seul l'éditeur possède (statut juridique, SIRET, adresse) — à renseigner
- * avant mise en production.
+ * Mentions légales — portfolio personnel édité par un particulier
+ * (éditeur non professionnel, sans activité commerciale). Pas d'informations
+ * d'entreprise (SIRET/adresse pro) : cf. LCEN art. 6 III 2.
  */
 export default function MentionsLegales() {
   const t = useT(STRINGS);
@@ -156,9 +146,6 @@ export default function MentionsLegales() {
                   {t.editorIntroAfter}
                 </p>
                 <dl className="mt-4 space-y-1">
-                  <LegalRow label={t.rowStatus}>{t.statusValue}</LegalRow>
-                  <LegalRow label={t.rowSiret}>{t.siretValue}</LegalRow>
-                  <LegalRow label={t.rowAddress}>{t.addressValue}</LegalRow>
                   <LegalRow label={t.rowLocation}>
                     {SITE_CONTACT.location}
                   </LegalRow>
@@ -179,6 +166,7 @@ export default function MentionsLegales() {
                     </a>
                   </LegalRow>
                 </dl>
+                <p className="mt-4">{t.editorNote}</p>
               </LegalSection>
 
               <LegalSection title={t.director}>
