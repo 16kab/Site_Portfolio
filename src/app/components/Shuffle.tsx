@@ -222,6 +222,10 @@ const Shuffle: React.FC<ShuffleProps> = ({
       ref,
       className: `shuffle-text ${className}`,
       style,
+      // GSAP SplitText pose automatiquement un aria-label sur ce conteneur ;
+      // role="img" rend cet attribut valide (interdit sur un <p> nu) tout en
+      // exposant le mot aux lecteurs d'écran. Aucun impact visuel.
+      role: 'img',
     },
     text,
   );

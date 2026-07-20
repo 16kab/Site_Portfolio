@@ -298,6 +298,7 @@ export default function APropos() {
             <button
               type="button"
               onClick={() => scrollToSection('expertises')}
+              aria-label="Aller à la section Expertises"
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[136px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
                 paddingTop: '10px',
@@ -350,6 +351,7 @@ export default function APropos() {
             <button
               type="button"
               onClick={() => scrollToSection('principes')}
+              aria-label="Aller à la section Principes"
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[120px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
                 paddingTop: '10px',
@@ -402,6 +404,7 @@ export default function APropos() {
             <button
               type="button"
               onClick={() => scrollToSection('environnement')}
+              aria-label="Aller à la section Environnement"
               className="relative z-10 flex items-center gap-2 transition-colors duration-300 md:w-[160px] w-[44px] justify-center md:justify-start cursor-pointer"
               style={{
                 paddingTop: '10px',
