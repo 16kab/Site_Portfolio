@@ -1,5 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useT } from '../../i18n';
+
+const STRINGS = {
+  fr: {
+    prev: 'Précédent',
+    next: 'Suivant',
+    goTo: (i: number) => `Aller à la carte ${i}`,
+  },
+  en: {
+    prev: 'Previous',
+    next: 'Next',
+    goTo: (i: number) => `Go to card ${i}`,
+  },
+};
 
 export interface InfoCardData {
   number: string;
@@ -99,6 +113,7 @@ export function CardCarousel({
   className = '',
   label,
 }: CardCarouselProps) {
+  const t = useT(STRINGS);
   const [index, setIndex] = useState(0);
   const [heights, setHeights] = useState<number[]>([]);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -156,7 +171,7 @@ export function CardCarousel({
           type="button"
           onClick={() => setIndex(index - 1)}
           disabled={index === 0}
-          aria-label="Précédent"
+          aria-label={t.prev}
           className={arrowClassName}
           style={arrowStyle}
         >
@@ -172,7 +187,7 @@ export function CardCarousel({
               key={item.title}
               type="button"
               onClick={() => setIndex(i)}
-              aria-label={`Aller à la carte ${i + 1}`}
+              aria-label={t.goTo(i + 1)}
               aria-current={i === index}
               className="h-2 rounded-full transition-all duration-300"
               style={{
@@ -190,7 +205,7 @@ export function CardCarousel({
           type="button"
           onClick={() => setIndex(index + 1)}
           disabled={index === items.length - 1}
-          aria-label="Suivant"
+          aria-label={t.next}
           className={arrowClassName}
           style={arrowStyle}
         >

@@ -1,4 +1,29 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { isLang, LANG_STORAGE_KEY } from '../i18n/types';
+
+const STRINGS = {
+  fr: {
+    title: 'Une erreur est survenue',
+    body: "Quelque chose s'est mal passé lors de l'affichage de cette page. Vous pouvez recharger ou revenir à l'accueil.",
+    home: "Revenir à l'accueil",
+  },
+  en: {
+    title: 'Something went wrong',
+    body: 'Something went wrong while displaying this page. You can reload or go back to the home page.',
+    home: 'Back to home',
+  },
+};
+
+// L'ErrorBoundary est au-dessus du LanguageProvider et c'est un composant de
+// classe : la langue est lue directement dans le stockage local (secours).
+function errorStrings() {
+  try {
+    const stored = window.localStorage.getItem(LANG_STORAGE_KEY);
+    return isLang(stored) ? STRINGS[stored] : STRINGS.fr;
+  } catch {
+    return STRINGS.fr;
+  }
+}
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -28,6 +53,7 @@ export default class ErrorBoundary extends Component<
 
   render() {
     if (this.state.hasError) {
+      const t = errorStrings();
       return (
         <div
           role="alert"
@@ -44,7 +70,7 @@ export default class ErrorBoundary extends Component<
               fontWeight: 700,
             }}
           >
-            Une erreur est survenue
+            {t.title}
           </h1>
           <p
             style={{
@@ -52,8 +78,7 @@ export default class ErrorBoundary extends Component<
               maxWidth: '32rem',
             }}
           >
-            Quelque chose s'est mal passé lors de l'affichage de cette page.
-            Vous pouvez recharger ou revenir à l'accueil.
+            {t.body}
           </p>
           <a
             href="/"
@@ -65,7 +90,7 @@ export default class ErrorBoundary extends Component<
               fontSize: '14px',
             }}
           >
-            Revenir à l'accueil
+            {t.home}
           </a>
         </div>
       );
