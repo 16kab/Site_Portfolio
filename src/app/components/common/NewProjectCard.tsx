@@ -237,6 +237,7 @@ const NewProjectCard = forwardRef<HTMLImageElement, NewProjectCardProps>(
                   src={image}
                   alt={title}
                   loading={priority ? undefined : 'lazy'}
+                  fetchPriority={priority ? 'high' : undefined}
                   decoding="async"
                   className="project-card-image w-full h-full object-cover object-center"
                 />

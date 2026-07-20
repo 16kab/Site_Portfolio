@@ -105,6 +105,8 @@ export default function ProjetDetail() {
             src={projet.image}
             alt={projet.title}
             className="w-full h-full object-cover object-center"
+            fetchPriority="high"
+            decoding="async"
           />
           {/* Dark overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
