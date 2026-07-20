@@ -31,6 +31,8 @@ jobs:
         run: npx vitest run
       - name: Build de production
         run: npm run build
+      - name: Vérification du pré-rendu (meta de partage)
+        run: npm run check:prerender
       - name: Budget de bundle
         run: npm run budget
 

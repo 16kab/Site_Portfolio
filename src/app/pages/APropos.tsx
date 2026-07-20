@@ -5,6 +5,8 @@ import { useState, useRef, useEffect } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import RollingText from '../components/RollingText';
 import PageMeta from '../components/PageMeta';
+import { ROUTES } from '../config';
+import { ROUTE_META } from '../config/seo';
 import { useScrollSpy } from '../hooks';
 import { CardCarousel, InfoCard } from '../components/common/CardCarousel';
 import { Lightbulb, Compass, Users, FileText } from 'lucide-react';
@@ -214,11 +216,7 @@ export default function APropos() {
       className="relative min-h-screen apropos-page"
       style={{ backgroundColor: 'var(--portfolio-bg)' }}
     >
-      <PageMeta
-        title="À propos — Alexis Kabiche"
-        description="Parcours, expertises et principes de travail d'Alexis Kabiche, Product & Brand Designer."
-        path="/apropos"
-      />
+      <PageMeta {...ROUTE_META[ROUTES.APROPOS]} />
       {/* Fixed Switch Menu - Bottom Right on desktop, Bottom Center on mobile */}
       <div
         className="fixed z-[199] left-0 right-0 md:top-[112px] md:bottom-auto"

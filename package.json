@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/prerender-meta.mjs",
     "dev": "vite",
     "preview": "vite preview",
     "test": "vitest",
@@ -13,7 +13,8 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "test:e2e": "playwright test",
-    "budget": "node scripts/check-bundle-budget.mjs"
+    "budget": "node scripts/check-bundle-budget.mjs",
+    "check:prerender": "node scripts/check-prerender.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

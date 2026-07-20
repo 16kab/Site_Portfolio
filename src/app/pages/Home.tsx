@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { useEffect } from 'react';
 import PageMeta from '../components/PageMeta';
 import { ROUTES } from '../config';
+import { ROUTE_META } from '../config/seo';
 
 interface HomeProps {
   showSplash: boolean;
@@ -31,7 +32,7 @@ export default function Home({ showSplash }: HomeProps) {
 
   return (
     <section className="relative overflow-hidden home-section">
-      <PageMeta title="Alexis Kabiche — Product & Brand Designer" path="/" />
+      <PageMeta {...ROUTE_META[ROUTES.HOME]} />
       <h1 className="sr-only">Alexis Kabiche, Product & Brand Designer</h1>
       {/* Hero Content */}
       <div

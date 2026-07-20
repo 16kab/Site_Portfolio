@@ -3,7 +3,8 @@ import { ScrollFadeIn } from '../components/ScrollFadeIn';
 import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import PageMeta from '../components/PageMeta';
 import ContactFooter from '../components/ContactFooter';
-import { CONTACT_EMAIL_HREF, SITE_CONTACT } from '../config';
+import { CONTACT_EMAIL_HREF, ROUTES, SITE_CONTACT } from '../config';
+import { ROUTE_META } from '../config/seo';
 
 /**
  * Mentions légales (obligation légale française pour un site professionnel).
@@ -19,11 +20,7 @@ export default function MentionsLegales() {
       className="relative min-h-screen"
       style={{ backgroundColor: 'var(--portfolio-bg)' }}
     >
-      <PageMeta
-        title="Mentions légales — Alexis Kabiche"
-        description="Mentions légales du site portfolio d'Alexis Kabiche : éditeur, hébergeur, propriété intellectuelle et protection des données personnelles."
-        path="/mentions-legales"
-      />
+      <PageMeta {...ROUTE_META[ROUTES.MENTIONS]} />
 
       <section
         style={{ paddingTop: 'var(--page-padding-top)' }}
@@ -71,10 +68,19 @@ export default function MentionsLegales() {
                   Product &amp; Brand Designer.
                 </p>
                 <dl className="mt-4 space-y-1">
-                  <LegalRow label="Statut">[À compléter : statut juridique — ex. entrepreneur individuel / micro-entreprise]</LegalRow>
-                  <LegalRow label="SIRET">[À compléter : numéro SIRET]</LegalRow>
-                  <LegalRow label="Adresse">[À compléter : adresse professionnelle]</LegalRow>
-                  <LegalRow label="Localisation">{SITE_CONTACT.location}</LegalRow>
+                  <LegalRow label="Statut">
+                    [À compléter : statut juridique — ex. entrepreneur
+                    individuel / micro-entreprise]
+                  </LegalRow>
+                  <LegalRow label="SIRET">
+                    [À compléter : numéro SIRET]
+                  </LegalRow>
+                  <LegalRow label="Adresse">
+                    [À compléter : adresse professionnelle]
+                  </LegalRow>
+                  <LegalRow label="Localisation">
+                    {SITE_CONTACT.location}
+                  </LegalRow>
                   <LegalRow label="Email">
                     <a
                       href={CONTACT_EMAIL_HREF}
@@ -166,10 +172,10 @@ export default function MentionsLegales() {
 
               <LegalSection title="Cookies et mesure d'audience">
                 <p>
-                  Ce site n'utilise aucun cookie publicitaire ni traceur
-                  tiers. La préférence de thème (clair/sombre) est mémorisée
-                  localement dans votre navigateur (stockage local), à des fins
-                  purement fonctionnelles.
+                  Ce site n'utilise aucun cookie publicitaire ni traceur tiers.
+                  La préférence de thème (clair/sombre) est mémorisée localement
+                  dans votre navigateur (stockage local), à des fins purement
+                  fonctionnelles.
                 </p>
                 <p className="mt-4">
                   La fréquentation est mesurée via Vercel Analytics et Vercel

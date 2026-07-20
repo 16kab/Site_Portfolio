@@ -4,6 +4,7 @@ import PageMeta from '../components/PageMeta';
 import SuccessPopup from '../components/SuccessPopup';
 import { useEmailForm } from '../hooks';
 import { CONTACT_EMAIL_HREF, ROUTES, SITE_CONTACT } from '../config';
+import { ROUTE_META } from '../config/seo';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
@@ -53,11 +54,7 @@ export default function Contact() {
       className="relative min-h-screen contact-page"
       style={{ backgroundColor: 'var(--portfolio-bg)' }}
     >
-      <PageMeta
-        title="Contact — Alexis Kabiche"
-        description="Contactez Alexis Kabiche, Product & Brand Designer à Paris, pour un projet, une mission ou une collaboration."
-        path="/contact"
-      />
+      <PageMeta {...ROUTE_META[ROUTES.CONTACT]} />
       {/* Contact Content */}
       <section
         style={{ paddingTop: 'var(--page-padding-top)' }}
