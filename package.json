@@ -13,6 +13,7 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "test:e2e": "playwright test",
+    "test:visual": "playwright test -c playwright.visual.config.ts",
     "budget": "node scripts/check-bundle-budget.mjs",
     "check:prerender": "node scripts/check-prerender.mjs"
   },

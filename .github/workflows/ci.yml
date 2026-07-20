@@ -75,3 +75,29 @@ jobs:
         run: npm run build
       - name: Audit Lighthouse
         run: npx lhci autorun
+
+  # Régression visuelle : compare le rendu aux captures de référence. Sur
+  # windows-latest, plateforme des références (-win32) — même moteur de rendu,
+  # polices auto-hébergées identiques. Consultatif au départ (le temps de
+  # confirmer la stabilité runner vs local), à promouvoir en requis ensuite.
+  visual:
+    name: Régression visuelle (consultatif)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Installation du navigateur
+        run: npx playwright install chromium
+      - name: Tests de régression visuelle
+        run: npm run test:visual
+      - name: Rapport (diffs visuels)
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-report
+          path: playwright-report/
+          retention-days: 7
