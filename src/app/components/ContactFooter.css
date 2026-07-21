@@ -1,0 +1,34 @@
+/* Coordonnées (mail / téléphone) du bandeau contact.
+   Survol épuré : l'icône se soulève avec un léger rebond, la couleur
+   s'éclaircit vers la couleur principale. */
+.contact-coord {
+  color: var(--portfolio-text-secondary);
+  transition: color 0.35s ease;
+}
+.contact-coord.contact-coord--tel {
+  color: var(--portfolio-text-description);
+}
+.contact-coord:hover,
+.contact-coord:focus-visible {
+  color: var(--portfolio-text-primary);
+}
+.contact-coord .contact-coord__ic {
+  display: inline-flex;
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.35s ease;
+}
+.contact-coord:hover .contact-coord__ic,
+.contact-coord:focus-visible .contact-coord__ic {
+  transform: translateY(-3px) scale(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-coord .contact-coord__ic {
+    transition: color 0.35s ease;
+  }
+  .contact-coord:hover .contact-coord__ic,
+  .contact-coord:focus-visible .contact-coord__ic {
+    transform: none;
+  }
+}

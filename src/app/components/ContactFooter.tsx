@@ -1,3 +1,4 @@
+import './ContactFooter.css';
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'motion/react';
 import { MessageCircle, Mail, Phone } from 'lucide-react';
@@ -50,22 +51,20 @@ export default function ContactFooter() {
             >
               <a
                 href={CONTACT_EMAIL_HREF}
-                className="flex items-center gap-2 transition-colors cursor-pointer"
-                style={{
-                  color: 'var(--portfolio-text-secondary)',
-                }}
+                className="contact-coord flex items-center gap-2 cursor-pointer"
               >
-                <Mail size={16} />
+                <span className="contact-coord__ic">
+                  <Mail size={16} />
+                </span>
                 <p>{SITE_CONTACT.email}</p>
               </a>
               <a
                 href={SITE_CONTACT.phoneHref}
-                className="flex items-center gap-2 transition-colors cursor-pointer"
-                style={{
-                  color: 'var(--portfolio-text-description)',
-                }}
+                className="contact-coord contact-coord--tel flex items-center gap-2 cursor-pointer"
               >
-                <Phone size={16} />
+                <span className="contact-coord__ic">
+                  <Phone size={16} />
+                </span>
                 <p>{SITE_CONTACT.phoneDisplay}</p>
               </a>
             </div>
@@ -128,7 +127,7 @@ export default function ContactFooter() {
               lineHeight: '1',
               letterSpacing: '-0.05em',
               color: 'var(--portfolio-text-large)',
-              bottom: 'clamp(-82px, -11vw, -205px)',
+              bottom: 'clamp(-185px, -23vw, -420px)',
               overflow: 'visible',
               pointerEvents: 'none',
               position: 'relative',
