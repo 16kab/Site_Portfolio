@@ -136,8 +136,11 @@ export default function MentionsLegales() {
             </ScrollRevealTitle>
           </div>
 
-          {/* Corps */}
-          <ScrollFadeIn delay={0.2}>
+          {/* Corps — `amount="some"` : le bloc est plus haut que l'écran, donc
+              on révèle dès qu'une partie est visible (à l'arrivée), sinon le
+              seuil de 30 % n'est jamais atteint en haut de page et le contenu
+              reste invisible jusqu'au scroll. */}
+          <ScrollFadeIn delay={0.2} amount="some">
             <div className="max-w-3xl space-y-12">
               <LegalSection title={t.editor}>
                 <p>
