@@ -13,6 +13,7 @@ import { ImageLightbox } from '../components/ImageLightbox';
 import { useScrollSpy } from '../hooks';
 import { usePageTransition } from '../context/PageTransitionContext';
 import { useLang, useT } from '../i18n';
+import MauniShowcase from './MauniShowcase';
 
 const STRINGS = {
   fr: {
@@ -102,6 +103,13 @@ export default function ProjetDetail() {
   // Redirect if project not found - AFTER all hooks
   if (!projet) {
     return <Navigate to={ROUTES.PROJETS} replace />;
+  }
+
+  // Mauni : page vitrine dédiée (design « Plein Cadre / Index »).
+  // markArrival() a déjà été appelé plus haut (useLayoutEffect) donc la
+  // transition carte→détail fonctionne normalement.
+  if (projet.id === 'mauni') {
+    return <MauniShowcase projet={projet} />;
   }
 
   // Scroll to section : offset de 120 px pour le menu sticky

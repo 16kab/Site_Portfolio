@@ -1,0 +1,135 @@
+/* Mauni — page vitrine « Plein Cadre / Index ».
+   Titres : Bricolage Grotesque. Tout le reste : Manrope (typo du site).
+   Neutres : tokens --portfolio-*. Accent : --mauni-accent (bleu, adaptable). */
+
+.mauni-showcase {
+  --mauni-accent: #2f6bff;
+  --mauni-accent-soft: #a9c7ff;
+  --mauni-grad: linear-gradient(120deg, #141046, #2e2a7a 34%, #5b6cff 66%, #3f9bff);
+  --title-font: 'Bricolage Grotesque Variable', 'Playfair Display', sans-serif;
+  --mtop: 108px; /* sous le header fixe du site */
+  position: relative;
+  background: var(--portfolio-bg);
+  color: var(--portfolio-text-primary);
+  font-family: 'Manrope', sans-serif;
+}
+.dark .mauni-showcase {
+  --mauni-accent: #5b96ff;
+  --mauni-accent-soft: #a9c7ff;
+}
+
+.mauni-showcase .wrap { width: min(1220px, 90vw); margin-inline: auto; }
+.mauni-showcase .title { font-family: var(--title-font); letter-spacing: -0.02em; font-weight: 600; }
+.mauni-showcase .label {
+  font-family: 'Manrope', sans-serif; text-transform: uppercase;
+  letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600;
+  color: var(--portfolio-text-muted);
+}
+.mauni-showcase .num { font-variant-numeric: tabular-nums; }
+
+/* ---- HERO : image de couverture (cible du morph carte→détail) ---- */
+.mauni-showcase .m-hero { position: relative; min-height: 92vh; display: flex; align-items: flex-end; overflow: hidden; }
+.mauni-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.mauni-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,5,20,0.82), rgba(6,5,20,0.2) 42%, rgba(6,5,20,0.04) 70%, transparent); }
+.mauni-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; }
+.mauni-showcase .m-hero .ey { display: flex; gap: 14px; flex-wrap: wrap; color: rgba(255,255,255,0.85); margin-bottom: 18px; }
+.mauni-showcase .m-hero h1 {
+  font-family: var(--title-font); font-weight: 800; font-size: clamp(4rem, 15vw, 12rem);
+  line-height: 0.84; letter-spacing: -0.04em; margin: 0; color: #fff;
+}
+.mauni-showcase .m-hero h1 .ch { display: inline-block; will-change: transform; }
+.mauni-showcase .m-hero .th {
+  font-family: var(--title-font); font-weight: 440; font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+  line-height: 1.16; max-width: 24ch; margin: 20px 0 0; color: rgba(255,255,255,0.95);
+}
+.mauni-showcase .m-hero .th em { font-style: normal; color: var(--mauni-accent-soft); }
+
+/* ---- LAYOUT index : rail fixe + flux ---- */
+.mauni-showcase .layout { display: grid; grid-template-columns: 280px 1fr; gap: clamp(30px, 5vw, 84px); align-items: start; padding: clamp(44px, 7vw, 90px) 0 0; }
+.mauni-showcase .rail { position: sticky; top: var(--mtop); align-self: start; }
+.mauni-showcase .rail .nm { font-family: var(--title-font); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.02em; margin: 0 0 4px; }
+.mauni-showcase .rail .sub { color: var(--portfolio-text-secondary); font-size: 0.92rem; margin: 0 0 24px; max-width: 26ch; }
+.mauni-showcase .rail dl { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 12px; border-top: 1px solid var(--portfolio-card-border); padding-top: 16px; margin: 0 0 26px; }
+.mauni-showcase .rail dd { margin: 4px 0 0; font-family: var(--title-font); font-weight: 600; font-size: 0.92rem; }
+.mauni-showcase .nav { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--portfolio-card-border); }
+.mauni-showcase .nav li { border-bottom: 1px solid var(--portfolio-card-border); }
+.mauni-showcase .nav button {
+  position: relative; display: flex; gap: 12px; width: 100%; text-align: left; padding: 11px 0;
+  background: none; border: none; cursor: pointer; color: var(--portfolio-text-muted);
+  font-family: 'Manrope', sans-serif; font-size: 0.82rem; transition: color .3s, padding .3s;
+}
+.mauni-showcase .nav button .n { color: var(--mauni-accent); opacity: 0.5; font-variant-numeric: tabular-nums; }
+.mauni-showcase .nav button:hover { color: var(--portfolio-text-primary); }
+.mauni-showcase .nav button.on { color: var(--portfolio-text-primary); padding-left: 15px; }
+.mauni-showcase .nav button.on .n { opacity: 1; }
+.mauni-showcase .nav button.on::before { content: ''; position: absolute; left: 0; top: 50%; width: 7px; height: 7px; margin-top: -3.5px; border-radius: 999px; background: var(--mauni-accent); }
+
+.mauni-showcase .stream { min-width: 0; }
+.mauni-showcase .sec { padding: 0 0 clamp(72px, 12vw, 150px); scroll-margin-top: var(--mtop); }
+.mauni-showcase .sec .ey { display: block; margin-bottom: 20px; }
+.mauni-showcase .lead {
+  font-family: var(--title-font); font-weight: 520; font-size: clamp(1.7rem, 4.2vw, 3.2rem);
+  line-height: 1.1; letter-spacing: -0.02em; margin: 0; max-width: 22ch;
+}
+.mauni-showcase .lead .k { color: var(--mauni-accent); }
+.mauni-showcase .illuminate .wd { transition: opacity .1s linear; }
+.mauni-showcase .note { color: var(--portfolio-text-description); font-size: 1.06rem; max-width: 46ch; margin: 22px 0 0; line-height: 1.6; }
+
+/* ---- Bandeau « solde » (dégradé Mauni) ---- */
+.mauni-showcase .band { background: var(--mauni-grad); color: #fff; border-radius: 22px; padding: clamp(28px, 5vw, 52px); margin-top: clamp(30px, 5vw, 52px); position: relative; overflow: hidden; }
+.mauni-showcase .band .top { font-family: 'Manrope', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.82); display: flex; align-items: center; gap: 10px; }
+.mauni-showcase .band .dot { width: 8px; height: 8px; border-radius: 999px; background: #34d3ac; box-shadow: 0 0 0 4px rgba(52,211,172,0.25); }
+.mauni-showcase .band .amount { font-family: var(--title-font); font-weight: 680; font-size: clamp(3rem, 11vw, 6.4rem); letter-spacing: -0.03em; line-height: 1; margin: 12px 0 0; font-variant-numeric: tabular-nums; }
+.mauni-showcase .band .subs { display: flex; gap: 32px; flex-wrap: wrap; margin-top: 22px; font-family: 'Manrope', sans-serif; }
+.mauni-showcase .band .subs .l { display: block; color: rgba(255,255,255,0.7); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 3px; }
+
+/* ---- Mockup téléphone réutilisable ---- */
+.mauni-showcase .device { background: linear-gradient(155deg, #20202a, #0b0b0f); border-radius: 42px; padding: 9px; box-shadow: 0 44px 90px -46px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.06); }
+.mauni-showcase .device .screen { border-radius: 34px; overflow: hidden; background: #000; display: block; position: relative; }
+.mauni-showcase .device .screen img { display: block; width: 100%; height: auto; }
+
+/* ---- Galerie horizontale épinglée ---- */
+.mauni-showcase .gswitch { position: relative; display: inline-flex; border: 1px solid var(--portfolio-card-border); border-radius: 999px; padding: 3px; background: var(--portfolio-card-bg); font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; flex: 0 0 auto; }
+.mauni-showcase .gswitch .knob { position: absolute; top: 3px; left: 3px; width: calc(50% - 3px); bottom: 3px; border-radius: 999px; background: var(--portfolio-text-primary); transition: transform .3s cubic-bezier(.4,0,.2,1); z-index: 0; }
+.mauni-showcase .gswitch[data-mode="dark"] .knob { transform: translateX(100%); }
+.mauni-showcase .gswitch button { position: relative; z-index: 1; flex: 1 1 0; min-width: 84px; justify-content: center; border: none; background: none; color: var(--portfolio-text-muted); cursor: pointer; padding: 6px 14px; border-radius: 999px; display: inline-flex; gap: 6px; align-items: center; font: inherit; transition: color .25s ease; }
+.mauni-showcase .gswitch button.on { color: var(--portfolio-bg); }
+.mauni-showcase .hwrap { position: relative; margin-top: clamp(20px, 3vw, 30px); }
+.mauni-showcase .hpin { position: sticky; top: var(--mtop); }
+.mauni-showcase .gbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 0 12px; }
+.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 86%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 86%, transparent 100%); }
+.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; will-change: transform; padding-right: 16vw; }
+.mauni-showcase .gitem { flex: 0 0 auto; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.mauni-showcase .gitem .device { height: calc(100% - 44px); border-radius: 50px; }
+.mauni-showcase .gitem .device .screen { height: 100%; aspect-ratio: 1290 / 2796; border-radius: 40px; }
+.mauni-showcase .gitem .device .screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.mauni-showcase .gitem .device .screen img.lyr { transition: opacity .5s ease; }
+.mauni-showcase .gitem .c { margin-top: 14px; font-size: 0.84rem; color: var(--portfolio-text-muted); text-align: center; max-width: 240px; }
+.mauni-showcase .gitem .c b { color: var(--portfolio-text-primary); font-family: var(--title-font); font-weight: 600; }
+.mauni-showcase .hbar { display: flex; align-items: center; gap: 12px; color: var(--portfolio-text-muted); font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; flex: 1; min-width: 0; }
+.mauni-showcase .hbar .tk { flex: 1; max-width: 300px; height: 2px; background: var(--portfolio-card-border); border-radius: 2px; position: relative; }
+.mauni-showcase .hbar .tk i { position: absolute; left: 0; top: 0; height: 100%; width: 16%; background: var(--mauni-accent); border-radius: 2px; }
+.mauni-showcase .gfallback .hviewport { height: auto; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 14px; scrollbar-width: none; cursor: grab; -webkit-mask-image: none; mask-image: none; }
+.mauni-showcase .gfallback .hviewport::-webkit-scrollbar { display: none; }
+.mauni-showcase .gfallback .gitem { height: min(74vh, 600px); scroll-snap-align: start; }
+.mauni-showcase .gfallback .htrack { transform: none !important; padding-right: 8px; }
+
+/* ---- Sections écran unique en mockup ---- */
+.mauni-showcase .rep { display: grid; grid-template-columns: 1fr auto; gap: clamp(26px, 5vw, 64px); align-items: center; }
+.mauni-showcase .rep .device { width: clamp(220px, 26vw, 270px); }
+@media (max-width: 900px) { .mauni-showcase .rep { grid-template-columns: 1fr; justify-items: start; } .mauni-showcase .rep .device { margin-inline: auto; } }
+
+@media (max-width: 860px) {
+  .mauni-showcase .layout { grid-template-columns: 1fr; gap: 28px; }
+  .mauni-showcase .rail { position: static; }
+  .mauni-showcase .nav { display: none; }
+}
+
+.mauni-showcase .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+.mauni-showcase .reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mauni-showcase .reveal { opacity: 1 !important; transform: none !important; }
+  .mauni-showcase .m-hero h1 .ch { transform: none !important; }
+  .mauni-showcase .illuminate .wd { opacity: 1 !important; }
+}
