@@ -315,7 +315,10 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
       if (!cover || !heroEl || reduce) return;
       const h = heroEl.offsetHeight || 1;
       const p = Math.max(0, Math.min(1, document.body.scrollTop / h));
-      cover.style.transform = `scale(${(1 + p * 0.15).toFixed(4)})`;
+      // Pas de transform à l'état initial (échelle 1) : une transform identité
+      // force quand même une couche de composition qui peut perturber la
+      // capture de la view-transition du thème, là où on bascule le plus.
+      cover.style.transform = p > 0.001 ? `scale(${(1 + p * 0.15).toFixed(4)})` : '';
     };
 
     function setup() {
