@@ -17,7 +17,7 @@ import categories from 'figma:asset/mauni-app-categories.webp';
 import parametres from 'figma:asset/mauni-app-parametres.webp';
 import objectifs from 'figma:asset/mauni-app-objectifs.webp';
 
-const MTOP = 108; // doit refléter --mtop dans MauniShowcase.css
+const MTOP = 134; // doit refléter --mtop dans MauniShowcase.css
 
 type Lead = { pre: string; k: string; post: string };
 
@@ -291,13 +291,13 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
       if (!pinned) {
         const max = hview.scrollWidth - hview.clientWidth;
         const pp = max > 0 ? hview.scrollLeft / max : 0;
-        hbar.style.width = 16 + pp * 68 + '%';
+        hbar.style.width = 6 + pp * 94 + '%';
         return;
       }
       let p = D > 0 ? (MTOP - hwrap.getBoundingClientRect().top) / D : 0;
       p = Math.max(0, Math.min(1, p));
       htrack.style.transform = `translateX(${(-p * D).toFixed(1)}px)`;
-      hbar.style.width = 16 + p * 68 + '%';
+      hbar.style.width = 6 + p * 94 + '%';
     }
 
     // ── Zoom de l'image hero au scroll (échelle 1 → 1.15) ────────

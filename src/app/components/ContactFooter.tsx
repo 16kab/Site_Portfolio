@@ -123,12 +123,12 @@ export default function ContactFooter() {
             className="hidden md:flex absolute left-0 right-0 items-center justify-center whitespace-nowrap"
             style={{
               fontFamily: 'Manrope, sans-serif',
-              fontWeight: 700,
-              fontSize: 'clamp(120px, 18vw, 350px)',
+              fontWeight: 800,
+              fontSize: 'clamp(180px, 27vw, 520px)',
               lineHeight: '1',
-              letterSpacing: '0px',
+              letterSpacing: '-0.05em',
               color: 'var(--portfolio-text-large)',
-              bottom: 'clamp(-80px, -11.5vw, -180px)',
+              bottom: 'clamp(-110px, -15vw, -280px)',
               overflow: 'visible',
               pointerEvents: 'none',
               position: 'relative',

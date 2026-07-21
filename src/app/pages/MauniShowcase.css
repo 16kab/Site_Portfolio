@@ -7,7 +7,7 @@
   --mauni-accent-soft: #a9c7ff;
   --mauni-grad: linear-gradient(120deg, #141046, #2e2a7a 34%, #5b6cff 66%, #3f9bff);
   --title-font: 'Bricolage Grotesque Variable', 'Playfair Display', sans-serif;
-  --mtop: 108px; /* sous le header fixe du site */
+  --mtop: 134px; /* sous le header fixe du site, avec une marge d'air */
   position: relative;
   background: var(--portfolio-bg);
   color: var(--portfolio-text-primary);
@@ -48,7 +48,7 @@
 .mauni-showcase .m-hero .th em { font-style: normal; color: var(--mauni-accent-soft); }
 
 /* ---- LAYOUT index : rail fixe + flux ---- */
-.mauni-showcase .layout { display: grid; grid-template-columns: 280px 1fr; gap: clamp(30px, 5vw, 84px); align-items: start; padding: clamp(44px, 7vw, 90px) 0 0; }
+.mauni-showcase .layout { display: grid; grid-template-columns: 280px 1fr; gap: clamp(30px, 5vw, 84px); align-items: start; padding: clamp(44px, 7vw, 90px) 0 0; margin-bottom: clamp(56px, 8vw, 120px); }
 .mauni-showcase .rail { position: sticky; top: var(--mtop); align-self: start; }
 .mauni-showcase .rail .nm { font-family: var(--title-font); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.02em; margin: 0 0 4px; }
 .mauni-showcase .rail .sub { color: var(--portfolio-text-secondary); font-size: 0.92rem; margin: 0 0 24px; max-width: 26ch; }
@@ -100,8 +100,8 @@
 .mauni-showcase .hwrap { position: relative; margin-top: clamp(20px, 3vw, 30px); }
 .mauni-showcase .hpin { position: sticky; top: var(--mtop); }
 .mauni-showcase .gbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 0 12px; }
-.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); }
-.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; will-change: transform; padding-right: 26vw; }
+.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 93%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 93%, transparent 100%); }
+.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; will-change: transform; padding-right: 7vw; }
 .mauni-showcase .gitem { flex: 0 0 auto; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .mauni-showcase .gitem .gshot { height: calc(100% - 44px); display: block; border: 0; background: none; padding: 0; margin: 0; font: inherit; color: inherit; cursor: zoom-in; border-radius: 50px; }
 .mauni-showcase .gitem .gshot:focus-visible { outline: 2px solid var(--mauni-accent); outline-offset: 4px; }
