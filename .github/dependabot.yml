@@ -15,6 +15,18 @@ updates:
         update-types:
           - minor
           - patch
+    ignore:
+      # Majeures bloquées en amont — nécessitent des migrations plus larges,
+      # à traiter comme des chantiers dédiés (pas de simples bumps) :
+      # - react-router 8 exige React >= 19 (migration React 19)
+      # - @vitejs/plugin-react 6 exige Vite >= 8 (migration Vite 8)
+      # On continue de recevoir leurs mises à jour mineures/patch.
+      - dependency-name: react-router
+        update-types:
+          - version-update:semver-major
+      - dependency-name: '@vitejs/plugin-react'
+        update-types:
+          - version-update:semver-major
 
   # Actions GitHub utilisées par la CI
   - package-ecosystem: github-actions
