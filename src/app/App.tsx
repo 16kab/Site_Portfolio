@@ -14,7 +14,7 @@ import SplashScreen from './components/SplashScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import { ROUTES } from './config';
 import { useIsDarkMode } from './hooks';
-import { LanguageProvider, useT } from './i18n';
+import { LanguageProvider, LanguageTransition, useT } from './i18n';
 
 function SkipLink() {
   const t = useT({
@@ -114,7 +114,9 @@ export default function App() {
 
               {/* App Content */}
               <main id="contenu">
-                <AppContent showSplash={showSplash} />
+                <LanguageTransition>
+                  <AppContent showSplash={showSplash} />
+                </LanguageTransition>
               </main>
 
               {/* Page Transition Overlay */}
