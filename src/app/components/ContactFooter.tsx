@@ -6,8 +6,15 @@ import ScrollRevealTitle from './ScrollRevealTitle';
 import { Link } from 'react-router';
 import RollingText from './RollingText';
 import { CONTACT_EMAIL_HREF, ROUTES, SITE_CONTACT } from '../config';
+import { useT } from '../i18n';
+
+const STRINGS = {
+  fr: { contactCta: 'Entrer en contact', mentions: 'Mentions légales' },
+  en: { contactCta: 'Get in touch', mentions: 'Legal notice' },
+};
 
 export default function ContactFooter() {
+  const t = useT(STRINGS);
   const contactTextRef = useRef(null);
   const isContactTextInView = useInView(contactTextRef, {
     once: true,
@@ -95,7 +102,7 @@ export default function ContactFooter() {
             >
               <MessageCircle size={18} />
               <RollingText
-                text="Entrer en contact"
+                text={t.contactCta}
                 inView={isContactButtonHovered}
                 transition={{ duration: 0.3, delay: 0.02, ease: 'easeOut' }}
               />
@@ -146,7 +153,7 @@ export default function ContactFooter() {
             to={ROUTES.MENTIONS}
             className="hover:opacity-70 transition-opacity cursor-pointer"
           >
-            Mentions légales
+            {t.mentions}
           </Link>
         </div>
       </div>

@@ -6,10 +6,16 @@ import NewProjectCard from '../components/common/NewProjectCard';
 import PageMeta from '../components/PageMeta';
 import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
-import { tousProjets } from '../data/projetsData';
+import { getTousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
 import { ROUTE_META } from '../config/seo';
+import { useLang, useT } from '../i18n';
 import { usePageTransition } from '../context/PageTransitionContext';
+
+const STRINGS = {
+  fr: { eyebrow: 'Mes travaux', title: 'Projets' },
+  en: { eyebrow: 'My work', title: 'Projects' },
+};
 import {
   prefersReducedProjectMotion,
   roundTransitionRect,
@@ -21,6 +27,9 @@ import {
 import { preloadProjetDetail } from './preloadProjetDetail';
 
 export default function Projets() {
+  const t = useT(STRINGS);
+  const { lang } = useLang();
+  const tousProjets = getTousProjets(lang);
   const location = useLocation();
   const { snapshot, direction, beginReverse, clearTransition } =
     usePageTransition();
@@ -120,7 +129,7 @@ export default function Projets() {
                   letterSpacing: '0.5px',
                 }}
               >
-                Mes travaux
+                {t.eyebrow}
               </p>
             </ScrollRevealTitle>
             <ScrollRevealTitle delay={0.05}>
@@ -134,7 +143,7 @@ export default function Projets() {
                   color: 'var(--portfolio-text-primary)',
                 }}
               >
-                Projets
+                {t.title}
               </h1>
             </ScrollRevealTitle>
           </div>

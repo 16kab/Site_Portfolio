@@ -1,6 +1,26 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useT } from '../i18n';
+
+const STRINGS = {
+  fr: {
+    dialog: (i: number, total: number) =>
+      `Visionneuse d'images, image ${i} sur ${total}`,
+    close: 'Fermer la visionneuse',
+    prev: 'Image précédente',
+    next: 'Image suivante',
+    alt: (i: number, total: number) => `Aperçu ${i} sur ${total}`,
+  },
+  en: {
+    dialog: (i: number, total: number) =>
+      `Image viewer, image ${i} of ${total}`,
+    close: 'Close viewer',
+    prev: 'Previous image',
+    next: 'Next image',
+    alt: (i: number, total: number) => `Preview ${i} of ${total}`,
+  },
+};
 
 interface ImageLightboxProps {
   images: string[];
@@ -13,6 +33,7 @@ export function ImageLightbox({
   currentIndex,
   onClose,
 }: ImageLightboxProps) {
+  const t = useT(STRINGS);
   const [index, setIndex] = useState(currentIndex);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -63,7 +84,7 @@ export function ImageLightbox({
         ref={containerRef}
         role="dialog"
         aria-modal="true"
-        aria-label={`Visionneuse d'images, image ${index + 1} sur ${images.length}`}
+        aria-label={t.dialog(index + 1, images.length)}
         className="fixed inset-0 z-[300] flex items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -82,7 +103,7 @@ export function ImageLightbox({
           type="button"
           onClick={onClose}
           className="absolute top-6 right-6 z-[310] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-          aria-label="Fermer la visionneuse"
+          aria-label={t.close}
         >
           <X size={24} className="text-white" />
         </button>
@@ -93,7 +114,7 @@ export function ImageLightbox({
             type="button"
             onClick={goToPrevious}
             className="absolute left-6 z-[310] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-            aria-label="Image précédente"
+            aria-label={t.prev}
           >
             <ChevronLeft size={24} className="text-white" />
           </button>
@@ -105,7 +126,7 @@ export function ImageLightbox({
             type="button"
             onClick={goToNext}
             className="absolute right-6 z-[310] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-            aria-label="Image suivante"
+            aria-label={t.next}
           >
             <ChevronRight size={24} className="text-white" />
           </button>
@@ -121,7 +142,7 @@ export function ImageLightbox({
         >
           <img
             src={images[index]}
-            alt={`Aperçu ${index + 1} sur ${images.length}`}
+            alt={t.alt(index + 1, images.length)}
             className="max-w-full max-h-[90vh] object-contain rounded-lg"
           />
         </motion.div>

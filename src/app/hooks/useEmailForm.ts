@@ -2,6 +2,18 @@ import { useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { toast } from 'sonner';
 import { EMAILJS_CONFIG, SITE_CONTACT } from '../config';
+import { useT } from '../i18n';
+
+const STRINGS = {
+  fr: {
+    sendFail: (email: string) =>
+      `L'envoi a échoué. Réessayez ou écrivez-moi directement à ${email}.`,
+  },
+  en: {
+    sendFail: (email: string) =>
+      `Sending failed. Please try again or email me directly at ${email}.`,
+  },
+};
 
 export interface FormData {
   nom: string;
@@ -18,6 +30,7 @@ export type FormErrors = Partial<Record<keyof FormData, boolean>>;
  * Manages form state, validation, and submission logic
  */
 export function useEmailForm() {
+  const t = useT(STRINGS);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -124,9 +137,7 @@ export function useEmailForm() {
       return true;
     } catch (error) {
       console.error('Email send error:', error);
-      toast.error(
-        `L'envoi a échoué. Réessayez ou écrivez-moi directement à ${SITE_CONTACT.email}.`,
-      );
+      toast.error(t.sendFail(SITE_CONTACT.email));
       return false;
     } finally {
       setIsSubmitting(false);

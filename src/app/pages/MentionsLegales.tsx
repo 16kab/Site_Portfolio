@@ -5,16 +5,93 @@ import PageMeta from '../components/PageMeta';
 import ContactFooter from '../components/ContactFooter';
 import { CONTACT_EMAIL_HREF, ROUTES, SITE_CONTACT } from '../config';
 import { ROUTE_META } from '../config/seo';
+import { useT } from '../i18n';
+
+const STRINGS = {
+  fr: {
+    eyebrow: 'Informations légales',
+    title: 'Mentions légales',
+    editor: 'Éditeur du site',
+    editorIntroBefore:
+      'Le présent site est un portfolio personnel édité à titre non professionnel par ',
+    editorIntroAfter: ', Product & Brand Designer.',
+    rowLocation: 'Localisation',
+    rowEmail: 'Email',
+    rowPhone: 'Téléphone',
+    editorNote:
+      "Ce site est un portfolio personnel, sans activité commerciale. En tant qu'éditeur non professionnel (particulier), les informations d'entreprise (SIRET, adresse professionnelle) ne s'appliquent pas. Conformément à l'article 6 III 2 de la loi pour la confiance dans l'économie numérique (LCEN), mon adresse personnelle n'est pas rendue publique ; elle est communiquée à l'hébergeur du site.",
+    director: 'Directeur de la publication',
+    directorValue: 'Alexis Kabiche.',
+    hosting: 'Hébergement',
+    hostingIntro: 'Le site est hébergé par :',
+    rowHost: 'Hébergeur',
+    rowHostAddress: 'Adresse',
+    hostAddress: '340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis',
+    rowWebsite: 'Site web',
+    domainBefore: 'Le nom de domaine ',
+    domainAfter: ' est enregistré via Squarespace Domains.',
+    ip: 'Propriété intellectuelle',
+    ipP1: "L'ensemble des éléments présents sur ce site (textes, visuels, maquettes, projets, identité graphique, code) est la propriété exclusive d'Alexis Kabiche, sauf mention contraire. Certains projets présentés ont été réalisés dans un cadre professionnel et restent la propriété de leurs commanditaires respectifs (notamment les marques du groupe SPVIE) ; ils sont exposés ici à des fins de portfolio, avec l'accord des parties concernées.",
+    ipP2: 'Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans autorisation écrite préalable, est interdite et constituerait une contrefaçon sanctionnée par le Code de la propriété intellectuelle.',
+    data: 'Données personnelles',
+    dataP1:
+      "Le formulaire de contact collecte les données que vous transmettez volontairement (nom, prénom, adresse email, objet et contenu du message), dans l'unique but de traiter votre demande. Ces données ne sont ni cédées ni vendues à des tiers et ne sont conservées que le temps nécessaire au traitement de votre demande.",
+    dataP2Before:
+      "Conformément au Règlement général sur la protection des données (RGPD) et à la loi « Informatique et Libertés », vous disposez d'un droit d'accès, de rectification, d'opposition et de suppression de vos données. Pour l'exercer, écrivez à ",
+    dataP2After: '.',
+    cookies: "Cookies et mesure d'audience",
+    cookiesP1:
+      "Ce site n'utilise aucun cookie publicitaire ni traceur tiers. La préférence de thème (clair/sombre) est mémorisée localement dans votre navigateur (stockage local), à des fins purement fonctionnelles.",
+    cookiesP2:
+      "La fréquentation est mesurée via Vercel Analytics et Vercel Speed Insights, des solutions respectueuses de la vie privée qui ne déposent pas de cookies et n'utilisent pas de données permettant de vous identifier personnellement.",
+  },
+  en: {
+    eyebrow: 'Legal information',
+    title: 'Legal notice',
+    editor: 'Site publisher',
+    editorIntroBefore:
+      'This site is a personal portfolio published on a non-professional basis by ',
+    editorIntroAfter: ', Product & Brand Designer.',
+    rowLocation: 'Location',
+    rowEmail: 'Email',
+    rowPhone: 'Phone',
+    editorNote:
+      'This is a personal portfolio with no commercial activity. As a non-professional (private individual) publisher, business details (company number, business address) do not apply. Under Article 6 III 2 of the French Digital Economy Act (LCEN), my personal address is not made public; it is provided to the site host.',
+    director: 'Publication director',
+    directorValue: 'Alexis Kabiche.',
+    hosting: 'Hosting',
+    hostingIntro: 'The site is hosted by:',
+    rowHost: 'Host',
+    rowHostAddress: 'Address',
+    hostAddress: '340 S Lemon Ave #4133, Walnut, CA 91789, USA',
+    rowWebsite: 'Website',
+    domainBefore: 'The domain name ',
+    domainAfter: ' is registered through Squarespace Domains.',
+    ip: 'Intellectual property',
+    ipP1: 'All content on this site (text, visuals, mockups, projects, graphic identity, code) is the exclusive property of Alexis Kabiche, unless otherwise stated. Some featured projects were produced in a professional context and remain the property of their respective clients (notably the SPVIE group brands); they are shown here for portfolio purposes, with the agreement of the parties involved.',
+    ipP2: 'Any reproduction, representation, modification or use, in whole or in part, without prior written authorisation, is prohibited and would constitute infringement punishable under the French Intellectual Property Code.',
+    data: 'Personal data',
+    dataP1:
+      'The contact form collects the data you voluntarily provide (last name, first name, email address, subject and message content), for the sole purpose of handling your request. This data is neither shared nor sold to third parties and is kept only for as long as needed to handle your request.',
+    dataP2Before:
+      'In accordance with the General Data Protection Regulation (GDPR) and the French Data Protection Act, you have the right to access, rectify, object to and delete your data. To exercise it, write to ',
+    dataP2After: '.',
+    cookies: 'Cookies and analytics',
+    cookiesP1:
+      'This site uses no advertising cookies or third-party trackers. Your theme preference (light/dark) is stored locally in your browser (local storage), for purely functional purposes.',
+    cookiesP2:
+      'Traffic is measured via Vercel Analytics and Vercel Speed Insights, privacy-friendly solutions that set no cookies and use no personally identifying data.',
+  },
+};
 
 /**
- * Mentions légales (obligation légale française pour un site professionnel).
- * Alignée sur la DA des pages de contenu (shell Contact/À propos).
- *
- * ⚠️ Les champs marqués « [À compléter] » nécessitent des informations que
- * seul l'éditeur possède (statut juridique, SIRET, adresse) — à renseigner
- * avant mise en production.
+ * Mentions légales — portfolio personnel édité par un particulier
+ * (éditeur non professionnel, sans activité commerciale). Pas d'informations
+ * d'entreprise (SIRET/adresse pro) : cf. LCEN art. 6 III 2.
  */
 export default function MentionsLegales() {
+  const t = useT(STRINGS);
+
   return (
     <div
       className="relative min-h-screen"
@@ -40,7 +117,7 @@ export default function MentionsLegales() {
                   letterSpacing: '0.5px',
                 }}
               >
-                Informations légales
+                {t.eyebrow}
               </p>
             </ScrollRevealTitle>
             <ScrollRevealTitle delay={0.05}>
@@ -54,34 +131,28 @@ export default function MentionsLegales() {
                   color: 'var(--portfolio-text-primary)',
                 }}
               >
-                Mentions légales
+                {t.title}
               </h1>
             </ScrollRevealTitle>
           </div>
 
-          {/* Corps */}
-          <ScrollFadeIn delay={0.2}>
+          {/* Corps — `amount="some"` : le bloc est plus haut que l'écran, donc
+              on révèle dès qu'une partie est visible (à l'arrivée), sinon le
+              seuil de 30 % n'est jamais atteint en haut de page et le contenu
+              reste invisible jusqu'au scroll. */}
+          <ScrollFadeIn delay={0.2} amount="some">
             <div className="max-w-3xl space-y-12">
-              <LegalSection title="Éditeur du site">
+              <LegalSection title={t.editor}>
                 <p>
-                  Le présent site est édité par <strong>Alexis Kabiche</strong>,
-                  Product &amp; Brand Designer.
+                  {t.editorIntroBefore}
+                  <strong>Alexis Kabiche</strong>
+                  {t.editorIntroAfter}
                 </p>
                 <dl className="mt-4 space-y-1">
-                  <LegalRow label="Statut">
-                    [À compléter : statut juridique — ex. entrepreneur
-                    individuel / micro-entreprise]
-                  </LegalRow>
-                  <LegalRow label="SIRET">
-                    [À compléter : numéro SIRET]
-                  </LegalRow>
-                  <LegalRow label="Adresse">
-                    [À compléter : adresse professionnelle]
-                  </LegalRow>
-                  <LegalRow label="Localisation">
+                  <LegalRow label={t.rowLocation}>
                     {SITE_CONTACT.location}
                   </LegalRow>
-                  <LegalRow label="Email">
+                  <LegalRow label={t.rowEmail}>
                     <a
                       href={CONTACT_EMAIL_HREF}
                       className="underline underline-offset-2 hover:opacity-70 transition-opacity"
@@ -89,7 +160,7 @@ export default function MentionsLegales() {
                       {SITE_CONTACT.email}
                     </a>
                   </LegalRow>
-                  <LegalRow label="Téléphone">
+                  <LegalRow label={t.rowPhone}>
                     <a
                       href={SITE_CONTACT.phoneHref}
                       className="hover:opacity-70 transition-opacity"
@@ -98,20 +169,19 @@ export default function MentionsLegales() {
                     </a>
                   </LegalRow>
                 </dl>
+                <p className="mt-4">{t.editorNote}</p>
               </LegalSection>
 
-              <LegalSection title="Directeur de la publication">
-                <p>Alexis Kabiche.</p>
+              <LegalSection title={t.director}>
+                <p>{t.directorValue}</p>
               </LegalSection>
 
-              <LegalSection title="Hébergement">
-                <p>Le site est hébergé par&nbsp;:</p>
+              <LegalSection title={t.hosting}>
+                <p>{t.hostingIntro}</p>
                 <dl className="mt-4 space-y-1">
-                  <LegalRow label="Hébergeur">Vercel Inc.</LegalRow>
-                  <LegalRow label="Adresse">
-                    340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis
-                  </LegalRow>
-                  <LegalRow label="Site web">
+                  <LegalRow label={t.rowHost}>Vercel Inc.</LegalRow>
+                  <LegalRow label={t.rowHostAddress}>{t.hostAddress}</LegalRow>
+                  <LegalRow label={t.rowWebsite}>
                     <a
                       href="https://vercel.com"
                       target="_blank"
@@ -123,66 +193,34 @@ export default function MentionsLegales() {
                   </LegalRow>
                 </dl>
                 <p className="mt-4">
-                  Le nom de domaine <strong>alexiskabiche.com</strong> est
-                  enregistré via Squarespace Domains.
+                  {t.domainBefore}
+                  <strong>alexiskabiche.com</strong>
+                  {t.domainAfter}
                 </p>
               </LegalSection>
 
-              <LegalSection title="Propriété intellectuelle">
-                <p>
-                  L'ensemble des éléments présents sur ce site (textes, visuels,
-                  maquettes, projets, identité graphique, code) est la propriété
-                  exclusive d'Alexis Kabiche, sauf mention contraire. Certains
-                  projets présentés ont été réalisés dans un cadre professionnel
-                  et restent la propriété de leurs commanditaires respectifs
-                  (notamment les marques du groupe SPVIE) ; ils sont exposés ici
-                  à des fins de portfolio, avec l'accord des parties concernées.
-                </p>
-                <p className="mt-4">
-                  Toute reproduction, représentation, modification ou
-                  exploitation, totale ou partielle, sans autorisation écrite
-                  préalable, est interdite et constituerait une contrefaçon
-                  sanctionnée par le Code de la propriété intellectuelle.
-                </p>
+              <LegalSection title={t.ip}>
+                <p>{t.ipP1}</p>
+                <p className="mt-4">{t.ipP2}</p>
               </LegalSection>
 
-              <LegalSection title="Données personnelles">
-                <p>
-                  Le formulaire de contact collecte les données que vous
-                  transmettez volontairement (nom, prénom, adresse email, objet
-                  et contenu du message), dans l'unique but de traiter votre
-                  demande. Ces données ne sont ni cédées ni vendues à des tiers
-                  et ne sont conservées que le temps nécessaire au traitement de
-                  votre demande.
-                </p>
+              <LegalSection title={t.data}>
+                <p>{t.dataP1}</p>
                 <p className="mt-4">
-                  Conformément au Règlement général sur la protection des
-                  données (RGPD) et à la loi « Informatique et Libertés », vous
-                  disposez d'un droit d'accès, de rectification, d'opposition et
-                  de suppression de vos données. Pour l'exercer, écrivez à{' '}
+                  {t.dataP2Before}
                   <a
                     href={CONTACT_EMAIL_HREF}
                     className="underline underline-offset-2 hover:opacity-70 transition-opacity"
                   >
                     {SITE_CONTACT.email}
                   </a>
-                  .
+                  {t.dataP2After}
                 </p>
               </LegalSection>
 
-              <LegalSection title="Cookies et mesure d'audience">
-                <p>
-                  Ce site n'utilise aucun cookie publicitaire ni traceur tiers.
-                  La préférence de thème (clair/sombre) est mémorisée localement
-                  dans votre navigateur (stockage local), à des fins purement
-                  fonctionnelles.
-                </p>
-                <p className="mt-4">
-                  La fréquentation est mesurée via Vercel Analytics et Vercel
-                  Speed Insights, des solutions respectueuses de la vie privée
-                  qui ne déposent pas de cookies et n'utilisent pas de données
-                  permettant de vous identifier personnellement.
-                </p>
+              <LegalSection title={t.cookies}>
+                <p>{t.cookiesP1}</p>
+                <p className="mt-4">{t.cookiesP2}</p>
               </LegalSection>
             </div>
           </ScrollFadeIn>
