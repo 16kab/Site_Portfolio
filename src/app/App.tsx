@@ -14,7 +14,7 @@ import SplashScreen from './components/SplashScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import { ROUTES } from './config';
 import { useIsDarkMode } from './hooks';
-import { LanguageProvider, LanguageTransition, useT } from './i18n';
+import { LanguageProvider, useLang, useT } from './i18n';
 
 function SkipLink() {
   const t = useT({
@@ -77,6 +77,17 @@ export function AppContent({ showSplash }: { showSplash: boolean }) {
   );
 }
 
+/**
+ * Rejoue l'animation d'arrivée (reveals blur-in, Shuffle, etc.) à chaque
+ * changement de langue : `key={lang}` remonte le contenu routé, ce qui relance
+ * naturellement les animations de montage — comme quand on arrive sur le site.
+ * Le routeur (au-dessus) n'est pas remonté : l'historique est préservé.
+ */
+function LocalizedAppContent({ showSplash }: { showSplash: boolean }) {
+  const { lang } = useLang();
+  return <AppContent key={lang} showSplash={showSplash} />;
+}
+
 export default function App() {
   const [showSplash, setShowSplash] = useState(() => {
     // Montrer le splash uniquement si on est sur la homepage
@@ -114,9 +125,7 @@ export default function App() {
 
               {/* App Content */}
               <main id="contenu">
-                <LanguageTransition>
-                  <AppContent showSplash={showSplash} />
-                </LanguageTransition>
+                <LocalizedAppContent showSplash={showSplash} />
               </main>
 
               {/* Page Transition Overlay */}
