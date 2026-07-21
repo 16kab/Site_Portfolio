@@ -7,6 +7,8 @@ import PageMeta from '../components/PageMeta';
 import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
 import { tousProjets } from '../data/projetsData';
+import { ROUTES } from '../config';
+import { ROUTE_META } from '../config/seo';
 import { usePageTransition } from '../context/PageTransitionContext';
 import {
   prefersReducedProjectMotion,
@@ -97,11 +99,7 @@ export default function Projets() {
         duration: isReturnVisit && !reduceReturnMotion ? 0.2 : 0,
       }}
     >
-      <PageMeta
-        title="Projets — Alexis Kabiche"
-        description="Tous les projets UX/UI d'Alexis Kabiche : applications métier, refontes, design systems et identité de marque."
-        path="/projets"
-      />
+      <PageMeta {...ROUTE_META[ROUTES.PROJETS]} />
       {/* Projets Content */}
       <section
         style={{ paddingTop: 'var(--page-padding-top)' }}

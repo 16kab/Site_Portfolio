@@ -22,7 +22,9 @@ test('la page d’accueil se charge et affiche le hero', async ({ page }) => {
 test('une URL inconnue affiche la page 404', async ({ page }) => {
   await page.goto('/cette-page-nexiste-pas');
 
-  await expect(page.getByRole('heading', { name: '404' })).toBeVisible();
-  await expect(page.getByText('Page introuvable')).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Page introuvable' }),
+  ).toBeVisible();
+  await expect(page.getByText('Erreur 404')).toBeVisible();
   await expect(page.getByRole('link', { name: /Retour à l/ })).toBeVisible();
 });

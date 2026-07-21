@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/prerender-meta.mjs",
     "dev": "vite",
     "preview": "vite preview",
     "test": "vitest",
@@ -13,13 +13,16 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "test:e2e": "playwright test",
-    "budget": "node scripts/check-bundle-budget.mjs"
+    "test:visual": "playwright test -c playwright.visual.config.ts",
+    "budget": "node scripts/check-bundle-budget.mjs",
+    "check:prerender": "node scripts/check-prerender.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@fontsource/manrope": "^5.2.8",
     "@fontsource/playfair-display": "^5.2.8",
     "@gsap/react": "^2.1.2",
+    "@sentry/react": "^10.67.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "clsx": "2.1.1",
@@ -35,7 +38,9 @@
     "tw-animate-css": "1.3.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
     "@biomejs/biome": "^2.5.4",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "4.1.12",
     "@testing-library/dom": "^10.4.1",

@@ -26,3 +26,9 @@ yarn-error.log*
 # Système / éditeur
 .DS_Store
 Thumbs.db
+
+# Scripts jetables locaux (captures visuelles, parsing) — non versionnés
+zz-*.mjs
+
+# Lighthouse CI (local)
+.lighthouseci/

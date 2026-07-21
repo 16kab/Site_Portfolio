@@ -1,113 +1,167 @@
 import { motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-router';
-import { Home, ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Home } from 'lucide-react';
+import { useState } from 'react';
 import PageMeta from '../components/PageMeta';
+import RollingText from '../components/RollingText';
 import { ROUTES } from '../config';
 
+/**
+ * Page 404 alignée sur la direction artistique du site (tokens
+ * `--portfolio-*`, typo Manrope, thème clair/sombre) : chiffre géant estompé
+ * en écho au « CONTACT » du footer, message et CTAs aux styles maison.
+ */
 export default function NotFound() {
   const shouldReduceMotion = useReducedMotion();
+  const [isBackHovered, setIsBackHovered] = useState(false);
+  const [isHomeHovered, setIsHomeHovered] = useState(false);
+
+  const reveal = (delay: number) =>
+    shouldReduceMotion
+      ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
+      : {
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: {
+            duration: 0.7,
+            delay,
+            ease: [0.25, 0.1, 0.25, 1] as const,
+          },
+        };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
+    <div
+      className="relative min-h-screen flex items-center justify-center overflow-hidden px-6"
+      style={{
+        backgroundColor: 'var(--portfolio-bg)',
+        color: 'var(--portfolio-text-primary)',
+      }}
+    >
       <PageMeta
         title="Page introuvable — Alexis Kabiche"
         description="Cette page n'existe pas ou a été déplacée."
         path="/404"
       />
 
-      {/* Animated background */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-400/10 rounded-full blur-[120px]"
-          animate={
-            shouldReduceMotion
-              ? { scale: 1, opacity: 0.4 }
-              : {
-                  scale: [1, 1.2, 1],
-                  opacity: [0.3, 0.5, 0.3],
-                }
-          }
-          transition={{
-            duration: 8,
-            repeat: shouldReduceMotion ? 0 : Infinity,
-            ease: 'easeInOut',
+      {/* Chiffre géant estompé en arrière-plan (motif du footer « CONTACT ») */}
+      <motion.p
+        aria-hidden="true"
+        className="pointer-events-none absolute select-none whitespace-nowrap"
+        style={{
+          fontFamily: 'Manrope, sans-serif',
+          fontWeight: 700,
+          fontSize: 'clamp(220px, 42vw, 640px)',
+          lineHeight: 1,
+          letterSpacing: '-0.02em',
+          color: 'var(--portfolio-text-large)',
+          opacity: 0.05,
+        }}
+        initial={
+          shouldReduceMotion
+            ? { opacity: 0.05 }
+            : { filter: 'blur(24px)', opacity: 0 }
+        }
+        animate={{ filter: 'blur(0px)', opacity: 0.05 }}
+        transition={{ duration: 1, ease: 'easeOut' }}
+      >
+        404
+      </motion.p>
+
+      {/* Contenu */}
+      <div className="relative z-10 text-center max-w-xl">
+        <motion.p
+          {...reveal(0)}
+          className="mb-4 text-sm uppercase tracking-[0.2em]"
+          style={{
+            fontFamily: 'Manrope, sans-serif',
+            fontWeight: 500,
+            color: 'var(--portfolio-text-muted)',
           }}
-        />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 text-center px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
         >
-          {/* 404 */}
-          <motion.h1
-            className="text-9xl md:text-[12rem] font-bold mb-8 bg-gradient-to-r from-white via-cyan-200 to-cyan-400 bg-clip-text text-transparent leading-none"
-            animate={
-              shouldReduceMotion
-                ? undefined
-                : { backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }
-            }
-            transition={{
-              duration: 5,
-              repeat: shouldReduceMotion ? 0 : Infinity,
-              ease: 'linear',
-            }}
+          Erreur 404
+        </motion.p>
+
+        <motion.h1
+          {...reveal(0.08)}
+          className="mb-5 text-4xl md:text-5xl"
+          style={{
+            fontFamily: 'Manrope, sans-serif',
+            fontWeight: 700,
+            letterSpacing: '-0.01em',
+          }}
+        >
+          Page introuvable
+        </motion.h1>
+
+        <motion.p
+          {...reveal(0.16)}
+          className="mx-auto mb-10 max-w-md text-base md:text-lg"
+          style={{
+            fontFamily: 'Manrope, sans-serif',
+            fontWeight: 400,
+            lineHeight: 1.6,
+            color: 'var(--portfolio-text-secondary)',
+          }}
+        >
+          La page que vous recherchez n'existe pas ou a été déplacée.
+        </motion.p>
+
+        <motion.div
+          {...reveal(0.24)}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        >
+          <Link
+            to={ROUTES.HOME}
+            className="inline-flex items-center gap-2 px-6 py-3 transition-colors duration-300 cursor-pointer"
             style={{
-              backgroundSize: '200% 200%',
+              backgroundColor: isHomeHovered
+                ? 'var(--portfolio-button-bg-hover)'
+                : 'var(--portfolio-button-bg)',
+              color: 'var(--portfolio-button-text)',
+              fontFamily: 'Manrope, sans-serif',
+              fontWeight: 500,
+              fontSize: '14px',
+              borderRadius: '5px',
             }}
+            onMouseEnter={() => setIsHomeHovered(true)}
+            onMouseLeave={() => setIsHomeHovered(false)}
+            onFocus={() => setIsHomeHovered(true)}
+            onBlur={() => setIsHomeHovered(false)}
+            data-cursor="hover"
           >
-            404
-          </motion.h1>
+            <Home size={18} />
+            <RollingText
+              text="Retour à l'accueil"
+              inView={isHomeHovered}
+              transition={{ duration: 0.3, delay: 0.02, ease: 'easeOut' }}
+            />
+          </Link>
 
-          {/* Message */}
-          <motion.p
-            className="text-2xl md:text-3xl text-gray-400 mb-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
+          <button
+            type="button"
+            onClick={() => window.history.back()}
+            className="inline-flex items-center gap-2 px-6 py-3 transition-colors duration-300 cursor-pointer"
+            style={{
+              backgroundColor: 'transparent',
+              color: 'var(--portfolio-text-primary)',
+              border: '1px solid var(--portfolio-card-border)',
+              borderColor: isBackHovered
+                ? 'var(--portfolio-card-focus)'
+                : 'var(--portfolio-card-border)',
+              fontFamily: 'Manrope, sans-serif',
+              fontWeight: 500,
+              fontSize: '14px',
+              borderRadius: '5px',
+            }}
+            onMouseEnter={() => setIsBackHovered(true)}
+            onMouseLeave={() => setIsBackHovered(false)}
+            onFocus={() => setIsBackHovered(true)}
+            onBlur={() => setIsBackHovered(false)}
+            data-cursor="hover"
           >
-            Page introuvable
-          </motion.p>
-
-          <motion.p
-            className="text-lg text-gray-500 mb-12 max-w-md mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            La page que vous recherchez n'existe pas ou a été déplacée.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-          >
-            <Link
-              to={ROUTES.HOME}
-              className="group inline-flex items-center gap-2 px-8 py-4 bg-cyan-400 text-black font-semibold rounded-full hover:bg-white transition-all duration-300"
-              data-cursor="hover"
-              data-cursor-text="Accueil"
-            >
-              <Home className="w-5 h-5" />
-              Retour à l'accueil
-            </Link>
-
-            <button
-              type="button"
-              onClick={() => window.history.back()}
-              className="group inline-flex items-center gap-2 px-8 py-4 border-2 border-white/20 text-white font-semibold rounded-full hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
-              data-cursor="hover"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Page précédente
-            </button>
-          </motion.div>
+            <ArrowLeft size={18} />
+            Page précédente
+          </button>
         </motion.div>
       </div>
     </div>

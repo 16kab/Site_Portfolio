@@ -20,6 +20,7 @@ const Projets = lazy(() => import('./pages/Projets'));
 const ProjetDetail = lazy(() => import('./pages/ProjetDetail'));
 const APropos = lazy(() => import('./pages/APropos'));
 const Contact = lazy(() => import('./pages/Contact'));
+const MentionsLegales = lazy(() => import('./pages/MentionsLegales'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export const getSafariChromeColor = (isDarkMode: boolean) =>
@@ -49,6 +50,7 @@ export function AppContent({ showSplash }: { showSplash: boolean }) {
             element={<Home showSplash={showSplash} />}
           />
           <Route path={ROUTES.CONTACT} element={<Contact />} />
+          <Route path={ROUTES.MENTIONS} element={<MentionsLegales />} />
           <Route path={ROUTES.APROPOS} element={<APropos />} />
           <Route path={ROUTES.PROJETS} element={<Projets />} />
           <Route
