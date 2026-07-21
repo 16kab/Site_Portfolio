@@ -117,29 +117,8 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const cleanups: (() => void)[] = [];
 
-    // ── Révélation lettre par lettre du titre hero ────────────────
-    const ht = root.querySelector<HTMLElement>('#m-htitle');
-    if (ht) {
-      const word = ht.textContent || '';
-      ht.textContent = '';
-      word.split('').forEach((c, i) => {
-        const s = document.createElement('span');
-        s.className = 'ch';
-        s.textContent = c;
-        if (!reduce) {
-          s.style.transform = 'translateY(115%)';
-          s.style.transition = `transform .9s cubic-bezier(.16,1,.3,1) ${i * 0.06}s`;
-        }
-        ht.appendChild(s);
-      });
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          ht.querySelectorAll<HTMLElement>('.ch').forEach((s) => {
-            s.style.transform = 'translateY(0)';
-          });
-        }),
-      );
-    }
+    // Le texte du hero apparaît en fondu (CSS : .m-hero .in), pas d'animation
+    // lettre par lettre — la transition de page fait déjà l'apparition.
 
     // ── Illumination mot par mot de tous les titres ──────────────
     const illum: { el: HTMLElement; sp: HTMLElement[] }[] = [];
@@ -479,23 +458,6 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
               <span className="ey label">01 — {t.nav[0]}</span>
               <Lead id="m-s1lead" lead={t.s1lead} />
               <p className="note">{t.s1note}</p>
-              <div className="band reveal" role="img" aria-label={`${t.bandTop} 266,84 €`}>
-                <div className="top">
-                  <span className="dot" />
-                  {t.bandTop}
-                </div>
-                <div className="amount num" id="m-amount">
-                  0,00 €
-                </div>
-                <div className="subs">
-                  {t.bandSubLabels.map((l, i) => (
-                    <div key={l}>
-                      <span className="l">{l}</span>
-                      <span className="num">{t.bandSubValues[i]}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </section>
 
             <section className="sec" id="m-s2" data-sec>
@@ -561,6 +523,23 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
                       ))}
                     </div>
                   </div>
+                </div>
+              </div>
+              <div className="band reveal" role="img" aria-label={`${t.bandTop} 266,84 €`}>
+                <div className="top">
+                  <span className="dot" />
+                  {t.bandTop}
+                </div>
+                <div className="amount num" id="m-amount">
+                  0,00 €
+                </div>
+                <div className="subs">
+                  {t.bandSubLabels.map((l, i) => (
+                    <div key={l}>
+                      <span className="l">{l}</span>
+                      <span className="num">{t.bandSubValues[i]}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </section>

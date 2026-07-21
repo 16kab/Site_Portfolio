@@ -31,7 +31,8 @@
 .mauni-showcase .m-hero { position: relative; min-height: 92vh; display: flex; align-items: flex-end; overflow: hidden; }
 .mauni-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .mauni-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,5,20,0.82), rgba(6,5,20,0.2) 42%, rgba(6,5,20,0.04) 70%, transparent); }
-.mauni-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; }
+.mauni-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: m-hero-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
+@keyframes m-hero-fade { from { opacity: 0; } to { opacity: 1; } }
 .mauni-showcase .m-hero .ey { display: flex; gap: 14px; flex-wrap: wrap; color: rgba(255,255,255,0.85); margin-bottom: 18px; }
 .mauni-showcase .m-hero h1 {
   font-family: var(--title-font); font-weight: 800; font-size: clamp(4rem, 15vw, 12rem);
@@ -92,7 +93,7 @@
 .mauni-showcase .gswitch { position: relative; display: inline-flex; border: 1px solid var(--portfolio-card-border); border-radius: 999px; padding: 3px; background: var(--portfolio-card-bg); font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; flex: 0 0 auto; }
 .mauni-showcase .gswitch .knob { position: absolute; top: 3px; left: 3px; width: calc(50% - 3px); bottom: 3px; border-radius: 999px; background: var(--portfolio-text-primary); transition: transform .3s cubic-bezier(.4,0,.2,1); z-index: 0; }
 .mauni-showcase .gswitch[data-mode="dark"] .knob { transform: translateX(100%); }
-.mauni-showcase .gswitch button { position: relative; z-index: 1; flex: 1 1 0; min-width: 84px; justify-content: center; border: none; background: none; color: var(--portfolio-text-muted); cursor: pointer; padding: 6px 14px; border-radius: 999px; display: inline-flex; gap: 6px; align-items: center; font: inherit; transition: color .25s ease; }
+.mauni-showcase .gswitch button { position: relative; z-index: 1; flex: 1 1 0; min-width: 84px; justify-content: center; white-space: nowrap; border: none; background: none; color: var(--portfolio-text-muted); cursor: pointer; padding: 6px 14px; border-radius: 999px; display: inline-flex; gap: 6px; align-items: center; font: inherit; transition: color .25s ease; }
 .mauni-showcase .gswitch button.on { color: var(--portfolio-bg); }
 .mauni-showcase .hwrap { position: relative; margin-top: clamp(20px, 3vw, 30px); }
 .mauni-showcase .hpin { position: sticky; top: var(--mtop); }
@@ -104,7 +105,7 @@
 .mauni-showcase .gitem .device .screen { height: 100%; aspect-ratio: 1290 / 2796; border-radius: 40px; }
 .mauni-showcase .gitem .device .screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .mauni-showcase .gitem .device .screen img.lyr { transition: opacity .5s ease; }
-.mauni-showcase .gitem .c { margin-top: 14px; font-size: 0.84rem; color: var(--portfolio-text-muted); text-align: center; max-width: 240px; }
+.mauni-showcase .gitem .c { margin-top: 14px; font-size: 0.72rem; color: var(--portfolio-text-muted); text-align: center; white-space: nowrap; }
 .mauni-showcase .gitem .c b { color: var(--portfolio-text-primary); font-family: var(--title-font); font-weight: 600; }
 .mauni-showcase .hbar { display: flex; align-items: center; gap: 12px; color: var(--portfolio-text-muted); font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; flex: 1; min-width: 0; }
 .mauni-showcase .hbar .tk { flex: 1; max-width: 300px; height: 2px; background: var(--portfolio-card-border); border-radius: 2px; position: relative; }
@@ -130,6 +131,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .mauni-showcase .reveal { opacity: 1 !important; transform: none !important; }
-  .mauni-showcase .m-hero h1 .ch { transform: none !important; }
+  .mauni-showcase .m-hero .in { animation: none !important; }
   .mauni-showcase .illuminate .wd { opacity: 1 !important; }
 }

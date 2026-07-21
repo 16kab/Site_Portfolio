@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { DEFAULT_LANG, isLang, type Lang, LANG_STORAGE_KEY } from './types';
@@ -26,12 +27,41 @@ function readInitialLang(): Lang {
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(readInitialLang);
 
+  // Position de défilement à restaurer après un changement de langue.
+  const pendingScrollRef = useRef<number | null>(null);
+  const didMountRef = useRef(false);
+
   // Reflète la langue sur <html lang> (SEO + lecteurs d'écran)
   useEffect(() => {
     document.documentElement.setAttribute('lang', lang);
   }, [lang]);
 
+  // Préserve la position de défilement au changement de langue. Le contenu
+  // routé est remonté (`key={lang}` dans App) et plusieurs effets remettent
+  // `body.scrollTop = 0` (ScrollToTop, page Détail…). Ce provider étant au-
+  // dessus du sous-arbre remonté, son effet s'exécute APRÈS ceux des enfants
+  // (descendants d'abord), dans le même commit : la restauration gagne, sans
+  // saut visible. Le tout premier rendu (chargement) n'est pas concerné.
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    const y = pendingScrollRef.current;
+    if (y == null) return;
+    pendingScrollRef.current = null;
+    // Après deux frames : le sous-arbre remonté a fini sa mise en page (la
+    // galerie fixe le pin, les images chargent) et les resets scrollTop=0
+    // synchrones des enfants sont passés — la restauration tient.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        document.body.scrollTop = y;
+      }),
+    );
+  }, [lang]);
+
   const setLang = useCallback((next: Lang) => {
+    pendingScrollRef.current = document.body.scrollTop;
     setLangState(next);
     try {
       window.localStorage.setItem(LANG_STORAGE_KEY, next);
@@ -41,6 +71,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const toggleLang = useCallback(() => {
+    pendingScrollRef.current = document.body.scrollTop;
     setLangState((current) => {
       const next: Lang = current === 'fr' ? 'en' : 'fr';
       try {
