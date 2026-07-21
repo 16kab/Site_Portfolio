@@ -82,7 +82,11 @@ function RollingText({
               isInView ? ENTRY_ANIMATION.animate : ENTRY_ANIMATION.initial
             }
             className="absolute inline-block backface-hidden origin-[50%_25%]"
-            initial={ENTRY_ANIMATION.initial}
+            // Pas d'animation au montage : seule la bascule isInView (survol /
+            // apparition au scroll) anime. Évite que les lettres nouvellement
+            // montées lors d'un changement de texte (ex. bascule FR/EN)
+            // rejouent l'animation.
+            initial={false}
             transition={{
               ...transition,
               delay: isInView
@@ -96,7 +100,7 @@ function RollingText({
           <motion.span
             animate={isInView ? EXIT_ANIMATION.animate : EXIT_ANIMATION.initial}
             className="absolute inline-block backface-hidden origin-[50%_100%]"
-            initial={EXIT_ANIMATION.initial}
+            initial={false}
             transition={{
               ...transition,
               delay: isInView

@@ -341,9 +341,8 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
           </nav>
 
           {/* Right side container - Mobile/Tablet only */}
-          <div className="lg:hidden absolute right-14 top-1/2 -translate-y-1/2 flex items-center gap-1">
-            <LanguageToggle isScrolled={isScrolled} />
-            {/* Theme Toggler - Mobile */}
+          <div className="lg:hidden absolute right-14 top-1/2 -translate-y-1/2 flex items-center gap-3">
+            {/* Theme Toggler - Mobile (le switch de langue est dans le menu) */}
             <AnimatedThemeToggler isScrolled={isScrolled} />
           </div>
 
@@ -458,6 +457,16 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                   {t.contact}
                 </motion.span>
               </Link>
+
+              {/* Bascule de langue — dans le menu en mobile */}
+              <motion.div
+                className="pointer-events-auto mt-4 -ml-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <LanguageToggle color="#EAEAEA" fontSize="22px" />
+              </motion.div>
             </motion.nav>
           </>
         )}

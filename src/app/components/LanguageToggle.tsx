@@ -13,15 +13,22 @@ const LABELS = {
  */
 export function LanguageToggle({
   isScrolled = false,
+  color,
+  fontSize = '13px',
+  className = '',
 }: {
   isScrolled?: boolean;
+  /** Force une couleur (ex. menu mobile sur fond sombre). */
+  color?: string;
+  fontSize?: string;
+  className?: string;
 }) {
   const { lang, toggleLang } = useLang();
   const [isHovered, setIsHovered] = useState(false);
 
-  const color = isScrolled
-    ? 'var(--header-text-scrolled)'
-    : 'var(--header-text-default)';
+  const resolvedColor =
+    color ??
+    (isScrolled ? 'var(--header-text-scrolled)' : 'var(--header-text-default)');
 
   // Opacité de la langue inactive : 0.4 au repos, remontée au survol
   const inactiveOpacity = isHovered ? 0.75 : 0.4;
@@ -31,12 +38,12 @@ export function LanguageToggle({
       type="button"
       onClick={toggleLang}
       aria-label={LABELS[lang].aria}
-      className="p-2 rounded-md transition-colors duration-200 cursor-pointer flex items-center gap-1"
+      className={`p-2 rounded-md transition-colors duration-200 cursor-pointer flex items-center gap-1 ${className}`}
       style={{
-        color,
+        color: resolvedColor,
         fontFamily: 'Manrope, sans-serif',
         fontWeight: 600,
-        fontSize: '13px',
+        fontSize,
         letterSpacing: '0.04em',
       }}
       onMouseEnter={(e) => {
