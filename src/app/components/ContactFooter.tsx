@@ -30,7 +30,7 @@ export default function ContactFooter() {
     >
       <div className="mx-auto px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24 w-full max-w-[1920px] mx-[0px] mt-[0px] mb-[50px]">
         <div
-          className="relative overflow-hidden h-[220px] md:h-[350px]"
+          className="relative overflow-hidden h-[200px] md:h-[280px]"
           style={{
             backgroundColor: 'var(--portfolio-card-bg)',
             border: '1px solid var(--portfolio-card-border)',
@@ -119,15 +119,14 @@ export default function ContactFooter() {
                 : { filter: 'blur(20px)', opacity: 0 }
             }
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.4 }}
-            className="hidden md:flex absolute left-0 right-0 items-center justify-center whitespace-nowrap"
+            className="contact-big hidden md:flex absolute left-0 right-0 items-center justify-center whitespace-nowrap"
             style={{
               fontFamily: 'Manrope, sans-serif',
               fontWeight: 800,
               fontSize: 'clamp(140px, 21vw, 400px)',
               lineHeight: '1',
               letterSpacing: '-0.05em',
-              color: 'var(--portfolio-text-large)',
-              bottom: 'clamp(-185px, -23vw, -420px)',
+              bottom: 'clamp(-72px, -9.5vw, -200px)',
               overflow: 'visible',
               pointerEvents: 'none',
               position: 'relative',

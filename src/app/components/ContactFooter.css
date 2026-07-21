@@ -1,3 +1,14 @@
+/* Mot géant « CONTACT » coupé par le cadre. En thème clair, la version
+   quasi-noire rendait les coupures (gauche / bas) trop franches : on
+   l'atténue en un gris doux pour que les bords soient plus discrets. Le
+   thème sombre garde le token clair (déjà doux sur fond foncé). */
+.contact-big {
+  color: var(--portfolio-text-large);
+}
+html:not(.dark) .contact-big {
+  color: #DBDBDB;
+}
+
 /* Coordonnées (mail / téléphone) du bandeau contact.
    Survol épuré : l'icône se soulève avec un léger rebond, la couleur
    s'éclaircit vers la couleur principale. */
