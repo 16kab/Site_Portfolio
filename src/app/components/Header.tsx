@@ -31,7 +31,12 @@ const STRINGS = {
 // Lien react-router animable par motion (couleurs du bouton contact)
 const MotionLink = motion.create(Link);
 
-export type HeaderMenuItem = 'projets' | 'apropos' | 'contact' | 'theme';
+export type HeaderMenuItem =
+  | 'projets'
+  | 'apropos'
+  | 'contact'
+  | 'lang'
+  | 'theme';
 
 export const getMenuItemOpacity = (
   hoveredItem: HeaderMenuItem | null,
@@ -309,7 +314,17 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 </MotionLink>
               </motion.div>
 
-              <LanguageToggle isScrolled={isScrolled} />
+              <motion.div
+                data-menu-item="lang"
+                className="transition-opacity duration-300"
+                style={{ opacity: getMenuItemOpacity(hoveredItem, 'lang') }}
+                onMouseEnter={() => handleMouseEnter('lang')}
+                onMouseLeave={handleMouseLeave}
+                onFocus={() => handleMouseEnter('lang')}
+                onBlur={handleMouseLeave}
+              >
+                <LanguageToggle isScrolled={isScrolled} />
+              </motion.div>
 
               <motion.div
                 data-menu-item="theme"
