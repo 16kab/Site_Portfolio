@@ -539,6 +539,7 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
                           </figcaption>
                         </figure>
                       ))}
+                      <div className="gspacer" aria-hidden="true" />
                     </div>
                   </div>
                 </div>
