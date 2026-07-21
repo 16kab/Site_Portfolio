@@ -124,11 +124,11 @@ export default function ContactFooter() {
             style={{
               fontFamily: 'Manrope, sans-serif',
               fontWeight: 800,
-              fontSize: 'clamp(180px, 27vw, 520px)',
+              fontSize: 'clamp(160px, 24vw, 460px)',
               lineHeight: '1',
               letterSpacing: '-0.05em',
               color: 'var(--portfolio-text-large)',
-              bottom: 'clamp(-110px, -15vw, -280px)',
+              bottom: 'clamp(-96px, -13vw, -240px)',
               overflow: 'visible',
               pointerEvents: 'none',
               position: 'relative',

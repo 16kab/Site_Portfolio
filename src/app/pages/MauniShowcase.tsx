@@ -283,6 +283,8 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
         hwrap.style.height = 'auto';
         htrack.style.transform = 'none';
         hview.style.width = '';
+        hview.style.webkitMaskImage = '';
+        hview.style.maskImage = '';
         pinned = false;
       }
     }
@@ -298,6 +300,12 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
       p = Math.max(0, Math.min(1, p));
       htrack.style.transform = `translateX(${(-p * D).toFixed(1)}px)`;
       hbar.style.width = 6 + p * 94 + '%';
+      // Le dégradé de droite se retire en fin de course pour révéler
+      // entièrement la dernière capture (plus « derrière le dégradé »).
+      const fade = 88 + 12 * Math.max(0, Math.min(1, (p - 0.72) / 0.28));
+      const mask = `linear-gradient(to right, #000 0%, #000 ${fade.toFixed(1)}%, transparent 100%)`;
+      hview.style.webkitMaskImage = mask;
+      hview.style.maskImage = mask;
     }
 
     // ── Zoom de l'image hero au scroll (échelle 1 → 1.15) ────────

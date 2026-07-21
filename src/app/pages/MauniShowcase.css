@@ -100,8 +100,8 @@
 .mauni-showcase .hwrap { position: relative; margin-top: clamp(20px, 3vw, 30px); }
 .mauni-showcase .hpin { position: sticky; top: var(--mtop); }
 .mauni-showcase .gbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 0 12px; }
-.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 93%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 93%, transparent 100%); }
-.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; will-change: transform; padding-right: 7vw; }
+.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); }
+.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; will-change: transform; padding-right: 13vw; }
 .mauni-showcase .gitem { flex: 0 0 auto; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .mauni-showcase .gitem .gshot { height: calc(100% - 44px); display: block; border: 0; background: none; padding: 0; margin: 0; font: inherit; color: inherit; cursor: zoom-in; border-radius: 50px; }
 .mauni-showcase .gitem .gshot:focus-visible { outline: 2px solid var(--mauni-accent); outline-offset: 4px; }
