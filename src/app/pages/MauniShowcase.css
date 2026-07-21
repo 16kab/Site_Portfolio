@@ -28,8 +28,10 @@
 .mauni-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO : image de couverture (cible du morph carte→détail) ---- */
-.mauni-showcase .m-hero { position: relative; min-height: 92vh; display: flex; align-items: flex-end; overflow: hidden; }
-.mauni-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+/* Hauteur = 100vh pour coïncider avec la fin du morph carte→détail (plein
+   écran). L'image se met à l'échelle au scroll (transform, origine centre). */
+.mauni-showcase .m-hero { position: relative; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+.mauni-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; will-change: transform; }
 .mauni-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,5,20,0.82), rgba(6,5,20,0.2) 42%, rgba(6,5,20,0.04) 70%, transparent); }
 .mauni-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: m-hero-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
 @keyframes m-hero-fade { from { opacity: 0; } to { opacity: 1; } }
@@ -98,13 +100,16 @@
 .mauni-showcase .hwrap { position: relative; margin-top: clamp(20px, 3vw, 30px); }
 .mauni-showcase .hpin { position: sticky; top: var(--mtop); }
 .mauni-showcase .gbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 0 12px; }
-.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 86%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 86%, transparent 100%); }
-.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; will-change: transform; padding-right: 16vw; }
+.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); }
+.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; will-change: transform; padding-right: 26vw; }
 .mauni-showcase .gitem { flex: 0 0 auto; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.mauni-showcase .gitem .device { height: calc(100% - 44px); border-radius: 50px; }
+.mauni-showcase .gitem .gshot { height: calc(100% - 44px); display: block; border: 0; background: none; padding: 0; margin: 0; font: inherit; color: inherit; cursor: zoom-in; border-radius: 50px; }
+.mauni-showcase .gitem .gshot:focus-visible { outline: 2px solid var(--mauni-accent); outline-offset: 4px; }
+.mauni-showcase .gitem .device { height: 100%; border-radius: 50px; }
 .mauni-showcase .gitem .device .screen { height: 100%; aspect-ratio: 1290 / 2796; border-radius: 40px; }
 .mauni-showcase .gitem .device .screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .mauni-showcase .gitem .device .screen img.lyr { transition: opacity .5s ease; }
+.mauni-showcase .gitem .device .screen img.d { opacity: 0; }
 .mauni-showcase .gitem .c { margin-top: 14px; font-size: 0.72rem; color: var(--portfolio-text-muted); text-align: center; white-space: nowrap; }
 .mauni-showcase .gitem .c b { color: var(--portfolio-text-primary); font-family: var(--title-font); font-weight: 600; }
 .mauni-showcase .hbar { display: flex; align-items: center; gap: 12px; color: var(--portfolio-text-muted); font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; flex: 1; min-width: 0; }

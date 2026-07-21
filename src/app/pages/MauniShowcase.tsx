@@ -1,8 +1,9 @@
 import '@fontsource-variable/bricolage-grotesque';
 import './MauniShowcase.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
+import { ImageLightbox } from '../components/ImageLightbox';
 import { scrollBodyTo } from '../utils/scrollBodyTo';
 import { useLang, useT } from '../i18n';
 import type { Projet } from '../data/projetsData';
@@ -34,6 +35,7 @@ const STRINGS = {
     defiler: 'Défiler',
     clair: 'Clair',
     sombre: 'Sombre',
+    enlarge: (name: string) => `Agrandir la capture « ${name} »`,
     s1lead: { pre: "Un découvert n'est pas un manque d'argent : c'est ", k: 'un manque de visibilité.', post: '' } as Lead,
     s1note: "Mauni remplace l'angoisse par une lecture claire — ce qui rentre, ce qui sort, ce qu'il reste.",
     bandTop: 'Compte courant · Connecté',
@@ -66,6 +68,7 @@ const STRINGS = {
     defiler: 'Scroll',
     clair: 'Light',
     sombre: 'Dark',
+    enlarge: (name: string) => `Enlarge the "${name}" screen`,
     s1lead: { pre: "An overdraft isn't a lack of money: it's ", k: 'a lack of visibility.', post: '' } as Lead,
     s1note: "Mauni replaces anxiety with a clear read — what comes in, what goes out, what's left.",
     bandTop: 'Checking account · Connected',
@@ -96,12 +99,27 @@ const GALLERY = [
   { src: parametres, dark: null },
 ];
 
+// Découpe un segment en mots enveloppés dans des <span.wd> (JSX, pas de
+// mutation du DOM), pour que l'illumination survive aux re-rendus (React
+// reste propriétaire des nœuds ; l'opacité est posée en style inline).
+function renderWords(text: string, accent: boolean, keyPrefix: string) {
+  return text.split(/(\s+)/).map((tok, i) => {
+    if (tok === '') return null;
+    if (/^\s+$/.test(tok)) return tok;
+    return (
+      <span key={keyPrefix + i} className={accent ? 'wd k' : 'wd'}>
+        {tok}
+      </span>
+    );
+  });
+}
+
 function Lead({ id, lead }: { id: string; lead: Lead }) {
   return (
     <p className="lead illuminate title" id={id}>
-      {lead.pre}
-      <span className="k">{lead.k}</span>
-      {lead.post}
+      {renderWords(lead.pre, false, 'p')}
+      {renderWords(lead.k, true, 'k')}
+      {renderWords(lead.post, false, 'o')}
     </p>
   );
 }
@@ -110,6 +128,7 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
   const t = useT(STRINGS);
   const { lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
+  const [lbIndex, setLbIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -122,31 +141,8 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
 
     // ── Illumination mot par mot de tous les titres ──────────────
     const illum: { el: HTMLElement; sp: HTMLElement[] }[] = [];
-    function splitWords(el: HTMLElement) {
-      const nodes = Array.prototype.slice.call(el.childNodes) as ChildNode[];
-      el.textContent = '';
-      const spans: HTMLElement[] = [];
-      nodes.forEach((node) => {
-        const accent =
-          node.nodeType === 1 &&
-          (node as HTMLElement).classList.contains('k');
-        (node.textContent || '').split(/(\s+)/).forEach((tk) => {
-          if (tk === '') return;
-          if (/^\s+$/.test(tk)) {
-            el.appendChild(document.createTextNode(tk));
-            return;
-          }
-          const s = document.createElement('span');
-          s.className = 'wd' + (accent ? ' k' : '');
-          s.textContent = tk;
-          el.appendChild(s);
-          spans.push(s);
-        });
-      });
-      return spans;
-    }
     root.querySelectorAll<HTMLElement>('.illuminate').forEach((el) => {
-      const sp = splitWords(el);
+      const sp = Array.from(el.querySelectorAll<HTMLElement>('.wd'));
       if (!reduce) sp.forEach((s) => (s.style.opacity = '0.16'));
       illum.push({ el, sp });
     });
@@ -304,10 +300,21 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
       hbar.style.width = 16 + p * 68 + '%';
     }
 
+    // ── Zoom de l'image hero au scroll (échelle 1 → 1.15) ────────
+    const cover = root.querySelector<HTMLElement>('.m-hero .cover');
+    const heroEl = root.querySelector<HTMLElement>('.m-hero');
+    const heroZoom = () => {
+      if (!cover || !heroEl || reduce) return;
+      const h = heroEl.offsetHeight || 1;
+      const p = Math.max(0, Math.min(1, document.body.scrollTop / h));
+      cover.style.transform = `scale(${(1 + p * 0.15).toFixed(4)})`;
+    };
+
     function setup() {
       measure();
       hUpdate();
       litUpdate();
+      heroZoom();
     }
     setup();
     // Re-mesure après chargement des captures (dimensions correctes)
@@ -331,6 +338,7 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
         requestAnimationFrame(() => {
           litUpdate();
           hUpdate();
+          heroZoom();
           ticking = false;
         });
         ticking = true;
@@ -498,23 +506,25 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
                     <div className="htrack" id="m-htrack">
                       {GALLERY.map((g, i) => (
                         <figure className="gitem" key={g.src}>
-                          <div className="device">
-                            <div className="screen">
-                              {g.dark ? (
-                                <>
-                                  <img className="lyr l" src={g.src} alt={t.screens[i].b} />
-                                  <img
-                                    className="lyr d"
-                                    src={g.dark}
-                                    alt=""
-                                    style={{ opacity: 0 }}
-                                  />
-                                </>
-                              ) : (
-                                <img src={g.src} alt={t.screens[i].b} />
-                              )}
+                          <button
+                            type="button"
+                            className="gshot"
+                            aria-label={t.enlarge(t.screens[i].b)}
+                            onClick={() => setLbIndex(i)}
+                          >
+                            <div className="device">
+                              <div className="screen">
+                                {g.dark ? (
+                                  <>
+                                    <img className="lyr l" src={g.src} alt={t.screens[i].b} />
+                                    <img className="lyr d" src={g.dark} alt="" />
+                                  </>
+                                ) : (
+                                  <img src={g.src} alt={t.screens[i].b} />
+                                )}
+                              </div>
                             </div>
-                          </div>
+                          </button>
                           <figcaption className="c">
                             <b>{t.screens[i].b}</b>
                             {t.screens[i].r}
@@ -572,6 +582,14 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
       </div>
 
       <ContactFooter />
+
+      {lbIndex !== null && (
+        <ImageLightbox
+          images={GALLERY.map((g) => g.src)}
+          currentIndex={lbIndex}
+          onClose={() => setLbIndex(null)}
+        />
+      )}
     </div>
   );
 }
