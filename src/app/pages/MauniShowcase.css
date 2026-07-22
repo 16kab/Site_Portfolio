@@ -100,7 +100,9 @@
 .mauni-showcase .hwrap { position: relative; margin-top: clamp(20px, 3vw, 30px); }
 .mauni-showcase .hpin { position: sticky; top: var(--mtop); }
 .mauni-showcase .gbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 0 12px; }
-.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow: hidden; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); }
+/* Découpe horizontale uniquement : le carrousel est coupé à gauche/droite,
+   mais l'ombre portée des téléphones déborde verticalement sans être coupée. */
+.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow-x: clip; overflow-y: visible; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); }
 .mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; }
 /* Espace vide APRÈS la dernière capture. En flex, padding-right est ignoré du
    scrollWidth quand ça déborde : on utilise donc un vrai élément d'espacement. */
