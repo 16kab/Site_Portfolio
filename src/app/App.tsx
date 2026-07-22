@@ -14,7 +14,7 @@ import SplashScreen from './components/SplashScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import { ROUTES } from './config';
 import { useIsDarkMode } from './hooks';
-import { LanguageProvider, useLang, useT } from './i18n';
+import { LanguageProvider, useT } from './i18n';
 
 function SkipLink() {
   const t = useT({
@@ -78,14 +78,13 @@ export function AppContent({ showSplash }: { showSplash: boolean }) {
 }
 
 /**
- * Rejoue l'animation d'arrivée (reveals blur-in, Shuffle, etc.) à chaque
- * changement de langue : `key={lang}` remonte le contenu routé, ce qui relance
- * naturellement les animations de montage — comme quand on arrive sur le site.
- * Le routeur (au-dessus) n'est pas remonté : l'historique est préservé.
+ * Le contenu routé n'est PAS remonté au changement de langue : `useT` lit la
+ * langue via le contexte, donc le texte se met à jour en place. On a retiré le
+ * `key={lang}` d'origine (qui remontait tout) car il remettait le défilement en
+ * haut de page et provoquait un flash visible sur les pages longues.
  */
 function LocalizedAppContent({ showSplash }: { showSplash: boolean }) {
-  const { lang } = useLang();
-  return <AppContent key={lang} showSplash={showSplash} />;
+  return <AppContent showSplash={showSplash} />;
 }
 
 export default function App() {

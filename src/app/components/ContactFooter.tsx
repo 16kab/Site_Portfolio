@@ -1,3 +1,4 @@
+import './ContactFooter.css';
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'motion/react';
 import { MessageCircle, Mail, Phone } from 'lucide-react';
@@ -29,7 +30,7 @@ export default function ContactFooter() {
     >
       <div className="mx-auto px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24 w-full max-w-[1920px] mx-[0px] mt-[0px] mb-[50px]">
         <div
-          className="relative overflow-hidden h-[220px] md:h-[350px]"
+          className="relative overflow-hidden h-[200px] md:h-[280px]"
           style={{
             backgroundColor: 'var(--portfolio-card-bg)',
             border: '1px solid var(--portfolio-card-border)',
@@ -50,22 +51,20 @@ export default function ContactFooter() {
             >
               <a
                 href={CONTACT_EMAIL_HREF}
-                className="flex items-center gap-2 transition-colors cursor-pointer"
-                style={{
-                  color: 'var(--portfolio-text-secondary)',
-                }}
+                className="contact-coord flex items-center gap-2 cursor-pointer"
               >
-                <Mail size={16} />
+                <span className="contact-coord__ic">
+                  <Mail size={16} />
+                </span>
                 <p>{SITE_CONTACT.email}</p>
               </a>
               <a
                 href={SITE_CONTACT.phoneHref}
-                className="flex items-center gap-2 transition-colors cursor-pointer"
-                style={{
-                  color: 'var(--portfolio-text-description)',
-                }}
+                className="contact-coord contact-coord--tel flex items-center gap-2 cursor-pointer"
               >
-                <Phone size={16} />
+                <span className="contact-coord__ic">
+                  <Phone size={16} />
+                </span>
                 <p>{SITE_CONTACT.phoneDisplay}</p>
               </a>
             </div>
@@ -120,15 +119,14 @@ export default function ContactFooter() {
                 : { filter: 'blur(20px)', opacity: 0 }
             }
             transition={{ duration: 0.8, ease: 'easeOut', delay: 0.4 }}
-            className="hidden md:flex absolute left-0 right-0 items-center justify-center whitespace-nowrap"
+            className="contact-big hidden md:flex absolute left-0 right-0 items-center justify-center whitespace-nowrap"
             style={{
               fontFamily: 'Manrope, sans-serif',
-              fontWeight: 700,
-              fontSize: 'clamp(120px, 18vw, 350px)',
+              fontWeight: 800,
+              fontSize: 'clamp(140px, 21vw, 400px)',
               lineHeight: '1',
-              letterSpacing: '0px',
-              color: 'var(--portfolio-text-large)',
-              bottom: 'clamp(-80px, -11.5vw, -180px)',
+              letterSpacing: '-0.05em',
+              bottom: 'clamp(-72px, -9.5vw, -200px)',
               overflow: 'visible',
               pointerEvents: 'none',
               position: 'relative',

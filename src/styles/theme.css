@@ -1,6 +1,12 @@
 @custom-variant dark (&:is(.dark *));
 
-/* View Transition API - Required for AnimatedThemeToggler */
+/* View Transition API - Required for AnimatedThemeToggler.
+   On fige TOUTES les animations par défaut (group/image-pair/old/new) pour
+   que SEULE l'animation clip-path (posée en JS sur ::view-transition-new)
+   s'exécute : la révélation part toujours du bouton, même sur les pages
+   complexes (sticky, transform, mask…) où le morph par défaut la décalait. */
+::view-transition-group(root),
+::view-transition-image-pair(root),
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
