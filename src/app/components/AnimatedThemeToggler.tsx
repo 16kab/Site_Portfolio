@@ -1,6 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  type MouseEvent as ReactMouseEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { flushSync } from 'react-dom';
 import { motion, type HTMLMotionProps } from 'motion/react';
@@ -45,13 +51,23 @@ export const AnimatedThemeToggler = ({
     return () => observer.disconnect();
   }, []);
 
-  const toggleTheme = useCallback(() => {
-    const button = buttonRef.current;
-    if (!button) return;
-
-    const { top, left, width, height } = button.getBoundingClientRect();
-    const x = left + width / 2;
-    const y = top + height / 2;
+  const toggleTheme = useCallback(
+    (event?: ReactMouseEvent<HTMLButtonElement>) => {
+    // Origine du cercle : le point réellement cliqué (fiable dans tous les
+    // cas), avec repli sur le centre du bouton pour l'activation clavier.
+    let x: number;
+    let y: number;
+    if (event && (event.clientX || event.clientY)) {
+      x = event.clientX;
+      y = event.clientY;
+    } else if (buttonRef.current) {
+      const r = buttonRef.current.getBoundingClientRect();
+      x = r.left + r.width / 2;
+      y = r.top + r.height / 2;
+    } else {
+      x = window.innerWidth;
+      y = 0;
+    }
     const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
     const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
     const maxRadius = Math.hypot(
