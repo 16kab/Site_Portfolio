@@ -79,7 +79,7 @@
 .mauni-showcase .note { color: var(--portfolio-text-description); font-size: 1.06rem; max-width: 46ch; margin: 22px 0 0; line-height: 1.6; }
 
 /* ---- Bandeau « solde » (dégradé Mauni) ---- */
-.mauni-showcase .band { background: var(--mauni-grad); color: #fff; border-radius: 22px; padding: clamp(28px, 5vw, 52px); margin-top: clamp(30px, 5vw, 52px); position: relative; overflow: hidden; }
+.mauni-showcase .band { background: var(--mauni-grad); color: #fff; border-radius: 22px; padding: clamp(28px, 5vw, 52px); margin-top: clamp(88px, 9vw, 116px); position: relative; overflow: hidden; }
 .mauni-showcase .band .top { font-family: 'Manrope', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.82); display: flex; align-items: center; gap: 10px; }
 .mauni-showcase .band .dot { width: 8px; height: 8px; border-radius: 999px; background: #34d3ac; box-shadow: 0 0 0 4px rgba(52,211,172,0.25); }
 .mauni-showcase .band .amount { font-family: var(--title-font); font-weight: 680; font-size: clamp(3rem, 11vw, 6.4rem); letter-spacing: -0.03em; line-height: 1; margin: 12px 0 0; font-variant-numeric: tabular-nums; }
@@ -99,7 +99,12 @@
 .mauni-showcase .gswitch button.on { color: var(--portfolio-bg); }
 .mauni-showcase .hwrap { position: relative; margin-top: clamp(20px, 3vw, 30px); }
 .mauni-showcase .hpin { position: sticky; top: var(--mtop); }
-.mauni-showcase .gbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 5vw 12px 0; }
+/* Bord droit du switch aligné sur le dernier élément du menu (le sélecteur de
+   thème du header) : padding du header (px-16/20/24 = 64/80/96) + le retrait
+   du bloc nav (right-[22.58px]) ≈ +24px. */
+.mauni-showcase .gbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 88px 12px 0; }
+@media (min-width: 1024px) { .mauni-showcase .gbar { padding-right: 104px; } }
+@media (min-width: 1280px) { .mauni-showcase .gbar { padding-right: 120px; } }
 .mauni-showcase .gfallback .gbar { padding-right: 0; }
 /* Découpe horizontale uniquement (overflow-x: clip) : le carrousel est coupé
    à gauche/droite, mais l'ombre portée des téléphones déborde verticalement
@@ -116,10 +121,12 @@
   background: linear-gradient(to right, transparent, var(--portfolio-bg));
   pointer-events: none;
   z-index: 3;
-  /* Bord bas adouci : le calque se dissout au lieu de finir en angle droit
-     par-dessus l'ombre portée qui déborde. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
+  /* Descend sous la galerie pour couvrir la légende ET toute l'ombre portée
+     qui déborde ; se dissout tout en bas (au-delà de l'ombre) pour ne pas
+     finir en angle droit. */
+  bottom: -80px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
 }
 /* Fondu de gauche : n'apparaît qu'au défilement (opacité pilotée en JS via
    --m-lfade), pour ne pas estomper la première capture au tout début. */
@@ -134,8 +141,9 @@
   pointer-events: none;
   z-index: 3;
   opacity: var(--m-lfade, 0);
-  -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
+  bottom: -80px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
 }
 .mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; }
 /* Espace vide APRÈS la dernière capture. En flex, padding-right est ignoré du
