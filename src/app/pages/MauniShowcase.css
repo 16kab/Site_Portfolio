@@ -115,6 +115,10 @@
   background: linear-gradient(to right, transparent, var(--portfolio-bg));
   pointer-events: none;
   z-index: 3;
+  /* Bord bas adouci : le calque se dissout au lieu de finir en angle droit
+     par-dessus l'ombre portée qui déborde. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
 }
 /* Fondu de gauche : n'apparaît qu'au défilement (opacité pilotée en JS via
    --m-lfade), pour ne pas estomper la première capture au tout début. */
@@ -129,6 +133,8 @@
   pointer-events: none;
   z-index: 3;
   opacity: var(--m-lfade, 0);
+  -webkit-mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 84%, transparent 100%);
 }
 .mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; }
 /* Espace vide APRÈS la dernière capture. En flex, padding-right est ignoré du
