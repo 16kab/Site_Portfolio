@@ -100,9 +100,22 @@
 .mauni-showcase .hwrap { position: relative; margin-top: clamp(20px, 3vw, 30px); }
 .mauni-showcase .hpin { position: sticky; top: var(--mtop); }
 .mauni-showcase .gbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 0 12px; }
-/* Découpe horizontale uniquement : le carrousel est coupé à gauche/droite,
-   mais l'ombre portée des téléphones déborde verticalement sans être coupée. */
-.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow-x: clip; overflow-y: visible; -webkit-mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); mask-image: linear-gradient(to right, #000 0%, #000 88%, transparent 100%); }
+/* Découpe horizontale uniquement (overflow-x: clip) : le carrousel est coupé
+   à gauche/droite, mais l'ombre portée des téléphones déborde verticalement
+   sans être coupée. Le fondu de droite se fait via ::after (calque dégradé),
+   PAS via mask-image dont le mask-clip:border-box rognerait l'ombre. */
+.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow-x: clip; overflow-y: visible; }
+.mauni-showcase .hviewport::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 16%;
+  background: linear-gradient(to right, transparent, var(--portfolio-bg));
+  pointer-events: none;
+  z-index: 3;
+}
 .mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; }
 /* Espace vide APRÈS la dernière capture. En flex, padding-right est ignoré du
    scrollWidth quand ça déborde : on utilise donc un vrai élément d'espacement. */
@@ -120,7 +133,8 @@
 .mauni-showcase .hbar { display: flex; align-items: center; gap: 12px; color: var(--portfolio-text-muted); font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; flex: 1; min-width: 0; }
 .mauni-showcase .hbar .tk { flex: 1; max-width: 300px; height: 2px; background: var(--portfolio-card-border); border-radius: 2px; position: relative; }
 .mauni-showcase .hbar .tk i { position: absolute; left: 0; top: 0; height: 100%; width: 16%; background: var(--mauni-accent); border-radius: 2px; }
-.mauni-showcase .gfallback .hviewport { height: auto; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 14px; scrollbar-width: none; cursor: grab; -webkit-mask-image: none; mask-image: none; }
+.mauni-showcase .gfallback .hviewport { height: auto; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 0 44px; scrollbar-width: none; cursor: grab; }
+.mauni-showcase .gfallback .hviewport::after { display: none; }
 .mauni-showcase .gfallback .hviewport::-webkit-scrollbar { display: none; }
 .mauni-showcase .gfallback .gitem { height: min(74vh, 600px); scroll-snap-align: start; }
 .mauni-showcase .gfallback .htrack { transform: none !important; padding-right: 8px; }
