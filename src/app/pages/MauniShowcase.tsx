@@ -264,6 +264,7 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
     const hview = root.querySelector<HTMLElement>('#m-hviewport');
     const htrack = root.querySelector<HTMLElement>('#m-htrack');
     const hbar = root.querySelector<HTMLElement>('#m-hbarfill');
+    const gbar = root.querySelector<HTMLElement>('.gbar');
     let pinned = false;
     let D = 0;
     const pinModeOn = () =>
@@ -275,6 +276,13 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
         hview.style.width = '';
         const left = hview.getBoundingClientRect().left;
         hview.style.width = window.innerWidth - left + 'px';
+        // La barre (Défiler + switch) déborde jusqu'au bord droit comme la
+        // galerie ; le switch se cale ainsi à droite au max (marge via CSS).
+        if (gbar) {
+          gbar.style.width = '';
+          gbar.style.width =
+            window.innerWidth - gbar.getBoundingClientRect().left + 'px';
+        }
         D = Math.max(0, htrack.scrollWidth - hview.clientWidth);
         hwrap.style.height = hpin.offsetHeight + D + 'px';
         pinned = true;
@@ -283,6 +291,7 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
         hwrap.style.height = 'auto';
         htrack.style.transform = 'none';
         hview.style.width = '';
+        if (gbar) gbar.style.width = '';
         pinned = false;
       }
     }
