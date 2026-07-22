@@ -116,6 +116,20 @@
   pointer-events: none;
   z-index: 3;
 }
+/* Fondu de gauche : n'apparaît qu'au défilement (opacité pilotée en JS via
+   --m-lfade), pour ne pas estomper la première capture au tout début. */
+.mauni-showcase .hviewport::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 16%;
+  background: linear-gradient(to right, var(--portfolio-bg), transparent);
+  pointer-events: none;
+  z-index: 3;
+  opacity: var(--m-lfade, 0);
+}
 .mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; }
 /* Espace vide APRÈS la dernière capture. En flex, padding-right est ignoré du
    scrollWidth quand ça déborde : on utilise donc un vrai élément d'espacement. */
@@ -134,7 +148,8 @@
 .mauni-showcase .hbar .tk { flex: 1; max-width: 300px; height: 2px; background: var(--portfolio-card-border); border-radius: 2px; position: relative; }
 .mauni-showcase .hbar .tk i { position: absolute; left: 0; top: 0; height: 100%; width: 16%; background: var(--mauni-accent); border-radius: 2px; }
 .mauni-showcase .gfallback .hviewport { height: auto; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 0 44px; scrollbar-width: none; cursor: grab; }
-.mauni-showcase .gfallback .hviewport::after { display: none; }
+.mauni-showcase .gfallback .hviewport::after,
+.mauni-showcase .gfallback .hviewport::before { display: none; }
 .mauni-showcase .gfallback .hviewport::-webkit-scrollbar { display: none; }
 .mauni-showcase .gfallback .gitem { height: min(74vh, 600px); scroll-snap-align: start; }
 .mauni-showcase .gfallback .htrack { transform: none !important; padding-right: 8px; }

@@ -298,6 +298,8 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
       p = Math.max(0, Math.min(1, p));
       htrack.style.transform = `translateX(${(-p * D).toFixed(1)}px)`;
       hbar.style.width = 6 + p * 94 + '%';
+      // Fondu de gauche : apparaît dès qu'on défile (plein à p≈0.04).
+      hview.style.setProperty('--m-lfade', String(Math.min(1, p / 0.04)));
     }
 
     // ── Zoom de l'image hero au scroll (échelle 1 → 1.15) ────────
