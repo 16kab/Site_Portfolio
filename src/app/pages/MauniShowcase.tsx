@@ -267,17 +267,12 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
     const gbar = root.querySelector<HTMLElement>('.gbar');
     let pinned = false;
     let D = 0;
-    let tilt: HTMLElement[] = [];
-    let centers: number[] = [];
     const pinModeOn = () =>
       !reduce && matchMedia('(min-width: 861px)').matches;
     function measure() {
       if (!hwrap || !hpin || !hview || !htrack) return;
       if (pinModeOn()) {
         hwrap.classList.remove('gfallback');
-        // Transforms remis à zéro avant mesure (rects propres, sans rotation).
-        tilt = Array.from(htrack.querySelectorAll<HTMLElement>('.gitem'));
-        for (const el of tilt) el.style.transform = '';
         hview.style.width = '';
         const left = hview.getBoundingClientRect().left;
         hview.style.width = window.innerWidth - left + 'px';
@@ -290,36 +285,14 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
         }
         D = Math.max(0, htrack.scrollWidth - hview.clientWidth);
         hwrap.style.height = hpin.offsetHeight + D + 'px';
-        // Centre de chaque téléphone dans le repère du track (indépendant du
-        // translateX : les deux termes portent la même translation).
-        const trackLeft = htrack.getBoundingClientRect().left;
-        centers = tilt.map((el) => {
-          const r = el.getBoundingClientRect();
-          return r.left + r.width / 2 - trackLeft;
-        });
         pinned = true;
       } else {
         hwrap.classList.add('gfallback');
         hwrap.style.height = 'auto';
         htrack.style.transform = 'none';
-        for (const el of htrack.querySelectorAll<HTMLElement>('.gitem'))
-          el.style.transform = '';
         hview.style.width = '';
         if (gbar) gbar.style.width = '';
         pinned = false;
-      }
-    }
-    // Inclinaison 3D « coverflow » : chaque téléphone pivote selon sa distance
-    // au centre du viewport ; celui au centre se redresse et avance un peu.
-    function applyTilt(p: number) {
-      if (!hview || reduce || centers.length === 0) return;
-      const vw = hview.clientWidth || 1;
-      for (let i = 0; i < tilt.length; i++) {
-        let off = (-p * D + centers[i] - vw / 2) / vw;
-        off = Math.max(-1, Math.min(1, off * 1.7));
-        const rotY = (-off * 11).toFixed(2);
-        const tz = ((1 - Math.min(1, Math.abs(off))) * 30).toFixed(1);
-        tilt[i].style.transform = `translateZ(${tz}px) rotateY(${rotY}deg)`;
       }
     }
     function hUpdate() {
@@ -336,7 +309,6 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
       hbar.style.width = 6 + p * 94 + '%';
       // Fondu de gauche : apparaît dès qu'on défile (plein à p≈0.04).
       hview.style.setProperty('--m-lfade', String(Math.min(1, p / 0.04)));
-      applyTilt(p);
     }
 
     // ── Zoom de l'image hero au scroll (échelle 1 → 1.15) ────────

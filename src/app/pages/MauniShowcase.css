@@ -114,7 +114,7 @@
    à gauche/droite, mais l'ombre portée des téléphones déborde verticalement
    sans être coupée. Le fondu de droite se fait via ::after (calque dégradé),
    PAS via mask-image dont le mask-clip:border-box rognerait l'ombre. */
-.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow-x: clip; overflow-y: visible; perspective: 1900px; }
+.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow-x: clip; overflow-y: visible; }
 .mauni-showcase .hviewport::after {
   content: '';
   position: absolute;
@@ -149,9 +149,7 @@
   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
   mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
 }
-/* preserve-3d : laisse passer l'inclinaison rotateY des téléphones (posée en
-   JS au scroll) jusqu'à la perspective portée par .hviewport. */
-.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; transform-style: preserve-3d; }
+.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; }
 /* Espace vide APRÈS la dernière capture. En flex, padding-right est ignoré du
    scrollWidth quand ça déborde : on utilise donc un vrai élément d'espacement. */
 .mauni-showcase .gspacer { flex: none; width: clamp(140px, 24vw, 400px); align-self: stretch; }
