@@ -39,6 +39,9 @@ Plateforme web interne, **accent vert Spvie**, UI en thème clair uniquement.
 6. **Bilingue FR/EN**, contenu codé en dur dans le composant (comme Mauni).
 7. Pas de toggle clair/sombre de galerie (UI Spvie en clair only), pas d'effet
    3D (retiré de Mauni aussi).
+8. **Titre du hero** : on garde **« Onboarding RH »** (pas de titre évocateur).
+9. **Pas de bandeau stat** : à la place, une **frise du parcours (J-7 → J+30)**,
+   bande à personnalité liée à l'onboarding (voir section dédiée).
 
 ## Architecture
 
@@ -76,6 +79,8 @@ Hero          — rendu MacBook (chaise verte), titre « Onboarding RH »,
 01 Contexte   — point de départ : onboarding dispersé, sans suivi.
 02 Rôle       — rôle sur le projet + problématique (deux publics mal servis :
                 RH sans pilotage, arrivant perdu). Liste d'interventions.
+   Frise du parcours — bande pleine largeur (vert Spvie) : timeline des jalons
+   de l'intégration. Personnalité du produit, cadre le récit avant les chapitres.
 03 Espace arrivant — galerie navigateur :
                 accueil → parcours → détail étape → success (Bravo) → équipe.
    ⋯ Charnière « face-à-face » : Admin/parcours (kanban RH) ↔ arrivant/parcours,
@@ -83,8 +88,6 @@ Hero          — rendu MacBook (chaise verte), titre « Onboarding RH »,
 04 Espace RH  — galerie navigateur :
                 accueil (tableau de bord) → Bienvenue (modèles) → parcours
                 (kanban) → détail étape → équipe.
-   Bandeau vert (stat de pilotage, façon bandeau Mauni — chiffre à définir avec
-   l'utilisateur, ex. « 5 Business Units · 19 étapes · un parcours par métier »).
 05 Impact     — résultats (premier jet, à affiner : visibilité RH, autonomie
                 des arrivants, 0 étape oubliée…).
 ContactFooter
@@ -108,6 +111,24 @@ Diptyque **statique** (hors galerie épinglée) entre les chapitres 03 et 04 :
 - Droite : `arrivant/parcours` (le parcours vécu, gamifié).
 - Reliés par un trait/flèche + phrase-clé bilingue « ce que le RH construit →
   ce que l'arrivant vit ». Un seul moment fort, révélé au scroll (`.reveal`).
+
+## Frise du parcours (bande personnalité)
+
+Remplace le bandeau stat de Mauni par une **bande pleine largeur, vert Spvie**,
+qui met en scène le **voyage de l'onboarding** — la personnalité même du
+produit. Placée entre le chapitre 02 (Rôle) et le chapitre 03 (Espace arrivant),
+elle cadre le récit avant de montrer les écrans.
+
+Timeline horizontale avec 4 jalons (bilingue) :
+
+- **J-7** — avant l'arrivée (préparer, accueillir en amont)
+- **Jour 1** — la bienvenue (premier contact chaleureux)
+- **1re semaine** — l'immersion (équipe, outils, repères)
+- **J+30** — autonome (l'intégration réussie)
+
+Traitement : points reliés par une ligne, libellés + micro-description, révélée
+au scroll (`.reveal`), éventuelle progression animée de la ligne. Contenu exact
+des jalons à affiner au build (premier jet ci-dessus).
 
 ## Contenu rédactionnel
 
