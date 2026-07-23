@@ -271,11 +271,18 @@ function Laptop({
   onClick?: () => void;
 }) {
   const body = (
-    <span className="laptop">
-      <span className="lscreen">
-        <img src={src} alt={alt} />
+    <span className="mac">
+      <span className="mac-lid">
+        <span className="mac-notch" aria-hidden="true">
+          <span className="mac-cam" />
+        </span>
+        <span className="mac-screen">
+          <img src={src} alt={alt} />
+        </span>
       </span>
-      <span className="ldeck" aria-hidden="true" />
+      <span className="mac-base" aria-hidden="true">
+        <span className="mac-lip" />
+      </span>
     </span>
   );
   return onClick ? (
