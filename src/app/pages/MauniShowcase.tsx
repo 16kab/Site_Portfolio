@@ -8,14 +8,18 @@ import { scrollBodyTo } from '../utils/scrollBodyTo';
 import { useLang, useT } from '../i18n';
 import type { Projet } from '../data/projetsData';
 import accueil from 'figma:asset/mauni-app-accueil.webp';
+import accueilDark from 'figma:asset/mauni-app-accueil-dark.webp';
+import transactions from 'figma:asset/mauni-app-transactions.webp';
+import transactionsDark from 'figma:asset/mauni-app-transactions-dark.webp';
 import budget from 'figma:asset/mauni-app-budget.webp';
 import budgetDark from 'figma:asset/mauni-app-budget-dark.webp';
 import repartition from 'figma:asset/mauni-app-repartition.webp';
 import repartitionDark from 'figma:asset/mauni-app-repartition-dark.webp';
 import previsionnel from 'figma:asset/mauni-app-previsionnel.webp';
-import categories from 'figma:asset/mauni-app-categories.webp';
-import parametres from 'figma:asset/mauni-app-parametres.webp';
-import objectifs from 'figma:asset/mauni-app-objectifs.webp';
+import previsionnelDark from 'figma:asset/mauni-app-previsionnel-dark.webp';
+import epargne from 'figma:asset/mauni-app-epargne.webp';
+import reglages from 'figma:asset/mauni-app-reglages.webp';
+import reglagesDark from 'figma:asset/mauni-app-reglages-dark.webp';
 
 const MTOP = 134; // doit refléter --mtop dans MauniShowcase.css
 
@@ -48,11 +52,11 @@ const STRINGS = {
     s5lead: { pre: "L'épargne devient ", k: 'un projet', post: ', pas une contrainte — un montant, une échéance, une intention.' } as Lead,
     screens: [
       { b: 'Accueil', r: " — le solde, la vue d'ensemble" },
+      { b: 'Transactions', r: ' — chaque opération, catégorisée' },
       { b: 'Budget', r: ' — suivi par catégorie' },
       { b: 'Répartition', r: " — l'anneau des dépenses" },
       { b: 'Prévisionnel', r: ' — anticiper la fin de mois' },
-      { b: 'Catégories', r: " — classer d'un geste" },
-      { b: 'Paramètres', r: ' — sobre, sans détour' },
+      { b: 'Réglages', r: ' — sobre, sans détour' },
     ],
   },
   en: {
@@ -81,22 +85,22 @@ const STRINGS = {
     s5lead: { pre: 'Saving becomes ', k: 'a project', post: ', not a constraint — an amount, a deadline, an intention.' } as Lead,
     screens: [
       { b: 'Home', r: ' — balance, the big picture' },
+      { b: 'Transactions', r: ' — every operation, categorised' },
       { b: 'Budget', r: ' — tracking by category' },
       { b: 'Breakdown', r: ' — the spending ring' },
       { b: 'Forecast', r: ' — anticipate month-end' },
-      { b: 'Categories', r: ' — sort in one tap' },
       { b: 'Settings', r: ' — plain, no detours' },
     ],
   },
 };
 
 const GALLERY = [
-  { src: accueil, dark: null as string | null },
+  { src: accueil, dark: accueilDark as string | null },
+  { src: transactions, dark: transactionsDark },
   { src: budget, dark: budgetDark },
   { src: repartition, dark: repartitionDark },
-  { src: previsionnel, dark: null },
-  { src: categories, dark: null },
-  { src: parametres, dark: null },
+  { src: previsionnel, dark: previsionnelDark },
+  { src: reglages, dark: reglagesDark },
 ];
 
 // Découpe un segment en mots enveloppés dans des <span.wd> (JSX, pas de
@@ -587,7 +591,7 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
                 <Lead id="m-s5lead" lead={t.s5lead} />
                 <div className="device reveal">
                   <div className="screen">
-                    <img src={objectifs} alt="Mauni — objectifs" />
+                    <img src={epargne} alt="Mauni — épargne" />
                   </div>
                 </div>
               </div>
