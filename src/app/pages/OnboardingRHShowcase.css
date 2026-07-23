@@ -83,6 +83,21 @@
 .onboarding-showcase .interv li { position: relative; padding-left: 22px; color: var(--portfolio-text-secondary); font-size: 0.98rem; }
 .onboarding-showcase .interv li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 2px; background: var(--onboarding-accent); }
 
+/* ---- Section « feature » : MacBook ouvert qui déborde à droite ---- */
+.onboarding-showcase .feature { display: grid; grid-template-columns: minmax(230px, 38%) 1fr; gap: clamp(24px, 3vw, 56px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
+.onboarding-showcase .feature-txt { min-width: 0; }
+.onboarding-showcase .feature-laptop { position: relative; min-width: 0; }
+.onboarding-showcase .lbtn { display: block; border: 0; padding: 0; margin: 0; background: none; cursor: zoom-in; }
+.onboarding-showcase .laptop { display: block; width: clamp(600px, 74vw, 1240px); position: relative; }
+.onboarding-showcase .laptop .lscreen { position: relative; background: #0b0b0e; border-radius: 18px; padding: 12px; box-shadow: 0 50px 90px -50px rgba(0,0,0,0.55); }
+.onboarding-showcase .laptop .lscreen img { display: block; width: 100%; border-radius: 7px; }
+.onboarding-showcase .laptop .ldeck { display: block; height: 13px; margin: 0 -2.5%; border-radius: 0 0 13px 13px; background: linear-gradient(#ccccd2, #a4a4ab); position: relative; }
+.onboarding-showcase .laptop .ldeck::after { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 13%; height: 5px; border-radius: 0 0 7px 7px; background: rgba(0,0,0,0.16); }
+@media (max-width: 860px) {
+  .onboarding-showcase .feature { grid-template-columns: 1fr; }
+  .onboarding-showcase .laptop { width: 100%; }
+}
+
 /* ---- Frise du parcours (J-7 → J+30) ---- */
 .onboarding-showcase .timeline { background: var(--onboarding-grad); color: #fff; border-radius: 22px; padding: clamp(28px, 4vw, 46px); margin: 0 0 clamp(64px, 10vw, 130px); }
 .onboarding-showcase .timeline .thead { color: rgba(255,255,255,0.82); margin-bottom: 30px; }
@@ -108,6 +123,8 @@
 /* ---- Galerie horizontale épinglée (fenêtres larges, sans toggle) ---- */
 .onboarding-showcase .hwrap { position: relative; margin-top: clamp(24px, 4vw, 40px); }
 .onboarding-showcase .hpin { position: sticky; top: var(--mtop); }
+/* Titre épinglé : reste visible pendant que la galerie défile horizontalement. */
+.onboarding-showcase .gtitle { font-family: var(--title-font); font-weight: 600; font-size: clamp(1.1rem, 1.9vw, 1.55rem); letter-spacing: -0.01em; margin: 0 0 clamp(14px, 1.8vw, 22px); color: var(--portfolio-text-primary); }
 .onboarding-showcase .gbar { display: flex; align-items: center; padding: 0 0 16px; }
 .onboarding-showcase .hbar { display: flex; align-items: center; gap: 12px; color: var(--portfolio-text-muted); font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; flex: 1; min-width: 0; }
 .onboarding-showcase .hbar .tk { flex: 1; max-width: 300px; height: 2px; background: var(--portfolio-card-border); border-radius: 2px; position: relative; }

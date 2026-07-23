@@ -73,8 +73,10 @@ const STRINGS = {
       k: 'un parcours qui donne envie',
       post: ' — clair, guidé, un peu gamifié.',
     } as Lead,
+    accueilLabel: "L'accueil de l'arrivant",
+    s3galTitle: 'Le parcours, écran par écran',
+    s4galTitle: 'Le pilotage, écran par écran',
     arrScreens: [
-      { b: 'Accueil', r: ' — tout au même endroit' },
       { b: 'Mon parcours', r: ' — les étapes, une à une' },
       { b: 'Une étape', r: ' — le contenu, guidé' },
       { b: 'Bravo !', r: ' — la petite victoire' },
@@ -152,8 +154,10 @@ const STRINGS = {
       k: 'a journey you want to follow',
       post: ' — clear, guided, a little gamified.',
     } as Lead,
+    accueilLabel: "The newcomer's home",
+    s3galTitle: 'The journey, screen by screen',
+    s4galTitle: 'Piloting, screen by screen',
     arrScreens: [
-      { b: 'Home', r: ' — everything in one place' },
       { b: 'My journey', r: ' — the steps, one by one' },
       { b: 'A step', r: ' — the content, guided' },
       { b: 'Bravo!', r: ' — the small win' },
@@ -187,9 +191,11 @@ const STRINGS = {
   },
 };
 
-const ARRIVANT = [arrAccueil, arrParcours, arrDetail, arrSuccess, arrEquipe];
+// L'accueil est mis en vedette dans le MacBook (hors galerie) ; la galerie
+// arrivant montre les 4 écrans du parcours. ALL sert d'index à la lightbox.
+const ARR_GALLERY = [arrParcours, arrDetail, arrSuccess, arrEquipe];
 const RH = [rhDash, rhModeles, rhParcours, rhDetail, rhEquipe];
-const ALL = [...ARRIVANT, ...RH];
+const ALL = [arrAccueil, ...ARR_GALLERY, ...RH];
 
 // Découpe un segment en mots enveloppés dans des <span.wd> (JSX, pas de mutation
 // DOM), pour que l'illumination survive aux re-rendus + au switch de langue.
@@ -255,10 +261,37 @@ function BrowserFrame({
   );
 }
 
+function Laptop({
+  src,
+  alt,
+  onClick,
+}: {
+  src: string;
+  alt: string;
+  onClick?: () => void;
+}) {
+  const body = (
+    <span className="laptop">
+      <span className="lscreen">
+        <img src={src} alt={alt} />
+      </span>
+      <span className="ldeck" aria-hidden="true" />
+    </span>
+  );
+  return onClick ? (
+    <button type="button" className="lbtn" onClick={onClick} aria-label={alt}>
+      {body}
+    </button>
+  ) : (
+    body
+  );
+}
+
 function Gallery({
   screens,
   caps,
   url,
+  title,
   defiler,
   enlarge,
   onOpen,
@@ -266,6 +299,7 @@ function Gallery({
   screens: string[];
   caps: Cap[];
   url: string;
+  title: string;
   defiler: string;
   enlarge: (name: string) => string;
   onOpen: (i: number) => void;
@@ -273,6 +307,7 @@ function Gallery({
   return (
     <div className="hwrap">
       <div className="hpin">
+        <p className="gtitle title">{title}</p>
         <div className="gbar">
           <div className="hbar">
             <span>{defiler}</span>
@@ -636,14 +671,26 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
 
             <section className="sec galsec" id="onb-s3" data-sec>
               <span className="ey label">03 — {t.nav[2]}</span>
-              <Lead id="onb-s3lead" lead={t.s3lead} />
+              <div className="feature">
+                <div className="feature-txt">
+                  <Lead id="onb-s3lead" lead={t.s3lead} />
+                </div>
+                <div className="feature-laptop">
+                  <Laptop
+                    src={arrAccueil}
+                    alt={t.accueilLabel}
+                    onClick={() => setLbIndex(0)}
+                  />
+                </div>
+              </div>
               <Gallery
-                screens={ARRIVANT}
+                screens={ARR_GALLERY}
                 caps={t.arrScreens}
                 url={ARR_URL}
+                title={t.s3galTitle}
                 defiler={t.defiler}
                 enlarge={t.enlarge}
-                onOpen={(i) => setLbIndex(i)}
+                onOpen={(i) => setLbIndex(1 + i)}
               />
             </section>
 
@@ -664,7 +711,7 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
                 <div className="fcol">
                   <BrowserFrame
                     src={arrParcours}
-                    alt={t.arrScreens[1].b}
+                    alt={t.arrScreens[0].b}
                     url={ARR_URL}
                   />
                   <span className="fcap">{t.facingRight}</span>
@@ -679,9 +726,10 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
                 screens={RH}
                 caps={t.rhScreens}
                 url={RH_URL}
+                title={t.s4galTitle}
                 defiler={t.defiler}
                 enlarge={t.enlarge}
-                onOpen={(i) => setLbIndex(ARRIVANT.length + i)}
+                onOpen={(i) => setLbIndex(1 + ARR_GALLERY.length + i)}
               />
             </section>
 
