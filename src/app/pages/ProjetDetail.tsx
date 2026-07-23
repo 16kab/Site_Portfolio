@@ -14,6 +14,7 @@ import { useScrollSpy } from '../hooks';
 import { usePageTransition } from '../context/PageTransitionContext';
 import { useLang, useT } from '../i18n';
 import MauniShowcase from './MauniShowcase';
+import OnboardingRHShowcase from './OnboardingRHShowcase';
 
 const STRINGS = {
   fr: {
@@ -110,6 +111,9 @@ export default function ProjetDetail() {
   // transition carte→détail fonctionne normalement.
   if (projet.id === 'mauni') {
     return <MauniShowcase projet={projet} />;
+  }
+  if (projet.id === 'onboarding-rh') {
+    return <OnboardingRHShowcase projet={projet} />;
   }
 
   // Scroll to section : offset de 120 px pour le menu sticky
