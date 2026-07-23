@@ -261,36 +261,41 @@ function BrowserFrame({
   );
 }
 
-function Laptop({
-  src,
-  alt,
-  onClick,
+// Pile de captures en éventail (façon « DisplayCards ») : cartes empilées,
+// inclinées, en niveaux de gris + assombries, qui se colorisent et se soulèvent
+// au survol. La dernière (front) est déjà en couleur.
+function DisplayStack({
+  cards,
+  onOpen,
 }: {
-  src: string;
-  alt: string;
-  onClick?: () => void;
+  cards: { src: string; alt: string; i: number }[];
+  onOpen: (i: number) => void;
 }) {
-  const body = (
-    <span className="mac">
-      <span className="mac-lid">
-        <span className="mac-notch" aria-hidden="true">
-          <span className="mac-cam" />
-        </span>
-        <span className="mac-screen">
-          <img src={src} alt={alt} />
-        </span>
-      </span>
-      <span className="mac-base" aria-hidden="true">
-        <span className="mac-lip" />
-      </span>
-    </span>
-  );
-  return onClick ? (
-    <button type="button" className="lbtn" onClick={onClick} aria-label={alt}>
-      {body}
-    </button>
-  ) : (
-    body
+  const n = cards.length;
+  return (
+    <div className="dstack">
+      {cards.map((c, idx) => (
+        <button
+          key={c.src}
+          type="button"
+          className="dcard"
+          data-front={idx === n - 1 ? 'true' : undefined}
+          style={
+            {
+              ['--tx' as string]: idx * 66 + 'px',
+              ['--ty' as string]: idx * 42 + 'px',
+              zIndex: idx,
+            } as CSSProperties
+          }
+          onClick={() => onOpen(c.i)}
+          aria-label={c.alt}
+        >
+          <span className="dcard-in">
+            <img src={c.src} alt={c.alt} />
+          </span>
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -747,11 +752,14 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
                 <div className="feature-txt">
                   <Lead id="onb-s3lead" lead={t.s3lead} />
                 </div>
-                <div className="feature-laptop">
-                  <Laptop
-                    src={arrAccueil}
-                    alt={t.accueilLabel}
-                    onClick={() => setLbIndex(0)}
+                <div className="feature-cards">
+                  <DisplayStack
+                    cards={[
+                      { src: arrAccueil, alt: t.accueilLabel, i: 0 },
+                      { src: arrParcours, alt: t.arrScreens[0].b, i: 1 },
+                      { src: arrSuccess, alt: t.arrScreens[2].b, i: 3 },
+                    ]}
+                    onOpen={(i) => setLbIndex(i)}
                   />
                 </div>
               </div>
