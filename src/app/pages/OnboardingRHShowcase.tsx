@@ -282,8 +282,8 @@ function DisplayStack({
           data-front={idx === n - 1 ? 'true' : undefined}
           style={
             {
-              ['--tx' as string]: idx * 66 + 'px',
-              ['--ty' as string]: idx * 42 + 'px',
+              ['--tx' as string]: idx * 205 + 'px',
+              ['--ty' as string]: idx * 116 + 'px',
               zIndex: idx,
             } as CSSProperties
           }
@@ -295,60 +295,6 @@ function DisplayStack({
           </span>
         </button>
       ))}
-    </div>
-  );
-}
-
-function Gallery({
-  screens,
-  caps,
-  url,
-  title,
-  defiler,
-  enlarge,
-  onOpen,
-}: {
-  screens: string[];
-  caps: Cap[];
-  url: string;
-  title: string;
-  defiler: string;
-  enlarge: (name: string) => string;
-  onOpen: (i: number) => void;
-}) {
-  return (
-    <div className="hwrap">
-      <div className="hpin">
-        <p className="gtitle title">{title}</p>
-        <div className="gbar">
-          <div className="hbar">
-            <span>{defiler}</span>
-            <span className="tk">
-              <i className="hbarfill" />
-            </span>
-          </div>
-        </div>
-        <div className="hviewport">
-          <div className="htrack">
-            {screens.map((src, i) => (
-              <figure className="gitem" key={src}>
-                <BrowserFrame
-                  src={src}
-                  alt={caps[i].b}
-                  url={url}
-                  onClick={() => onOpen(i)}
-                  enlargeLabel={enlarge(caps[i].b)}
-                />
-                <figcaption className="c">
-                  <b>{caps[i].b}</b>
-                  {caps[i].r}
-                </figcaption>
-              </figure>
-            ))}
-            <div className="gspacer" aria-hidden="true" />
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -558,10 +504,24 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
       cascade.style.height = h0 + (items.length - 1) * oy + 34 + 'px';
     }
 
+    // ── Section arrivant : la pile déborde au-delà du bord gauche ────
+    const fcards = root.querySelector<HTMLElement>('.feature-cards');
+    function bleedFeature() {
+      if (!fcards) return;
+      fcards.style.marginLeft = '';
+      fcards.style.width = '';
+      if (matchMedia('(max-width: 860px)').matches) return;
+      const r = fcards.getBoundingClientRect();
+      const bleed = 150; // px au-delà du bord gauche du viewport
+      fcards.style.marginLeft = -(r.left + bleed) + 'px';
+      fcards.style.width = r.width + r.left + bleed + 'px';
+    }
+
     function setup() {
       galleries.forEach(measure);
       galleries.forEach(hUpdate);
       measureCascade();
+      bleedFeature();
       litUpdate();
       heroZoom();
     }
@@ -746,12 +706,9 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
               </ol>
             </div>
 
-            <section className="sec galsec" id="onb-s3" data-sec>
+            <section className="sec" id="onb-s3" data-sec>
               <span className="ey label">03 — {t.nav[2]}</span>
               <div className="feature">
-                <div className="feature-txt">
-                  <Lead id="onb-s3lead" lead={t.s3lead} />
-                </div>
                 <div className="feature-cards">
                   <DisplayStack
                     cards={[
@@ -762,16 +719,10 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
                     onOpen={(i) => setLbIndex(i)}
                   />
                 </div>
+                <div className="feature-txt">
+                  <Lead id="onb-s3lead" lead={t.s3lead} />
+                </div>
               </div>
-              <Gallery
-                screens={ARR_GALLERY}
-                caps={t.arrScreens}
-                url={ARR_URL}
-                title={t.s3galTitle}
-                defiler={t.defiler}
-                enlarge={t.enlarge}
-                onOpen={(i) => setLbIndex(1 + i)}
-              />
             </section>
 
             {/* CHARNIÈRE FACE-À-FACE */}

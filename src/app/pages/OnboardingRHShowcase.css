@@ -47,7 +47,9 @@
 
 /* ---- LAYOUT index : rail collant + flux ---- */
 .onboarding-showcase .layout { display: grid; grid-template-columns: 280px 1fr; gap: clamp(30px, 5vw, 84px); align-items: start; padding: clamp(44px, 7vw, 90px) 0 0; margin-bottom: clamp(56px, 8vw, 120px); }
-.onboarding-showcase .rail { position: sticky; top: var(--mtop); align-self: start; }
+/* z-index élevé : quand la pile de captures déborde derrière le rail, il reste
+   au-dessus. Les cartes en arrière sont assombries vers le fond → texte lisible. */
+.onboarding-showcase .rail { position: sticky; top: var(--mtop); align-self: start; z-index: 4; }
 .onboarding-showcase .rail .nm { font-family: var(--title-font); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.02em; margin: 0 0 4px; }
 .onboarding-showcase .rail .sub { color: var(--portfolio-text-secondary); font-size: 0.92rem; margin: 0 0 24px; max-width: 26ch; }
 .onboarding-showcase .rail dl { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 12px; border-top: 1px solid var(--portfolio-card-border); padding-top: 16px; margin: 0 0 26px; }
@@ -83,15 +85,17 @@
 .onboarding-showcase .interv li { position: relative; padding-left: 22px; color: var(--portfolio-text-secondary); font-size: 0.98rem; }
 .onboarding-showcase .interv li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 2px; background: var(--onboarding-accent); }
 
-/* ---- Section « feature » : pile de captures en éventail (hover) ---- */
-.onboarding-showcase .feature { display: grid; grid-template-columns: minmax(230px, 40%) 1fr; gap: clamp(24px, 3vw, 56px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
+/* ---- Section « feature » : grande pile de captures qui déborde à gauche ---- */
+.onboarding-showcase .feature { display: grid; grid-template-columns: 1fr minmax(230px, 30%); gap: clamp(20px, 3vw, 48px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
 .onboarding-showcase .feature-txt { min-width: 0; }
-.onboarding-showcase .feature-cards { position: relative; min-width: 0; display: flex; align-items: center; justify-content: center; padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 90px) clamp(70px, 9vw, 120px); }
-.onboarding-showcase .dstack { display: grid; place-items: center; transform: translate(-33px, -22px); }
+/* Déborde jusqu'au-delà du bord gauche du site (marge/largeur posées en JS),
+   coupée par le body (overflow-x: hidden). */
+.onboarding-showcase .feature-cards { position: relative; min-width: 0; z-index: 0; display: flex; align-items: center; justify-content: flex-start; padding: clamp(60px, 8vw, 120px) 0 clamp(90px, 11vw, 150px); }
+.onboarding-showcase .dstack { display: grid; justify-items: start; align-items: center; }
 .onboarding-showcase .dcard {
   grid-area: 1 / 1;
   --tx: 0px; --ty: 0px; --lift: 0px;
-  width: clamp(270px, 27vw, 360px);
+  width: clamp(420px, 46vw, 680px);
   transform: translate(var(--tx), calc(var(--ty) + var(--lift))) skewY(-8deg);
   transition: transform .6s cubic-bezier(.16,1,.3,1), filter .6s ease;
   filter: grayscale(1);
@@ -102,7 +106,7 @@
 .onboarding-showcase .dcard-in { display: block; position: relative; border-radius: 14px; overflow: hidden; border: 2px solid var(--portfolio-card-border); box-shadow: 0 34px 54px -30px rgba(0,0,0,0.5); background: #fff; }
 .onboarding-showcase .dcard-in img { display: block; width: 100%; height: auto; }
 /* Voile qui assombrit les cartes non survolées. */
-.onboarding-showcase .dcard::before { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: 14px; background: var(--portfolio-bg); opacity: 0.42; transition: opacity .6s ease; pointer-events: none; }
+.onboarding-showcase .dcard::before { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: 14px; background: var(--portfolio-bg); opacity: 0.55; transition: opacity .6s ease; pointer-events: none; }
 .onboarding-showcase .dcard[data-front='true']::before { opacity: 0; }
 /* Fondu léger du bord droit vers le fond (cartes qui se dissolvent). */
 .onboarding-showcase .dcard::after { content: ''; position: absolute; top: -4%; right: -1px; height: 108%; width: 30%; z-index: 3; background: linear-gradient(to left, var(--portfolio-bg), transparent); pointer-events: none; }
