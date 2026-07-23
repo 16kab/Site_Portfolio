@@ -1,6 +1,6 @@
 import '@fontsource-variable/bricolage-grotesque';
 import './OnboardingRHShowcase.css';
-import { useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
 import { ImageLightbox } from '../components/ImageLightbox';
@@ -341,6 +341,54 @@ function Gallery({
   );
 }
 
+// Cascade : écrans (fenêtres navigateur) empilés en escalier décalé (profondeur),
+// révélés au scroll ; au survol, l'écran se soulève et sa légende apparaît.
+// Hauteur du conteneur mesurée en JS (enfants en position absolue).
+function Cascade({
+  screens,
+  caps,
+  url,
+  enlarge,
+  onOpen,
+}: {
+  screens: string[];
+  caps: Cap[];
+  url: string;
+  enlarge: (name: string) => string;
+  onOpen: (i: number) => void;
+}) {
+  return (
+    <div className="cascade reveal">
+      {screens.map((src, i) => (
+        <button
+          type="button"
+          className="casc-item"
+          key={src}
+          style={{ ['--i' as string]: i } as CSSProperties}
+          onClick={() => onOpen(i)}
+          aria-label={enlarge(caps[i].b)}
+        >
+          <span className="bwin">
+            <span className="bbar">
+              <span className="dot r" />
+              <span className="dot y" />
+              <span className="dot g" />
+              <span className="baddr">{url}</span>
+            </span>
+            <span className="bshot">
+              <img src={src} alt={caps[i].b} />
+            </span>
+          </span>
+          <span className="casc-cap">
+            <b>{caps[i].b}</b>
+            {caps[i].r}
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 type GalleryState = {
   hwrap: HTMLElement;
   hpin: HTMLElement | null;
@@ -482,9 +530,26 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
       cover.style.transform = p > 0.001 ? `scale(${(1 + p * 0.12).toFixed(4)})` : '';
     };
 
+    // ── Cascade RH : hauteur du conteneur (enfants en absolu) ────
+    const cascade = root.querySelector<HTMLElement>('.cascade');
+    function measureCascade() {
+      if (!cascade) return;
+      const items = cascade.querySelectorAll<HTMLElement>('.casc-item');
+      if (!items.length) return;
+      if (matchMedia('(max-width: 860px)').matches) {
+        cascade.style.height = '';
+        return;
+      }
+      const oy =
+        parseFloat(getComputedStyle(cascade).getPropertyValue('--oy')) || 78;
+      const h0 = items[0].getBoundingClientRect().height;
+      cascade.style.height = h0 + (items.length - 1) * oy + 34 + 'px';
+    }
+
     function setup() {
       galleries.forEach(measure);
       galleries.forEach(hUpdate);
+      measureCascade();
       litUpdate();
       heroZoom();
     }
@@ -719,15 +784,13 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
               </div>
             </div>
 
-            <section className="sec galsec" id="onb-s4" data-sec>
+            <section className="sec" id="onb-s4" data-sec>
               <span className="ey label">04 — {t.nav[3]}</span>
               <Lead id="onb-s4lead" lead={t.s4lead} />
-              <Gallery
+              <Cascade
                 screens={RH}
                 caps={t.rhScreens}
                 url={RH_URL}
-                title={t.s4galTitle}
-                defiler={t.defiler}
                 enlarge={t.enlarge}
                 onOpen={(i) => setLbIndex(1 + ARR_GALLERY.length + i)}
               />
