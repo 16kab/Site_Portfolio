@@ -87,9 +87,13 @@
 .mauni-showcase .band .subs .l { display: block; color: rgba(255,255,255,0.7); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 3px; }
 
 /* ---- Mockup téléphone réutilisable ---- */
-.mauni-showcase .device { background: linear-gradient(155deg, #20202a, #0b0b0f); border-radius: 42px; padding: 9px; box-shadow: 0 44px 90px -46px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.06); }
-.mauni-showcase .device .screen { border-radius: 34px; overflow: hidden; background: #000; display: block; position: relative; }
+/* Mockup iPhone en CSS pur : corps noir (biseau fin), tranche titane via
+   ::before (dégradé métallique), dynamic island via .screen::after. */
+.mauni-showcase .device { position: relative; background: #08080c; border-radius: 44px; padding: 6px; box-shadow: 0 44px 90px -46px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.09); }
+.mauni-showcase .device::before { content: ''; position: absolute; inset: -2px; border-radius: inherit; z-index: -1; background: linear-gradient(145deg, #83838d 0%, #3b3b42 15%, #5c5c66 32%, #2b2b31 50%, #5c5c66 68%, #3b3b42 85%, #83838d 100%); }
+.mauni-showcase .device .screen { border-radius: 38px; overflow: hidden; background: #000; display: block; position: relative; }
 .mauni-showcase .device .screen img { display: block; width: 100%; height: auto; }
+.mauni-showcase .device .screen::after { content: ''; position: absolute; top: 2.4%; left: 50%; transform: translateX(-50%); width: 29%; aspect-ratio: 34 / 10; background: #000; border-radius: 999px; z-index: 3; box-shadow: inset 0 -1px 1.5px rgba(255,255,255,0.07); }
 
 /* ---- Galerie horizontale épinglée ---- */
 .mauni-showcase .gswitch { position: relative; display: inline-flex; border: 1px solid var(--portfolio-card-border); border-radius: 999px; padding: 3px; background: var(--portfolio-card-bg); font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; flex: 0 0 auto; }
@@ -110,7 +114,7 @@
    à gauche/droite, mais l'ombre portée des téléphones déborde verticalement
    sans être coupée. Le fondu de droite se fait via ::after (calque dégradé),
    PAS via mask-image dont le mask-clip:border-box rognerait l'ombre. */
-.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow-x: clip; overflow-y: visible; }
+.mauni-showcase .hviewport { position: relative; height: min(74vh, 680px); overflow-x: clip; overflow-y: visible; perspective: 1900px; }
 .mauni-showcase .hviewport::after {
   content: '';
   position: absolute;
@@ -145,7 +149,9 @@
   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
   mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%);
 }
-.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; }
+/* preserve-3d : laisse passer l'inclinaison rotateY des téléphones (posée en
+   JS au scroll) jusqu'à la perspective portée par .hviewport. */
+.mauni-showcase .htrack { display: flex; align-items: center; gap: clamp(6px, 0.8vw, 12px); height: 100%; transform-style: preserve-3d; }
 /* Espace vide APRÈS la dernière capture. En flex, padding-right est ignoré du
    scrollWidth quand ça déborde : on utilise donc un vrai élément d'espacement. */
 .mauni-showcase .gspacer { flex: none; width: clamp(140px, 24vw, 400px); align-self: stretch; }
@@ -153,7 +159,7 @@
 .mauni-showcase .gitem .gshot { height: calc(100% - 44px); display: block; border: 0; background: none; padding: 0; margin: 0; font: inherit; color: inherit; cursor: zoom-in; border-radius: 50px; }
 .mauni-showcase .gitem .gshot:focus-visible { outline: 2px solid var(--mauni-accent); outline-offset: 4px; }
 .mauni-showcase .gitem .device { height: 100%; border-radius: 50px; }
-.mauni-showcase .gitem .device .screen { height: 100%; aspect-ratio: 1290 / 2796; border-radius: 40px; }
+.mauni-showcase .gitem .device .screen { height: 100%; aspect-ratio: 1290 / 2796; border-radius: 44px; }
 .mauni-showcase .gitem .device .screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .mauni-showcase .gitem .device .screen img.lyr { transition: opacity .5s ease; }
 .mauni-showcase .gitem .device .screen img.d { opacity: 0; }
