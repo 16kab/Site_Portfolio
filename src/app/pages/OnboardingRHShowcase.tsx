@@ -1,6 +1,12 @@
 import '@fontsource-variable/bricolage-grotesque';
 import './OnboardingRHShowcase.css';
-import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
 import { ImageLightbox } from '../components/ImageLightbox';
@@ -90,11 +96,11 @@ const STRINGS = {
       post: ' — et un parcours sur-mesure par métier.',
     } as Lead,
     rhSteps: [
-      { t: 'Piloter', d: 'Le tableau de bord : qui en est où, les retards, les points de suivi en alerte.' },
-      { t: 'Écrire une fois', d: "Les modèles de bienvenue — le contenu d'accueil, réutilisable pour chaque arrivant." },
-      { t: 'Construire', d: 'Le parcours en kanban : un tronc commun, des branches par Business Unit, en glisser-déposer.' },
-      { t: 'Détailler', d: "Chaque étape s'édite — média, documents, échéance, feedback." },
-      { t: 'Situer', d: "L'équipe et l'arborescence SPVIE, vues côté RH." },
+      { t: 'Piloter', d: 'Qui en est où, les retards, les alertes.' },
+      { t: 'Écrire une fois', d: "Le contenu d'accueil, réutilisable." },
+      { t: 'Construire', d: 'Un tronc commun, des branches par BU.' },
+      { t: 'Détailler', d: 'Média, documents, échéance, feedback.' },
+      { t: 'Situer', d: "L'équipe et l'arborescence SPVIE." },
     ],
     storyZoom: "Agrandir l'écran affiché",
     s5lead: {
@@ -168,11 +174,11 @@ const STRINGS = {
       post: ' — and a tailored journey per role.',
     } as Lead,
     rhSteps: [
-      { t: 'Steer', d: 'The dashboard: who is where, delays, follow-up alerts.' },
-      { t: 'Write once', d: 'Welcome templates — onboarding content, reused for every newcomer.' },
-      { t: 'Build', d: 'The journey as a kanban: a common trunk, branches per Business Unit, drag-and-drop.' },
-      { t: 'Refine', d: 'Each step is editable — media, documents, due date, feedback.' },
-      { t: 'Map', d: 'The team and the SPVIE org chart, seen from HR.' },
+      { t: 'Steer', d: 'Who is where, delays, alerts.' },
+      { t: 'Write once', d: 'Onboarding content, reused.' },
+      { t: 'Build', d: 'A common trunk, branches per BU.' },
+      { t: 'Refine', d: 'Media, documents, due date, feedback.' },
+      { t: 'Map', d: 'The team and the SPVIE org chart.' },
     ],
     storyZoom: 'Enlarge the displayed screen',
     s5lead: {
@@ -296,17 +302,19 @@ function DisplayStack({
   );
 }
 
-// Scrollytelling RH : l'écran (fenêtre navigateur) reste épinglé pendant le
-// scroll ; les étapes défilent à gauche et l'écran change en fondu selon
-// l'étape active (pilotée en JS via data-active). Repli mobile/reduce :
-// .story-flat = liste verticale, une mini-capture par étape.
+// Scrollytelling RH horizontal : tout est épinglé — le titre en haut, les 5
+// étapes alignées en dessous (chacune avec sa jauge qui se remplit 0→100 % au
+// scroll), le grand écran en fondu selon l'étape active (data-active en JS).
+// Repli mobile/reduce : .story-flat = liste verticale, mini-capture par étape.
 function Story({
+  header,
   steps,
   screens,
   url,
   zoomLabel,
   onOpen,
 }: {
+  header: ReactNode;
   steps: { t: string; d: string }[];
   screens: string[];
   url: string;
@@ -316,9 +324,13 @@ function Story({
   return (
     <div className="story" data-active="0">
       <div className="story-pin">
+        {header}
         <ol className="story-steps">
           {steps.map((s, i) => (
             <li className={i === 0 ? 'story-step on' : 'story-step'} key={s.t}>
+              <span className="story-bar" aria-hidden="true">
+                <i className="story-fill" />
+              </span>
               <span className="story-num num">
                 {String(i + 1).padStart(2, '0')}
               </span>
@@ -454,6 +466,9 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
     const storyImgs = story
       ? Array.from(story.querySelectorAll<HTMLElement>('.story-frames img'))
       : [];
+    const storyFills = story
+      ? Array.from(story.querySelectorAll<HTMLElement>('.story-fill'))
+      : [];
     let storyD = 0;
     function measureStory() {
       if (!story || !storyPin) return;
@@ -473,7 +488,15 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
         return;
       let p = (MTOP - story.getBoundingClientRect().top) / storyD;
       p = Math.max(0, Math.min(0.999, p));
-      const idx = Math.floor(p * storySteps.length);
+      const raw = p * storySteps.length;
+      // Jauge de chaque étape : 0→100 % au fil de son segment de scroll
+      // (les étapes passées restent pleines, les suivantes vides).
+      storyFills.forEach((f, i) => {
+        let frac = Math.max(0, Math.min(1, raw - i));
+        if (frac > 0.985) frac = 1;
+        f.style.transform = `scaleX(${frac.toFixed(3)})`;
+      });
+      const idx = Math.min(storySteps.length - 1, Math.floor(raw));
       if (Number(story.dataset.active) !== idx) {
         story.dataset.active = String(idx);
         storySteps.forEach((s, i) => s.classList.toggle('on', i === idx));
@@ -692,8 +715,8 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
 
             <section className="sec" id="onb-s4" data-sec>
               <span className="ey label">04 — {t.nav[3]}</span>
-              <Lead id="onb-s4lead" lead={t.s4lead} />
               <Story
+                header={<Lead id="onb-s4lead" lead={t.s4lead} />}
                 steps={t.rhSteps}
                 screens={RH}
                 url={RH_URL}

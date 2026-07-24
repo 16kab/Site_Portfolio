@@ -154,26 +154,34 @@
 .onboarding-showcase .bshot { display: block; }
 .onboarding-showcase .bshot img { display: block; width: 100%; height: auto; }
 
-/* ---- Scrollytelling RH : écran épinglé + étapes qui s'activent ---- */
-.onboarding-showcase .story { position: relative; margin: clamp(28px, 4vw, 52px) 0 clamp(64px, 10vw, 130px); }
-.onboarding-showcase .story-pin { position: sticky; top: calc(var(--mtop) + 8px); display: grid; grid-template-columns: minmax(230px, 30%) 1fr; gap: clamp(24px, 3.4vw, 60px); align-items: center; }
-.onboarding-showcase .story-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(16px, 2.2vw, 28px); }
-.onboarding-showcase .story-step { position: relative; padding-left: 18px; opacity: 0.32; transition: opacity 0.45s ease; }
-.onboarding-showcase .story-step::before { content: ''; position: absolute; left: 0; top: 4px; bottom: 4px; width: 2px; border-radius: 2px; background: var(--portfolio-card-border); transition: background 0.45s ease; }
+/* ---- Scrollytelling RH horizontal : titre + étapes en ligne + écran ---- */
+.onboarding-showcase .story { position: relative; margin: clamp(20px, 3vw, 40px) 0 clamp(64px, 10vw, 130px); }
+.onboarding-showcase .story-pin { position: sticky; top: calc(var(--mtop) + 4px); display: flex; flex-direction: column; gap: clamp(18px, 2.2vw, 30px); }
+/* Titre (Lead) compacté dans le pin pour laisser la place à l'écran. */
+.onboarding-showcase .story-pin .lead { font-size: clamp(1.4rem, 2.6vw, 2.2rem); max-width: none; }
+.onboarding-showcase .story-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(12px, 1.6vw, 24px); }
+.onboarding-showcase .story-step { opacity: 0.38; transition: opacity 0.45s ease; }
 .onboarding-showcase .story-step.on { opacity: 1; }
-.onboarding-showcase .story-step.on::before { background: var(--onboarding-accent); }
-.onboarding-showcase .story-num { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; color: var(--onboarding-accent); margin-bottom: 4px; }
-.onboarding-showcase .story-t { display: block; font-weight: 600; font-size: clamp(1.05rem, 1.6vw, 1.35rem); letter-spacing: -0.01em; }
-.onboarding-showcase .story-d { display: block; color: var(--portfolio-text-description); font-size: 0.92rem; line-height: 1.5; margin-top: 4px; max-width: 30ch; }
+/* Jauge : rail discret, remplissage 0→100 % piloté en JS (scaleX). */
+.onboarding-showcase .story-bar { display: block; height: 2px; border-radius: 2px; background: var(--portfolio-card-border); overflow: hidden; margin-bottom: 12px; }
+.onboarding-showcase .story-fill { display: block; height: 100%; width: 100%; background: var(--onboarding-accent); transform: scaleX(0); transform-origin: left; }
+.onboarding-showcase .story-num { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; color: var(--onboarding-accent); margin-bottom: 2px; }
+.onboarding-showcase .story-t { display: block; font-weight: 600; font-size: clamp(0.98rem, 1.25vw, 1.15rem); letter-spacing: -0.01em; }
+.onboarding-showcase .story-d { display: block; color: var(--portfolio-text-description); font-size: 0.82rem; line-height: 1.45; margin-top: 4px; }
 .onboarding-showcase .story-mini { display: none; }
-.onboarding-showcase .story-shot { display: block; width: 100%; border: 0; padding: 0; margin: 0; background: none; cursor: zoom-in; }
+/* Largeur de l'écran plafonnée par la hauteur disponible sous le header
+   (titre + étapes ≈ 320px) pour que tout le pin tienne dans le viewport. */
+.onboarding-showcase .story-shot { display: block; width: min(100%, calc((100vh - var(--mtop) - 330px) * 1.85)); margin-inline: auto; border: 0; padding: 0; background: none; cursor: zoom-in; }
 .onboarding-showcase .story-shot:focus-visible { outline: 2px solid var(--onboarding-accent); outline-offset: 4px; border-radius: 16px; }
 /* Écrans superposés : fondu piloté en JS (opacity inline), 1er visible au départ. */
 .onboarding-showcase .story-frames { position: relative; aspect-ratio: 1845 / 945; }
 .onboarding-showcase .story-frames img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; }
 .onboarding-showcase .story-frames img:first-child { opacity: 1; }
 /* Repli (mobile / reduce) : liste verticale, une mini-capture par étape. */
-.onboarding-showcase .story-flat .story-pin { position: static; grid-template-columns: 1fr; }
+.onboarding-showcase .story-flat .story-pin { position: static; }
+.onboarding-showcase .story-flat .story-pin .lead { font-size: clamp(1.7rem, 4.2vw, 3.2rem); }
+.onboarding-showcase .story-flat .story-steps { grid-template-columns: 1fr; gap: 22px; }
+.onboarding-showcase .story-flat .story-bar { display: none; }
 .onboarding-showcase .story-flat .story-shot { display: none; }
 .onboarding-showcase .story-flat .story-step { opacity: 1; }
 .onboarding-showcase .story-flat .story-mini { display: block; margin-top: 12px; border-radius: 10px; overflow: hidden; border: 1px solid var(--portfolio-card-border); }
