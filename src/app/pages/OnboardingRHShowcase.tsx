@@ -287,7 +287,10 @@ function DisplayStack({
               zIndex: idx,
             } as CSSProperties
           }
-          onClick={() => onOpen(c.i)}
+          onClick={(e) => {
+            e.currentTarget.blur();
+            onOpen(c.i);
+          }}
           aria-label={c.alt}
         >
           <span className="dcard-in">
