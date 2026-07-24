@@ -26,7 +26,6 @@ import rhEquipe from 'figma:asset/onb-rh-equipe.webp';
 
 const MTOP = 134; // doit refléter --mtop dans OnboardingRHShowcase.css
 
-const ARR_URL = 'spvie.dev/onboarding';
 const RH_URL = 'rh.spvie.dev';
 const SITE_URL = 'https://rh-onboarding.vercel.app/login';
 
@@ -86,12 +85,6 @@ const STRINGS = {
       { b: 'Bravo !', r: ' — la petite victoire' },
       { b: "L'équipe", r: " — l'organigramme, les visages" },
     ] as Cap[],
-    facingPhrase: {
-      pre: 'Ce que le RH construit, ',
-      k: "l'arrivant le vit.",
-    },
-    facingLeft: 'Côté RH — le parcours se construit',
-    facingRight: 'Côté arrivant — le parcours se vit',
     s4lead: {
       pre: 'Côté RH, ',
       k: "le pilotage en un coup d'œil",
@@ -165,12 +158,6 @@ const STRINGS = {
       { b: 'Bravo!', r: ' — the small win' },
       { b: 'The team', r: ' — the org chart, the faces' },
     ] as Cap[],
-    facingPhrase: {
-      pre: 'What HR builds, ',
-      k: 'the newcomer lives.',
-    },
-    facingLeft: 'HR side — the journey is built',
-    facingRight: 'Newcomer side — the journey is lived',
     s4lead: {
       pre: "On HR's side, ",
       k: 'pilot it at a glance',
@@ -221,46 +208,6 @@ function Lead({ id, lead }: { id: string; lead: Lead }) {
       {renderWords(lead.k, true, 'k')}
       {renderWords(lead.post, false, 'o')}
     </p>
-  );
-}
-
-function BrowserFrame({
-  src,
-  alt,
-  url,
-  onClick,
-  enlargeLabel,
-}: {
-  src: string;
-  alt: string;
-  url: string;
-  onClick?: () => void;
-  enlargeLabel?: string;
-}) {
-  const body = (
-    <span className="bwin">
-      <span className="bbar">
-        <span className="dot r" />
-        <span className="dot y" />
-        <span className="dot g" />
-        <span className="baddr">{url}</span>
-      </span>
-      <span className="bshot">
-        <img src={src} alt={alt} />
-      </span>
-    </span>
-  );
-  return onClick ? (
-    <button
-      type="button"
-      className="gshot"
-      onClick={onClick}
-      aria-label={enlargeLabel}
-    >
-      {body}
-    </button>
-  ) : (
-    <span className="gshot">{body}</span>
   );
 }
 
@@ -697,31 +644,6 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
                 </div>
               </div>
             </section>
-
-            {/* CHARNIÈRE FACE-À-FACE */}
-            <div className="facing reveal">
-              <p className="fphrase title">
-                {renderWords(t.facingPhrase.pre, false, 'fp')}
-                {renderWords(t.facingPhrase.k, true, 'fk')}
-              </p>
-              <div className="fgrid">
-                <div className="fcol">
-                  <BrowserFrame src={rhParcours} alt={t.rhSteps[2].t} url={RH_URL} />
-                  <span className="fcap">{t.facingLeft}</span>
-                </div>
-                <div className="flink" aria-hidden="true">
-                  <span>→</span>
-                </div>
-                <div className="fcol">
-                  <BrowserFrame
-                    src={arrParcours}
-                    alt={t.arrScreens[0].b}
-                    url={ARR_URL}
-                  />
-                  <span className="fcap">{t.facingRight}</span>
-                </div>
-              </div>
-            </div>
 
             <section className="sec" id="onb-s4" data-sec>
               <span className="ey label">04 — {t.nav[3]}</span>
