@@ -28,6 +28,7 @@ const MTOP = 134; // doit refléter --mtop dans OnboardingRHShowcase.css
 
 const ARR_URL = 'spvie.dev/onboarding';
 const RH_URL = 'rh.spvie.dev';
+const SITE_URL = 'https://rh-onboarding.vercel.app/login';
 
 type Lead = { pre: string; k: string; post: string };
 type Cap = { b: string; r: string };
@@ -44,6 +45,7 @@ const STRINGS = {
     metaValues: ['Product / UX Design', 'SPVIE · interne', 'Deux espaces', '2025'],
     nav: ['Contexte', 'Rôle', 'Arrivant', 'RH', 'Impact'],
     cue: '↓ étude de cas',
+    visit: 'Visiter le site',
     s1lead: {
       pre: "L'intégration se jouait dans les mails et les tableurs — ",
       k: 'chacun improvisait.',
@@ -122,6 +124,7 @@ const STRINGS = {
     metaValues: ['Product / UX Design', 'SPVIE · internal', 'Two spaces', '2025'],
     nav: ['Context', 'Role', 'Newcomer', 'HR', 'Impact'],
     cue: '↓ case study',
+    visit: 'Visit the site',
     s1lead: {
       pre: 'Onboarding lived in emails and spreadsheets — ',
       k: 'everyone improvised.',
@@ -625,12 +628,19 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
                       if (el) scrollBodyTo(el.offsetTop - MTOP + 1, 700);
                     }}
                   >
-                    <span className="n">{String(i + 1).padStart(2, '0')}</span>{' '}
-                    {label}
+                    <span className="n num">{i + 1}</span> {label}
                   </button>
                 </li>
               ))}
             </ul>
+            <a
+              className="visit"
+              href={SITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.visit} <span aria-hidden="true">↗</span>
+            </a>
           </aside>
 
           <main className="stream">
