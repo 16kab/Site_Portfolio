@@ -84,11 +84,12 @@
 .onboarding-showcase .interv li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 2px; background: var(--onboarding-accent); }
 
 /* ---- Section « feature » : grande pile de captures qui déborde à gauche ---- */
-.onboarding-showcase .feature { display: grid; grid-template-columns: minmax(280px, 54%) 1fr; gap: clamp(20px, 3vw, 40px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
+.onboarding-showcase .feature { display: grid; grid-template-columns: minmax(280px, 44%) 1fr; gap: clamp(20px, 3vw, 40px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
 .onboarding-showcase .feature-txt { min-width: 0; }
 /* Déborde jusqu'au-delà du bord gauche du site (marge/largeur posées en JS),
    coupée par le body (overflow-x: hidden). */
-.onboarding-showcase .feature-cards { position: relative; min-width: 0; z-index: 0; display: flex; align-items: center; justify-content: flex-start; padding: clamp(60px, 8vw, 120px) 0 clamp(90px, 11vw, 150px); }
+/* padding-left = décalage de la pile vers la droite (largeur posée en JS). */
+.onboarding-showcase .feature-cards { position: relative; min-width: 0; z-index: 0; display: flex; align-items: center; justify-content: flex-start; padding: clamp(60px, 8vw, 120px) 0 clamp(90px, 11vw, 150px) clamp(60px, 14vw, 300px); }
 .onboarding-showcase .dstack { display: grid; justify-items: start; align-items: center; }
 .onboarding-showcase .dcard {
   grid-area: 1 / 1;
