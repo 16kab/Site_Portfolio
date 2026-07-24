@@ -1,0 +1,229 @@
+/* Onboarding RH — page vitrine (même ossature que Mauni).
+   Titres : Bricolage Grotesque. Reste : Manrope. Neutres : tokens --portfolio-*.
+   Accent : --onboarding-accent (vert Spvie). Mockups : fenêtre navigateur. */
+
+.onboarding-showcase {
+  --onboarding-accent: #16a34a;
+  --onboarding-accent-soft: #86efac;
+  --onboarding-grad: linear-gradient(120deg, #064e3b, #15803d 42%, #16a34a 72%, #22c55e);
+  --title-font: 'Bricolage Grotesque Variable', 'Playfair Display', sans-serif;
+  --mtop: 134px;
+  position: relative;
+  background: var(--portfolio-bg);
+  color: var(--portfolio-text-primary);
+  font-family: 'Manrope', sans-serif;
+}
+.dark .onboarding-showcase {
+  --onboarding-accent: #34d399;
+  --onboarding-accent-soft: #a7f3d0;
+}
+
+.onboarding-showcase .wrap { width: min(1220px, 90vw); margin-inline: auto; }
+.onboarding-showcase .title { font-family: var(--title-font); letter-spacing: -0.02em; font-weight: 600; }
+.onboarding-showcase .label {
+  font-family: 'Manrope', sans-serif; text-transform: uppercase;
+  letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600;
+  color: var(--portfolio-text-muted);
+}
+.onboarding-showcase .num { font-variant-numeric: tabular-nums; }
+
+/* ---- HERO (cible du morph carte→détail) ---- */
+.onboarding-showcase .m-hero { position: relative; width: 100vw; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+.onboarding-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.onboarding-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,20,14,0.82), rgba(6,20,14,0.2) 42%, rgba(6,20,14,0.04) 70%, transparent); }
+.onboarding-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: onb-hero-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
+@keyframes onb-hero-fade { from { opacity: 0; } to { opacity: 1; } }
+.onboarding-showcase .m-hero .ey { display: flex; gap: 14px; flex-wrap: wrap; color: rgba(255,255,255,0.85); margin-bottom: 18px; }
+.onboarding-showcase .m-hero h1 {
+  font-family: var(--title-font); font-weight: 800; font-size: clamp(3.2rem, 11vw, 9rem);
+  line-height: 0.9; letter-spacing: -0.035em; margin: 0; color: #fff;
+}
+.onboarding-showcase .m-hero .th {
+  font-family: var(--title-font); font-weight: 440; font-size: clamp(1.15rem, 2.4vw, 1.85rem);
+  line-height: 1.16; max-width: 26ch; margin: 20px 0 0; color: rgba(255,255,255,0.95);
+}
+.onboarding-showcase .m-hero .th em { font-style: normal; color: var(--onboarding-accent-soft); }
+.onboarding-showcase .m-hero .cue { position: absolute; left: 0; right: 0; bottom: 20px; text-align: center; color: rgba(255,255,255,0.72); }
+
+/* ---- LAYOUT index : rail collant + flux ---- */
+.onboarding-showcase .layout { display: grid; grid-template-columns: 280px 1fr; gap: clamp(30px, 5vw, 84px); align-items: start; padding: clamp(44px, 7vw, 90px) 0 0; margin-bottom: clamp(56px, 8vw, 120px); }
+.onboarding-showcase .rail { position: sticky; top: var(--mtop); align-self: start; }
+.onboarding-showcase .rail .nm { font-family: var(--title-font); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.02em; margin: 0 0 4px; }
+.onboarding-showcase .rail .sub { color: var(--portfolio-text-secondary); font-size: 0.92rem; margin: 0 0 24px; max-width: 26ch; }
+.onboarding-showcase .rail dl { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 12px; border-top: 1px solid var(--portfolio-card-border); padding-top: 16px; margin: 0 0 26px; }
+.onboarding-showcase .rail dd { margin: 4px 0 0; font-family: var(--title-font); font-weight: 600; font-size: 0.92rem; }
+.onboarding-showcase .nav { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--portfolio-card-border); }
+.onboarding-showcase .nav li { border-bottom: 1px solid var(--portfolio-card-border); }
+.onboarding-showcase .nav button {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 10px 0;
+  background: none; border: none; cursor: pointer; color: var(--portfolio-text-muted);
+  font-family: 'Manrope', sans-serif; font-size: 0.82rem; transition: color .3s;
+}
+/* Pastille numérotée : carré arrondi bordé, qui se remplit d'accent quand la
+   section est active (remplace le chiffre pâle + point d'origine). */
+.onboarding-showcase .nav button .n {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 23px; height: 23px; border-radius: 7px;
+  border: 1px solid var(--portfolio-card-border);
+  font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted);
+  transition: background .3s, border-color .3s, color .3s;
+}
+.onboarding-showcase .nav button:hover { color: var(--portfolio-text-primary); }
+.onboarding-showcase .nav button:hover .n { border-color: var(--onboarding-accent); color: var(--onboarding-accent); }
+.onboarding-showcase .nav button.on { color: var(--portfolio-text-primary); }
+.onboarding-showcase .nav button.on .n { background: var(--onboarding-accent); border-color: var(--onboarding-accent); color: var(--portfolio-bg); }
+
+/* Lien vers le site (rail, sous la nav) */
+.onboarding-showcase .visit {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-top: 22px; padding: 11px 16px; border-radius: 10px;
+  border: 1px solid var(--portfolio-card-border);
+  color: var(--portfolio-text-primary); font-size: 0.88rem; font-weight: 600;
+  text-decoration: none; transition: border-color .3s, color .3s;
+}
+.onboarding-showcase .visit:hover,
+.onboarding-showcase .visit:focus-visible { border-color: var(--onboarding-accent); color: var(--onboarding-accent); }
+.onboarding-showcase .visit span { transition: transform .3s ease; }
+.onboarding-showcase .visit:hover span { transform: translate(2px, -2px); }
+
+.onboarding-showcase .stream { min-width: 0; }
+.onboarding-showcase .sec { padding: 0 0 clamp(72px, 12vw, 150px); scroll-margin-top: var(--mtop); }
+.onboarding-showcase .sec .ey { display: block; margin-bottom: 20px; }
+.onboarding-showcase .lead {
+  font-family: var(--title-font); font-weight: 520; font-size: clamp(1.7rem, 4.2vw, 3.2rem);
+  line-height: 1.1; letter-spacing: -0.02em; margin: 0; max-width: 22ch;
+}
+.onboarding-showcase .lead .k { color: var(--onboarding-accent); }
+.onboarding-showcase .illuminate .wd { transition: opacity .1s linear; }
+.onboarding-showcase .note { color: var(--portfolio-text-description); font-size: 1.06rem; max-width: 46ch; margin: 22px 0 0; line-height: 1.6; }
+
+/* ---- Interventions (liste) ---- */
+.onboarding-showcase .interv { margin-top: 30px; }
+.onboarding-showcase .interv .label { display: block; margin-bottom: 12px; }
+.onboarding-showcase .interv ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.onboarding-showcase .interv li { position: relative; padding-left: 22px; color: var(--portfolio-text-secondary); font-size: 0.98rem; }
+.onboarding-showcase .interv li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 2px; background: var(--onboarding-accent); }
+
+/* ---- Section « feature » : grande pile de captures qui déborde à gauche ---- */
+.onboarding-showcase .feature { display: grid; grid-template-columns: minmax(300px, 54%) 1fr; gap: clamp(20px, 3vw, 40px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
+.onboarding-showcase .feature-txt { min-width: 0; }
+/* Le lead remplit la colonne élargie (au lieu d'être bridé à 22ch). */
+.onboarding-showcase .feature-txt .lead { max-width: none; }
+/* Déborde jusqu'au-delà du bord gauche du site (marge/largeur posées en JS),
+   coupée par le body (overflow-x: hidden). */
+/* padding-left = décalage de la pile vers la droite (largeur posée en JS). */
+.onboarding-showcase .feature-cards { position: relative; min-width: 0; z-index: 0; display: flex; align-items: center; justify-content: flex-start; padding: clamp(60px, 8vw, 120px) 0 clamp(90px, 11vw, 150px) clamp(30px, 5vw, 110px); }
+.onboarding-showcase .dstack { display: grid; justify-items: start; align-items: center; }
+.onboarding-showcase .dcard {
+  grid-area: 1 / 1;
+  --tx: 0px; --ty: 0px; --lift: 0px;
+  width: clamp(420px, 46vw, 680px);
+  transform: translate(var(--tx), calc(var(--ty) + var(--lift))) skewY(-8deg);
+  transition: transform .6s cubic-bezier(.16,1,.3,1), filter .6s ease;
+  filter: grayscale(1);
+  border: 0; padding: 0; margin: 0; background: none; cursor: zoom-in;
+  position: relative;
+}
+.onboarding-showcase .dcard[data-front='true'] { filter: none; }
+/* Pas de bordure ; ombre projetée vers l'arrière (haut-gauche) pour assombrir
+   la carte située derrière + un léger ancrage vers le bas. */
+.onboarding-showcase .dcard-in { display: block; position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: -26px -16px 50px -18px rgba(0,0,0,0.5), 0 22px 46px -26px rgba(0,0,0,0.32); }
+.onboarding-showcase .dcard-in img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+/* Voile qui assombrit les cartes non survolées. */
+.onboarding-showcase .dcard::before { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: 14px; background: var(--portfolio-bg); opacity: 0.45; transition: opacity .6s ease; pointer-events: none; }
+.onboarding-showcase .dcard[data-front='true']::before { opacity: 0; }
+/* Fondu léger du bord droit vers le fond (cartes qui se dissolvent). */
+.onboarding-showcase .dcard::after { content: ''; position: absolute; top: -4%; right: -1px; height: 108%; width: 30%; z-index: 3; background: linear-gradient(to left, var(--portfolio-bg), transparent); pointer-events: none; }
+.onboarding-showcase .dcard:hover, .onboarding-showcase .dcard:focus-visible { --lift: -34px; filter: none; z-index: 40; outline: none; }
+.onboarding-showcase .dcard:hover::before, .onboarding-showcase .dcard:focus-visible::before { opacity: 0; }
+.onboarding-showcase .dcard:focus-visible .dcard-in { outline: 2px solid var(--onboarding-accent); outline-offset: 3px; }
+@media (max-width: 860px) {
+  .onboarding-showcase .feature { grid-template-columns: 1fr; }
+  .onboarding-showcase .feature-cards { padding: 30px 40px 80px 0; justify-content: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-showcase .dcard { transition: filter .6s ease; }
+}
+
+/* ---- Frise du parcours (J-7 → J+30) ---- */
+.onboarding-showcase .timeline { position: relative; overflow: hidden; background: var(--onboarding-grad); color: #fff; border-radius: 24px; padding: clamp(30px, 4vw, 50px); margin: 0 0 clamp(64px, 10vw, 130px); box-shadow: 0 40px 80px -50px rgba(6,60,40,0.7); }
+/* Halo lumineux discret en haut à droite pour donner du relief à la bande. */
+.onboarding-showcase .timeline::after { content: ''; position: absolute; top: -40%; right: -10%; width: 55%; height: 160%; background: radial-gradient(closest-side, rgba(255,255,255,0.16), transparent); pointer-events: none; }
+.onboarding-showcase .timeline .thead { position: relative; z-index: 1; color: rgba(255,255,255,0.78); margin-bottom: 34px; }
+.onboarding-showcase .timeline .tline { position: relative; z-index: 1; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+/* Piste de fond (translucide) + progression animée, calées pile du 1er au
+   dernier point (centre du point J-7 → centre du point J+30). */
+.onboarding-showcase .timeline .tline::before,
+.onboarding-showcase .timeline .tline::after { content: ''; position: absolute; top: 7px; left: 8px; right: calc(25% - 8px); height: 2px; border-radius: 2px; }
+.onboarding-showcase .timeline .tline::before { background: rgba(255,255,255,0.3); }
+.onboarding-showcase .timeline .tline::after { background: linear-gradient(to right, rgba(255,255,255,0.55), #fff); transform: scaleX(0); transform-origin: left; transition: transform 1.1s cubic-bezier(.16,1,.3,1) .15s; }
+.onboarding-showcase .timeline.in .tline::after { transform: scaleX(1); }
+.onboarding-showcase .timeline .tnode { display: flex; flex-direction: column; gap: 6px; position: relative; }
+.onboarding-showcase .timeline .tdot { width: 16px; height: 16px; border-radius: 999px; background: #fff; box-shadow: 0 0 0 5px rgba(255,255,255,0.16), 0 2px 6px rgba(0,0,0,0.18); margin-bottom: 20px; position: relative; z-index: 1; }
+.onboarding-showcase .timeline .tt { font-family: var(--title-font); font-weight: 700; font-size: clamp(1.35rem, 2.4vw, 1.75rem); letter-spacing: -0.02em; line-height: 1; }
+.onboarding-showcase .timeline .tl { font-weight: 600; font-size: 0.98rem; margin-top: 2px; }
+.onboarding-showcase .timeline .td { color: rgba(255,255,255,0.78); font-size: 0.85rem; line-height: 1.45; max-width: 22ch; }
+
+/* ---- Mockup fenêtre navigateur ---- */
+.onboarding-showcase .bwin { display: flex; flex-direction: column; border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid var(--portfolio-card-border); box-shadow: 0 40px 80px -44px rgba(0,0,0,0.5); }
+.onboarding-showcase .bbar { flex: none; height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 14px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.onboarding-showcase .dot { width: 11px; height: 11px; border-radius: 999px; flex: none; }
+.onboarding-showcase .dot.r { background: #ff5f57; }
+.onboarding-showcase .dot.y { background: #febc2e; }
+.onboarding-showcase .dot.g { background: #28c840; }
+.onboarding-showcase .baddr { margin-left: 8px; flex: 1; max-width: 360px; height: 20px; border-radius: 999px; background: #e9e9ec; color: #9a9aa2; font-size: 11px; display: flex; align-items: center; padding: 0 12px; font-family: 'Manrope', sans-serif; letter-spacing: 0.01em; overflow: hidden; white-space: nowrap; }
+.onboarding-showcase .bshot { display: block; }
+.onboarding-showcase .bshot img { display: block; width: 100%; height: auto; }
+
+/* ---- Scrollytelling RH horizontal : titre + étapes en ligne + écran ---- */
+.onboarding-showcase .story { position: relative; margin: clamp(20px, 3vw, 40px) 0 clamp(64px, 10vw, 130px); }
+.onboarding-showcase .story-pin { position: sticky; top: calc(var(--mtop) + 4px); display: flex; flex-direction: column; gap: clamp(18px, 2.2vw, 30px); }
+/* Titre (Lead) compacté dans le pin pour laisser la place à l'écran. */
+.onboarding-showcase .story-pin .lead { font-size: clamp(1.4rem, 2.6vw, 2.2rem); max-width: none; }
+.onboarding-showcase .story-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: clamp(12px, 1.6vw, 24px); }
+.onboarding-showcase .story-step { opacity: 0.38; transition: opacity 0.45s ease; }
+.onboarding-showcase .story-step.on { opacity: 1; }
+/* Jauge : rail discret, remplissage 0→100 % piloté en JS (scaleX). */
+.onboarding-showcase .story-bar { display: block; height: 2px; border-radius: 2px; background: var(--portfolio-card-border); overflow: hidden; margin-bottom: 12px; }
+.onboarding-showcase .story-fill { display: block; height: 100%; width: 100%; background: var(--onboarding-accent); transform: scaleX(0); transform-origin: left; }
+.onboarding-showcase .story-num { display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; color: var(--onboarding-accent); margin-bottom: 2px; }
+.onboarding-showcase .story-t { display: block; font-weight: 600; font-size: clamp(0.98rem, 1.25vw, 1.15rem); letter-spacing: -0.01em; }
+.onboarding-showcase .story-d { display: block; color: var(--portfolio-text-description); font-size: 0.82rem; line-height: 1.45; margin-top: 4px; }
+.onboarding-showcase .story-mini { display: none; }
+/* Largeur de l'écran plafonnée par la hauteur disponible sous le header
+   (titre + étapes ≈ 320px) pour que tout le pin tienne dans le viewport. */
+.onboarding-showcase .story-shot { display: block; width: min(100%, calc((100vh - var(--mtop) - 330px) * 1.85)); margin-inline: auto; border: 0; padding: 0; background: none; cursor: zoom-in; }
+.onboarding-showcase .story-shot:focus-visible { outline: 2px solid var(--onboarding-accent); outline-offset: 4px; border-radius: 16px; }
+/* Écrans superposés : fondu piloté en JS (opacity inline), 1er visible au départ. */
+.onboarding-showcase .story-frames { position: relative; aspect-ratio: 1845 / 945; }
+.onboarding-showcase .story-frames img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; }
+.onboarding-showcase .story-frames img:first-child { opacity: 1; }
+/* Repli (mobile / reduce) : liste verticale, une mini-capture par étape. */
+.onboarding-showcase .story-flat .story-pin { position: static; }
+.onboarding-showcase .story-flat .story-pin .lead { font-size: clamp(1.7rem, 4.2vw, 3.2rem); }
+.onboarding-showcase .story-flat .story-steps { grid-template-columns: 1fr; gap: 22px; }
+.onboarding-showcase .story-flat .story-bar { display: none; }
+.onboarding-showcase .story-flat .story-shot { display: none; }
+.onboarding-showcase .story-flat .story-step { opacity: 1; }
+.onboarding-showcase .story-flat .story-mini { display: block; margin-top: 12px; border-radius: 10px; overflow: hidden; border: 1px solid var(--portfolio-card-border); }
+.onboarding-showcase .story-flat .story-mini img { display: block; width: 100%; }
+
+/* ---- Reveal ---- */
+.onboarding-showcase .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+.onboarding-showcase .reveal.in { opacity: 1; transform: none; }
+
+@media (max-width: 860px) {
+  .onboarding-showcase .layout { grid-template-columns: 1fr; gap: 28px; }
+  .onboarding-showcase .rail { position: static; }
+  .onboarding-showcase .nav { display: none; }
+}
+@media (max-width: 720px) {
+  .onboarding-showcase .timeline .tline { grid-template-columns: 1fr; gap: 24px; }
+  .onboarding-showcase .timeline .tline::before { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-showcase .reveal { opacity: 1 !important; transform: none !important; }
+  .onboarding-showcase .m-hero .in { animation: none !important; }
+  .onboarding-showcase .illuminate .wd { opacity: 1 !important; }
+}
