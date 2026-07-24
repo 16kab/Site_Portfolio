@@ -282,8 +282,8 @@ function DisplayStack({
           data-front={idx === n - 1 ? 'true' : undefined}
           style={
             {
-              ['--tx' as string]: idx * 205 + 'px',
-              ['--ty' as string]: idx * 116 + 'px',
+              ['--tx' as string]: idx * 84 + 'px',
+              ['--ty' as string]: idx * 52 + 'px',
               zIndex: idx,
             } as CSSProperties
           }
@@ -508,13 +508,11 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
     const fcards = root.querySelector<HTMLElement>('.feature-cards');
     function bleedFeature() {
       if (!fcards) return;
-      fcards.style.marginLeft = '';
       fcards.style.width = '';
       if (matchMedia('(max-width: 860px)').matches) return;
       const r = fcards.getBoundingClientRect();
-      const bleed = 150; // px au-delà du bord gauche du viewport
-      fcards.style.marginLeft = -(r.left + bleed) + 'px';
-      fcards.style.width = r.width + r.left + bleed + 'px';
+      const bleed = 120; // px au-delà du bord droit du viewport
+      fcards.style.width = window.innerWidth - r.left + bleed + 'px';
     }
 
     function setup() {
@@ -709,6 +707,9 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
             <section className="sec" id="onb-s3" data-sec>
               <span className="ey label">03 — {t.nav[2]}</span>
               <div className="feature">
+                <div className="feature-txt">
+                  <Lead id="onb-s3lead" lead={t.s3lead} />
+                </div>
                 <div className="feature-cards">
                   <DisplayStack
                     cards={[
@@ -718,9 +719,6 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
                     ]}
                     onOpen={(i) => setLbIndex(i)}
                   />
-                </div>
-                <div className="feature-txt">
-                  <Lead id="onb-s3lead" lead={t.s3lead} />
                 </div>
               </div>
             </section>
