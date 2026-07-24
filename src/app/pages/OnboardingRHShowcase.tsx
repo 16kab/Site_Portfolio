@@ -38,7 +38,6 @@ const STRINGS = {
     metaValues: ['Product / UX Design', 'SPVIE · interne', 'Deux espaces', '2025'],
     nav: ['Contexte', 'Rôle', 'Arrivant', 'RH', 'Impact'],
     cue: '↓ étude de cas',
-    enlarge: (name: string) => `Agrandir l'écran « ${name} »`,
     s1lead: {
       pre: "L'intégration se jouait dans les mails et les tableurs — ",
       k: 'chacun improvisait.',
@@ -90,13 +89,14 @@ const STRINGS = {
       k: "le pilotage en un coup d'œil",
       post: ' — et un parcours sur-mesure par métier.',
     } as Lead,
-    rhScreens: [
-      { b: 'Tableau de bord', r: ' — qui en est où' },
-      { b: 'Modèles de bienvenue', r: ' — le contenu, réutilisable' },
-      { b: 'Constructeur de parcours', r: ' — glisser-déposer, par Business Unit' },
-      { b: 'Édition d’une étape', r: ' — média, documents, feedback' },
-      { b: 'Équipe', r: ' — la vue RH' },
-    ] as Cap[],
+    rhSteps: [
+      { t: 'Piloter', d: 'Le tableau de bord : qui en est où, les retards, les points de suivi en alerte.' },
+      { t: 'Écrire une fois', d: "Les modèles de bienvenue — le contenu d'accueil, réutilisable pour chaque arrivant." },
+      { t: 'Construire', d: 'Le parcours en kanban : un tronc commun, des branches par Business Unit, en glisser-déposer.' },
+      { t: 'Détailler', d: "Chaque étape s'édite — média, documents, échéance, feedback." },
+      { t: 'Situer', d: "L'équipe et l'arborescence SPVIE, vues côté RH." },
+    ],
+    storyZoom: "Agrandir l'écran affiché",
     s5lead: {
       pre: 'Un premier jour ',
       k: "qui ne s'improvise plus",
@@ -116,7 +116,6 @@ const STRINGS = {
     metaValues: ['Product / UX Design', 'SPVIE · internal', 'Two spaces', '2025'],
     nav: ['Context', 'Role', 'Newcomer', 'HR', 'Impact'],
     cue: '↓ case study',
-    enlarge: (name: string) => `Enlarge the "${name}" screen`,
     s1lead: {
       pre: 'Onboarding lived in emails and spreadsheets — ',
       k: 'everyone improvised.',
@@ -168,13 +167,14 @@ const STRINGS = {
       k: 'pilot it at a glance',
       post: ' — and a tailored journey per role.',
     } as Lead,
-    rhScreens: [
-      { b: 'Dashboard', r: ' — who is where' },
-      { b: 'Welcome templates', r: ' — reusable content' },
-      { b: 'Journey builder', r: ' — drag-and-drop, per Business Unit' },
-      { b: 'Editing a step', r: ' — media, documents, feedback' },
-      { b: 'Team', r: ' — the HR view' },
-    ] as Cap[],
+    rhSteps: [
+      { t: 'Steer', d: 'The dashboard: who is where, delays, follow-up alerts.' },
+      { t: 'Write once', d: 'Welcome templates — onboarding content, reused for every newcomer.' },
+      { t: 'Build', d: 'The journey as a kanban: a common trunk, branches per Business Unit, drag-and-drop.' },
+      { t: 'Refine', d: 'Each step is editable — media, documents, due date, feedback.' },
+      { t: 'Map', d: 'The team and the SPVIE org chart, seen from HR.' },
+    ],
+    storyZoom: 'Enlarge the displayed screen',
     s5lead: {
       pre: 'A first day ',
       k: 'that no longer improvises',
@@ -296,32 +296,52 @@ function DisplayStack({
   );
 }
 
-// Cascade : écrans (fenêtres navigateur) empilés en escalier décalé (profondeur),
-// révélés au scroll ; au survol, l'écran se soulève et sa légende apparaît.
-// Hauteur du conteneur mesurée en JS (enfants en position absolue).
-function Cascade({
+// Scrollytelling RH : l'écran (fenêtre navigateur) reste épinglé pendant le
+// scroll ; les étapes défilent à gauche et l'écran change en fondu selon
+// l'étape active (pilotée en JS via data-active). Repli mobile/reduce :
+// .story-flat = liste verticale, une mini-capture par étape.
+function Story({
+  steps,
   screens,
-  caps,
   url,
-  enlarge,
+  zoomLabel,
   onOpen,
 }: {
+  steps: { t: string; d: string }[];
   screens: string[];
-  caps: Cap[];
   url: string;
-  enlarge: (name: string) => string;
+  zoomLabel: string;
   onOpen: (i: number) => void;
 }) {
   return (
-    <div className="cascade reveal">
-      {screens.map((src, i) => (
+    <div className="story" data-active="0">
+      <div className="story-pin">
+        <ol className="story-steps">
+          {steps.map((s, i) => (
+            <li className={i === 0 ? 'story-step on' : 'story-step'} key={s.t}>
+              <span className="story-num num">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="story-t title">{s.t}</span>
+              <span className="story-d">{s.d}</span>
+              <span className="story-mini" aria-hidden="true">
+                <img src={screens[i]} alt="" loading="lazy" />
+              </span>
+            </li>
+          ))}
+        </ol>
         <button
           type="button"
-          className="casc-item"
-          key={src}
-          style={{ ['--i' as string]: i } as CSSProperties}
-          onClick={() => onOpen(i)}
-          aria-label={enlarge(caps[i].b)}
+          className="story-shot"
+          aria-label={zoomLabel}
+          onClick={(e) => {
+            const idx = Number(
+              e.currentTarget.closest('.story')?.getAttribute('data-active') ||
+                0,
+            );
+            e.currentTarget.blur();
+            onOpen(idx);
+          }}
         >
           <span className="bwin">
             <span className="bbar">
@@ -330,16 +350,14 @@ function Cascade({
               <span className="dot g" />
               <span className="baddr">{url}</span>
             </span>
-            <span className="bshot">
-              <img src={src} alt={caps[i].b} />
+            <span className="bshot story-frames">
+              {screens.map((src, i) => (
+                <img key={src} src={src} alt={steps[i].t} />
+              ))}
             </span>
           </span>
-          <span className="casc-cap">
-            <b>{caps[i].b}</b>
-            {caps[i].r}
-          </span>
         </button>
-      ))}
+      </div>
     </div>
   );
 }
@@ -427,20 +445,42 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
       cover.style.transform = p > 0.001 ? `scale(${(1 + p * 0.12).toFixed(4)})` : '';
     };
 
-    // ── Cascade RH : hauteur du conteneur (enfants en absolu) ────
-    const cascade = root.querySelector<HTMLElement>('.cascade');
-    function measureCascade() {
-      if (!cascade) return;
-      const items = cascade.querySelectorAll<HTMLElement>('.casc-item');
-      if (!items.length) return;
-      if (matchMedia('(max-width: 860px)').matches) {
-        cascade.style.height = '';
+    // ── Scrollytelling RH : écran épinglé, étape active au scroll ─
+    const story = root.querySelector<HTMLElement>('.story');
+    const storyPin = story?.querySelector<HTMLElement>('.story-pin') ?? null;
+    const storySteps = story
+      ? Array.from(story.querySelectorAll<HTMLElement>('.story-step'))
+      : [];
+    const storyImgs = story
+      ? Array.from(story.querySelectorAll<HTMLElement>('.story-frames img'))
+      : [];
+    let storyD = 0;
+    function measureStory() {
+      if (!story || !storyPin) return;
+      if (reduce || matchMedia('(max-width: 860px)').matches) {
+        story.classList.add('story-flat');
+        story.style.height = 'auto';
+        storyD = 0;
         return;
       }
-      const oy =
-        parseFloat(getComputedStyle(cascade).getPropertyValue('--oy')) || 78;
-      const h0 = items[0].getBoundingClientRect().height;
-      cascade.style.height = h0 + (items.length - 1) * oy + 34 + 'px';
+      story.classList.remove('story-flat');
+      // ~55 % de viewport de défilement par étape : assez pour lire, sans traîner.
+      storyD = Math.round(storySteps.length * innerHeight * 0.55);
+      story.style.height = storyPin.offsetHeight + storyD + 'px';
+    }
+    function storyUpdate() {
+      if (!story || storyD <= 0 || story.classList.contains('story-flat'))
+        return;
+      let p = (MTOP - story.getBoundingClientRect().top) / storyD;
+      p = Math.max(0, Math.min(0.999, p));
+      const idx = Math.floor(p * storySteps.length);
+      if (Number(story.dataset.active) !== idx) {
+        story.dataset.active = String(idx);
+        storySteps.forEach((s, i) => s.classList.toggle('on', i === idx));
+        storyImgs.forEach((im, i) => {
+          im.style.opacity = i === idx ? '1' : '0';
+        });
+      }
     }
 
     // ── Section arrivant : la pile déborde au-delà du bord gauche ────
@@ -455,7 +495,8 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
     }
 
     function setup() {
-      measureCascade();
+      measureStory();
+      storyUpdate();
       bleedFeature();
       litUpdate();
       heroZoom();
@@ -481,6 +522,7 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
       if (!ticking) {
         requestAnimationFrame(() => {
           litUpdate();
+          storyUpdate();
           heroZoom();
           ticking = false;
         });
@@ -631,7 +673,7 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
               </p>
               <div className="fgrid">
                 <div className="fcol">
-                  <BrowserFrame src={rhParcours} alt={t.rhScreens[2].b} url={RH_URL} />
+                  <BrowserFrame src={rhParcours} alt={t.rhSteps[2].t} url={RH_URL} />
                   <span className="fcap">{t.facingLeft}</span>
                 </div>
                 <div className="flink" aria-hidden="true">
@@ -651,11 +693,11 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
             <section className="sec" id="onb-s4" data-sec>
               <span className="ey label">04 — {t.nav[3]}</span>
               <Lead id="onb-s4lead" lead={t.s4lead} />
-              <Cascade
+              <Story
+                steps={t.rhSteps}
                 screens={RH}
-                caps={t.rhScreens}
                 url={RH_URL}
-                enlarge={t.enlarge}
+                zoomLabel={t.storyZoom}
                 onOpen={(i) => setLbIndex(1 + ARR_GALLERY.length + i)}
               />
             </section>
