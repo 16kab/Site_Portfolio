@@ -84,7 +84,7 @@
 .onboarding-showcase .interv li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 2px; background: var(--onboarding-accent); }
 
 /* ---- Section « feature » : grande pile de captures qui déborde à gauche ---- */
-.onboarding-showcase .feature { display: grid; grid-template-columns: minmax(260px, 45%) 1fr; gap: clamp(20px, 3vw, 40px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
+.onboarding-showcase .feature { display: grid; grid-template-columns: minmax(280px, 54%) 1fr; gap: clamp(20px, 3vw, 40px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
 .onboarding-showcase .feature-txt { min-width: 0; }
 /* Déborde jusqu'au-delà du bord gauche du site (marge/largeur posées en JS),
    coupée par le body (overflow-x: hidden). */
@@ -148,49 +148,6 @@
 .onboarding-showcase .baddr { margin-left: 8px; flex: 1; max-width: 360px; height: 20px; border-radius: 999px; background: #e9e9ec; color: #9a9aa2; font-size: 11px; display: flex; align-items: center; padding: 0 12px; font-family: 'Manrope', sans-serif; letter-spacing: 0.01em; overflow: hidden; white-space: nowrap; }
 .onboarding-showcase .bshot { display: block; }
 .onboarding-showcase .bshot img { display: block; width: 100%; height: auto; }
-
-/* ---- Galerie horizontale épinglée (fenêtres larges, sans toggle) ---- */
-.onboarding-showcase .hwrap { position: relative; margin-top: clamp(24px, 4vw, 40px); }
-.onboarding-showcase .hpin { position: sticky; top: var(--mtop); }
-/* Titre épinglé : reste visible pendant que la galerie défile horizontalement. */
-.onboarding-showcase .gtitle { font-family: var(--title-font); font-weight: 600; font-size: clamp(1.1rem, 1.9vw, 1.55rem); letter-spacing: -0.01em; margin: 0 0 clamp(14px, 1.8vw, 22px); color: var(--portfolio-text-primary); }
-.onboarding-showcase .gbar { display: flex; align-items: center; padding: 0 0 16px; }
-.onboarding-showcase .hbar { display: flex; align-items: center; gap: 12px; color: var(--portfolio-text-muted); font-family: 'Manrope', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; flex: 1; min-width: 0; }
-.onboarding-showcase .hbar .tk { flex: 1; max-width: 300px; height: 2px; background: var(--portfolio-card-border); border-radius: 2px; position: relative; }
-.onboarding-showcase .hbarfill { position: absolute; left: 0; top: 0; height: 100%; width: 16%; background: var(--onboarding-accent); border-radius: 2px; }
-/* Découpe horizontale (overflow-x: clip), ombre des fenêtres débordant en bas
-   sans coupure ; fondus latéraux via ::before/::after (pas de mask-image). */
-.onboarding-showcase .hviewport { position: relative; overflow-x: clip; overflow-y: visible; }
-.onboarding-showcase .hviewport::after {
-  content: ''; position: absolute; top: 0; bottom: -70px; right: 0; width: 14%;
-  background: linear-gradient(to right, transparent, var(--portfolio-bg));
-  pointer-events: none; z-index: 3;
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent 100%);
-}
-.onboarding-showcase .hviewport::before {
-  content: ''; position: absolute; top: 0; bottom: -70px; left: 0; width: 14%;
-  background: linear-gradient(to right, var(--portfolio-bg), transparent);
-  pointer-events: none; z-index: 3; opacity: var(--m-lfade, 0);
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent 100%);
-}
-.onboarding-showcase .htrack { display: flex; align-items: flex-start; gap: clamp(16px, 1.8vw, 30px); }
-.onboarding-showcase .gspacer { flex: none; width: clamp(80px, 10vw, 180px); }
-.onboarding-showcase .gitem { flex: 0 0 auto; width: clamp(400px, 44vw, 640px); display: flex; flex-direction: column; }
-.onboarding-showcase .gitem .gshot { display: block; width: 100%; border: 0; padding: 0; margin: 0; background: none; cursor: zoom-in; }
-.onboarding-showcase .gitem .gshot:focus-visible { outline: 2px solid var(--onboarding-accent); outline-offset: 4px; border-radius: 16px; }
-.onboarding-showcase .gitem .bwin { width: 100%; }
-.onboarding-showcase .gitem .c { margin-top: 14px; font-size: 0.8rem; color: var(--portfolio-text-muted); }
-.onboarding-showcase .gitem .c b { color: var(--portfolio-text-primary); font-family: var(--title-font); font-weight: 600; }
-
-/* Repli mobile / reduce : défilement horizontal natif */
-.onboarding-showcase .gfallback .hviewport { overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; scrollbar-width: none; cursor: grab; }
-.onboarding-showcase .gfallback .hviewport::after,
-.onboarding-showcase .gfallback .hviewport::before { display: none; }
-.onboarding-showcase .gfallback .hviewport::-webkit-scrollbar { display: none; }
-.onboarding-showcase .gfallback .gitem { width: min(84vw, 560px); scroll-snap-align: start; }
-.onboarding-showcase .gfallback .htrack { transform: none !important; }
 
 /* ---- Cascade (espace RH) : écrans empilés en escalier décalé ---- */
 .onboarding-showcase .cascade { position: relative; --ox: 104px; --oy: 78px; margin: clamp(28px, 4vw, 52px) 0 clamp(64px, 10vw, 130px); }

@@ -38,7 +38,6 @@ const STRINGS = {
     metaValues: ['Product / UX Design', 'SPVIE · interne', 'Deux espaces', '2025'],
     nav: ['Contexte', 'Rôle', 'Arrivant', 'RH', 'Impact'],
     cue: '↓ étude de cas',
-    defiler: 'Défiler',
     enlarge: (name: string) => `Agrandir l'écran « ${name} »`,
     s1lead: {
       pre: "L'intégration se jouait dans les mails et les tableurs — ",
@@ -74,8 +73,6 @@ const STRINGS = {
       post: ' — clair, guidé, un peu gamifié.',
     } as Lead,
     accueilLabel: "L'accueil de l'arrivant",
-    s3galTitle: 'Le parcours, écran par écran',
-    s4galTitle: 'Le pilotage, écran par écran',
     arrScreens: [
       { b: 'Mon parcours', r: ' — les étapes, une à une' },
       { b: 'Une étape', r: ' — le contenu, guidé' },
@@ -119,7 +116,6 @@ const STRINGS = {
     metaValues: ['Product / UX Design', 'SPVIE · internal', 'Two spaces', '2025'],
     nav: ['Context', 'Role', 'Newcomer', 'HR', 'Impact'],
     cue: '↓ case study',
-    defiler: 'Scroll',
     enlarge: (name: string) => `Enlarge the "${name}" screen`,
     s1lead: {
       pre: 'Onboarding lived in emails and spreadsheets — ',
@@ -155,8 +151,6 @@ const STRINGS = {
       post: ' — clear, guided, a little gamified.',
     } as Lead,
     accueilLabel: "The newcomer's home",
-    s3galTitle: 'The journey, screen by screen',
-    s4galTitle: 'Piloting, screen by screen',
     arrScreens: [
       { b: 'My journey', r: ' — the steps, one by one' },
       { b: 'A step', r: ' — the content, guided' },
@@ -350,16 +344,6 @@ function Cascade({
   );
 }
 
-type GalleryState = {
-  hwrap: HTMLElement;
-  hpin: HTMLElement | null;
-  hview: HTMLElement | null;
-  htrack: HTMLElement | null;
-  hbar: HTMLElement | null;
-  pinned: boolean;
-  D: number;
-};
-
 export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
   const t = useT(STRINGS);
   const { lang } = useLang();
@@ -433,54 +417,6 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
     root.querySelectorAll('.reveal').forEach((el) => io.observe(el));
     cleanups.push(() => io.disconnect());
 
-    // ── Galeries épinglées (multi-instances) ─────────────────────
-    const galleries: GalleryState[] = Array.from(
-      root.querySelectorAll<HTMLElement>('.hwrap'),
-    ).map((hwrap) => ({
-      hwrap,
-      hpin: hwrap.querySelector<HTMLElement>('.hpin'),
-      hview: hwrap.querySelector<HTMLElement>('.hviewport'),
-      htrack: hwrap.querySelector<HTMLElement>('.htrack'),
-      hbar: hwrap.querySelector<HTMLElement>('.hbarfill'),
-      pinned: false,
-      D: 0,
-    }));
-    const pinModeOn = () => !reduce && matchMedia('(min-width: 861px)').matches;
-    function measure(g: GalleryState) {
-      const { hwrap, hpin, hview, htrack } = g;
-      if (!hpin || !hview || !htrack) return;
-      if (pinModeOn()) {
-        hwrap.classList.remove('gfallback');
-        hview.style.width = '';
-        const left = hview.getBoundingClientRect().left;
-        hview.style.width = window.innerWidth - left + 'px';
-        g.D = Math.max(0, htrack.scrollWidth - hview.clientWidth);
-        hwrap.style.height = hpin.offsetHeight + g.D + 'px';
-        g.pinned = true;
-      } else {
-        hwrap.classList.add('gfallback');
-        hwrap.style.height = 'auto';
-        htrack.style.transform = 'none';
-        hview.style.width = '';
-        g.pinned = false;
-      }
-    }
-    function hUpdate(g: GalleryState) {
-      const { hwrap, hview, htrack, hbar } = g;
-      if (!hview || !htrack || !hbar) return;
-      if (!g.pinned) {
-        const max = hview.scrollWidth - hview.clientWidth;
-        const pp = max > 0 ? hview.scrollLeft / max : 0;
-        hbar.style.width = 6 + pp * 94 + '%';
-        return;
-      }
-      let p = g.D > 0 ? (MTOP - hwrap.getBoundingClientRect().top) / g.D : 0;
-      p = Math.max(0, Math.min(1, p));
-      htrack.style.transform = `translateX(${(-p * g.D).toFixed(1)}px)`;
-      hbar.style.width = 6 + p * 94 + '%';
-      hview.style.setProperty('--m-lfade', String(Math.min(1, p / 0.04)));
-    }
-
     // ── Zoom de l'image hero au scroll (échelle 1 → 1.12) ────────
     const cover = root.querySelector<HTMLElement>('.m-hero .cover');
     const heroEl = root.querySelector<HTMLElement>('.m-hero');
@@ -519,8 +455,6 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
     }
 
     function setup() {
-      galleries.forEach(measure);
-      galleries.forEach(hUpdate);
       measureCascade();
       bleedFeature();
       litUpdate();
@@ -547,7 +481,6 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
       if (!ticking) {
         requestAnimationFrame(() => {
           litUpdate();
-          galleries.forEach(hUpdate);
           heroZoom();
           ticking = false;
         });
@@ -558,42 +491,6 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
     window.addEventListener('resize', setup);
     cleanups.push(() => document.body.removeEventListener('scroll', onScroll));
     cleanups.push(() => window.removeEventListener('resize', setup));
-
-    // Glisser horizontal en mode repli (mobile / reduce), par galerie
-    galleries.forEach((g) => {
-      const hview = g.hview;
-      if (!hview) return;
-      let dn = false;
-      let sx = 0;
-      let sl = 0;
-      const pd = (e: PointerEvent) => {
-        if (g.pinned) return;
-        dn = true;
-        sx = e.clientX;
-        sl = hview.scrollLeft;
-        hview.setPointerCapture(e.pointerId);
-      };
-      const pm = (e: PointerEvent) => {
-        if (!dn) return;
-        hview.scrollLeft = sl - (e.clientX - sx);
-      };
-      const pu = () => {
-        dn = false;
-      };
-      const ps = () => {
-        if (!g.pinned) hUpdate(g);
-      };
-      hview.addEventListener('pointerdown', pd);
-      hview.addEventListener('pointermove', pm);
-      hview.addEventListener('pointerup', pu);
-      hview.addEventListener('scroll', ps);
-      cleanups.push(() => {
-        hview.removeEventListener('pointerdown', pd);
-        hview.removeEventListener('pointermove', pm);
-        hview.removeEventListener('pointerup', pu);
-        hview.removeEventListener('scroll', ps);
-      });
-    });
 
     return () => cleanups.forEach((fn) => fn());
   }, [lang]);
