@@ -84,12 +84,14 @@
 .onboarding-showcase .interv li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 2px; background: var(--onboarding-accent); }
 
 /* ---- Section « feature » : grande pile de captures qui déborde à gauche ---- */
-.onboarding-showcase .feature { display: grid; grid-template-columns: minmax(280px, 44%) 1fr; gap: clamp(20px, 3vw, 40px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
+.onboarding-showcase .feature { display: grid; grid-template-columns: minmax(300px, 54%) 1fr; gap: clamp(20px, 3vw, 40px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 clamp(64px, 10vw, 130px); }
 .onboarding-showcase .feature-txt { min-width: 0; }
+/* Le lead remplit la colonne élargie (au lieu d'être bridé à 22ch). */
+.onboarding-showcase .feature-txt .lead { max-width: none; }
 /* Déborde jusqu'au-delà du bord gauche du site (marge/largeur posées en JS),
    coupée par le body (overflow-x: hidden). */
 /* padding-left = décalage de la pile vers la droite (largeur posée en JS). */
-.onboarding-showcase .feature-cards { position: relative; min-width: 0; z-index: 0; display: flex; align-items: center; justify-content: flex-start; padding: clamp(60px, 8vw, 120px) 0 clamp(90px, 11vw, 150px) clamp(60px, 14vw, 300px); }
+.onboarding-showcase .feature-cards { position: relative; min-width: 0; z-index: 0; display: flex; align-items: center; justify-content: flex-start; padding: clamp(60px, 8vw, 120px) 0 clamp(90px, 11vw, 150px) clamp(30px, 5vw, 110px); }
 .onboarding-showcase .dstack { display: grid; justify-items: start; align-items: center; }
 .onboarding-showcase .dcard {
   grid-area: 1 / 1;
@@ -102,7 +104,9 @@
   position: relative;
 }
 .onboarding-showcase .dcard[data-front='true'] { filter: none; }
-.onboarding-showcase .dcard-in { display: block; position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; border: 2px solid var(--portfolio-card-border); box-shadow: 0 34px 54px -30px rgba(0,0,0,0.5); background: #fff; }
+/* Pas de bordure ; ombre projetée vers l'arrière (haut-gauche) pour assombrir
+   la carte située derrière + un léger ancrage vers le bas. */
+.onboarding-showcase .dcard-in { display: block; position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: -26px -16px 50px -18px rgba(0,0,0,0.5), 0 22px 46px -26px rgba(0,0,0,0.32); }
 .onboarding-showcase .dcard-in img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 /* Voile qui assombrit les cartes non survolées. */
 .onboarding-showcase .dcard::before { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: 14px; background: var(--portfolio-bg); opacity: 0.45; transition: opacity .6s ease; pointer-events: none; }
