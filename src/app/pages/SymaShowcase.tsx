@@ -173,6 +173,11 @@ type CmpT = {
   cmpLogo: string;
 };
 
+// Empêche le focus souris (et donc le scroll-into-view du navigateur qui
+// faisait sauter la page) sans casser l'accès clavier : preventDefault sur
+// mousedown bloque la mise au focus mais laisse passer le click.
+const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefault();
+
 // Un panneau du comparateur : aperçu + Modèle / Palette / Fond / Logo,
 // chaque sélecteur indépendant (même agencement que le vrai site).
 function Panel({ config, t }: { config: PanelConfig; t: CmpT }) {
@@ -206,6 +211,7 @@ function Panel({ config, t }: { config: PanelConfig; t: CmpT }) {
                 className={i === logoIdx ? 'thumb on' : 'thumb'}
                 aria-label={LOGO_NAMES[i]}
                 aria-pressed={i === logoIdx}
+                onMouseDown={preventFocusScroll}
                 onClick={() => setLogoIdx(i)}
               >
                 <SvgLogo svg={svg} className="thumb-logo" />
@@ -223,6 +229,7 @@ function Panel({ config, t }: { config: PanelConfig; t: CmpT }) {
                 type="button"
                 className={palette === k ? 'ptab on' : 'ptab'}
                 aria-pressed={palette === k}
+                onMouseDown={preventFocusScroll}
                 onClick={() => changePalette(k)}
               >
                 {PALETTES[k].label}
@@ -242,6 +249,7 @@ function Panel({ config, t }: { config: PanelConfig; t: CmpT }) {
                 style={{ background: c }}
                 aria-label={`${t.cmpFond} ${c}`}
                 aria-pressed={bg === c}
+                onMouseDown={preventFocusScroll}
                 onClick={() => setBg(c)}
               />
             ))}
@@ -259,6 +267,7 @@ function Panel({ config, t }: { config: PanelConfig; t: CmpT }) {
                 style={{ background: c }}
                 aria-label={`${t.cmpLogo} ${c}`}
                 aria-pressed={logoColor === c}
+                onMouseDown={preventFocusScroll}
                 onClick={() => setLogoColor(c)}
               />
             ))}

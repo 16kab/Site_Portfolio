@@ -45,7 +45,7 @@
 .syma-showcase .visit:hover span { transform: translate(2px, -2px); }
 
 /* ---- COMPARATEUR (signature) ---- */
-.syma-showcase .cmp-section { padding-top: clamp(44px, 7vw, 96px); padding-bottom: clamp(50px, 8vw, 110px); }
+.syma-showcase .cmp-section { padding-top: clamp(44px, 7vw, 96px); padding-bottom: clamp(50px, 8vw, 110px); overflow-anchor: none; }
 .syma-showcase .cmp-section .ey { display: block; }
 .syma-showcase .cmp-title { font-size: clamp(1.9rem, 4vw, 3.1rem); line-height: 1.08; margin: 14px 0 clamp(28px, 4vw, 48px); max-width: 20ch; }
 .syma-showcase .cmp-title .k { color: var(--syma-accent); }
