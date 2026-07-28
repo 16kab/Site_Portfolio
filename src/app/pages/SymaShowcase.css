@@ -1,0 +1,121 @@
+/* SYMA — page vitrine (même ossature que Mauni/Onboarding).
+   Titres : Bricolage Grotesque. Reste : Manrope. Neutres : tokens --portfolio-*.
+   Accent : --syma-accent (indigo). Signature : comparateur A/B recolorable. */
+
+.syma-showcase {
+  --syma-accent: #6366f1;
+  --syma-accent-soft: #a5b4fc;
+  --title-font: 'Bricolage Grotesque Variable', 'Playfair Display', sans-serif;
+  --mtop: 134px;
+  position: relative;
+  background: var(--portfolio-bg);
+  color: var(--portfolio-text-primary);
+  font-family: 'Manrope', sans-serif;
+}
+.dark .syma-showcase { --syma-accent: #818cf8; --syma-accent-soft: #c7d2fe; }
+
+.syma-showcase .wrap { width: min(1220px, 90vw); margin-inline: auto; }
+.syma-showcase .title { font-family: var(--title-font); letter-spacing: -0.02em; font-weight: 600; }
+.syma-showcase .label { font-family: 'Manrope', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); }
+.syma-showcase .num { font-variant-numeric: tabular-nums; }
+
+/* ---- HERO (cible du morph) ---- */
+.syma-showcase .m-hero { position: relative; width: 100vw; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+.syma-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.syma-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,8,16,0.86), rgba(8,8,16,0.24) 42%, rgba(8,8,16,0.04) 70%, transparent); }
+.syma-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: syma-hero-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
+@keyframes syma-hero-fade { from { opacity: 0; } to { opacity: 1; } }
+.syma-showcase .m-hero .ey { display: flex; gap: 14px; flex-wrap: wrap; color: rgba(255,255,255,0.85); margin-bottom: 18px; }
+.syma-showcase .m-hero h1 { font-family: var(--title-font); font-weight: 800; font-size: clamp(3.2rem, 11vw, 9rem); line-height: 0.9; letter-spacing: -0.035em; margin: 0; color: #fff; }
+.syma-showcase .m-hero .th { font-family: var(--title-font); font-weight: 440; font-size: clamp(1.15rem, 2.4vw, 1.85rem); line-height: 1.16; max-width: 26ch; margin: 20px 0 0; color: rgba(255,255,255,0.95); }
+.syma-showcase .m-hero .th em { font-style: normal; color: var(--syma-accent-soft); }
+.syma-showcase .m-hero .cue { position: absolute; left: 0; right: 0; bottom: 20px; text-align: center; color: rgba(255,255,255,0.72); }
+
+/* ---- LAYOUT : rail + flux ---- */
+.syma-showcase .layout { display: grid; grid-template-columns: 280px 1fr; gap: clamp(30px, 5vw, 84px); align-items: start; padding: clamp(44px, 7vw, 90px) 0 0; margin-bottom: clamp(56px, 8vw, 120px); }
+.syma-showcase .rail { position: sticky; top: var(--mtop); align-self: start; }
+.syma-showcase .rail .nm { font-family: var(--title-font); font-weight: 700; font-size: 1.7rem; letter-spacing: -0.02em; margin: 0 0 4px; }
+.syma-showcase .rail .sub { color: var(--portfolio-text-secondary); font-size: 0.92rem; margin: 0 0 24px; max-width: 26ch; }
+.syma-showcase .rail dl { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 12px; border-top: 1px solid var(--portfolio-card-border); padding-top: 16px; margin: 0 0 26px; }
+.syma-showcase .rail dd { margin: 4px 0 0; font-family: var(--title-font); font-weight: 600; font-size: 0.92rem; }
+.syma-showcase .nav { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--portfolio-card-border); }
+.syma-showcase .nav li { border-bottom: 1px solid var(--portfolio-card-border); }
+.syma-showcase .nav button { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 10px 0; background: none; border: none; cursor: pointer; color: var(--portfolio-text-muted); font-family: 'Manrope', sans-serif; font-size: 0.82rem; transition: color .3s; }
+.syma-showcase .nav button .n { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 23px; height: 23px; border-radius: 7px; border: 1px solid var(--portfolio-card-border); font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); transition: background .3s, border-color .3s, color .3s; }
+.syma-showcase .nav button:hover { color: var(--portfolio-text-primary); }
+.syma-showcase .nav button:hover .n { border-color: var(--syma-accent); color: var(--syma-accent); }
+.syma-showcase .nav button.on { color: var(--portfolio-text-primary); }
+.syma-showcase .nav button.on .n { background: var(--syma-accent); border-color: var(--syma-accent); color: var(--portfolio-bg); }
+.syma-showcase .visit { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 22px; padding: 11px 16px; border-radius: 10px; border: 1px solid var(--portfolio-card-border); color: var(--portfolio-text-primary); font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: border-color .3s, color .3s; }
+.syma-showcase .visit:hover, .syma-showcase .visit:focus-visible { border-color: var(--syma-accent); color: var(--syma-accent); }
+.syma-showcase .visit span { transition: transform .3s ease; }
+.syma-showcase .visit:hover span { transform: translate(2px, -2px); }
+
+.syma-showcase .stream { min-width: 0; }
+.syma-showcase .sec { padding: 0 0 clamp(72px, 12vw, 150px); scroll-margin-top: var(--mtop); }
+.syma-showcase .sec .ey { display: block; margin-bottom: 20px; }
+.syma-showcase .lead { font-family: var(--title-font); font-weight: 520; font-size: clamp(1.7rem, 4.2vw, 3.2rem); line-height: 1.1; letter-spacing: -0.02em; margin: 0; max-width: 22ch; }
+.syma-showcase .lead .k { color: var(--syma-accent); }
+.syma-showcase .illuminate .wd { transition: opacity .1s linear; }
+.syma-showcase .note { color: var(--portfolio-text-description); font-size: 1.06rem; max-width: 46ch; margin: 22px 0 0; line-height: 1.6; }
+.syma-showcase .interv { margin-top: 30px; }
+.syma-showcase .interv .label { display: block; margin-bottom: 12px; }
+.syma-showcase .interv ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.syma-showcase .interv li { position: relative; padding-left: 22px; color: var(--portfolio-text-secondary); font-size: 0.98rem; }
+.syma-showcase .interv li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 8px; height: 8px; border-radius: 2px; background: var(--syma-accent); }
+
+/* ---- Comparateur A/B (signature, recolorable en live) ---- */
+.syma-showcase .cmp { margin-top: clamp(24px, 4vw, 44px); }
+.syma-showcase .cmp-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-bottom: clamp(18px, 2.4vw, 28px); }
+.syma-showcase .cmp-palettes { display: flex; gap: 10px; }
+.syma-showcase .cmp-pal { display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--portfolio-card-border); background: var(--portfolio-card-bg); color: var(--portfolio-text-secondary); font-family: 'Manrope', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: border-color .3s, color .3s; }
+.syma-showcase .cmp-pal.on { border-color: var(--syma-accent); color: var(--portfolio-text-primary); }
+.syma-showcase .cmp-dots { display: inline-flex; }
+.syma-showcase .cmp-dots span { width: 13px; height: 13px; border-radius: 999px; margin-left: -4px; box-shadow: 0 0 0 1.5px var(--portfolio-card-bg); }
+.syma-showcase .cmp-dots span:first-child { margin-left: 0; }
+.syma-showcase .cmp-hint { color: var(--portfolio-text-muted); font-size: 0.85rem; }
+.syma-showcase .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2vw, 26px); }
+.syma-showcase .cmp-card { position: relative; aspect-ratio: 1 / 1; border-radius: 24px; background: var(--card-bg); color: var(--logo-color); display: flex; align-items: center; justify-content: center; padding: clamp(28px, 6vw, 72px); overflow: hidden; transition: background .55s cubic-bezier(.4,0,.2,1); box-shadow: 0 40px 80px -46px rgba(0,0,0,0.45); }
+.syma-showcase .cmp-badge { position: absolute; top: 16px; left: 16px; width: 28px; height: 28px; border-radius: 8px; background: rgba(0,0,0,0.16); color: inherit; display: inline-flex; align-items: center; justify-content: center; font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 0.85rem; }
+.syma-showcase .cmp-logo { display: block; width: 78%; color: inherit; }
+.syma-showcase .cmp-logo svg { display: block; width: 100%; height: auto; transition: fill .55s cubic-bezier(.4,0,.2,1); }
+.syma-showcase .cmp-models { margin-top: clamp(18px, 2.4vw, 28px); }
+.syma-showcase .cmp-models-lbl { display: block; margin-bottom: 12px; }
+.syma-showcase .cmp-models-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.syma-showcase .cmp-chip { width: 66px; height: 46px; border-radius: 10px; border: 1px solid var(--portfolio-card-border); background: var(--portfolio-card-bg); color: var(--portfolio-text-primary); display: inline-flex; align-items: center; justify-content: center; padding: 9px 11px; cursor: pointer; transition: border-color .3s, transform .3s; }
+.syma-showcase .cmp-chip:hover { transform: translateY(-2px); }
+.syma-showcase .cmp-chip.on { border-color: var(--syma-accent); }
+.syma-showcase .cmp-chip-logo { display: block; width: 100%; height: 100%; color: inherit; }
+.syma-showcase .cmp-chip-logo svg { display: block; width: 100%; height: 100%; }
+@media (max-width: 720px) { .syma-showcase .cmp-grid { grid-template-columns: 1fr; } }
+
+/* ---- Le système : fenêtres navigateur empilées ---- */
+.syma-showcase .bwin { display: flex; flex-direction: column; border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid var(--portfolio-card-border); box-shadow: 0 40px 80px -44px rgba(0,0,0,0.5); }
+.syma-showcase .bbar { flex: none; height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 14px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.syma-showcase .dot { width: 11px; height: 11px; border-radius: 999px; flex: none; }
+.syma-showcase .dot.r { background: #ff5f57; }
+.syma-showcase .dot.y { background: #febc2e; }
+.syma-showcase .dot.g { background: #28c840; }
+.syma-showcase .baddr { margin-left: 8px; flex: 1; max-width: 320px; height: 20px; border-radius: 999px; background: #e9e9ec; color: #9a9aa2; font-size: 11px; display: flex; align-items: center; padding: 0 12px; font-family: 'Manrope', sans-serif; overflow: hidden; white-space: nowrap; }
+.syma-showcase .bshot { display: block; }
+.syma-showcase .bshot img { display: block; width: 100%; height: auto; }
+.syma-showcase .sys { display: flex; flex-direction: column; gap: clamp(28px, 5vw, 60px); margin-top: clamp(24px, 4vw, 40px); }
+.syma-showcase .sys-shot { display: block; width: 100%; border: 0; padding: 0; margin: 0; background: none; cursor: zoom-in; }
+.syma-showcase .sys-shot:focus-visible { outline: 2px solid var(--syma-accent); outline-offset: 4px; border-radius: 16px; }
+.syma-showcase .sys-cap { display: block; margin-top: 12px; font-size: 0.82rem; color: var(--portfolio-text-muted); }
+.syma-showcase .sys-cap b { color: var(--portfolio-text-primary); font-family: var(--title-font); font-weight: 600; }
+
+/* ---- Reveal ---- */
+.syma-showcase .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+.syma-showcase .reveal.in { opacity: 1; transform: none; }
+
+@media (max-width: 860px) {
+  .syma-showcase .layout { grid-template-columns: 1fr; gap: 28px; }
+  .syma-showcase .rail { position: static; }
+  .syma-showcase .nav { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .syma-showcase .reveal { opacity: 1 !important; transform: none !important; }
+  .syma-showcase .m-hero .in { animation: none !important; }
+  .syma-showcase .illuminate .wd { opacity: 1 !important; }
+}

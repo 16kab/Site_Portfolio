@@ -15,6 +15,7 @@ import { usePageTransition } from '../context/PageTransitionContext';
 import { useLang, useT } from '../i18n';
 import MauniShowcase from './MauniShowcase';
 import OnboardingRHShowcase from './OnboardingRHShowcase';
+import SymaShowcase from './SymaShowcase';
 
 const STRINGS = {
   fr: {
@@ -114,6 +115,9 @@ export default function ProjetDetail() {
   }
   if (projet.id === 'onboarding-rh') {
     return <OnboardingRHShowcase projet={projet} />;
+  }
+  if (projet.id === 'syma') {
+    return <SymaShowcase projet={projet} />;
   }
 
   // Scroll to section : offset de 120 px pour le menu sticky
