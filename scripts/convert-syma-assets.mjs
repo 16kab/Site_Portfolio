@@ -12,6 +12,7 @@ const map = [
   ['iconographies.png', 'syma-iconographie.webp'],
   ['Typographies.png', 'syma-typographies.webp'],
   ['Valider.png', 'syma-valider.webp'],
+  ['Site accueil.png', 'syma-accueil.webp'],
 ];
 
 for (const [src, out] of map) {

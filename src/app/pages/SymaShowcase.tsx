@@ -4,9 +4,9 @@ import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
 import { ImageLightbox } from '../components/ImageLightbox';
-import { scrollBodyTo } from '../utils/scrollBodyTo';
 import { useLang, useT } from '../i18n';
 import type { Projet } from '../data/projetsData';
+import accueil from 'figma:asset/syma-accueil.webp';
 import iconographie from 'figma:asset/syma-iconographie.webp';
 import typographies from 'figma:asset/syma-typographies.webp';
 import valider from 'figma:asset/syma-valider.webp';
@@ -18,15 +18,11 @@ import manuscritSvg from '../../assets/syma-logos/manuscrit.svg?raw';
 import verticalSvg from '../../assets/syma-logos/vertical.svg?raw';
 import fluidSvg from '../../assets/syma-logos/fluid.svg?raw';
 
-const MTOP = 134; // doit refléter --mtop dans SymaShowcase.css
 const SITE_URL = 'https://logo-syma.vercel.app/';
 
-type Lead = { pre: string; k: string; post: string };
-type Cap = { b: string; r: string };
-
-// Logos SVG (recolorables). Ordre = affichage dans la rangée des modèles.
+// Logos SVG (recolorables). Ordre = logo1..logo7 du vrai site.
 const LOGOS = [fatSvg, goofySvg, journalSvg, lebeauSvg, manuscritSvg, verticalSvg, fluidSvg];
-const LOGO_NAMES = ['FAT', 'Goofy', 'Journal', 'le beau', 'manuscrit', 'Vertical', 'fluid'];
+const LOGO_NAMES = ['Logo 1', 'Logo 2', 'Logo 3', 'Logo 4', 'Logo 5', 'Logo 6', 'Logo 7'];
 
 // Palettes exactes du site SYMA (js/palettes.js).
 const PALETTES = {
@@ -40,17 +36,14 @@ const PALETTES = {
   },
 } as const;
 type PaletteKey = keyof typeof PALETTES;
-// Style {fond, logo} de la carte A et de la carte B, par palette.
-const CARD_STYLES: Record<PaletteKey, { bg: string; logo: string }[]> = {
-  palette1: [
-    { bg: '#18233f', logo: '#f7f3e7' },
-    { bg: '#ff4d6d', logo: '#18233f' },
-  ],
-  palette2: [
-    { bg: '#610023', logo: '#f7eee5' },
-    { bg: '#f35b43', logo: '#610023' },
-  ],
-};
+
+// Config initiale des deux panneaux (identique au vrai site, main.js).
+type PanelConfig = { label: string; logoIdx: number; palette: PaletteKey; bg: string; logo: string };
+const PANEL_A: PanelConfig = { label: 'A', logoIdx: 0, palette: 'palette1', bg: '#18233f', logo: '#ffffff' };
+const PANEL_B: PanelConfig = { label: 'B', logoIdx: 1, palette: 'palette1', bg: '#f7f3e7', logo: '#18233f' };
+
+// Écrans produit du récit (ordre = étapes de l'étude de cas).
+const STORY_IMAGES = [accueil, iconographie, typographies, valider];
 
 const STRINGS = {
   fr: {
@@ -58,120 +51,82 @@ const STRINGS = {
     heroEyebrow: ['Site web', 'Studio de marque', '2025'],
     thesisPre: 'Choisir une identité de marque, ',
     thesisEm: 'à plusieurs.',
-    railSub: "Comparateur d'identité — logos, palettes, typo : on tranche ensemble.",
     metaLabels: ['Rôle', 'Nature', 'Portée', 'Année'],
     metaValues: ['Design & Front', 'Site web', 'Outil de décision', '2025'],
-    nav: ['Contexte', 'Rôle', 'Comparateur', 'Système', 'Impact'],
-    cue: '↓ étude de cas',
     visit: 'Visiter le site',
+    cue: '↓ étude de cas',
+    // Comparateur
+    cmpEyebrow: 'Le comparateur',
+    cmpTitlePre: 'Comparez les directions, ',
+    cmpTitleEm: 'recolorez en direct.',
+    cmpModel: 'Modèle',
+    cmpPalette: 'Palette',
+    cmpFond: 'Fond',
+    cmpLogo: 'Logo',
+    cmpNote:
+      'Recréé à l’identique : chaque carte a son modèle, sa palette, sa couleur de fond et de logo — sélecteurs indépendants. Les logos sont de vrais SVG recolorés en direct, comme sur le site.',
+    // Récit
+    storyEyebrow: 'L’étude de cas',
     enlarge: (name: string) => `Agrandir « ${name} »`,
-    s1lead: {
-      pre: 'Choisir un logo par mails et captures, ',
-      k: "c'est un choix qui s'éparpille.",
-      post: '',
-    } as Lead,
-    s1note:
-      'SYMA rassemble les directions au même endroit — on compare, on classe, on tranche, sans perdre le fil des avis.',
-    s2lead: {
-      pre: 'Du concept à l’interface, ',
-      k: 'puis au code.',
-      post: '',
-    } as Lead,
-    s2note:
-      "Exploration des directions de logo, système de marque (palette, typo, icônes), UI du comparateur, et le front (recolorisation SVG en direct, vote).",
-    interventionsLabel: 'Interventions',
-    interventions: [
-      'Directions de logo & système de marque',
-      'UI du comparateur et du vote',
-      'Front : recolorisation SVG en direct',
-      'Palette, typographies, iconographie',
+    steps: [
+      {
+        t: 'Le contexte',
+        b: 'Choisir un logo par mails et captures, c’est un choix qui s’éparpille. SYMA rassemble les directions au même endroit : on compare, on classe, on tranche — sans perdre le fil des avis.',
+      },
+      {
+        t: 'L’iconographie',
+        b: 'Un jeu d’icônes cohérent, validable une par une. Chaque piste peut être acceptée, refusée avec un retour, ou complétée par une demande libre.',
+      },
+      {
+        t: 'Les typographies',
+        b: 'Titre, texte courant, accent décoratif : le système typographique se prévisualise en contexte pour trancher sur du concret plutôt que sur des noms de polices.',
+      },
+      {
+        t: 'Valider, ensemble',
+        b: 'Le choix acté, partagé, sans ambiguïté. Fini les fils de mails : chacun compare et vote, le studio tranche sur une base commune. [Impact réel à affiner.]',
+      },
     ],
-    s3lead: {
-      pre: 'Deux directions, ',
-      k: 'une bascule de palette',
-      post: ' — et le choix devient évident.',
-    } as Lead,
-    cmpHint: 'Cliquez une palette — les deux directions se recolorent.',
-    cmpModels: 'Modèles',
-    s4lead: {
-      pre: 'Un système complet : ',
-      k: 'palette, typo, icônes.',
-      post: '',
-    } as Lead,
-    sysScreens: [
-      { b: 'Iconographie', r: ' — un jeu d’icônes cohérent' },
-      { b: 'Typographies', r: ' — titre, texte, accent décoratif' },
-      { b: 'Valider', r: ' — le choix acté, partagé' },
-    ] as Cap[],
-    s5lead: {
-      pre: 'Une identité ',
-      k: 'assumée collectivement',
-      post: '.',
-    } as Lead,
-    s5note:
-      "Fini les fils de mails : chacun compare, vote, et le studio tranche sur une base commune. [Impact réel à affiner.]",
   },
   en: {
     study: 'Case study',
     heroEyebrow: ['Website', 'Brand studio', '2025'],
     thesisPre: 'Choosing a brand identity, ',
     thesisEm: 'together.',
-    railSub: 'Identity comparator — logos, palettes, type: decide together.',
     metaLabels: ['Role', 'Type', 'Scope', 'Year'],
     metaValues: ['Design & Front-end', 'Website', 'Decision tool', '2025'],
-    nav: ['Context', 'Role', 'Comparator', 'System', 'Impact'],
-    cue: '↓ case study',
     visit: 'Visit the site',
+    cue: '↓ case study',
+    cmpEyebrow: 'The comparator',
+    cmpTitlePre: 'Compare the directions, ',
+    cmpTitleEm: 'recolor them live.',
+    cmpModel: 'Model',
+    cmpPalette: 'Palette',
+    cmpFond: 'Background',
+    cmpLogo: 'Logo',
+    cmpNote:
+      'Rebuilt faithfully: each card has its own model, palette, background and logo color — independent selectors. The logos are real SVGs recolored live, just like on the site.',
+    storyEyebrow: 'The case study',
     enlarge: (name: string) => `Enlarge "${name}"`,
-    s1lead: {
-      pre: 'Picking a logo over emails and screenshots, ',
-      k: 'a choice that scatters.',
-      post: '',
-    } as Lead,
-    s1note:
-      'SYMA gathers the directions in one place — you compare, rank, decide, without losing the thread of opinions.',
-    s2lead: {
-      pre: 'From concept to interface, ',
-      k: 'then to code.',
-      post: '',
-    } as Lead,
-    s2note:
-      'Logo direction exploration, brand system (palette, type, icons), comparator UI, and the front-end (live SVG recoloring, voting).',
-    interventionsLabel: 'Contributions',
-    interventions: [
-      'Logo directions & brand system',
-      'Comparator and voting UI',
-      'Front-end: live SVG recoloring',
-      'Palette, typography, iconography',
+    steps: [
+      {
+        t: 'The context',
+        b: 'Picking a logo over emails and screenshots is a choice that scatters. SYMA gathers the directions in one place: you compare, rank, decide — without losing the thread of opinions.',
+      },
+      {
+        t: 'Iconography',
+        b: 'A coherent icon set, validated one by one. Each option can be accepted, rejected with feedback, or supplemented by a free request.',
+      },
+      {
+        t: 'Typography',
+        b: 'Heading, body, decorative accent: the type system is previewed in context, so the call is made on something concrete rather than on font names.',
+      },
+      {
+        t: 'Validate, together',
+        b: 'The choice locked in, shared, unambiguous. No more email threads: everyone compares and votes, the studio decides on common ground. [Real impact to refine.]',
+      },
     ],
-    s3lead: {
-      pre: 'Two directions, ',
-      k: 'one palette switch',
-      post: ' — and the choice becomes obvious.',
-    } as Lead,
-    cmpHint: 'Click a palette — both directions recolor.',
-    cmpModels: 'Models',
-    s4lead: {
-      pre: 'A full system: ',
-      k: 'palette, type, icons.',
-      post: '',
-    } as Lead,
-    sysScreens: [
-      { b: 'Iconography', r: ' — a coherent icon set' },
-      { b: 'Typography', r: ' — heading, body, decorative accent' },
-      { b: 'Validate', r: ' — the choice locked in, shared' },
-    ] as Cap[],
-    s5lead: {
-      pre: 'An identity ',
-      k: 'owned collectively',
-      post: '.',
-    } as Lead,
-    s5note:
-      'No more email threads: everyone compares, votes, and the studio decides on common ground. [Real impact to refine.]',
   },
 };
-
-const SYS_SCREENS = [iconographie, typographies, valider];
 
 // ── Petits composants ────────────────────────────────────────────
 function renderWords(text: string, accent: boolean, keyPrefix: string) {
@@ -186,34 +141,24 @@ function renderWords(text: string, accent: boolean, keyPrefix: string) {
   });
 }
 
-function Lead({ id, lead }: { id: string; lead: Lead }) {
-  return (
-    <p className="lead illuminate title" id={id}>
-      {renderWords(lead.pre, false, 'p')}
-      {renderWords(lead.k, true, 'k')}
-      {renderWords(lead.post, false, 'o')}
-    </p>
-  );
-}
-
 // Logo SVG inline recoloré via currentColor (le conteneur porte `color`).
-function SvgLogo({ svg, className }: { svg: string; className?: string }) {
+function SvgLogo({ svg, className, style }: { svg: string; className?: string; style?: CSSProperties }) {
   const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const el = ref.current?.querySelector('svg');
     if (!el) return;
-    // On retire width/height pour laisser le CSS dimensionner selon le contexte
-    // (carte = largeur pilotée + hauteur auto ; puce = contain). Le viewBox reste.
+    // On retire width/height pour laisser le CSS dimensionner selon le contexte.
     el.removeAttribute('width');
     el.removeAttribute('height');
     el.querySelectorAll('path, polygon, circle, rect, text').forEach((p) => {
-      (p as SVGElement & { style: CSSStyleDeclaration }).style.fill = 'currentColor';
+      (p as SVGElement).style.fill = 'currentColor';
     });
   }, [svg]);
   return (
     <span
       ref={ref}
       className={className}
+      style={style}
       aria-hidden="true"
       // biome-ignore lint: SVG de marque interne, contenu maîtrisé.
       dangerouslySetInnerHTML={{ __html: svg }}
@@ -221,93 +166,187 @@ function SvgLogo({ svg, className }: { svg: string; className?: string }) {
   );
 }
 
-function BrowserFrame({ src, alt, url }: { src: string; alt: string; url: string }) {
-  return (
-    <span className="bwin">
-      <span className="bbar">
-        <span className="dot r" />
-        <span className="dot y" />
-        <span className="dot g" />
-        <span className="baddr">{url}</span>
-      </span>
-      <span className="bshot">
-        <img src={src} alt={alt} />
-      </span>
-    </span>
-  );
-}
+type CmpT = {
+  cmpModel: string;
+  cmpPalette: string;
+  cmpFond: string;
+  cmpLogo: string;
+};
 
-function Comparator({
-  hint,
-  modelsLabel,
-}: {
-  hint: string;
-  modelsLabel: string;
-}) {
-  const [pal, setPal] = useState<PaletteKey>('palette1');
-  const [modelA, setModelA] = useState(3); // « le beau »
-  const [modelB, setModelB] = useState(6); // « fluid »
-  const styles = CARD_STYLES[pal];
-  const cardStyle = (i: number) =>
-    ({ ['--card-bg' as string]: styles[i].bg, ['--logo-color' as string]: styles[i].logo }) as CSSProperties;
-  // Clic sur une puce : devient la direction A. Si c'était déjà B, B reprend
-  // l'ancien A (on ne montre jamais deux fois le même logo).
-  const pickModel = (i: number) => {
-    if (i === modelA) return;
-    if (i === modelB) setModelB(modelA);
-    setModelA(i);
+// Un panneau du comparateur : aperçu + Modèle / Palette / Fond / Logo,
+// chaque sélecteur indépendant (même agencement que le vrai site).
+function Panel({ config, t }: { config: PanelConfig; t: CmpT }) {
+  const [palette, setPalette] = useState<PaletteKey>(config.palette);
+  const [logoIdx, setLogoIdx] = useState(config.logoIdx);
+  const [bg, setBg] = useState(config.bg);
+  const [logoColor, setLogoColor] = useState(config.logo);
+  const colors = PALETTES[palette].colors;
+
+  const changePalette = (k: PaletteKey) => {
+    setPalette(k);
+    setBg(PALETTES[k].colors[0]);
+    setLogoColor(PALETTES[k].colors[1]);
   };
+
   return (
-    <div className="cmp reveal">
-      <div className="cmp-head">
-        <div className="cmp-palettes" role="group" aria-label="Palette">
-          {(Object.keys(PALETTES) as PaletteKey[]).map((k) => (
-            <button
-              key={k}
-              type="button"
-              className={pal === k ? 'cmp-pal on' : 'cmp-pal'}
-              onClick={() => setPal(k)}
-            >
-              <span className="cmp-dots">
-                {PALETTES[k].colors.slice(0, 6).map((c, i) => (
-                  <span key={`${k}-${i}`} style={{ background: c }} />
-                ))}
-              </span>
-              {PALETTES[k].label}
-            </button>
-          ))}
-        </div>
-        <p className="cmp-hint">{hint}</p>
+    <div className="cpanel">
+      <div className="cpanel-preview" style={{ backgroundColor: bg }}>
+        <span className="cpanel-chip">{config.label}</span>
+        <SvgLogo svg={LOGOS[logoIdx]} className="cpanel-logo" style={{ color: logoColor }} />
       </div>
 
-      <div className="cmp-grid">
-        <div className="cmp-card" style={cardStyle(0)}>
-          <span className="cmp-badge">A</span>
-          <SvgLogo svg={LOGOS[modelA]} className="cmp-logo" />
+      <div className="cpanel-controls">
+        <div className="cgroup">
+          <span className="clabel label">{t.cmpModel}</span>
+          <div className="thumb-row">
+            {LOGOS.map((svg, i) => (
+              <button
+                key={LOGO_NAMES[i]}
+                type="button"
+                className={i === logoIdx ? 'thumb on' : 'thumb'}
+                aria-label={LOGO_NAMES[i]}
+                aria-pressed={i === logoIdx}
+                onClick={() => setLogoIdx(i)}
+              >
+                <SvgLogo svg={svg} className="thumb-logo" />
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="cmp-card" style={cardStyle(1)}>
-          <span className="cmp-badge">B</span>
-          <SvgLogo svg={LOGOS[modelB]} className="cmp-logo" />
-        </div>
-      </div>
 
-      <div className="cmp-models">
-        <span className="cmp-models-lbl label">{modelsLabel}</span>
-        <div className="cmp-models-row">
-          {LOGOS.map((svg, i) => (
-            <button
-              key={LOGO_NAMES[i]}
-              type="button"
-              className={i === modelA || i === modelB ? 'cmp-chip on' : 'cmp-chip'}
-              aria-label={LOGO_NAMES[i]}
-              onClick={() => pickModel(i)}
-            >
-              <SvgLogo svg={svg} className="cmp-chip-logo" />
-            </button>
-          ))}
+        <div className="cgroup">
+          <span className="clabel label">{t.cmpPalette}</span>
+          <div className="ptabs">
+            {(Object.keys(PALETTES) as PaletteKey[]).map((k) => (
+              <button
+                key={k}
+                type="button"
+                className={palette === k ? 'ptab on' : 'ptab'}
+                aria-pressed={palette === k}
+                onClick={() => changePalette(k)}
+              >
+                {PALETTES[k].label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="cgroup">
+          <span className="clabel label">{t.cmpFond}</span>
+          <div className="swrow">
+            {colors.map((c) => (
+              <button
+                key={`bg-${c}`}
+                type="button"
+                className={bg === c ? 'sw on' : 'sw'}
+                style={{ background: c }}
+                aria-label={`${t.cmpFond} ${c}`}
+                aria-pressed={bg === c}
+                onClick={() => setBg(c)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="cgroup">
+          <span className="clabel label">{t.cmpLogo}</span>
+          <div className="swrow">
+            {colors.map((c) => (
+              <button
+                key={`lg-${c}`}
+                type="button"
+                className={logoColor === c ? 'sw on' : 'sw'}
+                style={{ background: c }}
+                aria-label={`${t.cmpLogo} ${c}`}
+                aria-pressed={logoColor === c}
+                onClick={() => setLogoColor(c)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
+  );
+}
+
+type StoryStep = { t: string; b: string };
+
+// Récit : texte à gauche (change au scroll), image fixe à droite qui
+// déborde hors du cadre et change selon l'étape active.
+function Story({
+  eyebrow,
+  steps,
+  enlarge,
+}: {
+  eyebrow: string;
+  steps: StoryStep[];
+  enlarge: (name: string) => string;
+}) {
+  const [active, setActive] = useState(0);
+  const [lb, setLb] = useState<number | null>(null);
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return;
+    const stepEls = Array.from(root.querySelectorAll<HTMLElement>('.story-step'));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.step));
+        });
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+    );
+    stepEls.forEach((s) => io.observe(s));
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <section className="story" ref={ref}>
+      <div className="story-grid">
+        <div className="story-text">
+          <span className="ey label">{eyebrow}</span>
+          {steps.map((s, i) => (
+            <div className={i === active ? 'story-step on' : 'story-step'} data-step={i} key={s.t}>
+              <span className="story-num num">{String(i + 1).padStart(2, '0')}</span>
+              <h3 className="story-h title">{s.t}</h3>
+              <p className="story-b">{s.b}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="story-media">
+          <button
+            type="button"
+            className="story-sticky"
+            aria-label={enlarge(steps[active].t)}
+            onClick={(e) => {
+              e.currentTarget.blur();
+              setLb(active);
+            }}
+          >
+            {STORY_IMAGES.map((src, i) => (
+              <img
+                key={src}
+                src={src}
+                alt={steps[i].t}
+                className={i === active ? 'story-img on' : 'story-img'}
+                loading="lazy"
+                decoding="async"
+              />
+            ))}
+            <span className="story-zoom" aria-hidden="true">
+              ⤢
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {lb !== null && (
+        <ImageLightbox images={STORY_IMAGES} currentIndex={lb} onClose={() => setLb(null)} />
+      )}
+    </section>
   );
 }
 
@@ -315,7 +354,6 @@ export default function SymaShowcase({ projet }: { projet: Projet }) {
   const t = useT(STRINGS);
   const { lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
-  const [lbIndex, setLbIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -323,7 +361,7 @@ export default function SymaShowcase({ projet }: { projet: Projet }) {
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const cleanups: (() => void)[] = [];
 
-    // Illumination mot par mot des titres
+    // Illumination mot par mot des titres .illuminate
     const illum: { el: HTMLElement; sp: HTMLElement[] }[] = [];
     root.querySelectorAll<HTMLElement>('.illuminate').forEach((el) => {
       const sp = Array.from(el.querySelectorAll<HTMLElement>('.wd'));
@@ -345,27 +383,6 @@ export default function SymaShowcase({ projet }: { projet: Projet }) {
         });
       });
     }
-
-    // Scroll-spy du rail
-    const navButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('.nav button'));
-    const links: Record<string, HTMLButtonElement> = {};
-    navButtons.forEach((b) => {
-      links[b.dataset.to || ''] = b;
-    });
-    const spy = new IntersectionObserver(
-      (es) => {
-        es.forEach((e) => {
-          if (e.isIntersecting) {
-            navButtons.forEach((b) => b.classList.remove('on'));
-            const l = links[(e.target as HTMLElement).id];
-            if (l) l.classList.add('on');
-          }
-        });
-      },
-      { rootMargin: '-45% 0px -50% 0px' },
-    );
-    root.querySelectorAll('[data-sec]').forEach((s) => spy.observe(s));
-    cleanups.push(() => spy.disconnect());
 
     // Reveal au scroll
     const io = new IntersectionObserver(
@@ -450,123 +467,44 @@ export default function SymaShowcase({ projet }: { projet: Projet }) {
         </div>
       </section>
 
-      {/* CORPS : rail + flux */}
+      {/* BARRE MÉTA */}
       <div className="wrap">
-        <div className="layout">
-          <aside className="rail">
-            <div className="label" style={{ marginBottom: '12px' }}>
-              {t.study}
-            </div>
-            <p className="nm">{projet.title}</p>
-            <p className="sub">{t.railSub}</p>
-            <dl>
-              {t.metaLabels.map((l, i) => (
-                <div key={l}>
-                  <dt className="label">{l}</dt>
-                  <dd>{t.metaValues[i]}</dd>
-                </div>
-              ))}
-            </dl>
-            <ul className="nav">
-              {t.nav.map((label, i) => (
-                <li key={label}>
-                  <button
-                    type="button"
-                    data-to={`syma-s${i + 1}`}
-                    onClick={() => {
-                      const el = rootRef.current?.querySelector<HTMLElement>(
-                        `#syma-s${i + 1}`,
-                      );
-                      if (el) scrollBodyTo(el.offsetTop - MTOP + 1, 700);
-                    }}
-                  >
-                    <span className="n num">{i + 1}</span> {label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <a
-              className="visit"
-              href={SITE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t.visit} <span aria-hidden="true">↗</span>
-            </a>
-          </aside>
-
-          <main className="stream">
-            <section className="sec" id="syma-s1" data-sec>
-              <span className="ey label">01 — {t.nav[0]}</span>
-              <Lead id="syma-s1lead" lead={t.s1lead} />
-              <p className="note">{t.s1note}</p>
-            </section>
-
-            <section className="sec" id="syma-s2" data-sec>
-              <span className="ey label">02 — {t.nav[1]}</span>
-              <Lead id="syma-s2lead" lead={t.s2lead} />
-              <p className="note">{t.s2note}</p>
-              <div className="interv">
-                <span className="label">{t.interventionsLabel}</span>
-                <ul>
-                  {t.interventions.map((it) => (
-                    <li key={it}>{it}</li>
-                  ))}
-                </ul>
+        <div className="metabar reveal">
+          <span className="metabar-study label">{t.study}</span>
+          <dl className="metabar-meta">
+            {t.metaLabels.map((l, i) => (
+              <div key={l}>
+                <dt className="label">{l}</dt>
+                <dd>{t.metaValues[i]}</dd>
               </div>
-            </section>
-
-            <section className="sec" id="syma-s3" data-sec>
-              <span className="ey label">03 — {t.nav[2]}</span>
-              <Lead id="syma-s3lead" lead={t.s3lead} />
-              <Comparator hint={t.cmpHint} modelsLabel={t.cmpModels} />
-            </section>
-
-            <section className="sec" id="syma-s4" data-sec>
-              <span className="ey label">04 — {t.nav[3]}</span>
-              <Lead id="syma-s4lead" lead={t.s4lead} />
-              <div className="sys">
-                {SYS_SCREENS.map((src, i) => (
-                  <figure className="sys-item reveal" key={src}>
-                    <button
-                      type="button"
-                      className="sys-shot"
-                      aria-label={t.enlarge(t.sysScreens[i].b)}
-                      onClick={() => setLbIndex(i)}
-                    >
-                      <BrowserFrame
-                        src={src}
-                        alt={t.sysScreens[i].b}
-                        url="logo-syma.vercel.app"
-                      />
-                    </button>
-                    <figcaption className="sys-cap">
-                      <b>{t.sysScreens[i].b}</b>
-                      {t.sysScreens[i].r}
-                    </figcaption>
-                  </figure>
-                ))}
-              </div>
-            </section>
-
-            <section className="sec" id="syma-s5" data-sec>
-              <span className="ey label">05 — {t.nav[4]}</span>
-              <Lead id="syma-s5lead" lead={t.s5lead} />
-              <p className="note">{t.s5note}</p>
-            </section>
-          </main>
+            ))}
+          </dl>
+          <a className="visit" href={SITE_URL} target="_blank" rel="noopener noreferrer">
+            {t.visit} <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
 
-      <ContactFooter />
+      {/* COMPARATEUR (signature) */}
+      <section className="wrap cmp-section">
+        <span className="ey label">{t.cmpEyebrow}</span>
+        <h2 className="cmp-title title illuminate">
+          {renderWords(t.cmpTitlePre, false, 'p')}
+          {renderWords(t.cmpTitleEm, true, 'k')}
+        </h2>
+        <div className="cmp reveal">
+          <div className="cmp-cards">
+            <Panel config={PANEL_A} t={t} />
+            <Panel config={PANEL_B} t={t} />
+          </div>
+        </div>
+        <p className="cmp-note">{t.cmpNote}</p>
+      </section>
 
-      {lbIndex !== null && (
-        <ImageLightbox
-          images={SYS_SCREENS}
-          currentIndex={lbIndex}
-          onClose={() => setLbIndex(null)}
-        />
-      )}
+      {/* RÉCIT — texte à gauche, image fixe à droite qui déborde */}
+      <Story eyebrow={t.storyEyebrow} steps={t.steps} enlarge={t.enlarge} />
+
+      <ContactFooter />
     </div>
   );
 }
