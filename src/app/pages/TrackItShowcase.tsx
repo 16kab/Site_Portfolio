@@ -52,9 +52,9 @@ const SERIES: {
         { t: "La balance et l'épée", d: '2026-04-07', r: 7.7, w: true },
         { t: 'Angle mort', d: '2026-04-14', r: 8.0, w: true },
         { t: 'Le juste et le fort', d: '2026-04-21', r: 7.8, w: true },
-        { t: 'Contre-enquête', d: '2026-04-28', r: 0, w: false },
-        { t: 'La chute', d: '2026-05-05', r: 0, w: false },
-        { t: 'Verdict', d: '2026-05-12', r: 0, w: false },
+        { t: 'Contre-enquête', d: '2026-04-28', r: 7.6, w: false },
+        { t: 'La chute', d: '2026-05-05', r: 8.3, w: false },
+        { t: 'Verdict', d: '2026-05-12', r: 8.7, w: false },
       ],
     },
   ],
@@ -198,6 +198,20 @@ function IPhone({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+// Coches identiques à l'app (Lucide Circle / CircleCheckBig).
+function CheckIcon({ on }: { on: boolean }) {
+  return on ? (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21.801 10A10 10 0 1 1 17 3.335" />
+      <path d="m9 11 3 3L22 4" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+    </svg>
+  );
+}
+
 // Signature — suivi d'épisodes interactif
 function EpisodeTracker({ t }: { t: (typeof STRINGS)['fr'] }) {
   const initial: Record<string, boolean> = {};
@@ -226,15 +240,34 @@ function EpisodeTracker({ t }: { t: (typeof STRINGS)['fr'] }) {
   const orangePct = (orange / TOTAL_EP) * 100;
   const complete = watchedCount === TOTAL_EP;
 
+  // Logique identique à l'app (ShowDetails) : cocher un épisode coche aussi
+  // tous les précédents (saisons antérieures entières + éps ≤ i de la saison) ;
+  // décocher ne retire que cet épisode.
   const toggleEp = (n: number, i: number) =>
-    setWatched((w) => ({ ...w, [`${n}-${i}`]: !w[`${n}-${i}`] }));
+    setWatched((w) => {
+      const key = `${n}-${i}`;
+      if (w[key]) return { ...w, [key]: false };
+      const next = { ...w };
+      for (const s of SERIES.seasons) {
+        if (s.n < n) s.episodes.forEach((_, j) => (next[`${s.n}-${j}`] = true));
+        else if (s.n === n) for (let j = 0; j <= i; j++) next[`${s.n}-${j}`] = true;
+      }
+      return next;
+    });
+  // Cocher une saison : la saison entière + toutes les précédentes.
+  // Décocher : uniquement les épisodes de cette saison.
   const toggleSeason = (s: Season) => {
     const all = seasonWatchedCount(s) === s.episodes.length;
     setWatched((w) => {
       const next = { ...w };
-      s.episodes.forEach((_, i) => {
-        next[`${s.n}-${i}`] = !all;
-      });
+      if (all) {
+        s.episodes.forEach((_, j) => (next[`${s.n}-${j}`] = false));
+      } else {
+        for (const ss of SERIES.seasons) {
+          if (ss.n < s.n) ss.episodes.forEach((_, j) => (next[`${ss.n}-${j}`] = true));
+        }
+        s.episodes.forEach((_, j) => (next[`${s.n}-${j}`] = true));
+      }
       return next;
     });
   };
@@ -312,7 +345,7 @@ function EpisodeTracker({ t }: { t: (typeof STRINGS)['fr'] }) {
                     onMouseDown={preventFocusScroll}
                     onClick={() => toggleSeason(s)}
                   >
-                    <span aria-hidden="true">✓</span>
+                    <CheckIcon on={seasonDone} />
                   </button>
                 </div>
 
@@ -321,22 +354,24 @@ function EpisodeTracker({ t }: { t: (typeof STRINGS)['fr'] }) {
                     {s.episodes.map((e, i) => {
                       const on = isW(s.n, i);
                       return (
-                        <li className="episode" key={e.t}>
-                          <span className="ep-n num">{i + 1}</span>
-                          <span className="ep-meta">
-                            <span className="ep-title">{e.t}</span>
-                            <span className="ep-date num">{e.d}</span>
-                          </span>
-                          {e.r > 0 && <span className="ep-note num">★ {e.r.toFixed(1)}</span>}
+                        <li key={e.t}>
                           <button
                             type="button"
-                            className={on ? 'check ep-check on' : 'check ep-check'}
-                            aria-label={e.t}
+                            className="episode"
                             aria-pressed={on}
+                            aria-label={`${e.t}${on ? ' — vu' : ''}`}
                             onMouseDown={preventFocusScroll}
                             onClick={() => toggleEp(s.n, i)}
                           >
-                            <span aria-hidden="true">✓</span>
+                            <span className="ep-n num">{i + 1}</span>
+                            <span className="ep-meta">
+                              <span className="ep-title">{e.t}</span>
+                              <span className="ep-date num">{e.d}</span>
+                            </span>
+                            {e.r > 0 && <span className="ep-note num">★ {e.r.toFixed(1)}</span>}
+                            <span className={on ? 'check ep-check on' : 'check ep-check'}>
+                              <CheckIcon on={on} />
+                            </span>
                           </button>
                         </li>
                       );
