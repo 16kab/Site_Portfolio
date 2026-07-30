@@ -140,11 +140,11 @@ export const projetsDataEn: Record<string, ProjetTranslation> = {
       '[Placeholder] Description of the project impact.\n\n• First result to complete\n• Second result to complete\n• Third result to complete',
   },
   trackit: {
-    title: 'Trackit',
-    subtitle: '[Placeholder] Trackit project subtitle, to be written later.',
+    title: 'TrackIt',
+    subtitle: 'Film & TV tracking — TMDB search, episodes, cloud sync.',
     description:
-      '[Placeholder] Short description of the Trackit project shown on the card. To be replaced with the final content.',
-    tags: ['UX/UI Design', 'Product Design', 'To be completed'],
+      'A mobile-first web app to track your films and shows: watchlist, episode-by-episode tracking, statuses, history and TV Time import, synced to the cloud. Solo full-stack build.',
+    tags: ['Product design', 'React 19', 'Full-stack'],
     brand: 'Trackit',
     natureProduit: 'Web app',
     utilisateurPrincipal: '[Placeholder]',

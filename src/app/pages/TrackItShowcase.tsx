@@ -64,18 +64,26 @@ const TOTAL_EP = SERIES.seasons.reduce((a, s) => a + s.episodes.length, 0);
 const STRINGS = {
   fr: {
     study: 'Étude de cas',
-    heroEyebrow: ['App mobile', 'Suivi films & séries', '2025'],
+    heroEyebrow: ['App web', 'Suivi films & séries', '2025'],
     thesisPre: 'Ne perdez plus le fil ',
     thesisEm: 'de vos séries.',
     metaLabels: ['Rôle', 'Nature', 'Portée', 'Année'],
-    metaValues: ['UX/UI & Product', 'App mobile', 'Projet perso', '2025'],
+    metaValues: ['Design & dev full-stack', 'App web · mobile-first', 'Projet perso', '2025'],
     cue: '↓ étude de cas',
+    interventionsLabel: 'Ce que j’ai construit',
+    interventions: [
+      'Design produit & UI (sombre, mobile-first)',
+      'Front React 19 + Tailwind, animations',
+      'Proxy Express + intégration TMDB',
+      'Auth Google & sync Firestore',
+      'Import TV Time (migration d’historique)',
+    ],
     // Contexte
     s1eyebrow: '01 — Contexte',
     s1pre: 'Une série par plateforme, ',
     s1k: 'et le fil qui se perd.',
     s1note:
-      'Netflix, Prime, Apple TV+, Crunchyroll… on éparpille ce qu’on regarde et on oublie où on en est. TrackIt réunit tout : une watchlist, la reprise au bon épisode, la prochaine date de diffusion.',
+      'Netflix, Prime, Apple TV+, Crunchyroll… on éparpille ce qu’on regarde et on oublie où on en est. TrackIt centralise tout : recherche TMDB, suivi épisode par épisode, reprise en un tap, et import de son historique TV Time — synchronisé dans le cloud.',
     s1cap: 'La watchlist « À voir »',
     // Signature
     s2eyebrow: '02 — Le suivi',
@@ -84,7 +92,7 @@ const STRINGS = {
     s2note: 'Cochez un épisode (ou une saison entière) — la progression avance en direct.',
     serieTag: 'Série TV',
     progression: 'Progression',
-    complet: 'Complet',
+    complet: 'Terminé',
     encours: 'En cours',
     episodesLabel: 'épisodes',
     saisons: 'Saisons',
@@ -96,7 +104,7 @@ const STRINGS = {
     s3pre: 'Sombre, ',
     s3k: 'pensé pour le canapé.',
     s3note:
-      'Interface cinématique, posters en vedette, navigation flottante. Recherche et tendances, historique de ce qui est vu, reprise en un tap.',
+      'Recherche TMDB et tendances de la semaine, statuts de suivi (À commencer, En cours, Vu, En pause), profil et habitudes de visionnage. Interface sombre, posters en vedette, navigation flottante.',
     screens: [
       { cap: 'Recherche & tendances' },
       { cap: 'Historique' },
@@ -107,21 +115,29 @@ const STRINGS = {
     s4pre: 'Une app qu’on ouvre ',
     s4k: 'par réflexe.',
     s4note:
-      'Plus besoin de se souvenir : TrackIt sait quoi regarder ensuite. [Impact réel à affiner — usage, rétention, nombre de séries suivies.]',
+      'Mon tracker au quotidien, en remplacement de TV Time : suivi précis, synchronisé sur tous mes écrans, sans pub et sous mon contrôle (auto-hébergé). [Chiffres d’usage à ajouter.]',
   },
   en: {
     study: 'Case study',
-    heroEyebrow: ['Mobile app', 'Film & TV tracker', '2025'],
+    heroEyebrow: ['Web app', 'Film & TV tracker', '2025'],
     thesisPre: 'Never lose track ',
     thesisEm: 'of your shows.',
     metaLabels: ['Role', 'Type', 'Scope', 'Year'],
-    metaValues: ['UX/UI & Product', 'Mobile app', 'Personal project', '2025'],
+    metaValues: ['Design & full-stack dev', 'Web app · mobile-first', 'Personal project', '2025'],
     cue: '↓ case study',
+    interventionsLabel: 'What I built',
+    interventions: [
+      'Product & UI design (dark, mobile-first)',
+      'React 19 front-end + Tailwind, animations',
+      'Express proxy + TMDB integration',
+      'Google auth & Firestore sync',
+      'TV Time import (history migration)',
+    ],
     s1eyebrow: '01 — Context',
     s1pre: 'One show per platform, ',
     s1k: 'and you lose the thread.',
     s1note:
-      'Netflix, Prime, Apple TV+, Crunchyroll… what you watch scatters and you forget where you left off. TrackIt brings it together: a watchlist, resume at the right episode, the next air date.',
+      'Netflix, Prime, Apple TV+, Crunchyroll… what you watch scatters and you forget where you left off. TrackIt centralizes everything: TMDB search, episode-by-episode tracking, one-tap resume, and TV Time history import — synced to the cloud.',
     s1cap: 'The “To watch” list',
     s2eyebrow: '02 — Tracking',
     s2pre: 'The heart of the app: ',
@@ -140,13 +156,13 @@ const STRINGS = {
     s3pre: 'Dark, ',
     s3k: 'built for the couch.',
     s3note:
-      'Cinematic interface, posters up front, floating navigation. Search and trends, history of what you’ve watched, resume in one tap.',
+      'TMDB search and weekly trends, tracking statuses (To start, Watching, Watched, Paused), profile and viewing habits. Dark interface, posters up front, floating navigation.',
     screens: [{ cap: 'Search & trends' }, { cap: 'History' }, { cap: 'Up next' }],
     s4eyebrow: '04 — Impact',
     s4pre: 'An app you open ',
     s4k: 'on reflex.',
     s4note:
-      'No more remembering: TrackIt knows what to watch next. [Real impact to refine — usage, retention, shows tracked.]',
+      'My daily tracker, replacing TV Time: precise tracking, synced across all my screens, ad-free and under my control (self-hosted). [Usage figures to add.]',
   },
 };
 
@@ -484,6 +500,14 @@ export default function TrackItShowcase({ projet }: { projet: Projet }) {
             <span className="ey label">{t.s1eyebrow}</span>
             <Lead id="tk-s1" pre={t.s1pre} k={t.s1k} />
             <p className="note">{t.s1note}</p>
+            <div className="interv-wrap">
+              <span className="interv-label label">{t.interventionsLabel}</span>
+              <ul className="interv">
+                {t.interventions.map((it) => (
+                  <li key={it}>{it}</li>
+                ))}
+              </ul>
+            </div>
           </div>
           <figure className="context-phone reveal">
             <IPhone src={avoir} alt={t.s1cap} />
