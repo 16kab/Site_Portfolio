@@ -16,6 +16,7 @@ import { useLang, useT } from '../i18n';
 import MauniShowcase from './MauniShowcase';
 import OnboardingRHShowcase from './OnboardingRHShowcase';
 import SymaShowcase from './SymaShowcase';
+import TrackItShowcase from './TrackItShowcase';
 
 const STRINGS = {
   fr: {
@@ -118,6 +119,9 @@ export default function ProjetDetail() {
   }
   if (projet.id === 'syma') {
     return <SymaShowcase projet={projet} />;
+  }
+  if (projet.id === 'trackit') {
+    return <TrackItShowcase projet={projet} />;
   }
 
   // Scroll to section : offset de 120 px pour le menu sticky

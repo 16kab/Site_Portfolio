@@ -209,13 +209,12 @@ export const projetsData: Projet[] = [
   },
   {
     id: 'trackit',
-    title: 'Trackit',
-    subtitle:
-      '[Texte provisoire] Sous-titre du projet Trackit, à rédiger ultérieurement.',
+    title: 'TrackIt',
+    subtitle: 'Suivi de films & séries — recherche TMDB, épisodes, sync cloud.',
     year: '2025',
     description:
-      '[Texte provisoire] Courte description du projet Trackit affichée sur la carte. À remplacer par le contenu final.',
-    tags: ['UX/UI Design', 'Product Design', 'À compléter'],
+      'Application web mobile-first pour suivre ses films et séries : watchlist, suivi épisode par épisode, statuts, historique et import TV Time, synchronisés dans le cloud. Projet full-stack en solo.',
+    tags: ['Design produit', 'React 19', 'Full-stack'],
     brand: 'Trackit',
     natureProduit: 'Application web',
     utilisateurPrincipal: '[Texte provisoire]',
