@@ -91,6 +91,7 @@ const STRINGS = {
     s2k: 'savoir exactement où on en est.',
     s2note: 'Cochez un épisode (ou une saison entière) — la progression avance en direct.',
     serieTag: 'Série TV',
+    serieDate: '4 mars 2025',
     progression: 'Progression',
     complet: 'Terminé',
     encours: 'En cours',
@@ -144,6 +145,7 @@ const STRINGS = {
     s2k: 'knowing exactly where you are.',
     s2note: 'Check an episode (or a whole season) — progress updates live.',
     serieTag: 'TV series',
+    serieDate: 'March 4, 2025',
     progression: 'Progress',
     complet: 'Complete',
     encours: 'In progress',
@@ -198,6 +200,22 @@ function IPhone({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+// Icônes Lucide (mêmes que l'app).
+function ChevronIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+function StarIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2z" />
+    </svg>
+  );
+}
+
 // Coches identiques à l'app (Lucide Circle / CircleCheckBig).
 function CheckIcon({ on }: { on: boolean }) {
   return on ? (
@@ -226,18 +244,6 @@ function EpisodeTracker({ t }: { t: (typeof STRINGS)['fr'] }) {
   const isW = (n: number, i: number) => watched[`${n}-${i}`];
   const seasonWatchedCount = (s: Season) => s.episodes.filter((_, i) => isW(s.n, i)).length;
   const watchedCount = SERIES.seasons.reduce((a, s) => a + seasonWatchedCount(s), 0);
-
-  // Segments de la barre : vert = vus, orange = restants de la saison en cours.
-  let orange = 0;
-  for (const s of SERIES.seasons) {
-    const w = seasonWatchedCount(s);
-    if (w < s.episodes.length) {
-      orange = s.episodes.length - w;
-      break;
-    }
-  }
-  const greenPct = (watchedCount / TOTAL_EP) * 100;
-  const orangePct = (orange / TOTAL_EP) * 100;
   const complete = watchedCount === TOTAL_EP;
 
   // Logique identique à l'app (ShowDetails) : cocher un épisode coche aussi
@@ -278,8 +284,13 @@ function EpisodeTracker({ t }: { t: (typeof STRINGS)['fr'] }) {
         <img className="tracker-bd" src={ddBackdrop} alt="" aria-hidden="true" />
         <div className="tracker-hero-scrim" aria-hidden="true" />
         <div className="tracker-hero-top">
-          <span className="tk-tag">{t.serieTag}</span>
-          <span className="tk-note">★ {SERIES.rating.toFixed(1)}</span>
+          <span className="tk-date">{t.serieDate}</span>
+          <div className="tk-badges">
+            <span className="tk-tag">{t.serieTag}</span>
+            <span className="tk-note">
+              <StarIcon /> {SERIES.rating.toFixed(1)}
+            </span>
+          </div>
         </div>
         <div className="tracker-hero-tt">
           <h3 className="title">{SERIES.title}</h3>
@@ -300,9 +311,23 @@ function EpisodeTracker({ t }: { t: (typeof STRINGS)['fr'] }) {
               {watchedCount} / {TOTAL_EP} {t.episodesLabel}
             </span>
           </div>
+          {/* Barre segmentée par saison (séparateurs), comme l'app :
+              vert = saison complète, dégradé orange = saison en cours. */}
           <div className="prog-bar" role="progressbar" aria-valuenow={watchedCount} aria-valuemax={TOTAL_EP}>
-            <span className="prog-green" style={{ width: `${greenPct}%` }} />
-            <span className="prog-orange" style={{ width: `${orangePct}%` }} />
+            {SERIES.seasons.map((s) => {
+              const wc = seasonWatchedCount(s);
+              const fill = Math.min(wc / s.episodes.length, 1) * 100;
+              const done = fill >= 100;
+              return (
+                <span
+                  className="prog-seg"
+                  key={s.n}
+                  style={{ flex: `${(s.episodes.length / TOTAL_EP) * 100} 0 0` }}
+                >
+                  <span className={done ? 'prog-fill done' : 'prog-fill'} style={{ width: `${fill}%` }} />
+                </span>
+              );
+            })}
           </div>
         </div>
 
@@ -334,7 +359,7 @@ function EpisodeTracker({ t }: { t: (typeof STRINGS)['fr'] }) {
                       </span>
                     </span>
                     <span className="season-chevron" aria-hidden="true">
-                      ⌄
+                      <ChevronIcon />
                     </span>
                   </button>
                   <button

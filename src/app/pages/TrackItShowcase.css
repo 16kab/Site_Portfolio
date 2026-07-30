@@ -75,10 +75,13 @@
 .trackit-showcase .tracker { max-width: 760px; margin: clamp(30px, 4vw, 52px) auto 0; background: var(--tk-surface); border: 1px solid var(--tk-border); border-radius: 24px; overflow: hidden; box-shadow: 0 60px 120px -60px rgba(0,0,0,0.9); overflow-anchor: none; }
 .trackit-showcase .tracker-hero { position: relative; height: 232px; overflow: hidden; }
 .trackit-showcase .tracker-bd { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 42%; }
-.trackit-showcase .tracker-hero-scrim { position: absolute; inset: 0; background: linear-gradient(to top, var(--tk-surface) 2%, rgba(20,20,23,0.55) 42%, rgba(10,10,12,0.35)); }
-.trackit-showcase .tracker-hero-top { position: absolute; top: 16px; left: 16px; right: 16px; display: flex; justify-content: space-between; align-items: flex-start; }
-.trackit-showcase .tk-tag { border: 1px solid var(--tk-orange); color: var(--tk-orange); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.66rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; background: rgba(0,0,0,0.4); }
-.trackit-showcase .tk-note { color: var(--tk-gold); font-weight: 700; font-size: 0.82rem; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,206,74,0.4); padding: 5px 12px; border-radius: 999px; }
+.trackit-showcase .tracker-hero-scrim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.78), rgba(0,0,0,0) 28%), linear-gradient(to top, var(--tk-surface) 2%, rgba(20,20,23,0.5) 42%, rgba(10,10,12,0.3)); }
+.trackit-showcase .tracker-hero-top { position: absolute; top: 15px; left: 18px; right: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.trackit-showcase .tk-date { min-width: 0; font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3em; color: rgba(255,255,255,0.74); }
+.trackit-showcase .tk-badges { display: flex; align-items: center; gap: 8px; flex: none; }
+.trackit-showcase .tk-tag { display: inline-flex; align-items: center; height: 28px; padding: 0 11px; border-radius: 8px; border: 1px solid rgba(245,100,22,0.42); background: rgba(10,10,12,0.5); color: var(--tk-orange); text-transform: uppercase; letter-spacing: 0.26em; font-size: 0.6rem; font-weight: 600; backdrop-filter: blur(6px); }
+.trackit-showcase .tk-note { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 11px; border-radius: 8px; border: 1px solid rgba(234,179,8,0.55); background: rgba(0,0,0,0.4); color: #fde047; font-size: 0.75rem; font-weight: 700; backdrop-filter: blur(6px); }
+.trackit-showcase .tk-note svg { width: 13px; height: 13px; }
 .trackit-showcase .tracker-hero-tt { position: absolute; left: 20px; right: 20px; bottom: 16px; }
 .trackit-showcase .tracker-hero-tt h3 { font-size: clamp(1.5rem, 3vw, 2.2rem); margin: 0; color: #fff; letter-spacing: -0.02em; }
 .trackit-showcase .tracker-genres { color: var(--tk-text2); font-size: 0.84rem; margin: 6px 0 0; }
@@ -90,9 +93,12 @@
 .trackit-showcase .prog-badge { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 999px; color: var(--tk-orange); background: rgba(242,102,31,0.16); }
 .trackit-showcase .prog-badge.ok { color: var(--tk-green); background: rgba(62,207,126,0.16); }
 .trackit-showcase .prog-count { color: var(--tk-text2); font-size: 0.9rem; }
-.trackit-showcase .prog-bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,0.08); }
-.trackit-showcase .prog-green { background: var(--tk-green); transition: width .5s cubic-bezier(.4,0,.2,1); }
-.trackit-showcase .prog-orange { background: var(--tk-orange); transition: width .5s cubic-bezier(.4,0,.2,1); }
+.trackit-showcase .prog-bar { display: flex; gap: 3px; align-items: stretch; }
+.trackit-showcase .prog-seg { position: relative; height: 8px; background: rgba(255,255,255,0.09); overflow: hidden; }
+.trackit-showcase .prog-seg:first-child { border-radius: 999px 0 0 999px; }
+.trackit-showcase .prog-seg:last-child { border-radius: 0 999px 999px 0; }
+.trackit-showcase .prog-fill { position: absolute; top: 0; bottom: 0; left: 0; border-radius: inherit; background: linear-gradient(90deg, #f56416, #ff9254); box-shadow: 0 0 10px rgba(245,100,22,0.35); transition: width .5s cubic-bezier(.4,0,.2,1); }
+.trackit-showcase .prog-fill.done { background: var(--tk-green); box-shadow: 0 0 8px rgba(34,197,94,0.4); }
 
 .trackit-showcase .tracker-sub { display: block; margin: 22px 0 12px; }
 .trackit-showcase .seasons { display: flex; flex-direction: column; gap: 10px; }
@@ -104,7 +110,8 @@
 .trackit-showcase .season-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .trackit-showcase .season-name { font-family: var(--title-font); font-weight: 600; font-size: 1rem; }
 .trackit-showcase .season-count { color: var(--tk-text2); font-size: 0.82rem; }
-.trackit-showcase .season-chevron { margin-left: auto; color: var(--tk-muted); font-size: 1.1rem; transition: transform .3s; }
+.trackit-showcase .season-chevron { margin-left: auto; display: inline-flex; color: var(--tk-muted); transition: transform .3s; }
+.trackit-showcase .season-chevron svg { width: 18px; height: 18px; display: block; }
 .trackit-showcase .season.open .season-chevron { transform: rotate(180deg); }
 /* Coches (Lucide Circle / CircleCheckBig) — identiques à l'app */
 .trackit-showcase .check { flex: none; width: 36px; height: 36px; border-radius: 999px; border: 0; background: none; color: var(--tk-muted); padding: 0; display: inline-flex; align-items: center; justify-content: center; transition: color .2s, background .2s, transform .15s; }
