@@ -50,6 +50,9 @@ const STRINGS = {
     trBadge: 'temps perçu divisé par deux',
     s2note:
       'En regroupant les questions et en clarifiant chaque étape, la perception de longueur a été divisée par deux — sans toucher à la logique métier.',
+    statsTiles: [
+      { label: 'Devis personnalisé & complet', before: '10 min', after: '5 min', note: '2× plus rapide' },
+    ],
     // 03 Le parcours
     s3eyebrow: '03 — Le parcours',
     s3pre: 'Court, guidé, ',
@@ -132,6 +135,9 @@ const STRINGS = {
     trBadge: 'perceived time halved',
     s2note:
       'By grouping the questions and clarifying every step, the perceived length was cut in half — without touching the business logic.',
+    statsTiles: [
+      { label: 'Personalized, complete quote', before: '10 min', after: '5 min', note: '2× faster' },
+    ],
     s3eyebrow: '03 — The journey',
     s3pre: 'Short, guided, ',
     s3k: 'clear at every step.',
@@ -446,6 +452,21 @@ export default function ParcoursB2CShowcase({ projet }: { projet: Projet }) {
         <span className="ey label">{t.s2eyebrow}</span>
         <Lead id="pb-s2" pre={t.s2pre} k={t.s2k} />
         <TempsRessenti t={t} />
+        <div className="stat-tiles reveal">
+          {t.statsTiles.map((s) => (
+            <div className="stat-tile" key={s.label}>
+              <span className="stat-tile-label label">{s.label}</span>
+              <span className="stat-tile-nums">
+                <span className="stat-before num">{s.before}</span>
+                <span className="stat-arrow" aria-hidden="true">
+                  →
+                </span>
+                <span className="stat-after num">{s.after}</span>
+              </span>
+              <span className="stat-tile-note">{s.note}</span>
+            </div>
+          ))}
+        </div>
         <p className="note note-center">{t.s2note}</p>
       </section>
 

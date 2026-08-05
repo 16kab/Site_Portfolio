@@ -76,6 +76,16 @@
 .parcours-b2c-showcase .tr-badge-x { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 34px; padding: 0 8px; border-radius: 999px; background: var(--spvie-accent); color: var(--portfolio-bg); font-family: var(--title-font); font-weight: 700; font-size: 1rem; }
 @media (max-width: 620px) { .parcours-b2c-showcase .tr-grid { grid-template-columns: 1fr; gap: 28px; } }
 
+/* Tuiles de stats complémentaires (devis, + autres à venir) */
+.parcours-b2c-showcase .stat-tiles { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(14px, 2vw, 22px); max-width: 860px; margin: clamp(28px, 3vw, 40px) auto 0; }
+.parcours-b2c-showcase .stat-tile { flex: 0 1 260px; padding: 20px 22px; border: 1px solid var(--portfolio-card-border); border-radius: 18px; background: var(--portfolio-card-bg); text-align: center; }
+.parcours-b2c-showcase .stat-tile-label { display: block; margin-bottom: 12px; }
+.parcours-b2c-showcase .stat-tile-nums { display: inline-flex; align-items: baseline; gap: 10px; font-family: var(--title-font); }
+.parcours-b2c-showcase .stat-before { color: var(--portfolio-text-muted); text-decoration: line-through; font-size: 1.25rem; font-weight: 600; }
+.parcours-b2c-showcase .stat-arrow { color: var(--portfolio-text-muted); font-size: 1rem; align-self: center; }
+.parcours-b2c-showcase .stat-after { color: var(--spvie-accent); font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; }
+.parcours-b2c-showcase .stat-tile-note { display: block; margin-top: 8px; color: var(--spvie-accent); font-size: 0.82rem; font-weight: 600; }
+
 /* ---- 03 LE PARCOURS : walkthrough ---- */
 .parcours-b2c-showcase .walk { margin-top: clamp(28px, 4vw, 44px); }
 .parcours-b2c-showcase .walk-stepnav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 14px; scrollbar-width: thin; }
