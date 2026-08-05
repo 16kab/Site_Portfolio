@@ -9,9 +9,10 @@ import type { Projet } from '../data/projetsData';
 import scrBoard from 'figma:asset/crm-bb-board.webp';
 import scrConseiller from 'figma:asset/crm-bb-conseiller.webp';
 import scrGroupes from 'figma:asset/crm-bb-groupes.webp';
-import scrDispatch from 'figma:asset/crm-bb-dispatch.webp';
+import scrImport from 'figma:asset/crm-bb-import.webp';
+import scrRelance from 'figma:asset/crm-bb-relance.webp';
 
-const SCREENS = [scrBoard, scrConseiller, scrGroupes, scrDispatch];
+const SCREENS = [scrBoard, scrConseiller, scrGroupes, scrImport, scrRelance];
 
 // Données illustratives du dispatch (d'après les écrans réels).
 const SOURCES = [
@@ -66,12 +67,13 @@ const STRINGS = {
     s3pre: 'Tout au même endroit, ',
     s3k: 'clair et rapide.',
     s3note:
-      'Dispatch board, fiche conseiller, groupes de dispatch, règles par source, import de leads, relance des devis — pensés pour la vitesse d’usage des équipes d’appel.',
+      'Dispatch board, fiche conseiller, groupes de dispatch, import de leads, relance des devis — pensés pour la vitesse d’usage des équipes d’appel.',
     screenCaps: [
       'Dispatch board — suivi des conseillers',
       'Fiche conseiller — leads & quota',
       'Groupes de dispatch & quotas',
-      'Règles de dispatch par source',
+      'Import de leads',
+      'Relance des devis',
     ],
     // 04
     s4eyebrow: '04 — La démarche',
@@ -142,12 +144,13 @@ const STRINGS = {
     s3pre: 'All in one place, ',
     s3k: 'clear and fast.',
     s3note:
-      'Dispatch board, advisor sheet, dispatch groups, rules by source, lead import, quote follow-up — built for the speed the phone teams need.',
+      'Dispatch board, advisor sheet, dispatch groups, lead import, quote follow-up — built for the speed the phone teams need.',
     screenCaps: [
       'Dispatch board — advisor monitoring',
       'Advisor sheet — leads & quota',
       'Dispatch groups & quotas',
-      'Dispatch rules by source',
+      'Lead import',
+      'Quote follow-up',
     ],
     s4eyebrow: '04 — The approach',
     s4pre: 'From business workshops ',
