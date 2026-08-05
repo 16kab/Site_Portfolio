@@ -87,6 +87,7 @@ const STRINGS = {
     ],
     stepWord: 'Étape',
     nextWord: 'Continuer',
+    prevWord: 'Précédent',
     addr: 'souscription.spvie-assurances.com',
     // 04 Démarche
     s4eyebrow: '04 — La démarche',
@@ -175,6 +176,7 @@ const STRINGS = {
     ],
     stepWord: 'Step',
     nextWord: 'Continue',
+    prevWord: 'Previous',
     addr: 'souscription.spvie-assurances.com',
     s4eyebrow: '04 — The approach',
     s4pre: 'From behavioral analytics ',
@@ -269,25 +271,38 @@ function Walkthrough({ t }: { t: (typeof STRINGS)['fr'] }) {
   const [active, setActive] = useState(0);
   const n = STEP_IMAGES.length;
   const next = () => setActive((a) => (a + 1) % n);
+  const prev = () => setActive((a) => (a - 1 + n) % n);
   return (
     <div className="walk reveal">
-      <div className="walk-stepnav">
+      <div className="walk-stepper">
         {t.stepLabels.map((l, i) => (
-          <button
-            key={l}
-            type="button"
-            className={i === active ? 'walk-chip on' : 'walk-chip'}
-            onMouseDown={preventFocusScroll}
-            onClick={() => setActive(i)}
-          >
-            <span className="walk-chip-n num">{i + 1}</span> {l}
-          </button>
+          <div className="wstep-item" key={l}>
+            <button
+              type="button"
+              className={i < active ? 'wstep done' : i === active ? 'wstep on' : 'wstep'}
+              title={l}
+              aria-label={`${t.stepWord} ${i + 1} : ${l}`}
+              aria-current={i === active ? 'step' : undefined}
+              onMouseDown={preventFocusScroll}
+              onClick={() => setActive(i)}
+            >
+              {i < active ? (
+                <span aria-hidden="true">✓</span>
+              ) : (
+                <span className="num">{i + 1}</span>
+              )}
+            </button>
+            {i < n - 1 && <span className={i < active ? 'wstep-line done' : 'wstep-line'} />}
+          </div>
         ))}
       </div>
 
-      <span className="walk-progress" aria-hidden="true">
-        <span className="walk-progress-fill" style={{ width: `${((active + 1) / n) * 100}%` }} />
-      </span>
+      <div className="walk-current">
+        <span className="walk-current-n label">
+          {t.stepWord} {active + 1} / {n}
+        </span>
+        <span className="walk-current-t title">{t.stepLabels[active]}</span>
+      </div>
 
       <div className="bwin">
         <span className="bbar">
@@ -311,9 +326,15 @@ function Walkthrough({ t }: { t: (typeof STRINGS)['fr'] }) {
       </div>
 
       <div className="walk-controls">
-        <span className="walk-count label">
-          {t.stepWord} {active + 1}/{n}
-        </span>
+        <button
+          type="button"
+          className="walk-prev"
+          aria-label={t.prevWord}
+          onMouseDown={preventFocusScroll}
+          onClick={prev}
+        >
+          <span aria-hidden="true">‹</span>
+        </button>
         <button type="button" className="walk-next" onMouseDown={preventFocusScroll} onClick={next}>
           {t.nextWord} <span aria-hidden="true">›</span>
         </button>

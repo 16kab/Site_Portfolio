@@ -88,14 +88,20 @@
 
 /* ---- 03 LE PARCOURS : walkthrough ---- */
 .parcours-b2c-showcase .walk { margin-top: clamp(28px, 4vw, 44px); }
-.parcours-b2c-showcase .walk-stepnav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 14px; scrollbar-width: thin; }
-.parcours-b2c-showcase .walk-chip { flex: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--portfolio-card-border); background: var(--portfolio-card-bg); color: var(--portfolio-text-secondary); font-family: 'Manrope', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: border-color .25s, color .25s, background .25s; white-space: nowrap; }
-.parcours-b2c-showcase .walk-chip-n { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 999px; background: var(--portfolio-card-border); color: var(--portfolio-text-muted); font-size: 0.72rem; font-weight: 700; transition: background .25s, color .25s; }
-.parcours-b2c-showcase .walk-chip:hover { color: var(--portfolio-text-primary); }
-.parcours-b2c-showcase .walk-chip.on { border-color: var(--spvie-accent); color: var(--spvie-accent); background: color-mix(in srgb, var(--spvie-accent) 8%, var(--portfolio-card-bg)); }
-.parcours-b2c-showcase .walk-chip.on .walk-chip-n { background: var(--spvie-accent); color: var(--portfolio-bg); }
-.parcours-b2c-showcase .walk-progress { display: block; height: 4px; border-radius: 999px; background: var(--portfolio-card-border); overflow: hidden; margin-bottom: 16px; }
-.parcours-b2c-showcase .walk-progress-fill { display: block; height: 100%; background: var(--spvie-accent); border-radius: 999px; transition: width .45s cubic-bezier(.4,0,.2,1); }
+/* Stepper : pastilles numérotées reliées (aucun scroll) */
+.parcours-b2c-showcase .walk-stepper { display: flex; align-items: center; padding: 0 4px; }
+.parcours-b2c-showcase .wstep-item { display: flex; align-items: center; }
+.parcours-b2c-showcase .wstep-item:not(:last-child) { flex: 1; }
+.parcours-b2c-showcase .wstep { flex: none; width: 32px; height: 32px; border-radius: 999px; border: 2px solid var(--portfolio-card-border); background: var(--portfolio-card-bg); color: var(--portfolio-text-muted); display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; cursor: pointer; padding: 0; transition: border-color .25s, background .25s, color .25s, box-shadow .25s, transform .25s; }
+.parcours-b2c-showcase .wstep:hover { border-color: var(--spvie-accent); color: var(--spvie-accent); }
+.parcours-b2c-showcase .wstep.done { border-color: var(--spvie-accent); background: var(--spvie-accent); color: var(--portfolio-bg); }
+.parcours-b2c-showcase .wstep.on { border-color: var(--spvie-accent); background: var(--spvie-accent); color: var(--portfolio-bg); transform: scale(1.14); box-shadow: 0 0 0 5px color-mix(in srgb, var(--spvie-accent) 18%, transparent); }
+.parcours-b2c-showcase .wstep-line { flex: 1; height: 2px; min-width: 8px; margin: 0 7px; border-radius: 2px; background: var(--portfolio-card-border); transition: background .35s ease; }
+.parcours-b2c-showcase .wstep-line.done { background: var(--spvie-accent); }
+
+.parcours-b2c-showcase .walk-current { text-align: center; margin: 22px 0 18px; }
+.parcours-b2c-showcase .walk-current-n { display: block; margin-bottom: 5px; color: var(--spvie-accent); }
+.parcours-b2c-showcase .walk-current-t { font-family: var(--title-font); font-weight: 600; font-size: clamp(1.25rem, 2.6vw, 1.7rem); letter-spacing: -0.01em; }
 
 .parcours-b2c-showcase .bwin { display: block; border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid var(--portfolio-card-border); box-shadow: 0 40px 80px -46px rgba(0,0,0,0.5); }
 .parcours-b2c-showcase .bbar { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.06); }
@@ -107,7 +113,9 @@
 .parcours-b2c-showcase .bshot { position: relative; display: block; width: 100%; aspect-ratio: 1600 / 900; background: #faf8f0; }
 .parcours-b2c-showcase .walk-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; opacity: 0; transition: opacity .5s ease; }
 .parcours-b2c-showcase .walk-img.on { opacity: 1; }
-.parcours-b2c-showcase .walk-controls { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; }
+.parcours-b2c-showcase .walk-controls { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; }
+.parcours-b2c-showcase .walk-prev { width: 46px; height: 46px; border-radius: 999px; border: 1px solid var(--portfolio-card-border); background: var(--portfolio-card-bg); color: var(--portfolio-text-primary); font-size: 1.4rem; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: border-color .25s, color .25s; }
+.parcours-b2c-showcase .walk-prev:hover { border-color: var(--spvie-accent); color: var(--spvie-accent); }
 .parcours-b2c-showcase .walk-next { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 999px; border: 0; background: var(--spvie-bright); color: #06231b; font-family: 'Manrope', sans-serif; font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: transform .2s, filter .2s; }
 .parcours-b2c-showcase .walk-next:hover { transform: translateY(-1px); filter: brightness(1.05); }
 .parcours-b2c-showcase .walk-next span { font-size: 1.1em; }
