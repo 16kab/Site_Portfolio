@@ -51,6 +51,8 @@ const STRINGS = {
     s2note:
       'En regroupant les questions et en clarifiant chaque étape, la perception de longueur a été divisée par deux — sans toucher à la logique métier.',
     statsTiles: [
+      { label: 'Conversion visiteurs → devis', before: '32 %', after: '51 %', note: '+19 pts · leads qualifiés' },
+      { label: 'Abandon à l’étape des offres', before: '85 %', after: '47 %', note: '−38 pts' },
       { label: 'Devis personnalisé & complet', before: '10 min', after: '5 min', note: '2× plus rapide' },
     ],
     // 03 Le parcours
@@ -136,6 +138,8 @@ const STRINGS = {
     s2note:
       'By grouping the questions and clarifying every step, the perceived length was cut in half — without touching the business logic.',
     statsTiles: [
+      { label: 'Visitor → quote conversion', before: '32%', after: '51%', note: '+19 pts · better leads' },
+      { label: 'Drop-off at the offers step', before: '85%', after: '47%', note: '−38 pts' },
       { label: 'Personalized, complete quote', before: '10 min', after: '5 min', note: '2× faster' },
     ],
     s3eyebrow: '03 — The journey',
