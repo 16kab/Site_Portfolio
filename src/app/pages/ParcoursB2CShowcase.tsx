@@ -5,15 +5,28 @@ import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
 import { useLang, useT } from '../i18n';
 import type { Projet } from '../data/projetsData';
-import step1 from 'figma:asset/spvie-b2c-01-type.webp';
-import step2 from 'figma:asset/spvie-b2c-02-besoins.webp';
-import step3 from 'figma:asset/spvie-b2c-03-budget.webp';
-import step4 from 'figma:asset/spvie-b2c-04-couverture.webp';
-import step5 from 'figma:asset/spvie-b2c-05-offre.webp';
-import step6 from 'figma:asset/spvie-b2c-06-coordonnees.webp';
-import step7 from 'figma:asset/spvie-b2c-07-recap.webp';
+import stepType from 'figma:asset/spvie-b2c-01-type.webp';
+import stepBesoins from 'figma:asset/spvie-b2c-02-besoins.webp';
+import stepBudget from 'figma:asset/spvie-b2c-03-budget.webp';
+import stepCouverture from 'figma:asset/spvie-b2c-04-couverture.webp';
+import stepLoader from 'figma:asset/spvie-b2c-loader.webp';
+import stepOffre from 'figma:asset/spvie-b2c-05-offre.webp';
+import stepComparateur from 'figma:asset/spvie-b2c-comparateur.webp';
+import stepCoordonnees from 'figma:asset/spvie-b2c-06-coordonnees.webp';
+import stepRecap from 'figma:asset/spvie-b2c-07-recap.webp';
 
-const STEP_IMAGES = [step1, step2, step3, step4, step5, step6, step7];
+// Ordre du walkthrough : loader avant l'offre, comparateur après.
+const STEP_IMAGES = [
+  stepType,
+  stepBesoins,
+  stepBudget,
+  stepCouverture,
+  stepLoader,
+  stepOffre,
+  stepComparateur,
+  stepCoordonnees,
+  stepRecap,
+];
 
 const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefault();
 
@@ -66,7 +79,9 @@ const STRINGS = {
       'Vos besoins',
       'Votre budget',
       'Votre couverture',
+      'Loader',
       'Votre offre',
+      'Comparateur',
       'Vos coordonnées',
       'Récapitulatif',
     ],
@@ -152,7 +167,9 @@ const STRINGS = {
       'Your needs',
       'Your budget',
       'Your coverage',
+      'Loading',
       'Your offer',
+      'Comparator',
       'Your details',
       'Summary',
     ],

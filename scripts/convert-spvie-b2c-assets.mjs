@@ -14,7 +14,9 @@ const map = [
   ['Choix besoins.jpg', 'spvie-b2c-02-besoins.webp'],
   ['Budget.png', 'spvie-b2c-03-budget.webp'],
   ['Besoins.jpg', 'spvie-b2c-04-couverture.webp'],
-  ['Prix en pourcentage.jpg', 'spvie-b2c-05-offre.webp'],
+  ['Loader 06.jpg', 'spvie-b2c-loader.webp'],
+  ['Aucun menu sélectionné.png', 'spvie-b2c-05-offre.webp'],
+  ['comparateur.jpg', 'spvie-b2c-comparateur.webp'],
   ['Coordonnées.png', 'spvie-b2c-06-coordonnees.webp'],
   ['Affichage principal.jpg', 'spvie-b2c-07-recap.webp'],
 ];
