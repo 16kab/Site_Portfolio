@@ -3,14 +3,13 @@ import './CrmBigBrokerShowcase.css';
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
+import { ImageLightbox } from '../components/ImageLightbox';
 import { useLang, useT } from '../i18n';
 import type { Projet } from '../data/projetsData';
 import scrBoard from 'figma:asset/crm-bb-board.webp';
 import scrConseiller from 'figma:asset/crm-bb-conseiller.webp';
 import scrGroupes from 'figma:asset/crm-bb-groupes.webp';
 import scrDispatch from 'figma:asset/crm-bb-dispatch.webp';
-
-const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefault();
 
 const SCREENS = [scrBoard, scrConseiller, scrGroupes, scrDispatch];
 
@@ -60,7 +59,6 @@ const STRINGS = {
     dispHub: 'Moteur de dispatch',
     dispHubSub: 'règles par source · quotas par équipe',
     dispAdvisors: 'Conseillers',
-    dispReplay: 'Répartir les leads',
     s2note:
       'Le CRM distribue les leads selon leur origine et des règles de quota par équipe et par conseiller — et garde l’œil sur les leads non attribués.',
     // 03 écrans
@@ -138,7 +136,6 @@ const STRINGS = {
     dispHub: 'Dispatch engine',
     dispHubSub: 'rules by source · quotas by team',
     dispAdvisors: 'Advisors',
-    dispReplay: 'Dispatch the leads',
     s2note:
       'The CRM distributes leads by origin and by quota rules per team and per advisor — while keeping an eye on unassigned leads.',
     s3eyebrow: '03 — The screens',
@@ -208,27 +205,49 @@ function Lead({ id, pre, k }: { id: string; pre: string; k: string }) {
   );
 }
 
-function BrowserFrame({ src, cap }: { src: string; cap: string }) {
+// Pile de captures en éventail (façon « DisplayCards », comme la section
+// arrivant d'Onboarding RH) : cartes empilées, inclinées, en niveaux de gris +
+// assombries, qui se colorisent et se soulèvent au survol. Front en couleur.
+function DisplayStack({
+  cards,
+  onOpen,
+}: {
+  cards: { src: string; alt: string; i: number }[];
+  onOpen: (i: number) => void;
+}) {
+  const n = cards.length;
   return (
-    <figure className="scr">
-      <span className="bwin">
-        <span className="bbar">
-          <span className="dot r" />
-          <span className="dot y" />
-          <span className="dot g" />
-          <span className="baddr">crm.bigbroker.spvie.com</span>
-        </span>
-        <span className="bshot">
-          <img src={src} alt={cap} loading="lazy" decoding="async" />
-        </span>
-      </span>
-      <figcaption className="scr-cap">{cap}</figcaption>
-    </figure>
+    <div className="dstack">
+      {cards.map((c, idx) => (
+        <button
+          key={c.src}
+          type="button"
+          className="dcard"
+          data-front={idx === n - 1 ? 'true' : undefined}
+          style={
+            {
+              ['--tx' as string]: `${idx * 84}px`,
+              ['--ty' as string]: `${idx * 52}px`,
+              zIndex: idx,
+            } as CSSProperties
+          }
+          onClick={(e) => {
+            e.currentTarget.blur();
+            onOpen(c.i);
+          }}
+          aria-label={c.alt}
+        >
+          <span className="dcard-in">
+            <img src={c.src} alt={c.alt} />
+          </span>
+        </button>
+      ))}
+    </div>
   );
 }
 
 // Signature — le dispatch en direct (connecteurs SVG + flux animé + jauges)
-type DispT = { dispSources: string; dispHub: string; dispHubSub: string; dispAdvisors: string; dispReplay: string };
+type DispT = { dispSources: string; dispHub: string; dispHubSub: string; dispAdvisors: string };
 function DispatchDiagram({ t }: { t: DispT }) {
   const ref = useRef<HTMLDivElement>(null);
   const [paths, setPaths] = useState<{ id: string; d: string }[]>([]);
@@ -296,11 +315,6 @@ function DispatchDiagram({ t }: { t: DispT }) {
     };
   }, []);
 
-  const replay = () => {
-    setRun(false);
-    requestAnimationFrame(() => requestAnimationFrame(() => setRun(true)));
-  };
-
   return (
     <div className={run ? 'dispatch run' : 'dispatch'} ref={ref}>
       <div className="disp-stage">
@@ -367,12 +381,6 @@ function DispatchDiagram({ t }: { t: DispT }) {
           })}
         </div>
       </div>
-
-      <div className="disp-controls">
-        <button type="button" className="disp-btn" onMouseDown={preventFocusScroll} onClick={replay}>
-          {t.dispReplay} <span aria-hidden="true">⟳</span>
-        </button>
-      </div>
     </div>
   );
 }
@@ -381,6 +389,7 @@ export default function CrmBigBrokerShowcase({ projet }: { projet: Projet }) {
   const t = useT(STRINGS);
   const { lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
+  const [lb, setLb] = useState<number | null>(null);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -433,11 +442,26 @@ export default function CrmBigBrokerShowcase({ projet }: { projet: Projet }) {
       cover.style.transform = p > 0.001 ? `scale(${(1 + p * 0.12).toFixed(4)})` : '';
     };
 
+    // La pile d'écrans déborde au-delà du bord droit du viewport.
+    const fcards = root.querySelector<HTMLElement>('.feature-cards');
+    const bleedFeature = () => {
+      if (!fcards) return;
+      fcards.style.width = '';
+      if (matchMedia('(max-width: 860px)').matches) return;
+      const r = fcards.getBoundingClientRect();
+      fcards.style.width = `${window.innerWidth - r.left + 120}px`;
+    };
+
     function onScrollRaw() {
       litUpdate();
       heroZoom();
     }
     onScrollRaw();
+    bleedFeature();
+    const onResize = () => {
+      onScrollRaw();
+      bleedFeature();
+    };
     let ticking = false;
     const onScroll = () => {
       if (!ticking) {
@@ -449,9 +473,9 @@ export default function CrmBigBrokerShowcase({ projet }: { projet: Projet }) {
       }
     };
     document.body.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScrollRaw);
+    window.addEventListener('resize', onResize);
     cleanups.push(() => document.body.removeEventListener('scroll', onScroll));
-    cleanups.push(() => window.removeEventListener('resize', onScrollRaw));
+    cleanups.push(() => window.removeEventListener('resize', onResize));
 
     return () => cleanups.forEach((fn) => fn());
   }, [lang]);
@@ -531,15 +555,20 @@ export default function CrmBigBrokerShowcase({ projet }: { projet: Projet }) {
         <p className="note note-center">{t.s2note}</p>
       </section>
 
-      {/* 03 LES ÉCRANS */}
+      {/* 03 LES ÉCRANS — pile DisplayCards (design section « arrivant ») */}
       <section className="wrap sec">
         <span className="ey label">{t.s3eyebrow}</span>
-        <Lead id="crm-s3" pre={t.s3pre} k={t.s3k} />
-        <p className="note">{t.s3note}</p>
-        <div className="screens reveal">
-          {SCREENS.map((src, i) => (
-            <BrowserFrame key={src} src={src} cap={t.screenCaps[i]} />
-          ))}
+        <div className="feature">
+          <div className="feature-txt">
+            <Lead id="crm-s3" pre={t.s3pre} k={t.s3k} />
+            <p className="note">{t.s3note}</p>
+          </div>
+          <div className="feature-cards">
+            <DisplayStack
+              cards={SCREENS.map((src, i) => ({ src, alt: t.screenCaps[i], i }))}
+              onOpen={(i) => setLb(i)}
+            />
+          </div>
         </div>
       </section>
 
@@ -572,6 +601,10 @@ export default function CrmBigBrokerShowcase({ projet }: { projet: Projet }) {
       </section>
 
       <ContactFooter />
+
+      {lb !== null && (
+        <ImageLightbox images={SCREENS} currentIndex={lb} onClose={() => setLb(null)} />
+      )}
     </div>
   );
 }

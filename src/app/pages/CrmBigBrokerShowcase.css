@@ -90,19 +90,34 @@
   .crm-showcase .disp-hub-col { align-items: stretch; }
 }
 
-/* ---- 03 LES ÉCRANS ---- */
-.crm-showcase .screens { display: flex; flex-direction: column; gap: clamp(30px, 5vw, 60px); margin-top: clamp(30px, 4vw, 48px); }
-.crm-showcase .scr { margin: 0; }
-.crm-showcase .scr-cap { margin-top: 12px; font-size: 0.82rem; color: var(--portfolio-text-muted); }
-.crm-showcase .bwin { display: block; border-radius: 14px; overflow: hidden; background: #fff; border: 1px solid var(--portfolio-card-border); box-shadow: 0 40px 80px -46px rgba(0,0,0,0.5); }
-.crm-showcase .bbar { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.06); }
-.crm-showcase .dot { width: 11px; height: 11px; border-radius: 999px; flex: none; }
-.crm-showcase .dot.r { background: #ff5f57; }
-.crm-showcase .dot.y { background: #febc2e; }
-.crm-showcase .dot.g { background: #28c840; }
-.crm-showcase .baddr { margin-left: 8px; flex: 1; max-width: 320px; height: 22px; border-radius: 999px; background: #e9e9ec; color: #7a7a82; font-size: 11px; display: flex; align-items: center; padding: 0 12px; overflow: hidden; white-space: nowrap; }
-.crm-showcase .bshot { display: block; }
-.crm-showcase .bshot img { display: block; width: 100%; height: auto; }
+/* ---- 03 LES ÉCRANS — pile DisplayCards (design section « arrivant ») ---- */
+.crm-showcase .feature { display: grid; grid-template-columns: minmax(300px, 52%) 1fr; gap: clamp(20px, 3vw, 40px); align-items: center; margin: clamp(10px, 2vw, 24px) 0 0; }
+.crm-showcase .feature-txt { min-width: 0; }
+.crm-showcase .feature-txt .lead { max-width: none; }
+.crm-showcase .feature-cards { position: relative; min-width: 0; z-index: 0; display: flex; align-items: center; justify-content: flex-start; padding: clamp(60px, 8vw, 120px) 0 clamp(90px, 11vw, 150px) clamp(30px, 5vw, 100px); }
+.crm-showcase .dstack { display: grid; justify-items: start; align-items: center; }
+.crm-showcase .dcard {
+  grid-area: 1 / 1;
+  --tx: 0px; --ty: 0px; --lift: 0px;
+  width: clamp(420px, 46vw, 680px);
+  transform: translate(var(--tx), calc(var(--ty) + var(--lift))) skewY(-8deg);
+  transition: transform .6s cubic-bezier(.16,1,.3,1), filter .6s ease;
+  filter: grayscale(1);
+  border: 0; padding: 0; margin: 0; background: none; cursor: zoom-in; position: relative;
+}
+.crm-showcase .dcard[data-front='true'] { filter: none; }
+.crm-showcase .dcard-in { display: block; position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: -26px -16px 50px -18px rgba(0,0,0,0.5), 0 22px 46px -26px rgba(0,0,0,0.32); }
+.crm-showcase .dcard-in img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.crm-showcase .dcard::before { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: 14px; background: var(--portfolio-bg); opacity: 0.45; transition: opacity .6s ease; pointer-events: none; }
+.crm-showcase .dcard[data-front='true']::before { opacity: 0; }
+.crm-showcase .dcard::after { content: ''; position: absolute; top: -4%; right: -1px; height: 108%; width: 30%; z-index: 3; background: linear-gradient(to left, var(--portfolio-bg), transparent); pointer-events: none; }
+.crm-showcase .dcard:hover, .crm-showcase .dcard:focus-visible { --lift: -34px; filter: none; z-index: 40; outline: none; }
+.crm-showcase .dcard:hover::before, .crm-showcase .dcard:focus-visible::before { opacity: 0; }
+.crm-showcase .dcard:focus-visible .dcard-in { outline: 2px solid var(--bb-accent); outline-offset: 3px; }
+@media (max-width: 860px) {
+  .crm-showcase .feature { grid-template-columns: 1fr; }
+  .crm-showcase .feature-cards { padding: 30px 40px 80px 0; justify-content: flex-start; }
+}
 
 /* ---- 04 DÉMARCHE ---- */
 .crm-showcase .demarche { list-style: none; margin: clamp(28px, 4vw, 44px) 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 36px); }
@@ -127,4 +142,5 @@
   .crm-showcase .illuminate .wd { opacity: 1 !important; }
   .crm-showcase .disp-dot { display: none; }
   .crm-showcase .adv-fill { width: var(--fill) !important; transition: none; }
+  .crm-showcase .dcard { transition: filter .6s ease; }
 }
