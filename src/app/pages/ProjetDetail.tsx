@@ -18,6 +18,7 @@ import OnboardingRHShowcase from './OnboardingRHShowcase';
 import SymaShowcase from './SymaShowcase';
 import TrackItShowcase from './TrackItShowcase';
 import ParcoursB2CShowcase from './ParcoursB2CShowcase';
+import CrmBigBrokerShowcase from './CrmBigBrokerShowcase';
 
 const STRINGS = {
   fr: {
@@ -126,6 +127,9 @@ export default function ProjetDetail() {
   }
   if (projet.id === 'parcours-spvieassurances') {
     return <ParcoursB2CShowcase projet={projet} />;
+  }
+  if (projet.id === 'crm-bigbroker') {
+    return <CrmBigBrokerShowcase projet={projet} />;
   }
 
   // Scroll to section : offset de 120 px pour le menu sticky
