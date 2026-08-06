@@ -19,6 +19,7 @@ import SymaShowcase from './SymaShowcase';
 import TrackItShowcase from './TrackItShowcase';
 import ParcoursB2CShowcase from './ParcoursB2CShowcase';
 import CrmBigBrokerShowcase from './CrmBigBrokerShowcase';
+import AgptShowcase from './AgptShowcase';
 
 const STRINGS = {
   fr: {
@@ -130,6 +131,9 @@ export default function ProjetDetail() {
   }
   if (projet.id === 'crm-bigbroker') {
     return <CrmBigBrokerShowcase projet={projet} />;
+  }
+  if (projet.id === 'agpt') {
+    return <AgptShowcase projet={projet} />;
   }
 
   // Scroll to section : offset de 120 px pour le menu sticky
