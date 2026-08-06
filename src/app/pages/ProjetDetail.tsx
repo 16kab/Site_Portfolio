@@ -1,5 +1,5 @@
 import { Navigate, useNavigate, useParams } from 'react-router';
-import { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import ContactFooter from '../components/ContactFooter';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
@@ -74,10 +74,20 @@ export default function ProjetDetail() {
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
 
-  // Signale à l'overlay de transition que la page est montée : la
-  // révélation ne doit pas avoir lieu avant (chunk lazy chargé).
-  useLayoutEffect(() => {
-    markArrival();
+  // Signale à l'overlay de transition que la page est montée : la révélation
+  // (fin du morph) attend le chargement des POLICES pour éviter le flash de
+  // bascule de typo à l'arrivée (les pages showcase chargent des polices
+  // dédiées). Filet de sécurité à 1.2s si l'API Font Loading traîne/absente.
+  useEffect(() => {
+    let done = false;
+    const reveal = () => {
+      if (done) return;
+      done = true;
+      markArrival();
+    };
+    const fallback = window.setTimeout(reveal, 1200);
+    document.fonts?.ready?.then(reveal);
+    return () => window.clearTimeout(fallback);
   }, [markArrival]);
 
   // Retour navigateur « détail → liste » : on capture le 1er retour pour
@@ -137,7 +147,7 @@ export default function ProjetDetail() {
   }
 
   // Mauni : page vitrine dédiée (design « Plein Cadre / Index »).
-  // markArrival() a déjà été appelé plus haut (useLayoutEffect) donc la
+  // markArrival() est planifié plus haut (effet « polices prêtes ») donc la
   // transition carte→détail fonctionne normalement.
   if (projet.id === 'mauni') {
     return <MauniShowcase projet={projet} />;
