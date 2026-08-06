@@ -3,22 +3,36 @@
    Titres : Bricolage Grotesque. Corps : Manrope.
    Signature : le dispatch en direct (sources → moteur → conseillers). */
 
+@font-face {
+  font-family: 'Tusker Grotesk';
+  src: url('../../assets/fonts/TuskerGrotesk-4500Medium.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 .crm-showcase {
   --bb-accent: #0d9d6e;
   --bb-bright: #10b981;
   --bb-soft: #6ee7b7;
-  --title-font: 'Bricolage Grotesque Variable', 'Playfair Display', sans-serif;
+  --title-font: 'Tusker Grotesk', 'Arial Narrow', sans-serif;
   --mtop: 134px;
   position: relative;
   background: var(--portfolio-bg);
   color: var(--portfolio-text-primary);
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
-.dark .crm-showcase { --bb-accent: #34d399; --bb-soft: #10b981; }
+.dark .crm-showcase {
+  --bb-accent: #34d399; --bb-soft: #10b981;
+  /* Fond + footer teintés vert (au lieu du gris neutre). */
+  --portfolio-bg: #0b1512;
+  --portfolio-card-bg: #12201f;
+  --portfolio-card-border: rgba(255, 255, 255, 0.1);
+}
 
 .crm-showcase .wrap { width: min(1180px, 90vw); margin-inline: auto; }
 .crm-showcase .title { font-family: var(--title-font); letter-spacing: -0.02em; font-weight: 600; }
-.crm-showcase .label { font-family: 'Manrope', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); }
+.crm-showcase .label { font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); }
 .crm-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO (image claire, scrim sombre + texte blanc) ---- */
@@ -82,7 +96,7 @@
 .crm-showcase .adv-fill.full { background: linear-gradient(90deg, var(--bb-bright), var(--bb-accent)); }
 .crm-showcase .dispatch.run .adv-fill { width: var(--fill); }
 .crm-showcase .disp-controls { display: flex; justify-content: center; margin-top: clamp(24px, 3vw, 34px); }
-.crm-showcase .disp-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px; border: 1px solid var(--bb-accent); background: color-mix(in srgb, var(--bb-accent) 10%, transparent); color: var(--bb-accent); font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background .2s; }
+.crm-showcase .disp-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px; border: 1px solid var(--bb-accent); background: color-mix(in srgb, var(--bb-accent) 10%, transparent); color: var(--bb-accent); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background .2s; }
 .crm-showcase .disp-btn:hover { background: color-mix(in srgb, var(--bb-accent) 18%, transparent); }
 @media (max-width: 720px) {
   .crm-showcase .disp-stage { grid-template-columns: 1fr; gap: 26px; }

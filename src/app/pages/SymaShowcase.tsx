@@ -1,4 +1,12 @@
-import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource/sora/400.css';
+import '@fontsource/sora/500.css';
+import '@fontsource/sora/600.css';
+import '@fontsource/sora/700.css';
+import '@fontsource/sora/800.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
 import './SymaShowcase.css';
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';

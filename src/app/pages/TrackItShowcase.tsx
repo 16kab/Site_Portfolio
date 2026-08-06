@@ -1,4 +1,12 @@
-import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource/archivo/400.css';
+import '@fontsource/archivo/500.css';
+import '@fontsource/archivo/600.css';
+import '@fontsource/archivo/700.css';
+import '@fontsource/archivo/800.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
 import './TrackItShowcase.css';
 import { useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';

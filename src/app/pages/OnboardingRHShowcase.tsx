@@ -1,4 +1,8 @@
-import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource/plus-jakarta-sans/400.css';
+import '@fontsource/plus-jakarta-sans/500.css';
+import '@fontsource/plus-jakarta-sans/600.css';
+import '@fontsource/plus-jakarta-sans/700.css';
+import '@fontsource/plus-jakarta-sans/800.css';
 import './OnboardingRHShowcase.css';
 import {
   type CSSProperties,
@@ -10,7 +14,6 @@ import {
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
 import { ImageLightbox } from '../components/ImageLightbox';
-import { scrollBodyTo } from '../utils/scrollBodyTo';
 import { useLang, useT } from '../i18n';
 import type { Projet } from '../data/projetsData';
 import arrAccueil from 'figma:asset/onb-arrivant-accueil.webp';
@@ -359,29 +362,6 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
       });
     }
 
-    // ── Scroll-spy du rail ───────────────────────────────────────
-    const navButtons = Array.from(
-      root.querySelectorAll<HTMLButtonElement>('.nav button'),
-    );
-    const links: Record<string, HTMLButtonElement> = {};
-    navButtons.forEach((b) => {
-      links[b.dataset.to || ''] = b;
-    });
-    const spy = new IntersectionObserver(
-      (es) => {
-        es.forEach((e) => {
-          if (e.isIntersecting) {
-            navButtons.forEach((b) => b.classList.remove('on'));
-            const l = links[(e.target as HTMLElement).id];
-            if (l) l.classList.add('on');
-          }
-        });
-      },
-      { rootMargin: '-45% 0px -50% 0px' },
-    );
-    root.querySelectorAll('[data-sec]').forEach((s) => spy.observe(s));
-    cleanups.push(() => spy.disconnect());
-
     // ── Reveal au scroll ─────────────────────────────────────────
     const io = new IntersectionObserver(
       (es) => {
@@ -545,52 +525,29 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
         </div>
       </section>
 
-      {/* CORPS : rail + flux */}
+      {/* BARRE MÉTA */}
       <div className="wrap">
-        <div className="layout">
-          <aside className="rail">
-            <div className="label" style={{ marginBottom: '12px' }}>
-              {t.study}
-            </div>
-            <p className="nm">{projet.title}</p>
-            <p className="sub">{t.railSub}</p>
-            <dl>
-              {t.metaLabels.map((l, i) => (
-                <div key={l}>
-                  <dt className="label">{l}</dt>
-                  <dd>{t.metaValues[i]}</dd>
-                </div>
-              ))}
-            </dl>
-            <ul className="nav">
-              {t.nav.map((label, i) => (
-                <li key={label}>
-                  <button
-                    type="button"
-                    data-to={`onb-s${i + 1}`}
-                    onClick={() => {
-                      const el = rootRef.current?.querySelector<HTMLElement>(
-                        `#onb-s${i + 1}`,
-                      );
-                      if (el) scrollBodyTo(el.offsetTop - MTOP + 1, 700);
-                    }}
-                  >
-                    <span className="n num">{i + 1}</span> {label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-            <a
-              className="visit"
-              href={SITE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t.visit} <span aria-hidden="true">↗</span>
-            </a>
-          </aside>
+        <div className="metabar reveal">
+          <span className="metabar-study label">{t.study}</span>
+          <dl className="metabar-meta">
+            {t.metaLabels.map((l, i) => (
+              <div key={l}>
+                <dt className="label">{l}</dt>
+                <dd>{t.metaValues[i]}</dd>
+              </div>
+            ))}
+          </dl>
+          <a
+            className="visit"
+            href={SITE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t.visit} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
 
-          <main className="stream">
+        <main className="stream">
             <section className="sec" id="onb-s1" data-sec>
               <span className="ey label">01 — {t.nav[0]}</span>
               <Lead id="onb-s1lead" lead={t.s1lead} />
@@ -662,8 +619,7 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
               <Lead id="onb-s5lead" lead={t.s5lead} />
               <p className="note">{t.s5note}</p>
             </section>
-          </main>
-        </div>
+        </main>
       </div>
 
       <ContactFooter />

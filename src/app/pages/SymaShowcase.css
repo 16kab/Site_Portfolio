@@ -8,18 +8,24 @@
 .syma-showcase {
   --syma-accent: #6366f1;
   --syma-accent-soft: #a5b4fc;
-  --title-font: 'Bricolage Grotesque Variable', 'Playfair Display', sans-serif;
+  --title-font: 'Sora', sans-serif;
   --mtop: 134px;
   position: relative;
   background: var(--portfolio-bg);
   color: var(--portfolio-text-primary);
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
-.dark .syma-showcase { --syma-accent: #818cf8; --syma-accent-soft: #c7d2fe; }
+.dark .syma-showcase {
+  --syma-accent: #818cf8; --syma-accent-soft: #c7d2fe;
+  /* Fond + footer teintés indigo (au lieu du gris neutre). */
+  --portfolio-bg: #0e0e1c;
+  --portfolio-card-bg: #17172c;
+  --portfolio-card-border: rgba(255, 255, 255, 0.1);
+}
 
 .syma-showcase .wrap { width: min(1220px, 90vw); margin-inline: auto; }
 .syma-showcase .title { font-family: var(--title-font); letter-spacing: -0.02em; font-weight: 600; }
-.syma-showcase .label { font-family: 'Manrope', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); }
+.syma-showcase .label { font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); }
 .syma-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO (cible du morph) ---- */
@@ -68,7 +74,7 @@
 .syma-showcase .thumb-logo { display: block; width: 100%; height: 100%; color: inherit; }
 .syma-showcase .thumb-logo svg { display: block; width: 100%; height: 100%; }
 .syma-showcase .ptabs { display: flex; gap: 8px; }
-.syma-showcase .ptab { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--portfolio-card-border); background: var(--portfolio-card-bg); color: var(--portfolio-text-secondary); font-family: 'Manrope', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: border-color .25s, color .25s; }
+.syma-showcase .ptab { padding: 7px 14px; border-radius: 999px; border: 1px solid var(--portfolio-card-border); background: var(--portfolio-card-bg); color: var(--portfolio-text-secondary); font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: border-color .25s, color .25s; }
 .syma-showcase .ptab.on { border-color: var(--syma-accent); color: var(--portfolio-text-primary); }
 .syma-showcase .swrow { display: flex; flex-wrap: wrap; gap: 8px; }
 .syma-showcase .sw { width: 26px; height: 26px; flex: none; border-radius: 999px; border: 1px solid var(--portfolio-card-border); padding: 0; cursor: pointer; transition: transform .2s, box-shadow .2s; }
