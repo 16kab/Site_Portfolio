@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, MessageCircle } from 'lucide-react';
 import { RollingText } from './RollingText';
@@ -7,6 +7,7 @@ import Magnet from './Magnet';
 import { AnimatedThemeToggler } from './AnimatedThemeToggler';
 import { LanguageToggle } from './LanguageToggle';
 import { ROUTES } from '../config';
+import { scrollBodyTo } from '../utils/scrollBodyTo';
 import { useT } from '../i18n';
 
 const STRINGS = {
@@ -51,6 +52,23 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lockedScrollTopRef = useRef<number | null>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Retour « détail → liste » : depuis une page projet, on remonte en douceur
+  // tout en haut PUIS on navigue vers /projets — la liste joue alors le morph
+  // « image qui rétrécit » (repli de l'image plein écran sur la carte).
+  const handleProjetsNav = (e: { preventDefault: () => void }) => {
+    setIsMobileMenuOpen(false);
+    if (/^\/projets\/[^/]+/.test(location.pathname)) {
+      e.preventDefault();
+      if (document.body.scrollTop > 40) {
+        scrollBodyTo(0, 520, () => navigate(ROUTES.PROJETS));
+      } else {
+        navigate(ROUTES.PROJETS);
+      }
+    }
+  };
 
   const handleMouseEnter = (item: HeaderMenuItem) => {
     if (hoverTimeoutRef.current) {
@@ -213,6 +231,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
                 onMouseLeave={handleMouseLeave}
                 onFocus={() => handleMouseEnter('projets')}
                 onBlur={handleMouseLeave}
+                onClick={handleProjetsNav}
               >
                 <motion.p
                   className="font-['Manrope',sans-serif] font-medium text-[15.9px] whitespace-nowrap leading-[21.6px] tracking-[0.04px] transition-opacity duration-300"
@@ -413,7 +432,7 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
               <Link
                 to={ROUTES.PROJETS}
                 className="pointer-events-auto cursor-pointer"
-                onClick={handleLinkClick}
+                onClick={handleProjetsNav}
               >
                 <motion.span
                   className="block font-bold text-white text-5xl sm:text-6xl md:text-7xl tracking-wider"
