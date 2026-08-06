@@ -38,9 +38,28 @@ import presentation from 'figma:asset/charte-presentation.webp';
 
 const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefault();
 
-// [src, profondeur (b/m/f), x%, y%, largeur en vw] — les images flottent
-// AUTOUR du texte central (on évite la zone centrale ~35-65%).
-type Img = [string, 'b' | 'm' | 'f', number, number, number];
+// [src, plan (a/m/f), x%, y%, largeur vw]. 3 plans nets :
+// a = 1er plan (grand, net, rapide) · m = 2e (moyen, léger flou) ·
+// f = 3e (petit, flou, lent). Le centre reste libre pour le texte.
+type Img = [string, 'a' | 'm' | 'f', number, number, number];
+
+// Gabarit de composition RÉUTILISÉ d'une scène à l'autre → rendu organisé,
+// pas de fouillis. A à gauche, M à droite, F en petits accents (haut/bas).
+const SL = {
+  A: ['a', 12, 47, 23],
+  M1: ['m', 86, 32, 20],
+  M2: ['m', 83, 77, 18],
+  F1: ['f', 33, 13, 12],
+  F2: ['f', 70, 89, 12],
+  F3: ['f', 13, 83, 11],
+} as const;
+const im = (slot: readonly [string, number, number, number], src: string): Img => [
+  src,
+  slot[0] as 'a' | 'm' | 'f',
+  slot[1],
+  slot[2],
+  slot[3],
+];
 
 const PALETTE = [
   { hex: '#17332f', name: 'Vert-pin' },
@@ -51,18 +70,18 @@ const PALETTE = [
   { hex: '#f5f6f3', name: 'Crème' },
 ];
 
-// Ordre + contenu des scènes. `images` = visuels EN RAPPORT avec le propos.
-const SCENES: { id: string; extra?: 'palette' | 'specimen' | 'steps' | 'gains'; h: number; images: Img[] }[] = [
-  { id: 'intro', h: 130, images: [[mockupSite, 'f', 11, 16, 28], [couleurs, 'm', 15, 68, 19], [marques, 'm', 85, 30, 18], [photos, 'b', 82, 80, 16], [carteVisite, 'b', 30, 88, 13]] },
-  { id: 'contexte', h: 130, images: [[presentation, 'f', 84, 20, 27], [mockup2, 'm', 15, 30, 19], [papeterie, 'b', 22, 82, 15]] },
-  { id: 'logo', h: 140, images: [[logo, 'm', 16, 30, 22], [logoExplication, 'f', 86, 74, 28], [zones, 'b', 78, 22, 16]] },
-  { id: 'couleurs', extra: 'palette', h: 145, images: [[couleurs, 'f', 85, 26, 28], [mockupSite, 'b', 15, 78, 17]] },
-  { id: 'typo', extra: 'specimen', h: 140, images: [[typo, 'm', 15, 28, 21], [typoEcriture, 'f', 86, 76, 27]] },
-  { id: 'pattern', h: 140, images: [[pattern, 'f', 15, 24, 28], [elements, 'm', 85, 72, 22]] },
-  { id: 'marques', h: 150, images: [[wealth, 'm', 16, 26, 20], [international, 'f', 87, 30, 22], [epargne, 'm', 82, 78, 20], [marques, 'b', 20, 80, 16]] },
-  { id: 'applications', h: 175, images: [[mockup1, 'm', 13, 22, 19], [mockup4, 'f', 88, 20, 24], [carteVisite, 'b', 30, 42, 13], [papeterie, 'm', 84, 60, 18], [socialLinkedin, 'b', 14, 66, 15], [reseaux, 'm', 68, 84, 18], [socialFacebook, 'b', 40, 88, 13], [mockup3, 'f', 90, 88, 22]] },
-  { id: 'demarche', extra: 'steps', h: 150, images: [[mockup2, 'b', 13, 24, 16], [miseEnSituation, 'b', 87, 78, 17]] },
-  { id: 'impact', extra: 'gains', h: 135, images: [[mockupSite, 'b', 14, 26, 17], [marques, 'b', 86, 74, 16]] },
+// `images` = visuels EN RAPPORT avec le propos de la scène.
+const SCENES: { id: string; extra?: 'palette' | 'specimen' | 'steps' | 'gains'; images: Img[] }[] = [
+  { id: 'intro', images: [im(SL.A, mockupSite), im(SL.M1, marques), im(SL.M2, couleurs), im(SL.F1, photos), im(SL.F2, carteVisite), im(SL.F3, papeterie)] },
+  { id: 'contexte', images: [im(SL.A, presentation), im(SL.M1, mockup2), im(SL.M2, miseEnSituation), im(SL.F2, papeterie)] },
+  { id: 'logo', images: [im(SL.A, logo), im(SL.M1, logoExplication), im(SL.M2, zones)] },
+  { id: 'couleurs', extra: 'palette', images: [im(SL.A, couleurs), im(SL.M1, marques), im(SL.F1, wealth), im(SL.F2, epargne)] },
+  { id: 'typo', extra: 'specimen', images: [im(SL.A, typo), im(SL.M1, typoEcriture), im(SL.F2, presentation)] },
+  { id: 'pattern', images: [im(SL.A, pattern), im(SL.M1, elements), im(SL.F1, mockupSite), im(SL.F2, mockup3)] },
+  { id: 'marques', images: [im(SL.A, marques), im(SL.M1, wealth), im(SL.M2, international), im(SL.F2, epargne)] },
+  { id: 'applications', images: [im(SL.A, mockupSite), im(SL.M1, mockup4), im(SL.M2, socialLinkedin), im(SL.F1, papeterie), im(SL.F2, reseaux), im(SL.F3, socialFacebook)] },
+  { id: 'demarche', extra: 'steps', images: [im(SL.A, mockup2), im(SL.M1, presentation), im(SL.M2, miseEnSituation), im(SL.F2, mockup1)] },
+  { id: 'impact', extra: 'gains', images: [im(SL.A, marques), im(SL.M1, mockupSite), im(SL.F2, photos)] },
 ];
 
 const STRINGS = {
@@ -128,9 +147,7 @@ const STRINGS = {
   },
 };
 
-const DEPTH = { b: 'back', m: 'mid', f: 'front' } as const;
-const SCALE = { b: '0.62', m: '0.8', f: '1' } as const;
-const OPA = { b: '0.5', m: '1', f: '0.88' } as const;
+const TIER = { a: 'avant', m: 'milieu', f: 'fond' } as const;
 
 export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
   const t = useT(STRINGS);
@@ -178,8 +195,9 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
       el,
       imgs: Array.from(el.querySelectorAll<HTMLElement>('.scene-img')),
     }));
-    const shift = (d: string) => (d === 'front' ? 0.12 : d === 'mid' ? 0.05 : -0.08);
-    const mfac = (d: string) => (d === 'front' ? 42 : d === 'mid' ? 26 : 16);
+    // Vitesses de scroll distinctes par plan : 1er plan rapide → 3e plan lent.
+    const shift = (tr: string) => (tr === 'avant' ? 0.2 : tr === 'milieu' ? 0.1 : 0.045);
+    const mfac = (tr: string) => (tr === 'avant' ? 40 : tr === 'milieu' ? 22 : 12);
     let mx = 0;
     let my = 0;
 
@@ -189,12 +207,11 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
       for (const sc of scenes) {
         const r = sc.el.getBoundingClientRect();
         const rel = r.top + r.height / 2 - vh / 2; // 0 quand la scène est centrée
-        for (const im of sc.imgs) {
-          const d = im.dataset.depth || 'mid';
-          const dx = -mx * mfac(d);
-          const dy = rel * shift(d) - my * mfac(d);
-          const s = im.dataset.scale || '1';
-          im.style.transform = `translate(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px)) scale(${s})`;
+        for (const el of sc.imgs) {
+          const tr = el.dataset.tier || 'milieu';
+          const dx = -mx * mfac(tr);
+          const dy = rel * shift(tr) - my * mfac(tr);
+          el.style.transform = `translate(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px))`;
         }
       }
     }
@@ -237,23 +254,21 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
           <section className="scene" key={scene.id}>
             <div className="scene-pin">
               <div className="scene-imgs">
-                {scene.images.map((im, ii) => (
+                {scene.images.map((image, ii) => (
                   <button
-                    key={im[0] + ii}
+                    key={image[0] + ii}
                     type="button"
-                    className={`scene-img d-${DEPTH[im[1]]}`}
-                    data-depth={DEPTH[im[1]]}
-                    data-scale={SCALE[im[1]]}
-                    data-op={OPA[im[1]]}
+                    className={`scene-img t-${TIER[image[1]]}`}
+                    data-tier={TIER[image[1]]}
                     aria-label={t.zoom}
-                    style={{ left: `${im[2]}%`, top: `${im[3]}%`, width: `${im[4]}vw` }}
+                    style={{ left: `${image[2]}%`, top: `${image[3]}%`, width: `${image[4]}vw` }}
                     onMouseDown={preventFocusScroll}
                     onClick={(e) => {
                       e.currentTarget.blur();
                       openLb(scene.images, ii);
                     }}
                   >
-                    <img src={im[0]} alt="" loading="lazy" decoding="async" />
+                    <img src={image[0]} alt="" loading="lazy" decoding="async" />
                   </button>
                 ))}
               </div>
