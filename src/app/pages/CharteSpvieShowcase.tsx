@@ -152,45 +152,52 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
     const root = rootRef.current;
     if (!root) return;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Le texte de chaque scène apparaît UNE FOIS à l'entrée (puis reste) :
+    // rien ne disparaît en cours de route, tout se suit naturellement.
+    const io = new IntersectionObserver(
+      (es) => {
+        es.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.35 },
+    );
+    root.querySelectorAll<HTMLElement>('.scene-text').forEach((el) => {
+      if (reduce) el.classList.add('in');
+      else io.observe(el);
+    });
+
+    // Parallaxe de profondeur : les visuels dérivent selon la position de leur
+    // scène dans le viewport (+ léger décalage souris). Aucune opacité pilotée
+    // au scroll → les images entrent/sortent naturellement du cadre.
     const scenes = Array.from(root.querySelectorAll<HTMLElement>('.scene')).map((el) => ({
       el,
-      text: el.querySelector<HTMLElement>('.scene-text'),
       imgs: Array.from(el.querySelectorAll<HTMLElement>('.scene-img')),
     }));
-    const smooth = (x: number) => {
-      const c = Math.max(0, Math.min(1, x));
-      return c * c * (3 - 2 * c);
-    };
-    const fFactor = (d: string) => (d === 'front' ? 1 : d === 'mid' ? 0.62 : 0.35);
+    const shift = (d: string) => (d === 'front' ? 0.12 : d === 'mid' ? 0.05 : -0.08);
+    const mfac = (d: string) => (d === 'front' ? 42 : d === 'mid' ? 26 : 16);
     let mx = 0;
     let my = 0;
 
     function frame() {
+      if (reduce) return;
       const vh = innerHeight;
       for (const sc of scenes) {
         const r = sc.el.getBoundingClientRect();
-        const travel = sc.el.offsetHeight - vh;
-        const p = travel > 0 ? Math.max(0, Math.min(1, -r.top / travel)) : 0.5;
-        // Texte : monte + apparaît (0→0.16), tient, repart (0.84→1)
-        if (sc.text) {
-          const tIn = smooth(p / 0.16);
-          const tOut = smooth((1 - p) / 0.16);
-          sc.text.style.opacity = reduce ? '1' : String(Math.min(tIn, tOut));
-          sc.text.style.transform = reduce ? '' : `translateY(${((1 - tIn) * 42 - (1 - tOut) * 42).toFixed(1)}px)`;
-        }
+        const rel = r.top + r.height / 2 - vh / 2; // 0 quand la scène est centrée
         for (const im of sc.imgs) {
-          const f = fFactor(im.dataset.depth || 'mid');
-          const dy = reduce ? 0 : (0.5 - p) * f * 300 - my * f * 44;
-          const dx = reduce ? 0 : -mx * f * 44;
+          const d = im.dataset.depth || 'mid';
+          const dx = -mx * mfac(d);
+          const dy = rel * shift(d) - my * mfac(d);
           const s = im.dataset.scale || '1';
           im.style.transform = `translate(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px)) scale(${s})`;
-          const vis = smooth(p / 0.14) * smooth((1 - p) / 0.14);
-          im.style.opacity = String((Number(im.dataset.op) || 1) * (reduce ? 1 : vis));
         }
       }
     }
-    // Mise à jour au scroll + au mouvement souris uniquement (pas de boucle
-    // rAF permanente : pas de calcul de layout au repos).
     let ticking = false;
     const schedule = () => {
       if (!ticking) {
@@ -211,6 +218,7 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
     if (!reduce) window.addEventListener('mousemove', onMouse, { passive: true });
     window.addEventListener('resize', frame);
     return () => {
+      io.disconnect();
       document.body.removeEventListener('scroll', schedule);
       window.removeEventListener('mousemove', onMouse);
       window.removeEventListener('resize', frame);
@@ -226,7 +234,7 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
       {SCENES.map((scene, si) => {
         const sc = t.scenes[scene.id as keyof typeof t.scenes];
         return (
-          <section className="scene" key={scene.id} style={{ height: `${scene.h}vh` }}>
+          <section className="scene" key={scene.id}>
             <div className="scene-pin">
               <div className="scene-imgs">
                 {scene.images.map((im, ii) => (
