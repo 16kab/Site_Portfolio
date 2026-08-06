@@ -62,10 +62,13 @@ export default function Header({ showSplash }: { showSplash?: boolean }) {
     setIsMobileMenuOpen(false);
     if (/^\/projets\/[^/]+/.test(location.pathname)) {
       e.preventDefault();
+      // replace : consomme l'entrée « tampon » posée par la page détail pour
+      // l'interception du retour navigateur → historique propre.
+      const go = () => navigate(ROUTES.PROJETS, { replace: true });
       if (document.body.scrollTop > 40) {
-        scrollBodyTo(0, 520, () => navigate(ROUTES.PROJETS));
+        scrollBodyTo(0, 520, go);
       } else {
-        navigate(ROUTES.PROJETS);
+        go();
       }
     }
   };
