@@ -1,4 +1,9 @@
-import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource/suez-one/400.css';
+import '@fontsource/raleway/400.css';
+import '@fontsource/raleway/500.css';
+import '@fontsource/raleway/600.css';
+import '@fontsource/raleway/700.css';
+import '@fontsource/raleway/800.css';
 import './RefonteSpvieShowcase.css';
 import { useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
@@ -198,16 +203,6 @@ export default function RefonteSpvieShowcase({ projet }: { projet: Projet }) {
   const { lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
   const [lb, setLb] = useState<number | null>(null);
-
-  // Refonte = site clair → force le thème light du site.
-  useEffect(() => {
-    const el = document.documentElement;
-    const wasDark = el.classList.contains('dark');
-    if (wasDark) el.classList.remove('dark');
-    return () => {
-      if (wasDark) el.classList.add('dark');
-    };
-  }, []);
 
   useEffect(() => {
     const root = rootRef.current;

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 import { useT } from '../i18n';
 
 const STRINGS = {
@@ -10,6 +10,8 @@ const STRINGS = {
     close: 'Fermer la visionneuse',
     prev: 'Image précédente',
     next: 'Image suivante',
+    zoomIn: 'Zoomer',
+    zoomOut: 'Dézoomer',
     alt: (i: number, total: number) => `Aperçu ${i} sur ${total}`,
   },
   en: {
@@ -18,9 +20,14 @@ const STRINGS = {
     close: 'Close viewer',
     prev: 'Previous image',
     next: 'Next image',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
     alt: (i: number, total: number) => `Preview ${i} of ${total}`,
   },
 };
+
+const MAX_ZOOM = 6;
+const MIN_ZOOM = 1;
 
 interface ImageLightboxProps {
   images: string[];
@@ -36,6 +43,57 @@ export function ImageLightbox({
   const t = useT(STRINGS);
   const [index, setIndex] = useState(currentIndex);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Zoom / panoramique de l'image affichée.
+  const [scale, setScale] = useState(1);
+  const [tx, setTx] = useState(0);
+  const [ty, setTy] = useState(0);
+  const dragRef = useRef<{ x: number; y: number; ox: number; oy: number } | null>(
+    null,
+  );
+  const movedRef = useRef(false);
+
+  // Réinitialise le zoom à chaque changement d'image.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: index est le déclencheur voulu (reset au changement d'image)
+  useEffect(() => {
+    setScale(1);
+    setTx(0);
+    setTy(0);
+  }, [index]);
+
+  const zoomTo = useCallback((next: number) => {
+    const ns = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(next * 100) / 100));
+    setScale(ns);
+    if (ns === 1) {
+      setTx(0);
+      setTy(0);
+    }
+  }, []);
+
+  const onWheel = (e: React.WheelEvent) => {
+    zoomTo(scale + (e.deltaY < 0 ? 0.4 : -0.4));
+  };
+  const onImgClick = () => {
+    if (movedRef.current) return;
+    zoomTo(scale > 1 ? 1 : 2.5);
+  };
+  const onPointerDown = (e: React.PointerEvent) => {
+    movedRef.current = false;
+    if (scale <= 1) return;
+    dragRef.current = { x: e.clientX, y: e.clientY, ox: tx, oy: ty };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    const dx = e.clientX - dragRef.current.x;
+    const dy = e.clientY - dragRef.current.y;
+    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) movedRef.current = true;
+    setTx(dragRef.current.ox + dx);
+    setTy(dragRef.current.oy + dy);
+  };
+  const onPointerUp = () => {
+    dragRef.current = null;
+  };
 
   // Bloque le scroll du body tant que la lightbox est ouverte.
   // Restauration avec '' (et non 'unset') pour rendre la main à la
@@ -140,12 +198,48 @@ export function ImageLightbox({
           exit={{ scale: 0.9, opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: clic = zoom souris ; l'accès clavier au zoom passe par les boutons +/- ci-dessous */}
           <img
             src={images[index]}
             alt={t.alt(index + 1, images.length)}
-            className="max-w-full max-h-[90vh] object-contain rounded-lg"
+            onClick={onImgClick}
+            onWheel={onWheel}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            draggable={false}
+            className="max-w-full max-h-[90vh] object-contain rounded-lg select-none"
+            style={{
+              transform: `translate(${tx}px, ${ty}px) scale(${scale})`,
+              cursor: scale > 1 ? 'grab' : 'zoom-in',
+              transition: dragRef.current ? 'none' : 'transform 0.18s ease-out',
+              touchAction: 'none',
+            }}
           />
         </motion.div>
+
+        {/* Zoom Controls */}
+        <div className="absolute bottom-6 left-6 z-[310] flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => zoomTo(scale - 0.5)}
+            disabled={scale <= MIN_ZOOM}
+            className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-40 disabled:cursor-default"
+            aria-label={t.zoomOut}
+          >
+            <ZoomOut size={20} className="text-white" />
+          </button>
+          <button
+            type="button"
+            onClick={() => zoomTo(scale + 0.5)}
+            disabled={scale >= MAX_ZOOM}
+            className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-40 disabled:cursor-default"
+            aria-label={t.zoomIn}
+          >
+            <ZoomIn size={20} className="text-white" />
+          </button>
+        </div>
 
         {/* Image Counter */}
         {images.length > 1 && (

@@ -12,17 +12,32 @@
   --spv-ink: #17262a;
   --spv-ink2: #566a68;
   --spv-line: rgba(23, 38, 42, 0.1);
-  --title-font: 'Bricolage Grotesque Variable', sans-serif;
+  --title-font: 'Suez One', Georgia, 'Times New Roman', serif;
+  --body-font: 'Raleway', 'Manrope', sans-serif;
   --mtop: 134px;
   position: relative;
   background: var(--spv-bg);
   color: var(--spv-ink);
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--body-font);
+}
+
+/* Dark mode — la DA de la refonte transposée en sombre (navy profond + vert
+   plus lumineux). Les cadres navigateur restent clairs : ce sont des captures
+   d'un site clair, comme une fenêtre de navigateur réelle. */
+.dark .refonte-showcase {
+  --spv-bg: #0d1618;
+  --spv-surface: #16242a;
+  --spv-navy: #eaf3f0;
+  --spv-green: #22d3a5;
+  --spv-accent: #35dcac;
+  --spv-ink: #e7efec;
+  --spv-ink2: #9db0ac;
+  --spv-line: rgba(255, 255, 255, 0.12);
 }
 
 .refonte-showcase .wrap { width: min(1180px, 90vw); margin-inline: auto; }
-.refonte-showcase .title { font-family: var(--title-font); letter-spacing: -0.02em; font-weight: 600; }
-.refonte-showcase .label { font-family: 'Manrope', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 700; color: var(--spv-ink2); }
+.refonte-showcase .title { font-family: var(--title-font); letter-spacing: -0.01em; font-weight: 400; }
+.refonte-showcase .label { font-family: var(--body-font); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 700; color: var(--spv-ink2); }
 .refonte-showcase .num { font-variant-numeric: tabular-nums; }
 .refonte-showcase .dot { width: 11px; height: 11px; border-radius: 999px; flex: none; }
 .refonte-showcase .dot.r { background: #ff5f57; }
@@ -36,8 +51,8 @@
 .refonte-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: rs-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
 @keyframes rs-fade { from { opacity: 0; } to { opacity: 1; } }
 .refonte-showcase .m-hero .ey { display: flex; gap: 14px; flex-wrap: wrap; color: rgba(255,255,255,0.85); margin-bottom: 18px; }
-.refonte-showcase .m-hero h1 { font-family: var(--title-font); font-weight: 800; font-size: clamp(2.6rem, 8vw, 6.6rem); line-height: 0.96; letter-spacing: -0.03em; margin: 0; color: #fff; max-width: 16ch; }
-.refonte-showcase .m-hero .th { font-family: var(--title-font); font-weight: 440; font-size: clamp(1.15rem, 2.4vw, 1.85rem); line-height: 1.16; max-width: 26ch; margin: 20px 0 0; color: rgba(255,255,255,0.95); }
+.refonte-showcase .m-hero h1 { font-family: var(--title-font); font-weight: 400; font-size: clamp(2.4rem, 7.4vw, 6rem); line-height: 1.0; letter-spacing: -0.015em; margin: 0; color: #fff; max-width: 16ch; }
+.refonte-showcase .m-hero .th { font-family: var(--body-font); font-weight: 500; font-size: clamp(1.1rem, 2.3vw, 1.7rem); line-height: 1.22; max-width: 30ch; margin: 20px 0 0; color: rgba(255,255,255,0.95); }
 .refonte-showcase .m-hero .th em { font-style: normal; color: #4fe0b5; }
 .refonte-showcase .m-hero .cue { position: absolute; left: 0; right: 0; bottom: 20px; text-align: center; color: rgba(255,255,255,0.72); }
 
@@ -45,7 +60,7 @@
 .refonte-showcase .metabar { display: flex; align-items: center; gap: clamp(20px, 4vw, 56px); flex-wrap: wrap; padding: clamp(24px, 4vw, 40px) 0; border-bottom: 1px solid var(--spv-line); }
 .refonte-showcase .metabar-study { flex: none; }
 .refonte-showcase .metabar-meta { display: flex; gap: clamp(18px, 3vw, 44px); flex-wrap: wrap; margin: 0; flex: 1 1 auto; }
-.refonte-showcase .metabar-meta dd { margin: 4px 0 0; font-family: var(--title-font); font-weight: 600; font-size: 0.95rem; color: var(--spv-ink); }
+.refonte-showcase .metabar-meta dd { margin: 4px 0 0; font-family: var(--body-font); font-weight: 600; font-size: 0.95rem; color: var(--spv-ink); }
 
 /* ---- Sections ---- */
 .refonte-showcase .sec { padding: clamp(50px, 8vw, 104px) 0 0; }
@@ -53,7 +68,7 @@
 .refonte-showcase .sec-tight { padding-bottom: clamp(12px, 2vw, 24px); }
 .refonte-showcase .sec .ey { display: inline-flex; align-items: center; margin-bottom: 16px; color: var(--spv-ink2); }
 .refonte-showcase .sec .ey::before { content: ''; display: inline-block; width: 4px; height: 12px; background: var(--spv-green); border-radius: 2px; margin-right: 10px; }
-.refonte-showcase .lead { font-family: var(--title-font); font-weight: 540; font-size: clamp(1.8rem, 4.2vw, 3.1rem); line-height: 1.08; letter-spacing: -0.02em; margin: 0; max-width: 20ch; color: var(--spv-navy); }
+.refonte-showcase .lead { font-family: var(--title-font); font-weight: 400; font-size: clamp(1.7rem, 3.9vw, 2.9rem); line-height: 1.12; letter-spacing: -0.008em; margin: 0; max-width: 20ch; color: var(--spv-navy); }
 .refonte-showcase .lead .k { color: var(--spv-accent); }
 .refonte-showcase .illuminate .wd { transition: opacity .1s linear; }
 .refonte-showcase .note { color: var(--spv-ink2); font-size: 1.06rem; max-width: 48ch; margin: 22px 0 0; line-height: 1.62; }
@@ -82,7 +97,7 @@
 .refonte-showcase .bbar { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; background: #eef1f0; border-bottom: 1px solid var(--spv-line); }
 .refonte-showcase .baddr { margin-left: 8px; flex: 1; max-width: 260px; height: 20px; border-radius: 999px; background: #e2e7e4; color: #74847f; font-size: 11px; display: flex; align-items: center; padding: 0 12px; overflow: hidden; white-space: nowrap; }
 .refonte-showcase .bshot { display: block; height: clamp(240px, 30vw, 360px); overflow: hidden; }
-.refonte-showcase .bshot img { display: block; width: 100%; height: auto; transition: transform 3.5s cubic-bezier(.2,0,.2,1); }
+.refonte-showcase .bshot img { display: block; width: 100%; height: auto; transition: transform 16s cubic-bezier(.25,0,.3,1); }
 .refonte-showcase .page-tile:hover .bshot img { transform: translateY(calc(-100% + clamp(240px, 30vw, 360px))); }
 .refonte-showcase .page-tile:focus-visible .bwin { outline: 2px solid var(--spv-green); outline-offset: 3px; }
 .refonte-showcase .page-cap { display: block; margin-top: 12px; font-size: 0.84rem; color: var(--spv-ink2); }
@@ -91,7 +106,7 @@
 /* ---- 04 DÉMARCHE ---- */
 .refonte-showcase .demarche { list-style: none; margin: clamp(28px, 4vw, 44px) 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 36px); }
 .refonte-showcase .dem-step { display: flex; gap: 16px; align-items: flex-start; padding: clamp(20px, 2.4vw, 28px); border: 1px solid var(--spv-line); border-radius: 18px; background: var(--spv-surface); }
-.refonte-showcase .dem-n { flex: none; color: var(--spv-accent); font-family: var(--title-font); font-weight: 700; font-size: 1.1rem; }
+.refonte-showcase .dem-n { flex: none; color: var(--spv-accent); font-family: var(--title-font); font-weight: 400; font-size: 1.15rem; }
 .refonte-showcase .dem-t { font-size: 1.2rem; margin: 0 0 8px; color: var(--spv-navy); }
 .refonte-showcase .dem-b { color: var(--spv-ink2); font-size: 0.98rem; line-height: 1.55; margin: 0; }
 @media (max-width: 720px) { .refonte-showcase .demarche { grid-template-columns: 1fr; } }
