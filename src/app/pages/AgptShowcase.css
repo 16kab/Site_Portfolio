@@ -87,8 +87,9 @@
 /* ---- 02 SIGNATURE : la planche d'identité ---- */
 .agpt-showcase .board { position: relative; margin: clamp(30px, 4vw, 52px) auto 0; max-width: 920px; background: var(--agpt-surface); border: 1px solid var(--agpt-line); border-radius: 26px; padding: clamp(28px, 4vw, 48px); overflow: hidden; box-shadow: 0 46px 90px -55px rgba(94,28,51,0.42); }
 .agpt-showcase .board-venus { position: absolute; right: -24px; bottom: -84px; font-size: 340px; line-height: 1; color: var(--agpt-rose); opacity: 0.06; pointer-events: none; }
-.agpt-showcase .board-wordmark { font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.3rem); color: var(--agpt-heading); font-weight: 500; margin: 0 0 clamp(24px, 3vw, 38px); position: relative; z-index: 2; }
-.agpt-showcase .board-wordmark em { font-style: italic; font-weight: 600; }
+.agpt-showcase .board-logo-wrap { position: relative; z-index: 2; margin: 0 0 clamp(26px, 3.4vw, 42px); }
+.agpt-showcase .board-logo { display: inline-block; color: var(--agpt-heading); }
+.agpt-showcase .board-logo svg { display: block; height: clamp(52px, 7.5vw, 82px); width: auto; }
 .agpt-showcase .board-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(28px, 4vw, 52px); position: relative; z-index: 2; }
 .agpt-showcase .board-h { display: block; margin-bottom: 16px; color: var(--agpt-mauve); }
 .agpt-showcase .swatches { display: flex; flex-wrap: wrap; gap: 16px; }

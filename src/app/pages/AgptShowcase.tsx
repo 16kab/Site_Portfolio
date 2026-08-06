@@ -14,6 +14,7 @@ import pGrossesse from 'figma:asset/agpt-p-grossesse.webp';
 import pClub from 'figma:asset/agpt-p-club.webp';
 import pArticle from 'figma:asset/agpt-p-article.webp';
 import pAnnuaire from 'figma:asset/agpt-p-annuaire.webp';
+import agptLogo from '../../assets/agpt-logo.svg?raw';
 
 const SITE = [pHome, pGrossesse, pClub, pArticle, pAnnuaire];
 const SITE_URL = 'https://www.agirpourtoutes.com';
@@ -53,6 +54,7 @@ const STRINGS = {
     s2eyebrow: '02 — L’univers de marque',
     s2pre: 'Un univers ',
     s2k: 'chaleureux, premium, féminin.',
+    logoLabel: 'Logo',
     paletteLabel: 'Palette',
     typoLabel: 'Typographie',
     s2note:
@@ -127,6 +129,7 @@ const STRINGS = {
     s2eyebrow: '02 — The brand world',
     s2pre: 'A world that is ',
     s2k: 'warm, premium, feminine.',
+    logoLabel: 'Logo',
     paletteLabel: 'Palette',
     typoLabel: 'Typography',
     s2note:
@@ -198,16 +201,41 @@ function Lead({ id, pre, k }: { id: string; pre: string; k: string }) {
   );
 }
 
-// Signature — la planche d'identité (palette + typographie + logo, natifs)
-function BrandBoard({ t }: { t: { paletteLabel: string; typoLabel: string } }) {
+// Logo de marque (SVG monochrome recoloré via currentColor → suit le thème).
+function BrandLogo() {
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const el = ref.current?.querySelector('svg');
+    if (!el) return;
+    el.removeAttribute('width');
+    el.removeAttribute('height');
+    el.querySelectorAll('path, polygon, rect, circle, ellipse').forEach((p) => {
+      (p as SVGElement).style.fill = 'currentColor';
+    });
+  }, []);
+  return (
+    <span
+      className="board-logo"
+      ref={ref}
+      role="img"
+      aria-label="Logo Agir Pour Toutes"
+      // biome-ignore lint: logo de marque interne, contenu maîtrisé.
+      dangerouslySetInnerHTML={{ __html: agptLogo }}
+    />
+  );
+}
+
+// Signature — la planche d'identité (logo + palette + typographie)
+function BrandBoard({ t }: { t: { paletteLabel: string; typoLabel: string; logoLabel: string } }) {
   return (
     <div className="board reveal">
       <span className="board-venus" aria-hidden="true">
         ♀
       </span>
-      <p className="board-wordmark">
-        <em>Agir</em> pour toutes.
-      </p>
+      <div className="board-logo-wrap">
+        <span className="board-h label">{t.logoLabel}</span>
+        <BrandLogo />
+      </div>
       <div className="board-grid">
         <div className="board-block">
           <span className="board-h label">{t.paletteLabel}</span>
