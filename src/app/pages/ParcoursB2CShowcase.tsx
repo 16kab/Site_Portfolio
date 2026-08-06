@@ -1,4 +1,8 @@
-import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource/raleway/400.css';
+import '@fontsource/raleway/500.css';
+import '@fontsource/raleway/600.css';
+import '@fontsource/raleway/700.css';
+import '@fontsource/raleway/800.css';
 import './ParcoursB2CShowcase.css';
 import { useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';

@@ -7,18 +7,24 @@
   --spvie-accent: #0a9d7a;
   --spvie-bright: #12c69a;
   --spvie-soft: #7fe6cc;
-  --title-font: 'Bricolage Grotesque Variable', 'Playfair Display', sans-serif;
+  --title-font: 'Raleway', sans-serif;
   --mtop: 134px;
   position: relative;
   background: var(--portfolio-bg);
   color: var(--portfolio-text-primary);
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Raleway', sans-serif;
 }
-.dark .parcours-b2c-showcase { --spvie-accent: #2ad4a8; --spvie-soft: #12c69a; }
+.dark .parcours-b2c-showcase {
+  --spvie-accent: #2ad4a8; --spvie-soft: #12c69a;
+  /* Fond + footer teintés vert SPVIE (au lieu du gris neutre). */
+  --portfolio-bg: #0b1512;
+  --portfolio-card-bg: #12201f;
+  --portfolio-card-border: rgba(255, 255, 255, 0.1);
+}
 
 .parcours-b2c-showcase .wrap { width: min(1180px, 90vw); margin-inline: auto; }
 .parcours-b2c-showcase .title { font-family: var(--title-font); letter-spacing: -0.02em; font-weight: 600; }
-.parcours-b2c-showcase .label { font-family: 'Manrope', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); }
+.parcours-b2c-showcase .label { font-family: 'Raleway', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); }
 .parcours-b2c-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO ---- */
@@ -118,7 +124,7 @@
 .parcours-b2c-showcase .walk-controls { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 14px; }
 .parcours-b2c-showcase .walk-prev { width: 46px; height: 46px; border-radius: 999px; border: 1px solid var(--portfolio-card-border); background: var(--portfolio-card-bg); color: var(--portfolio-text-primary); font-size: 1.4rem; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: border-color .25s, color .25s; }
 .parcours-b2c-showcase .walk-prev:hover { border-color: var(--spvie-accent); color: var(--spvie-accent); }
-.parcours-b2c-showcase .walk-next { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 999px; border: 0; background: var(--spvie-bright); color: #06231b; font-family: 'Manrope', sans-serif; font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: transform .2s, filter .2s; }
+.parcours-b2c-showcase .walk-next { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 999px; border: 0; background: var(--spvie-bright); color: #06231b; font-family: 'Raleway', sans-serif; font-size: 0.92rem; font-weight: 700; cursor: pointer; transition: transform .2s, filter .2s; }
 .parcours-b2c-showcase .walk-next:hover { transform: translateY(-1px); filter: brightness(1.05); }
 .parcours-b2c-showcase .walk-next span { font-size: 1.1em; }
 

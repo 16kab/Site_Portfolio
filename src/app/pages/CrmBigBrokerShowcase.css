@@ -3,22 +3,38 @@
    Titres : Bricolage Grotesque. Corps : Manrope.
    Signature : le dispatch en direct (sources → moteur → conseillers). */
 
+@font-face {
+  font-family: 'Tusker Grotesk';
+  src: url('../../assets/fonts/TuskerGrotesk-4500Medium.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 .crm-showcase {
-  --bb-accent: #0d9d6e;
-  --bb-bright: #10b981;
-  --bb-soft: #6ee7b7;
-  --title-font: 'Bricolage Grotesque Variable', 'Playfair Display', sans-serif;
+  --bb-accent: #0a8c82;
+  --bb-bright: #05d7cd;
+  --bb-soft: #4fe4d6;
+  /* Couleur principale de la marque : dégradé teal → lime. */
+  --bb-grad: linear-gradient(100deg, #05d7cd 0%, #bed210 100%);
+  --title-font: 'Tusker Grotesk', 'Arial Narrow', sans-serif;
   --mtop: 134px;
   position: relative;
   background: var(--portfolio-bg);
   color: var(--portfolio-text-primary);
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
-.dark .crm-showcase { --bb-accent: #34d399; --bb-soft: #10b981; }
+.dark .crm-showcase {
+  --bb-accent: #22d3c4; --bb-soft: #4fe4d6;
+  /* Fond + footer teintés teal (dégradé de marque 05D7CD → BED210). */
+  --portfolio-bg: #07201e;
+  --portfolio-card-bg: #0e2c28;
+  --portfolio-card-border: rgba(255, 255, 255, 0.1);
+}
 
 .crm-showcase .wrap { width: min(1180px, 90vw); margin-inline: auto; }
 .crm-showcase .title { font-family: var(--title-font); letter-spacing: -0.02em; font-weight: 600; }
-.crm-showcase .label { font-family: 'Manrope', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); }
+.crm-showcase .label { font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 600; color: var(--portfolio-text-muted); }
 .crm-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO (image claire, scrim sombre + texte blanc) ---- */
@@ -30,7 +46,7 @@
 .crm-showcase .m-hero .ey { display: flex; gap: 14px; flex-wrap: wrap; color: rgba(255,255,255,0.85); margin-bottom: 18px; }
 .crm-showcase .m-hero h1 { font-family: var(--title-font); font-weight: 800; font-size: clamp(2.8rem, 9vw, 7rem); line-height: 0.92; letter-spacing: -0.035em; margin: 0; color: #fff; }
 .crm-showcase .m-hero .th { font-family: var(--title-font); font-weight: 440; font-size: clamp(1.15rem, 2.4vw, 1.85rem); line-height: 1.16; max-width: 26ch; margin: 20px 0 0; color: rgba(255,255,255,0.95); }
-.crm-showcase .m-hero .th em { font-style: normal; color: var(--bb-soft); }
+.crm-showcase .m-hero .th em { font-style: normal; background: var(--bb-grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
 .crm-showcase .m-hero .cue { position: absolute; left: 0; right: 0; bottom: 20px; text-align: center; color: rgba(255,255,255,0.72); }
 
 /* ---- BARRE MÉTA ---- */
@@ -44,7 +60,13 @@
 .crm-showcase .sec:last-of-type { padding-bottom: clamp(50px, 8vw, 104px); }
 .crm-showcase .sec .ey { display: block; margin-bottom: 16px; color: var(--bb-accent); }
 .crm-showcase .lead { font-family: var(--title-font); font-weight: 520; font-size: clamp(1.7rem, 4vw, 3rem); line-height: 1.1; letter-spacing: -0.02em; margin: 0; max-width: 20ch; }
-.crm-showcase .lead .k { color: var(--bb-accent); }
+.crm-showcase .lead .k {
+  background: var(--bb-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
 .crm-showcase .illuminate .wd { transition: opacity .1s linear; }
 .crm-showcase .note { color: var(--portfolio-text-description); font-size: 1.06rem; max-width: 46ch; margin: 22px 0 0; line-height: 1.6; }
 .crm-showcase .note-center { margin-inline: auto; text-align: center; max-width: 54ch; }
@@ -78,11 +100,11 @@
 .crm-showcase .adv-name { font-weight: 600; font-size: 0.9rem; }
 .crm-showcase .adv-q { color: var(--portfolio-text-muted); font-size: 0.8rem; }
 .crm-showcase .adv-gauge { display: block; height: 7px; border-radius: 999px; background: var(--portfolio-card-border); overflow: hidden; }
-.crm-showcase .adv-fill { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--bb-accent); transition: width 1.1s cubic-bezier(.16,1,.3,1); }
-.crm-showcase .adv-fill.full { background: linear-gradient(90deg, var(--bb-bright), var(--bb-accent)); }
+.crm-showcase .adv-fill { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--bb-grad); transition: width 1.1s cubic-bezier(.16,1,.3,1); }
+.crm-showcase .adv-fill.full { background: var(--bb-grad); }
 .crm-showcase .dispatch.run .adv-fill { width: var(--fill); }
 .crm-showcase .disp-controls { display: flex; justify-content: center; margin-top: clamp(24px, 3vw, 34px); }
-.crm-showcase .disp-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px; border: 1px solid var(--bb-accent); background: color-mix(in srgb, var(--bb-accent) 10%, transparent); color: var(--bb-accent); font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background .2s; }
+.crm-showcase .disp-btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px; border: 1px solid var(--bb-accent); background: color-mix(in srgb, var(--bb-accent) 10%, transparent); color: var(--bb-accent); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: background .2s; }
 .crm-showcase .disp-btn:hover { background: color-mix(in srgb, var(--bb-accent) 18%, transparent); }
 @media (max-width: 720px) {
   .crm-showcase .disp-stage { grid-template-columns: 1fr; gap: 26px; }

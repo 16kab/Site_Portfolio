@@ -1,4 +1,4 @@
-import { Navigate, useParams } from 'react-router';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import ContactFooter from '../components/ContactFooter';
@@ -7,6 +7,7 @@ import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import NewProjectCard from '../components/common/NewProjectCard';
 import { getProjets, getTousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
+import { scrollBodyTo } from '../utils/scrollBodyTo';
 import svgPaths from '../../imports/svg-jlpjaqyx1i';
 import PageMeta from '../components/PageMeta';
 import { ImageLightbox } from '../components/ImageLightbox';
@@ -58,7 +59,11 @@ export default function ProjetDetail() {
   const bodyRef = useRef(document.body);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  const { markArrival } = usePageTransition();
+  const { markArrival, snapshot } = usePageTransition();
+  const navigate = useNavigate();
+  // Vrai si on est arrivé directement depuis la liste (snapshot de morph) :
+  // seul ce cas garantit un historique propre pour l'interception du retour.
+  const [armReturn] = useState(() => snapshot?.originPath === '/projets');
 
   // Scroll animation for hero image zoom - MUST be called before any conditional returns
   const { scrollYProgress } = useScroll({
@@ -74,6 +79,25 @@ export default function ProjetDetail() {
   useLayoutEffect(() => {
     markArrival();
   }, [markArrival]);
+
+  // Retour navigateur « détail → liste » : on capture le 1er retour pour
+  // rejouer la même animation que le lien « Projets » du header — remontée
+  // douce tout en haut PUIS morph de repli sur la carte (joué par la liste au
+  // montage). Armé uniquement quand on vient directement de la liste, pour
+  // laisser l'historique propre (remplace l'entrée détail par /projets).
+  useEffect(() => {
+    if (!armReturn) return;
+    window.history.pushState({ projetReturnGuard: true }, '');
+    let consumed = false;
+    const onPop = () => {
+      if (consumed) return;
+      consumed = true;
+      window.removeEventListener('popstate', onPop);
+      scrollBodyTo(0, 480, () => navigate(ROUTES.PROJETS, { replace: true }));
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [armReturn, navigate]);
 
   // Réinitialise le scroll au montage. Déclaré AVANT useScrollSpy pour que
   // le body soit à 0 avant la première détection du hook.
