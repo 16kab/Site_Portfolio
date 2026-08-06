@@ -27,6 +27,8 @@ const PALETTE = [
   { name: 'Bordeaux', hex: '#5E1C33' },
 ];
 
+const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefault();
+
 const STRINGS = {
   fr: {
     study: 'Étude de cas',
@@ -270,7 +272,16 @@ export default function AgptShowcase({ projet }: { projet: Projet }) {
   const t = useT(STRINGS);
   const { lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [lb, setLb] = useState<number | null>(null);
+
+  const scrollByCard = (dir: number) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>('.tile');
+    const step = card ? card.offsetWidth + 20 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     const root = rootRef.current;
@@ -424,18 +435,21 @@ export default function AgptShowcase({ projet }: { projet: Projet }) {
         <p className="note note-center">{t.s2note}</p>
       </section>
 
-      {/* 03 LE SITE */}
-      <section className="wrap sec">
-        <span className="ey label">{t.s3eyebrow}</span>
-        <Lead id="agpt-s3" pre={t.s3pre} k={t.s3k} />
-        <p className="note">{t.s3note}</p>
-        <div className="tiles reveal">
+      {/* 03 LE SITE — carrousel horizontal (façon Apple) */}
+      <section className="sec sec-site">
+        <div className="wrap">
+          <span className="ey label">{t.s3eyebrow}</span>
+          <Lead id="agpt-s3" pre={t.s3pre} k={t.s3k} />
+          <p className="note">{t.s3note}</p>
+        </div>
+        <div className="tiles reveal" ref={scrollRef}>
           {SITE.map((src, i) => (
             <button
               key={src}
               type="button"
               className="tile"
               aria-label={t.siteCaps[i]}
+              onMouseDown={preventFocusScroll}
               onClick={(e) => {
                 e.currentTarget.blur();
                 setLb(i);
@@ -447,6 +461,26 @@ export default function AgptShowcase({ projet }: { projet: Projet }) {
               <span className="tile-cap">{t.siteCaps[i]}</span>
             </button>
           ))}
+        </div>
+        <div className="wrap hctrls">
+          <button
+            type="button"
+            className="hbtn"
+            aria-label="Précédent"
+            onMouseDown={preventFocusScroll}
+            onClick={() => scrollByCard(-1)}
+          >
+            <span aria-hidden="true">‹</span>
+          </button>
+          <button
+            type="button"
+            className="hbtn"
+            aria-label="Suivant"
+            onMouseDown={preventFocusScroll}
+            onClick={() => scrollByCard(1)}
+          >
+            <span aria-hidden="true">›</span>
+          </button>
         </div>
       </section>
 
