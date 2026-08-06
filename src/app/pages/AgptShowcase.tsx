@@ -1,8 +1,7 @@
-import '@fontsource/playfair-display/400.css';
-import '@fontsource/playfair-display/500.css';
-import '@fontsource/playfair-display/600.css';
-import '@fontsource/playfair-display/700.css';
-import '@fontsource/playfair-display/500-italic.css';
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
 import './AgptShowcase.css';
 import { useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
@@ -228,9 +227,9 @@ function BrandBoard({ t }: { t: { paletteLabel: string; typoLabel: string } }) {
             <span className="typo-aa">Aa</span>
             <div className="typo-txt">
               <p className="typo-serif">Agir Pour Toutes</p>
-              <p className="typo-meta">Playfair Display — titres</p>
+              <p className="typo-meta">WsParadose — titres</p>
               <p className="typo-sans">Grossesse · Naissance · Post-partum</p>
-              <p className="typo-meta">Manrope — texte courant</p>
+              <p className="typo-meta">Poppins — texte courant</p>
             </div>
           </div>
         </div>
@@ -244,16 +243,6 @@ export default function AgptShowcase({ projet }: { projet: Projet }) {
   const { lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
   const [lb, setLb] = useState<number | null>(null);
-
-  // Marque claire → force le thème light du site (header/footer clairs).
-  useEffect(() => {
-    const el = document.documentElement;
-    const wasDark = el.classList.contains('dark');
-    if (wasDark) el.classList.remove('dark');
-    return () => {
-      if (wasDark) el.classList.add('dark');
-    };
-  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
