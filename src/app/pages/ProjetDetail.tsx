@@ -20,6 +20,7 @@ import TrackItShowcase from './TrackItShowcase';
 import ParcoursB2CShowcase from './ParcoursB2CShowcase';
 import CrmBigBrokerShowcase from './CrmBigBrokerShowcase';
 import AgptShowcase from './AgptShowcase';
+import RefonteSpvieShowcase from './RefonteSpvieShowcase';
 
 const STRINGS = {
   fr: {
@@ -134,6 +135,9 @@ export default function ProjetDetail() {
   }
   if (projet.id === 'agpt') {
     return <AgptShowcase projet={projet} />;
+  }
+  if (projet.id === 'refonte-spvie') {
+    return <RefonteSpvieShowcase projet={projet} />;
   }
 
   // Scroll to section : offset de 120 px pour le menu sticky
