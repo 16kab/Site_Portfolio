@@ -33,6 +33,12 @@
   --spv-ink: #e7efec;
   --spv-ink2: #9db0ac;
   --spv-line: rgba(255, 255, 255, 0.12);
+  /* Le footer partagé (ContactFooter) consomme ces tokens portfolio : on les
+     réaligne sur la DA sombre de la page pour que la carte contact matche le
+     fond vert-navy au lieu du gris neutre par défaut. */
+  --portfolio-card-bg: #12201f;
+  --portfolio-card-border: rgba(255, 255, 255, 0.1);
+  --portfolio-text-muted: #9db0ac;
 }
 
 .refonte-showcase .wrap { width: min(1180px, 90vw); margin-inline: auto; }
