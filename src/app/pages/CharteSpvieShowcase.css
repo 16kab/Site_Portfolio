@@ -28,16 +28,20 @@
 .charte-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- Scène : flux naturel, parallaxe à 3 plans ---- */
-.charte-showcase .scene { position: relative; min-height: 100vh; }
+.charte-showcase .scene { position: relative; min-height: 90vh; }
 .charte-showcase .scene-pin { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 
 .charte-showcase .scene-imgs { position: absolute; inset: 0; pointer-events: none; }
-.charte-showcase .scene-img { position: absolute; margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in; pointer-events: auto; will-change: transform; transform: translate(-50%, -50%); }
-.charte-showcase .scene-img img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 28px 60px -46px rgba(0,0,0,0.5); }
+.charte-showcase .scene-img { position: absolute; margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in; pointer-events: auto; will-change: transform; transform: translate(-50%, -50%); transition: opacity .6s cubic-bezier(.2,.8,.2,1), filter .6s cubic-bezier(.2,.8,.2,1); }
+.charte-showcase .scene-img img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 28px 60px -46px rgba(0,0,0,0.5); transition: transform .6s cubic-bezier(.2,.8,.2,1); }
 /* 3 plans nets : 1er plan grand/net · 2e moyen/léger flou · 3e petit/flou. */
 .charte-showcase .scene-img.t-avant { z-index: 4; }
 .charte-showcase .scene-img.t-milieu { z-index: 2; opacity: 0.9; filter: blur(2px); }
 .charte-showcase .scene-img.t-fond { z-index: 1; opacity: 0.6; filter: blur(6px); }
+/* Au survol : le flou se dissipe en douceur (comme un nuage qu'on souffle),
+   l'image passe au net et remonte au 1er plan. */
+.charte-showcase .scene-img:hover, .charte-showcase .scene-img:focus-visible { z-index: 8; opacity: 1; filter: blur(0); }
+.charte-showcase .scene-img:hover img, .charte-showcase .scene-img:focus-visible img { transform: scale(1.04); }
 .charte-showcase .scene-img:focus-visible { outline: 2px solid var(--emerald); outline-offset: 3px; border-radius: 12px; }
 
 /* ---- Texte central : au-dessus de tous les plans, apparaît une fois ---- */

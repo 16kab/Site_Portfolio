@@ -38,27 +38,20 @@ import presentation from 'figma:asset/charte-presentation.webp';
 
 const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefault();
 
-// [src, plan (a/m/f), x%, y%, largeur vw]. 3 plans nets :
-// a = 1er plan (grand, net, rapide) · m = 2e (moyen, léger flou) ·
-// f = 3e (petit, flou, lent). Le centre reste libre pour le texte.
-type Img = [string, 'a' | 'm' | 'f', number, number, number];
+// Slot = [plan (a/m/f), x%, y%, largeur vw]. a = 1er plan (grand, net,
+// rapide) · m = 2e (moyen, léger flou) · f = 3e (petit, flou, lent).
+type Slot = ['a' | 'm' | 'f', number, number, number];
 
-// Gabarit de composition RÉUTILISÉ d'une scène à l'autre → rendu organisé,
-// pas de fouillis. A à gauche, M à droite, F en petits accents (haut/bas).
-const SL = {
-  A: ['a', 12, 47, 23],
-  M1: ['m', 86, 32, 20],
-  M2: ['m', 83, 77, 18],
-  F1: ['f', 33, 13, 12],
-  F2: ['f', 70, 89, 12],
-  F3: ['f', 13, 83, 11],
-} as const;
-const im = (slot: readonly [string, number, number, number], src: string): Img => [
-  src,
-  slot[0] as 'a' | 'm' | 'f',
-  slot[1],
-  slot[2],
-  slot[3],
+// Plusieurs GABARITS de composition distincts (gros visuel à gauche/droite,
+// haut/bas…) : chaque scène en utilise un différent → disposition variée.
+// Le centre reste toujours libre pour le texte.
+const V: Slot[][] = [
+  [['a', 13, 46, 23], ['m', 87, 30, 19], ['m', 85, 75, 18], ['f', 34, 12, 12], ['f', 68, 90, 12], ['f', 12, 84, 11]],
+  [['a', 87, 52, 23], ['m', 14, 32, 19], ['m', 16, 78, 18], ['f', 64, 11, 12], ['f', 30, 90, 12], ['f', 88, 84, 11]],
+  [['a', 14, 32, 22], ['m', 86, 66, 19], ['m', 85, 24, 17], ['f', 32, 90, 12], ['f', 62, 12, 12], ['f', 12, 78, 11]],
+  [['a', 86, 66, 22], ['m', 15, 32, 19], ['m', 17, 74, 18], ['f', 66, 13, 12], ['f', 40, 90, 12], ['f', 88, 26, 11]],
+  [['a', 15, 68, 23], ['m', 85, 36, 19], ['m', 83, 80, 16], ['f', 40, 12, 12], ['f', 66, 88, 12], ['f', 13, 30, 11]],
+  [['a', 85, 30, 22], ['m', 15, 58, 19], ['m', 30, 84, 17], ['f', 70, 86, 12], ['f', 12, 26, 12], ['f', 88, 76, 11]],
 ];
 
 const PALETTE = [
@@ -70,18 +63,19 @@ const PALETTE = [
   { hex: '#f5f6f3', name: 'Crème' },
 ];
 
-// `images` = visuels EN RAPPORT avec le propos de la scène.
-const SCENES: { id: string; extra?: 'palette' | 'specimen' | 'steps' | 'gains'; images: Img[] }[] = [
-  { id: 'intro', images: [im(SL.A, mockupSite), im(SL.M1, marques), im(SL.M2, couleurs), im(SL.F1, photos), im(SL.F2, carteVisite), im(SL.F3, papeterie)] },
-  { id: 'contexte', images: [im(SL.A, presentation), im(SL.M1, mockup2), im(SL.M2, miseEnSituation), im(SL.F2, papeterie)] },
-  { id: 'logo', images: [im(SL.A, logo), im(SL.M1, logoExplication), im(SL.M2, zones)] },
-  { id: 'couleurs', extra: 'palette', images: [im(SL.A, couleurs), im(SL.M1, marques), im(SL.F1, wealth), im(SL.F2, epargne)] },
-  { id: 'typo', extra: 'specimen', images: [im(SL.A, typo), im(SL.M1, typoEcriture), im(SL.F2, presentation)] },
-  { id: 'pattern', images: [im(SL.A, pattern), im(SL.M1, elements), im(SL.F1, mockupSite), im(SL.F2, mockup3)] },
-  { id: 'marques', images: [im(SL.A, marques), im(SL.M1, wealth), im(SL.M2, international), im(SL.F2, epargne)] },
-  { id: 'applications', images: [im(SL.A, mockupSite), im(SL.M1, mockup4), im(SL.M2, socialLinkedin), im(SL.F1, papeterie), im(SL.F2, reseaux), im(SL.F3, socialFacebook)] },
-  { id: 'demarche', extra: 'steps', images: [im(SL.A, mockup2), im(SL.M1, presentation), im(SL.M2, miseEnSituation), im(SL.F2, mockup1)] },
-  { id: 'impact', extra: 'gains', images: [im(SL.A, marques), im(SL.M1, mockupSite), im(SL.F2, photos)] },
+// `imgs` = visuels EN RAPPORT avec le propos, ORDONNÉS (le 1er = 1er plan).
+// `v` = index du gabarit de composition (différent d'une scène à l'autre).
+const SCENES: { id: string; extra?: 'palette' | 'specimen' | 'steps' | 'gains'; v: number; imgs: string[] }[] = [
+  { id: 'intro', v: 0, imgs: [mockupSite, marques, couleurs, photos, carteVisite, papeterie] },
+  { id: 'contexte', v: 1, imgs: [presentation, mockup2, miseEnSituation, papeterie] },
+  { id: 'logo', v: 2, imgs: [logo, logoExplication, zones] },
+  { id: 'couleurs', extra: 'palette', v: 3, imgs: [couleurs, marques, wealth, epargne] },
+  { id: 'typo', extra: 'specimen', v: 4, imgs: [typo, typoEcriture, presentation] },
+  { id: 'pattern', v: 5, imgs: [pattern, elements, mockupSite, mockup3] },
+  { id: 'marques', v: 2, imgs: [marques, wealth, international, epargne] },
+  { id: 'applications', v: 0, imgs: [mockupSite, mockup4, socialLinkedin, papeterie, reseaux, socialFacebook] },
+  { id: 'demarche', extra: 'steps', v: 4, imgs: [mockup2, presentation, miseEnSituation, mockup1] },
+  { id: 'impact', extra: 'gains', v: 1, imgs: [marques, mockupSite, photos] },
 ];
 
 const STRINGS = {
@@ -242,7 +236,7 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
     };
   }, [lang]);
 
-  const openLb = (imgs: Img[], i: number) => setLb({ imgs: imgs.map((x) => x[0]), i });
+  const openLb = (imgs: string[], i: number) => setLb({ imgs, i });
 
   return (
     <div className="charte-showcase" ref={rootRef} style={{ minHeight: '100vh' }}>
@@ -254,23 +248,27 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
           <section className="scene" key={scene.id}>
             <div className="scene-pin">
               <div className="scene-imgs">
-                {scene.images.map((image, ii) => (
-                  <button
-                    key={image[0] + ii}
-                    type="button"
-                    className={`scene-img t-${TIER[image[1]]}`}
-                    data-tier={TIER[image[1]]}
-                    aria-label={t.zoom}
-                    style={{ left: `${image[2]}%`, top: `${image[3]}%`, width: `${image[4]}vw` }}
-                    onMouseDown={preventFocusScroll}
-                    onClick={(e) => {
-                      e.currentTarget.blur();
-                      openLb(scene.images, ii);
-                    }}
-                  >
-                    <img src={image[0]} alt="" loading="lazy" decoding="async" />
-                  </button>
-                ))}
+                {scene.imgs.map((src, ii) => {
+                  const slot = V[scene.v][ii];
+                  if (!slot) return null;
+                  return (
+                    <button
+                      key={src + ii}
+                      type="button"
+                      className={`scene-img t-${TIER[slot[0]]}`}
+                      data-tier={TIER[slot[0]]}
+                      aria-label={t.zoom}
+                      style={{ left: `${slot[1]}%`, top: `${slot[2]}%`, width: `${slot[3]}vw` }}
+                      onMouseDown={preventFocusScroll}
+                      onClick={(e) => {
+                        e.currentTarget.blur();
+                        openLb(scene.imgs, ii);
+                      }}
+                    >
+                      <img src={src} alt="" loading="lazy" decoding="async" />
+                    </button>
+                  );
+                })}
               </div>
 
               <div className="scene-text">
