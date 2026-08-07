@@ -232,6 +232,7 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
       el,
       idx,
       text: el.querySelector<HTMLElement>('.scene-text'),
+      stin: el.querySelector<HTMLElement>('.st-in'),
       imgs: Array.from(el.querySelectorAll<HTMLElement>('.scene-img')),
     }));
     const smooth = (x: number) => {
@@ -268,7 +269,9 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
           // opacité, flou quand il se fond.
           const blur = (1 - op) * 11;
           sc.text.style.filter = blur > 0.15 ? `blur(${blur.toFixed(1)}px)` : '';
-          sc.text.style.pointerEvents = op < 0.05 ? 'none' : '';
+          // Le bloc de texte ne capte les clics que lorsqu'il est bien visible
+          // (sinon on laisse passer vers les images derrière).
+          if (sc.stin) sc.stin.style.pointerEvents = op < 0.5 ? 'none' : '';
         }
         if (!reduce) {
           const rel = r.top + r.height / 2 - vh / 2;

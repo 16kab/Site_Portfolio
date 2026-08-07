@@ -66,8 +66,10 @@
 /* ---- Texte : épinglé au centre (ne bouge pas), fondu piloté au scroll ---- */
 /* Boîte épinglée < 1 écran (centrée) : réduit le « vide » entre deux propos.
    top DOIT valoir (100vh - height)/2 pour rester centré (cf. calc de p en JS). */
-.charte-showcase .scene-text { position: sticky; top: 31vh; height: 38vh; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; will-change: opacity, filter; }
-.charte-showcase .st-in { width: min(720px, 88vw); text-align: center; }
+.charte-showcase .scene-text { position: sticky; top: 31vh; height: 38vh; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; will-change: opacity, filter; pointer-events: none; }
+/* Seul le bloc de texte capte les clics (et seulement quand il est visible, cf.
+   JS) → les images, même nettes au centre, restent cliquables autour. */
+.charte-showcase .st-in { width: min(720px, 88vw); text-align: center; pointer-events: auto; }
 .charte-showcase .scene-text .ey { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; color: var(--emerald-soft); margin-bottom: 20px; }
 .charte-showcase .scene-text h1 { font-family: var(--title-font); font-weight: 700; font-size: clamp(2.4rem, 6vw, 5.2rem); line-height: 1.02; letter-spacing: -0.025em; margin: 0; color: var(--ink-strong); }
 .charte-showcase .scene-text h2 { font-family: var(--title-font); font-weight: 700; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.05; letter-spacing: -0.02em; margin: 0; color: var(--ink-strong); }
