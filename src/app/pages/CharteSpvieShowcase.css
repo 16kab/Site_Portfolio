@@ -64,7 +64,7 @@
 .charte-showcase .scene-img:focus-visible { outline: 2px solid var(--emerald); outline-offset: 3px; border-radius: 12px; }
 
 /* ---- Texte : épinglé au centre (ne bouge pas), fondu piloté au scroll ---- */
-.charte-showcase .scene-text { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; will-change: opacity; }
+.charte-showcase .scene-text { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; will-change: opacity, filter; }
 .charte-showcase .st-in { width: min(720px, 88vw); text-align: center; }
 .charte-showcase .scene-text .ey { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; color: var(--emerald-soft); margin-bottom: 20px; }
 .charte-showcase .scene-text h1 { font-family: var(--title-font); font-weight: 700; font-size: clamp(2.4rem, 6vw, 5.2rem); line-height: 1.02; letter-spacing: -0.025em; margin: 0; color: var(--ink-strong); }

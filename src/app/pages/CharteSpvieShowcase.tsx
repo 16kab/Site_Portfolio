@@ -259,6 +259,10 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
             op = sc.idx === 0 ? fout : Math.min(fin, fout);
           }
           sc.text.style.opacity = String(op);
+          // Apparaît/disparaît AUSSI avec un flou (mise au point) : net à pleine
+          // opacité, flou quand il se fond.
+          const blur = (1 - op) * 11;
+          sc.text.style.filter = blur > 0.15 ? `blur(${blur.toFixed(1)}px)` : '';
           sc.text.style.pointerEvents = op < 0.05 ? 'none' : '';
         }
         if (!reduce) {
