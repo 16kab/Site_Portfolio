@@ -1,0 +1,120 @@
+/* Charte graphique SPVIE — étude de cas branding, en scrollytelling parallaxe.
+   Monde sombre vert-pin + émeraude (fidèle à la charte). Typo Outfit (police du
+   brand book). Chaque scène : un propos central qui apparaît dynamiquement +
+   des visuels EN RAPPORT flottant autour, à 3 profondeurs (parallaxe). */
+
+.charte-showcase {
+  --title-font: 'Outfit', sans-serif;
+  --body-font: 'Outfit', 'Manrope', sans-serif;
+  --mtop: 134px;
+  /* Clair (défaut) — la charte comporte des sections crème. */
+  --stage: #f5f6f3;
+  --stage2: #eaece7;
+  --ink-strong: #17332f;
+  --ink: #294a44;
+  --ink2: #5f7d75;
+  --emerald: #0a9d70;
+  --emerald-soft: #0a9d70;
+  --line: rgba(23, 51, 47, 0.12);
+  --img-line: rgba(23, 51, 47, 0.1);
+  --img-shadow: 0 26px 56px -44px rgba(23, 51, 47, 0.45);
+  --portfolio-card-bg: #ffffff;
+  --portfolio-card-border: rgba(23, 51, 47, 0.1);
+  --portfolio-text-muted: #5f7d75;
+  position: relative;
+  background: var(--stage);
+  color: var(--ink);
+  font-family: var(--body-font);
+}
+/* Sombre — le monde vert-pin de la charte. */
+.dark .charte-showcase {
+  --stage: #17332f;
+  --stage2: #1e433d;
+  --ink-strong: #ffffff;
+  --ink: #eaf4ef;
+  --ink2: #93b0a7;
+  --emerald: #10d18a;
+  --emerald-soft: #6fe6bf;
+  --line: rgba(255, 255, 255, 0.12);
+  --img-line: rgba(255, 255, 255, 0.14);
+  --img-shadow: 0 28px 60px -46px rgba(0, 0, 0, 0.5);
+  --portfolio-card-bg: #1c3f39;
+  --portfolio-card-border: rgba(255, 255, 255, 0.1);
+  --portfolio-text-muted: #93b0a7;
+}
+
+.charte-showcase .label { font-family: var(--body-font); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 700; color: var(--ink2); }
+.charte-showcase .title { font-family: var(--title-font); font-weight: 600; letter-spacing: -0.01em; }
+.charte-showcase .num { font-variant-numeric: tabular-nums; }
+
+/* ---- Scène : texte ÉPINGLÉ (crossfade), images qui défilent ---- */
+.charte-showcase .scene { position: relative; height: 118vh; }
+
+.charte-showcase .scene-imgs { position: absolute; inset: 0; pointer-events: none; }
+.charte-showcase .scene-img { position: absolute; margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in; pointer-events: auto; will-change: transform; transform: translate(-50%, -50%); transition: opacity .6s cubic-bezier(.2,.8,.2,1), filter .6s cubic-bezier(.2,.8,.2,1); }
+.charte-showcase .scene-img img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--img-line); box-shadow: var(--img-shadow); transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+/* 3 plans nets : 1er plan grand/net · 2e moyen/léger flou · 3e petit/flou. */
+.charte-showcase .scene-img.t-avant { z-index: 4; }
+.charte-showcase .scene-img.t-milieu { z-index: 2; opacity: 0.9; filter: blur(2px); }
+.charte-showcase .scene-img.t-fond { z-index: 1; opacity: 0.6; filter: blur(6px); }
+/* Au survol : le flou se dissipe en douceur (comme un nuage qu'on souffle),
+   l'image passe au net et remonte au 1er plan. */
+.charte-showcase .scene-img:hover, .charte-showcase .scene-img:focus-visible { z-index: 8; opacity: 1; filter: blur(0); }
+.charte-showcase .scene-img:hover img, .charte-showcase .scene-img:focus-visible img { transform: scale(1.04); }
+.charte-showcase .scene-img:focus-visible { outline: 2px solid var(--emerald); outline-offset: 3px; border-radius: 12px; }
+
+/* ---- Texte : épinglé au centre (ne bouge pas), fondu piloté au scroll ---- */
+/* Boîte épinglée < 1 écran (centrée) : réduit le « vide » entre deux propos.
+   top DOIT valoir (100vh - height)/2 pour rester centré (cf. calc de p en JS). */
+.charte-showcase .scene-text { position: sticky; top: 31vh; height: 38vh; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; will-change: opacity, filter; pointer-events: none; }
+/* Seul le bloc de texte capte les clics (et seulement quand il est visible, cf.
+   JS) → les images, même nettes au centre, restent cliquables autour. */
+.charte-showcase .st-in { width: min(720px, 88vw); text-align: center; pointer-events: auto; }
+.charte-showcase .scene-text .ey { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; color: var(--emerald-soft); margin-bottom: 20px; }
+.charte-showcase .scene-text h1 { font-family: var(--title-font); font-weight: 700; font-size: clamp(2.4rem, 6vw, 5.2rem); line-height: 1.02; letter-spacing: -0.025em; margin: 0; color: var(--ink-strong); }
+.charte-showcase .scene-text h2 { font-family: var(--title-font); font-weight: 700; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.05; letter-spacing: -0.02em; margin: 0; color: var(--ink-strong); }
+.charte-showcase .scene-text em { font-style: normal; color: var(--emerald); }
+.charte-showcase .scene-text .note { color: var(--ink2); font-size: clamp(1rem, 1.5vw, 1.18rem); line-height: 1.55; max-width: 44ch; margin: 22px auto 0; }
+
+.charte-showcase .intro-meta { display: flex; align-items: center; justify-content: center; gap: 14px 22px; flex-wrap: wrap; margin-top: 34px; font-size: 0.86rem; color: var(--ink2); }
+.charte-showcase .intro-meta > span { position: relative; }
+.charte-showcase .intro-meta > span + span::before { content: '·'; margin-right: 22px; color: var(--line); }
+.charte-showcase .intro-meta .pdf { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 600; transition: border-color .3s, color .3s; }
+.charte-showcase .intro-meta .pdf::before { display: none; }
+.charte-showcase .intro-meta .pdf:hover { border-color: var(--emerald); color: var(--emerald); }
+
+
+/* ---- Extras centraux ---- */
+.charte-showcase .palette { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+.charte-showcase .sw { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.charte-showcase .sw-chip { display: block; width: 64px; height: 64px; border-radius: 12px; border: 1px solid var(--line); }
+.charte-showcase .sw-hex { font-size: 0.7rem; color: var(--ink2); }
+
+.charte-showcase .specimen { display: inline-flex; gap: 14px; margin-top: 28px; flex-wrap: wrap; justify-content: center; }
+.charte-showcase .spec-item { display: inline-flex; align-items: center; gap: 16px; padding: 15px 24px; border: 1px solid var(--line); border-radius: 16px; background: var(--stage2); }
+.charte-showcase .spec-big { font-family: var(--title-font); font-weight: 700; font-size: 3.2rem; line-height: 0.8; color: var(--emerald); }
+.charte-showcase .spec-txt { display: flex; flex-direction: column; gap: 3px; text-align: left; }
+.charte-showcase .spec-name { font-size: 1.25rem; color: var(--ink-strong); }
+.charte-showcase .spec-poppins { font-family: 'Poppins', sans-serif; }
+
+.charte-showcase .steps { list-style: none; margin: 34px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; text-align: left; }
+.charte-showcase .steps li { display: flex; flex-direction: column; gap: 5px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--stage2); }
+.charte-showcase .st-n { color: var(--emerald); font-family: var(--title-font); font-weight: 700; font-size: 0.95rem; }
+.charte-showcase .st-t { font-weight: 600; font-size: 0.98rem; color: var(--ink-strong); }
+.charte-showcase .st-b { color: var(--ink2); font-size: 0.82rem; line-height: 1.45; }
+@media (max-width: 760px) { .charte-showcase .steps { grid-template-columns: 1fr 1fr; } }
+
+.charte-showcase .gains { list-style: none; margin: 30px auto 0; padding: 0; display: grid; gap: 11px; max-width: 46ch; text-align: left; }
+.charte-showcase .gains li { position: relative; padding-left: 30px; font-size: 1.02rem; color: var(--ink); }
+.charte-showcase .gains li::before { content: '✓'; position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 999px; background: var(--emerald); color: #06251c; font-size: 0.7rem; font-weight: 700; }
+
+/* ---- Agrandissement au clic (FLIP depuis la position de l'image) ---- */
+.charte-showcase .zoom-overlay { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 4vh 4vw; background: rgba(8, 20, 18, 0.74); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); animation: charte-zoom-in .38s ease both; }
+.charte-showcase .zoom-overlay.closing { animation: charte-zoom-out .4s ease forwards; }
+@keyframes charte-zoom-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes charte-zoom-out { from { opacity: 1; } to { opacity: 0; } }
+.charte-showcase .zoom-img { display: block; width: auto; height: auto; max-width: min(1120px, 92vw); max-height: 90vh; object-fit: contain; border-radius: 14px; box-shadow: 0 60px 130px -40px rgba(0, 0, 0, 0.7); cursor: zoom-out; will-change: transform; }
+
+@media (max-width: 720px) {
+  .charte-showcase .scene-img.t-fond { display: none; }
+}

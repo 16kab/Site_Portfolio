@@ -22,6 +22,7 @@ import ParcoursB2CShowcase from './ParcoursB2CShowcase';
 import CrmBigBrokerShowcase from './CrmBigBrokerShowcase';
 import AgptShowcase from './AgptShowcase';
 import RefonteSpvieShowcase from './RefonteSpvieShowcase';
+import CharteSpvieShowcase from './CharteSpvieShowcase';
 
 const STRINGS = {
   fr: {
@@ -172,6 +173,9 @@ export default function ProjetDetail() {
   }
   if (projet.id === 'refonte-spvie') {
     return <RefonteSpvieShowcase projet={projet} />;
+  }
+  if (projet.id === 'charte-spvie') {
+    return <CharteSpvieShowcase projet={projet} />;
   }
 
   // Scroll to section : offset de 120 px pour le menu sticky
