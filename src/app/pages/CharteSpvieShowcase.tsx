@@ -7,10 +7,9 @@ import '@fontsource/poppins/400.css';
 import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/600.css';
 import './CharteSpvieShowcase.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
-import { ImageLightbox } from '../components/ImageLightbox';
 import { useLang, useT } from '../i18n';
 import type { Projet } from '../data/projetsData';
 import couleurs from 'figma:asset/charte-couleurs.webp';
@@ -157,59 +156,118 @@ const STRINGS = {
 
 const TIER = { a: 'avant', m: 'milieu', f: 'fond' } as const;
 
+// Clic sur une image : elle s'agrandit en douceur DEPUIS sa position (FLIP)
+// vers un grand format centré, plutôt que d'ouvrir un visionneur d'un coup.
+function ZoomView({ src, rect, onClose }: { src: string; rect: DOMRect; onClose: () => void }) {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [closing, setClosing] = useState(false);
+
+  useLayoutEffect(() => {
+    const el = imgRef.current;
+    if (!el) return;
+    const t = el.getBoundingClientRect();
+    const dx = rect.left + rect.width / 2 - (t.left + t.width / 2);
+    const dy = rect.top + rect.height / 2 - (t.top + t.height / 2);
+    const s = t.width ? rect.width / t.width : 1;
+    el.style.transition = 'none';
+    el.style.transform = `translate(${dx}px, ${dy}px) scale(${s})`;
+    requestAnimationFrame(() => {
+      el.style.transition = 'transform .55s cubic-bezier(.2,.85,.25,1)';
+      el.style.transform = 'none';
+    });
+  }, [rect]);
+
+  const close = () => {
+    if (closing) return;
+    const el = imgRef.current;
+    if (el) {
+      const t = el.getBoundingClientRect();
+      const dx = rect.left + rect.width / 2 - (t.left + t.width / 2);
+      const dy = rect.top + rect.height / 2 - (t.top + t.height / 2);
+      const s = t.width ? rect.width / t.width : 1;
+      el.style.transition = 'transform .4s cubic-bezier(.4,0,.2,1)';
+      el.style.transform = `translate(${dx}px, ${dy}px) scale(${s})`;
+    }
+    setClosing(true);
+    window.setTimeout(onClose, 400);
+  };
+
+  return (
+    <div
+      className={`zoom-overlay${closing ? ' closing' : ''}`}
+      role="dialog"
+      aria-modal="true"
+      onClick={close}
+    >
+      <img
+        ref={imgRef}
+        className="zoom-img"
+        src={src}
+        alt=""
+        draggable={false}
+        onClick={(e) => {
+          e.stopPropagation();
+          close();
+        }}
+      />
+    </div>
+  );
+}
+
 export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
   const t = useT(STRINGS);
   const { lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
-  const [lb, setLb] = useState<{ imgs: string[]; i: number } | null>(null);
+  const [zoom, setZoom] = useState<{ src: string; rect: DOMRect } | null>(null);
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Le texte de chaque scène apparaît UNE FOIS à l'entrée (puis reste) :
-    // rien ne disparaît en cours de route, tout se suit naturellement.
-    const io = new IntersectionObserver(
-      (es) => {
-        es.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.35 },
-    );
-    root.querySelectorAll<HTMLElement>('.scene-text').forEach((el) => {
-      if (reduce) el.classList.add('in');
-      else io.observe(el);
-    });
-
-    // Parallaxe de profondeur : les visuels dérivent selon la position de leur
-    // scène dans le viewport (+ léger décalage souris). Aucune opacité pilotée
-    // au scroll → les images entrent/sortent naturellement du cadre.
-    const scenes = Array.from(root.querySelectorAll<HTMLElement>('.scene')).map((el) => ({
+    // Le texte est ÉPINGLÉ au centre (il ne bouge pas) : il apparaît en fondu
+    // quand sa scène est en place, tient, puis se fond pour laisser la place au
+    // texte suivant. Seules les IMAGES défilent (+ profondeur par plan).
+    const scenes = Array.from(root.querySelectorAll<HTMLElement>('.scene')).map((el, idx) => ({
       el,
+      idx,
+      text: el.querySelector<HTMLElement>('.scene-text'),
       imgs: Array.from(el.querySelectorAll<HTMLElement>('.scene-img')),
     }));
-    // Vitesses de scroll distinctes par plan : 1er plan rapide → 3e plan lent.
-    const shift = (tr: string) => (tr === 'avant' ? 0.2 : tr === 'milieu' ? 0.1 : 0.045);
-    const mfac = (tr: string) => (tr === 'avant' ? 40 : tr === 'milieu' ? 22 : 12);
+    const smooth = (x: number) => {
+      const c = Math.max(0, Math.min(1, x));
+      return c * c * (3 - 2 * c);
+    };
+    // Vitesse additionnelle par plan : 1er plan file plus vite, 3e plan traîne.
+    const shift = (tr: string) => (tr === 'avant' ? 0.16 : tr === 'milieu' ? 0.06 : -0.1);
+    const mfac = (tr: string) => (tr === 'avant' ? 34 : tr === 'milieu' ? 20 : 12);
     let mx = 0;
     let my = 0;
 
     function frame() {
-      if (reduce) return;
       const vh = innerHeight;
       for (const sc of scenes) {
         const r = sc.el.getBoundingClientRect();
-        const rel = r.top + r.height / 2 - vh / 2; // 0 quand la scène est centrée
-        for (const el of sc.imgs) {
-          const tr = el.dataset.tier || 'milieu';
-          const dx = -mx * mfac(tr);
-          const dy = rel * shift(tr) - my * mfac(tr);
-          el.style.transform = `translate(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px))`;
+        const travel = sc.el.offsetHeight - vh || 1;
+        const p = -r.top / travel; // 0 → 1 pendant l'épinglage
+        if (sc.text) {
+          let op = 1;
+          if (!reduce) {
+            const fin = smooth((p - 0.06) / 0.2);
+            const fout = smooth((0.94 - p) / 0.2);
+            op = sc.idx === 0 ? fout : Math.min(fin, fout);
+          }
+          sc.text.style.opacity = String(op);
+          sc.text.style.pointerEvents = op < 0.05 ? 'none' : '';
+        }
+        if (!reduce) {
+          const rel = r.top + r.height / 2 - vh / 2;
+          for (const el of sc.imgs) {
+            const tr = el.dataset.tier || 'milieu';
+            const dx = -mx * mfac(tr);
+            const dy = rel * shift(tr) - my * mfac(tr);
+            el.style.transform = `translate(calc(-50% + ${dx.toFixed(1)}px), calc(-50% + ${dy.toFixed(1)}px))`;
+          }
         }
       }
     }
@@ -233,49 +291,51 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
     if (!reduce) window.addEventListener('mousemove', onMouse, { passive: true });
     window.addEventListener('resize', frame);
     return () => {
-      io.disconnect();
       document.body.removeEventListener('scroll', schedule);
       window.removeEventListener('mousemove', onMouse);
       window.removeEventListener('resize', frame);
     };
   }, [lang]);
 
-  const openLb = (imgs: string[], i: number) => setLb({ imgs, i });
+  const openZoom = (src: string, btn: HTMLElement) => {
+    const img = btn.querySelector('img');
+    if (img) setZoom({ src, rect: img.getBoundingClientRect() });
+  };
 
   return (
     <div className="charte-showcase" ref={rootRef} style={{ minHeight: '100vh' }}>
       <PageMeta title={`${projet.title} — Alexis Kabiche`} description={projet.description} path={`/projets/${projet.id}`} />
 
-      {SCENES.map((scene, si) => {
+      {SCENES.map((scene) => {
         const sc = t.scenes[scene.id as keyof typeof t.scenes];
         return (
           <section className="scene" key={scene.id}>
-            <div className="scene-pin">
-              <div className="scene-imgs">
-                {scene.imgs.map((src, ii) => {
-                  const slot = V[scene.v][ii];
-                  if (!slot) return null;
-                  return (
-                    <button
-                      key={src + ii}
-                      type="button"
-                      className={`scene-img t-${TIER[slot[0]]}`}
-                      data-tier={TIER[slot[0]]}
-                      aria-label={t.zoom}
-                      style={{ left: `${slot[1]}%`, top: `${slot[2]}%`, width: `${slot[3]}vw` }}
-                      onMouseDown={preventFocusScroll}
-                      onClick={(e) => {
-                        e.currentTarget.blur();
-                        openLb(scene.imgs, ii);
-                      }}
-                    >
-                      <img src={src} alt="" loading="lazy" decoding="async" />
-                    </button>
-                  );
-                })}
-              </div>
+            <div className="scene-imgs">
+              {scene.imgs.map((src, ii) => {
+                const slot = V[scene.v][ii];
+                if (!slot) return null;
+                return (
+                  <button
+                    key={src + ii}
+                    type="button"
+                    className={`scene-img t-${TIER[slot[0]]}`}
+                    data-tier={TIER[slot[0]]}
+                    aria-label={t.zoom}
+                    style={{ left: `${slot[1]}%`, top: `${slot[2]}%`, width: `${slot[3]}vw` }}
+                    onMouseDown={preventFocusScroll}
+                    onClick={(e) => {
+                      e.currentTarget.blur();
+                      openZoom(src, e.currentTarget);
+                    }}
+                  >
+                    <img src={src} alt="" loading="lazy" decoding="async" />
+                  </button>
+                );
+              })}
+            </div>
 
-              <div className="scene-text">
+            <div className="scene-text">
+              <div className="st-in">
                 {scene.id === 'intro' ? (
                   <>
                     <span className="ey label">
@@ -357,18 +417,13 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
                 )}
               </div>
             </div>
-            {si === 0 && (
-              <div className="cue label" aria-hidden="true">
-                {t.cue}
-              </div>
-            )}
           </section>
         );
       })}
 
       <ContactFooter />
 
-      {lb && <ImageLightbox images={lb.imgs} currentIndex={lb.i} onClose={() => setLb(null)} />}
+      {zoom && <ZoomView src={zoom.src} rect={zoom.rect} onClose={() => setZoom(null)} />}
     </div>
   );
 }

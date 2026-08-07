@@ -47,9 +47,8 @@
 .charte-showcase .title { font-family: var(--title-font); font-weight: 600; letter-spacing: -0.01em; }
 .charte-showcase .num { font-variant-numeric: tabular-nums; }
 
-/* ---- Scène : flux naturel, parallaxe à 3 plans ---- */
-.charte-showcase .scene { position: relative; min-height: 90vh; }
-.charte-showcase .scene-pin { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+/* ---- Scène : texte ÉPINGLÉ (crossfade), images qui défilent ---- */
+.charte-showcase .scene { position: relative; height: 130vh; }
 
 .charte-showcase .scene-imgs { position: absolute; inset: 0; pointer-events: none; }
 .charte-showcase .scene-img { position: absolute; margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in; pointer-events: auto; will-change: transform; transform: translate(-50%, -50%); transition: opacity .6s cubic-bezier(.2,.8,.2,1), filter .6s cubic-bezier(.2,.8,.2,1); }
@@ -64,9 +63,9 @@
 .charte-showcase .scene-img:hover img, .charte-showcase .scene-img:focus-visible img { transform: scale(1.04); }
 .charte-showcase .scene-img:focus-visible { outline: 2px solid var(--emerald); outline-offset: 3px; border-radius: 12px; }
 
-/* ---- Texte central : au-dessus de tous les plans, apparaît une fois ---- */
-.charte-showcase .scene-text { position: relative; z-index: 10; text-align: center; width: min(720px, 88vw); opacity: 0; transform: translateY(28px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
-.charte-showcase .scene-text.in { opacity: 1; transform: none; }
+/* ---- Texte : épinglé au centre (ne bouge pas), fondu piloté au scroll ---- */
+.charte-showcase .scene-text { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; will-change: opacity; }
+.charte-showcase .st-in { width: min(720px, 88vw); text-align: center; }
 .charte-showcase .scene-text .ey { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; color: var(--emerald-soft); margin-bottom: 20px; }
 .charte-showcase .scene-text h1 { font-family: var(--title-font); font-weight: 700; font-size: clamp(2.4rem, 6vw, 5.2rem); line-height: 1.02; letter-spacing: -0.025em; margin: 0; color: var(--ink-strong); }
 .charte-showcase .scene-text h2 { font-family: var(--title-font); font-weight: 700; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.05; letter-spacing: -0.02em; margin: 0; color: var(--ink-strong); }
@@ -80,7 +79,6 @@
 .charte-showcase .intro-meta .pdf::before { display: none; }
 .charte-showcase .intro-meta .pdf:hover { border-color: var(--emerald); color: var(--emerald); }
 
-.charte-showcase .cue { position: absolute; left: 0; right: 0; top: calc(100vh - 42px); text-align: center; color: var(--ink2); z-index: 7; }
 
 /* ---- Extras centraux ---- */
 .charte-showcase .palette { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
@@ -105,6 +103,13 @@
 .charte-showcase .gains { list-style: none; margin: 30px auto 0; padding: 0; display: grid; gap: 11px; max-width: 46ch; text-align: left; }
 .charte-showcase .gains li { position: relative; padding-left: 30px; font-size: 1.02rem; color: var(--ink); }
 .charte-showcase .gains li::before { content: '✓'; position: absolute; left: 0; top: 0; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 999px; background: var(--emerald); color: #06251c; font-size: 0.7rem; font-weight: 700; }
+
+/* ---- Agrandissement au clic (FLIP depuis la position de l'image) ---- */
+.charte-showcase .zoom-overlay { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 4vh 4vw; background: rgba(8, 20, 18, 0.74); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); animation: charte-zoom-in .38s ease both; }
+.charte-showcase .zoom-overlay.closing { animation: charte-zoom-out .4s ease forwards; }
+@keyframes charte-zoom-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes charte-zoom-out { from { opacity: 1; } to { opacity: 0; } }
+.charte-showcase .zoom-img { display: block; width: auto; height: auto; max-width: min(1120px, 92vw); max-height: 90vh; object-fit: contain; border-radius: 14px; box-shadow: 0 60px 130px -40px rgba(0, 0, 0, 0.7); cursor: zoom-out; will-change: transform; }
 
 @media (max-width: 720px) {
   .charte-showcase .scene-img.t-fond { display: none; }
