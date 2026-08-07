@@ -23,7 +23,6 @@ import marques from 'figma:asset/charte-marques.webp';
 import wealth from 'figma:asset/charte-wealth.webp';
 import international from 'figma:asset/charte-international.webp';
 import epargne from 'figma:asset/charte-epargne.webp';
-import photos from 'figma:asset/charte-photos.webp';
 import carteVisite from 'figma:asset/charte-carte-visite.webp';
 import papeterie from 'figma:asset/charte-papeterie.webp';
 import socialLinkedin from 'figma:asset/charte-social-linkedin.webp';
@@ -33,8 +32,6 @@ import mockup1 from 'figma:asset/charte-mockup-1.webp';
 import mockup2 from 'figma:asset/charte-mockup-2.webp';
 import mockup3 from 'figma:asset/charte-mockup-3.webp';
 import mockup4 from 'figma:asset/charte-mockup-4.webp';
-import mockupSite from 'figma:asset/charte-mockup-site.webp';
-import miseEnSituation from 'figma:asset/charte-mise-en-situation.webp';
 import presentation from 'figma:asset/charte-presentation.webp';
 import identite from 'figma:asset/charte-identite.webp';
 import sommaire from 'figma:asset/charte-sommaire.webp';
@@ -45,9 +42,6 @@ import patternPrint from 'figma:asset/charte-pattern-print.webp';
 import spvieGroupe from 'figma:asset/charte-spvie-groupe.webp';
 import mockupPpt from 'figma:asset/charte-mockup-ppt.webp';
 import slidesPpt from 'figma:asset/charte-slides-ppt.webp';
-import brandStrategie from 'figma:asset/charte-brand-strategie.webp';
-import assetIcones from 'figma:asset/charte-asset-icones.webp';
-import autresMarques from 'figma:asset/charte-autres-marques.webp';
 
 const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefault();
 
@@ -58,13 +52,16 @@ type Slot = ['a' | 'm' | 'f', number, number, number];
 // Plusieurs GABARITS de composition distincts (gros visuel à gauche/droite,
 // haut/bas…) : chaque scène en utilise un différent → disposition variée.
 // Le centre reste toujours libre pour le texte.
+// Visuels plus GRANDS, ancrés aux bords et DÉBORDANT de l'écran (gauche/droite)
+// pour une immersion « dans l'univers de marque ». Le centre reste dégagé pour
+// le texte (le débordement horizontal est masqué par `overflow-x: clip`).
 const V: Slot[][] = [
-  [['a', 13, 46, 23], ['m', 87, 30, 19], ['m', 85, 75, 18], ['f', 34, 12, 12], ['f', 68, 90, 12], ['f', 12, 84, 11]],
-  [['a', 87, 52, 23], ['m', 14, 32, 19], ['m', 16, 78, 18], ['f', 64, 11, 12], ['f', 30, 90, 12], ['f', 88, 84, 11]],
-  [['a', 14, 32, 22], ['m', 86, 66, 19], ['m', 85, 24, 17], ['f', 32, 90, 12], ['f', 62, 12, 12], ['f', 12, 78, 11]],
-  [['a', 86, 66, 22], ['m', 15, 32, 19], ['m', 17, 74, 18], ['f', 66, 13, 12], ['f', 40, 90, 12], ['f', 88, 26, 11]],
-  [['a', 15, 68, 23], ['m', 85, 36, 19], ['m', 83, 80, 16], ['f', 40, 12, 12], ['f', 66, 88, 12], ['f', 13, 30, 11]],
-  [['a', 85, 30, 22], ['m', 15, 58, 19], ['m', 30, 84, 17], ['f', 70, 86, 12], ['f', 12, 26, 12], ['f', 88, 76, 11]],
+  [['a', 3, 46, 40], ['m', 93, 26, 29], ['m', 89, 79, 25], ['f', 33, 13, 18], ['f', 64, 90, 16], ['f', 12, 85, 16]],
+  [['a', 97, 52, 40], ['m', 7, 28, 29], ['m', 11, 80, 25], ['f', 69, 12, 18], ['f', 35, 90, 16], ['f', 88, 84, 16]],
+  [['a', 2, 32, 42], ['m', 91, 66, 28], ['m', 86, 22, 24], ['f', 33, 88, 18], ['f', 62, 11, 16], ['f', 9, 76, 16]],
+  [['a', 98, 66, 42], ['m', 9, 30, 28], ['m', 15, 74, 24], ['f', 66, 13, 18], ['f', 40, 90, 16], ['f', 91, 25, 16]],
+  [['a', 3, 66, 40], ['m', 92, 34, 29], ['m', 86, 81, 24], ['f', 40, 12, 18], ['f', 66, 89, 16], ['f', 12, 28, 16]],
+  [['a', 97, 30, 40], ['m', 8, 57, 29], ['m', 17, 84, 24], ['f', 70, 86, 16], ['f', 10, 22, 16], ['f', 88, 74, 16]],
 ];
 
 const PALETTE = [
@@ -79,7 +76,6 @@ const PALETTE = [
 // `imgs` = visuels EN RAPPORT avec le propos, ORDONNÉS (le 1er = 1er plan).
 // `v` = index du gabarit de composition (différent d'une scène à l'autre).
 const SCENES: { id: string; extra?: 'palette' | 'specimen' | 'steps' | 'gains'; v: number; imgs: string[] }[] = [
-  { id: 'intro', v: 0, imgs: [mockupSite, photos, miseEnSituation, brandStrategie, assetIcones, autresMarques] },
   { id: 'contexte', v: 1, imgs: [presentation, identite, sommaire] },
   { id: 'logo', v: 2, imgs: [declinaisonsLogo, logo, zones] },
   { id: 'couleurs', extra: 'palette', v: 3, imgs: [couleurs, restrictions, marques] },
@@ -258,11 +254,12 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
         if (sc.text) {
           let op = 1;
           if (!reduce) {
-            // Apparition PROGRESSIVE (fenêtre large, pas soudaine), tenue
-            // longue, puis disparition tout aussi douce.
-            const fin = smooth((p - 0.03) / 0.24);
-            const fout = smooth((0.97 - p) / 0.24);
-            op = sc.idx === 0 ? fout : Math.min(fin, fout);
+            // Apparition et disparition TRÈS progressives (fenêtres larges) :
+            // le texte se révèle et s'efface lentement (fondu + flou étirés),
+            // avec une tenue nette au milieu de l'épinglage.
+            const fin = smooth((p - 0.03) / 0.36);
+            const fout = smooth((0.97 - p) / 0.36);
+            op = Math.min(fin, fout);
           }
           sc.text.style.opacity = String(op);
           // Apparaît/disparaît AUSSI avec un flou (mise au point) : net à pleine
@@ -319,6 +316,36 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
     <div className="charte-showcase" ref={rootRef} style={{ minHeight: '100vh' }}>
       <PageMeta title={`${projet.title} — Alexis Kabiche`} description={projet.description} path={`/projets/${projet.id}`} />
 
+      {/* Hero : l'image de la charte (celle que l'anim d'ouverture agrandit)
+          en plein écran + voile sombre accordé au dégradé du morph → l'entrée
+          « atterrit » sur le manifeste, avant de plonger dans le parallaxe. */}
+      <section className="m-hero">
+        <img className="cover" src={projet.image} alt="" fetchPriority="high" decoding="async" />
+        <div className="scrim" aria-hidden="true" />
+        <div className="h-in">
+          <span className="ey label">
+            {t.heroEyebrow.map((e) => (
+              <span key={e}>{e}</span>
+            ))}
+          </span>
+          <h1>
+            {t.scenes.intro.pre}
+            <em>{t.scenes.intro.k}</em>
+          </h1>
+          <p className="th">{t.scenes.intro.note}</p>
+          <div className="intro-meta">
+            <span>{t.metaRole}</span>
+            <span>{t.metaClient}</span>
+            <span>{t.metaYear}</span>
+            {projet.pdfUrl && (
+              <a href={projet.pdfUrl} target="_blank" rel="noopener noreferrer" className="pdf">
+                {t.pdf} <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+
       {SCENES.map((scene) => {
         const sc = t.scenes[scene.id as keyof typeof t.scenes];
         return (
@@ -349,38 +376,13 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
 
             <div className="scene-text">
               <div className="st-in">
-                {scene.id === 'intro' ? (
-                  <>
-                    <span className="ey label">
-                      {t.heroEyebrow.map((e) => (
-                        <span key={e}>{e}</span>
-                      ))}
-                    </span>
-                    <h1>
-                      {sc.pre}
-                      <em>{sc.k}</em>
-                    </h1>
-                    <p className="note">{sc.note}</p>
-                    <div className="intro-meta">
-                      <span>{t.metaRole}</span>
-                      <span>{t.metaClient}</span>
-                      <span>{t.metaYear}</span>
-                      {projet.pdfUrl && (
-                        <a href={projet.pdfUrl} target="_blank" rel="noopener noreferrer" className="pdf">
-                          {t.pdf} <span aria-hidden="true">↗</span>
-                        </a>
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    {sc.ey && <span className="ey label">{sc.ey}</span>}
-                    <h2 className="lead">
-                      {sc.pre}
-                      <em>{sc.k}</em>
-                    </h2>
-                    {sc.note && <p className="note">{sc.note}</p>}
-                    {scene.extra === 'palette' && (
+                {sc.ey && <span className="ey label">{sc.ey}</span>}
+                <h2 className="lead">
+                  {sc.pre}
+                  <em>{sc.k}</em>
+                </h2>
+                {sc.note && <p className="note">{sc.note}</p>}
+                {scene.extra === 'palette' && (
                       <div className="palette">
                         {PALETTE.map((c) => (
                           <span className="sw" key={c.hex}>
@@ -426,8 +428,6 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
                         ))}
                       </ul>
                     )}
-                  </>
-                )}
               </div>
             </div>
           </section>
