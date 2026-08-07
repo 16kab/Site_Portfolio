@@ -3,6 +3,9 @@ import '@fontsource/outfit/500.css';
 import '@fontsource/outfit/600.css';
 import '@fontsource/outfit/700.css';
 import '@fontsource/outfit/800.css';
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/600.css';
 import './CharteSpvieShowcase.css';
 import { useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
@@ -16,7 +19,6 @@ import typoEcriture from 'figma:asset/charte-typo-ecriture.webp';
 import pattern from 'figma:asset/charte-pattern.webp';
 import elements from 'figma:asset/charte-elements.webp';
 import logo from 'figma:asset/charte-logo.webp';
-import logoExplication from 'figma:asset/charte-logo-explication.webp';
 import zones from 'figma:asset/charte-zones.webp';
 import marques from 'figma:asset/charte-marques.webp';
 import wealth from 'figma:asset/charte-wealth.webp';
@@ -35,6 +37,18 @@ import mockup4 from 'figma:asset/charte-mockup-4.webp';
 import mockupSite from 'figma:asset/charte-mockup-site.webp';
 import miseEnSituation from 'figma:asset/charte-mise-en-situation.webp';
 import presentation from 'figma:asset/charte-presentation.webp';
+import identite from 'figma:asset/charte-identite.webp';
+import sommaire from 'figma:asset/charte-sommaire.webp';
+import declinaisonsLogo from 'figma:asset/charte-declinaisons-logo.webp';
+import restrictions from 'figma:asset/charte-restrictions.webp';
+import typoEcriture2 from 'figma:asset/charte-typo-ecriture-2.webp';
+import patternPrint from 'figma:asset/charte-pattern-print.webp';
+import spvieGroupe from 'figma:asset/charte-spvie-groupe.webp';
+import mockupPpt from 'figma:asset/charte-mockup-ppt.webp';
+import slidesPpt from 'figma:asset/charte-slides-ppt.webp';
+import brandStrategie from 'figma:asset/charte-brand-strategie.webp';
+import assetIcones from 'figma:asset/charte-asset-icones.webp';
+import autresMarques from 'figma:asset/charte-autres-marques.webp';
 
 const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefault();
 
@@ -66,16 +80,16 @@ const PALETTE = [
 // `imgs` = visuels EN RAPPORT avec le propos, ORDONNÉS (le 1er = 1er plan).
 // `v` = index du gabarit de composition (différent d'une scène à l'autre).
 const SCENES: { id: string; extra?: 'palette' | 'specimen' | 'steps' | 'gains'; v: number; imgs: string[] }[] = [
-  { id: 'intro', v: 0, imgs: [mockupSite, marques, couleurs, photos, carteVisite, papeterie] },
-  { id: 'contexte', v: 1, imgs: [presentation, mockup2, miseEnSituation, papeterie] },
-  { id: 'logo', v: 2, imgs: [logo, logoExplication, zones] },
-  { id: 'couleurs', extra: 'palette', v: 3, imgs: [couleurs, marques, wealth, epargne] },
-  { id: 'typo', extra: 'specimen', v: 4, imgs: [typo, typoEcriture, presentation] },
-  { id: 'pattern', v: 5, imgs: [pattern, elements, mockupSite, mockup3] },
-  { id: 'marques', v: 2, imgs: [marques, wealth, international, epargne] },
-  { id: 'applications', v: 0, imgs: [mockupSite, mockup4, socialLinkedin, papeterie, reseaux, socialFacebook] },
-  { id: 'demarche', extra: 'steps', v: 4, imgs: [mockup2, presentation, miseEnSituation, mockup1] },
-  { id: 'impact', extra: 'gains', v: 1, imgs: [marques, mockupSite, photos] },
+  { id: 'intro', v: 0, imgs: [mockupSite, photos, miseEnSituation, brandStrategie, assetIcones, autresMarques] },
+  { id: 'contexte', v: 1, imgs: [presentation, identite, sommaire] },
+  { id: 'logo', v: 2, imgs: [declinaisonsLogo, logo, zones] },
+  { id: 'couleurs', extra: 'palette', v: 3, imgs: [couleurs, restrictions, marques] },
+  { id: 'typo', extra: 'specimen', v: 4, imgs: [typo, typoEcriture, typoEcriture2] },
+  { id: 'pattern', v: 5, imgs: [pattern, elements, patternPrint] },
+  { id: 'marques', v: 2, imgs: [spvieGroupe, wealth, international, epargne] },
+  { id: 'applications', v: 0, imgs: [mockup1, mockup2, mockup3, mockup4] },
+  { id: 'demarche', extra: 'steps', v: 4, imgs: [reseaux, socialLinkedin, papeterie, mockupPpt] },
+  { id: 'impact', extra: 'gains', v: 1, imgs: [carteVisite, socialFacebook, slidesPpt] },
 ];
 
 const STRINGS = {
@@ -148,16 +162,6 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
   const { lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
   const [lb, setLb] = useState<{ imgs: string[]; i: number } | null>(null);
-
-  // Monde sombre assumé (comme la charte) : force le thème dark du site.
-  useEffect(() => {
-    const el = document.documentElement;
-    const wasDark = el.classList.contains('dark');
-    if (!wasDark) el.classList.add('dark');
-    return () => {
-      if (!wasDark) el.classList.remove('dark');
-    };
-  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -315,8 +319,20 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
                     )}
                     {scene.extra === 'specimen' && (
                       <div className="specimen">
-                        <span className="spec-big">Aa</span>
-                        <span className="spec-name title">{t.specimenName}</span>
+                        <div className="spec-item">
+                          <span className="spec-big">Aa</span>
+                          <span className="spec-txt">
+                            <span className="spec-name title">Outfit</span>
+                            <span className="spec-tag label">Titres</span>
+                          </span>
+                        </div>
+                        <div className="spec-item">
+                          <span className="spec-big spec-poppins">Aa</span>
+                          <span className="spec-txt">
+                            <span className="spec-name spec-poppins">Poppins</span>
+                            <span className="spec-tag label">Corps de texte</span>
+                          </span>
+                        </div>
                       </div>
                     )}
                     {scene.extra === 'steps' && (

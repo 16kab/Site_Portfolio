@@ -46,6 +46,17 @@ const wanted = [
   ['mockup-site', 'mockup site'],
   ['mise-en-situation', 'mise en situation'],
   ['presentation', 'presentation de la marque'],
+  ['sommaire', 'sommaire'],
+  ['declinaisons-logo', 'declinaisons du logo'],
+  ['restrictions', 'restrictions'],
+  ['typo-ecriture-2', 'ecriture-1'],
+  ['pattern-print', 'le pattern-1'],
+  ['spvie-groupe', 'spvie groupe'],
+  ['mockup-ppt', 'mockup ppt'],
+  ['slides-ppt', 'slides ppt'],
+  ['brand-strategie', 'brand strategie'],
+  ['asset-icones', 'asset icones'],
+  ['autres-marques', 'autres marques'],
 ];
 
 for (const [slug, key] of wanted) {
