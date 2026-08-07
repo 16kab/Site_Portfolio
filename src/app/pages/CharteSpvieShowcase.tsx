@@ -253,8 +253,9 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
         if (sc.text) {
           let op = 1;
           if (!reduce) {
-            const fin = smooth((p - 0.06) / 0.2);
-            const fout = smooth((0.94 - p) / 0.2);
+            // Apparition + tenue longue, puis disparition douce et progressive.
+            const fin = smooth((p - 0.05) / 0.16);
+            const fout = smooth((0.96 - p) / 0.24);
             op = sc.idx === 0 ? fout : Math.min(fin, fout);
           }
           sc.text.style.opacity = String(op);
