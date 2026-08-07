@@ -48,7 +48,7 @@
 .charte-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- Scène : texte ÉPINGLÉ (crossfade), images qui défilent ---- */
-.charte-showcase .scene { position: relative; height: 148vh; }
+.charte-showcase .scene { position: relative; height: 168vh; }
 
 .charte-showcase .scene-imgs { position: absolute; inset: 0; pointer-events: none; }
 .charte-showcase .scene-img { position: absolute; margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in; pointer-events: auto; will-change: transform; transform: translate(-50%, -50%); transition: opacity .6s cubic-bezier(.2,.8,.2,1), filter .6s cubic-bezier(.2,.8,.2,1); }

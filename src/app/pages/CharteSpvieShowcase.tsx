@@ -253,9 +253,10 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
         if (sc.text) {
           let op = 1;
           if (!reduce) {
-            // Apparition + tenue longue, puis disparition douce et progressive.
-            const fin = smooth((p - 0.05) / 0.16);
-            const fout = smooth((0.96 - p) / 0.24);
+            // Apparition PROGRESSIVE (fenêtre large, pas soudaine), tenue
+            // longue, puis disparition tout aussi douce.
+            const fin = smooth((p - 0.03) / 0.24);
+            const fout = smooth((0.97 - p) / 0.24);
             op = sc.idx === 0 ? fout : Math.min(fin, fout);
           }
           sc.text.style.opacity = String(op);
