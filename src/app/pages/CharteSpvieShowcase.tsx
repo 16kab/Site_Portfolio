@@ -248,8 +248,12 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
       const vh = innerHeight;
       for (const sc of scenes) {
         const r = sc.el.getBoundingClientRect();
-        const travel = sc.el.offsetHeight - vh || 1;
-        const p = -r.top / travel; // 0 → 1 pendant l'épinglage
+        // Le texte épinglé fait moins d'un écran (pour raccourcir le vide entre
+        // deux propos) : durée d'épinglage = hauteur scène − hauteur du texte ;
+        // il est centré, donc son décalage haut = (vh − hauteur texte) / 2.
+        const eh = sc.text ? sc.text.offsetHeight : vh;
+        const travel = sc.el.offsetHeight - eh || 1;
+        const p = ((vh - eh) / 2 - r.top) / travel; // 0 → 1 pendant l'épinglage
         if (sc.text) {
           let op = 1;
           if (!reduce) {

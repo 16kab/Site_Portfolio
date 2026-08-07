@@ -48,7 +48,7 @@
 .charte-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- Scène : texte ÉPINGLÉ (crossfade), images qui défilent ---- */
-.charte-showcase .scene { position: relative; height: 168vh; }
+.charte-showcase .scene { position: relative; height: 118vh; }
 
 .charte-showcase .scene-imgs { position: absolute; inset: 0; pointer-events: none; }
 .charte-showcase .scene-img { position: absolute; margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in; pointer-events: auto; will-change: transform; transform: translate(-50%, -50%); transition: opacity .6s cubic-bezier(.2,.8,.2,1), filter .6s cubic-bezier(.2,.8,.2,1); }
@@ -64,7 +64,9 @@
 .charte-showcase .scene-img:focus-visible { outline: 2px solid var(--emerald); outline-offset: 3px; border-radius: 12px; }
 
 /* ---- Texte : épinglé au centre (ne bouge pas), fondu piloté au scroll ---- */
-.charte-showcase .scene-text { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; will-change: opacity, filter; }
+/* Boîte épinglée < 1 écran (centrée) : réduit le « vide » entre deux propos.
+   top DOIT valoir (100vh - height)/2 pour rester centré (cf. calc de p en JS). */
+.charte-showcase .scene-text { position: sticky; top: 31vh; height: 38vh; display: flex; align-items: center; justify-content: center; z-index: 10; opacity: 0; will-change: opacity, filter; }
 .charte-showcase .st-in { width: min(720px, 88vw); text-align: center; }
 .charte-showcase .scene-text .ey { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; color: var(--emerald-soft); margin-bottom: 20px; }
 .charte-showcase .scene-text h1 { font-family: var(--title-font); font-weight: 700; font-size: clamp(2.4rem, 6vw, 5.2rem); line-height: 1.02; letter-spacing: -0.025em; margin: 0; color: var(--ink-strong); }
