@@ -22,6 +22,10 @@
   --portfolio-card-border: rgba(23, 51, 47, 0.1);
   --portfolio-text-muted: #5f7d75;
   position: relative;
+  /* Les visuels débordent volontairement des bords : on masque le trop-plein
+     horizontal. `clip` (et non `hidden`) pour ne PAS créer de conteneur de
+     défilement qui casserait l'épinglage `sticky` du texte. */
+  overflow-x: clip;
   background: var(--stage);
   color: var(--ink);
   font-family: var(--body-font);
@@ -43,12 +47,29 @@
   --portfolio-text-muted: #93b0a7;
 }
 
+/* ---- Hero : image de la charte plein écran (là où l'anim d'ouverture
+   atterrit) + voile sombre calé sur le dégradé du morph (bas noir). ---- */
+.charte-showcase .m-hero { position: relative; width: 100vw; height: 100vh; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; }
+.charte-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.charte-showcase .m-hero .scrim { position: absolute; inset: 0; background: radial-gradient(115% 78% at 50% 82%, rgba(8, 20, 18, 0.62), transparent 62%), linear-gradient(to top, rgba(8, 20, 18, 0.92) 0%, rgba(8, 20, 18, 0.56) 36%, rgba(8, 20, 18, 0.14) 68%, transparent 100%); }
+.charte-showcase .m-hero .h-in { position: relative; z-index: 2; width: min(880px, 90vw); text-align: center; color: #fff; padding-bottom: clamp(52px, 10vh, 118px); animation: charte-hero-fade 0.85s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes charte-hero-fade { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.charte-showcase .m-hero .ey { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; color: #7fe7c1; margin-bottom: 22px; }
+.charte-showcase .m-hero h1 { font-family: var(--title-font); font-weight: 700; font-size: clamp(2.5rem, 6.4vw, 5.4rem); line-height: 1.02; letter-spacing: -0.025em; margin: 0; color: #fff; }
+.charte-showcase .m-hero h1 em { font-style: normal; color: #10d18a; }
+.charte-showcase .m-hero .th { color: rgba(255, 255, 255, 0.86); font-size: clamp(1rem, 1.6vw, 1.2rem); line-height: 1.55; max-width: 52ch; margin: 22px auto 0; }
+.charte-showcase .m-hero .intro-meta { color: rgba(255, 255, 255, 0.72); }
+.charte-showcase .m-hero .intro-meta > span + span::before { color: rgba(255, 255, 255, 0.35); }
+.charte-showcase .m-hero .intro-meta .pdf { border-color: rgba(255, 255, 255, 0.35); color: #fff; }
+.charte-showcase .m-hero .intro-meta .pdf:hover { border-color: #7fe7c1; color: #7fe7c1; }
+@media (prefers-reduced-motion: reduce) { .charte-showcase .m-hero .h-in { animation: none; } }
+
 .charte-showcase .label { font-family: var(--body-font); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; font-weight: 700; color: var(--ink2); }
 .charte-showcase .title { font-family: var(--title-font); font-weight: 600; letter-spacing: -0.01em; }
 .charte-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- Scène : texte ÉPINGLÉ (crossfade), images qui défilent ---- */
-.charte-showcase .scene { position: relative; height: 118vh; }
+.charte-showcase .scene { position: relative; height: 132vh; }
 
 .charte-showcase .scene-imgs { position: absolute; inset: 0; pointer-events: none; }
 .charte-showcase .scene-img { position: absolute; margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in; pointer-events: auto; will-change: transform; transform: translate(-50%, -50%); transition: opacity .6s cubic-bezier(.2,.8,.2,1), filter .6s cubic-bezier(.2,.8,.2,1); }
