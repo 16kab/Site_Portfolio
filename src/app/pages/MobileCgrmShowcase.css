@@ -137,8 +137,9 @@
 .cgrm-showcase .phone-notch::before { content: ''; width: 38px; height: 5px; border-radius: 99px; background: #15181d; box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8); }
 .cgrm-showcase .notch-cam { width: 9px; height: 9px; border-radius: 99px; background: radial-gradient(circle at 35% 30%, #2a3550, #060810 70%); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05); }
 
+.cgrm-showcase .cm-controls { display: flex; align-items: center; justify-content: center; gap: 16px; }
 .cgrm-showcase .dots { display: flex; gap: 9px; }
-.cgrm-showcase .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--line); transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s; }
+.cgrm-showcase .dot { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 999px; background: var(--line); cursor: pointer; transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.35s; }
 .cgrm-showcase .dot.on { width: 24px; background: var(--teal); }
 
 .cgrm-showcase .beats { display: flex; flex-direction: column; }
@@ -160,18 +161,35 @@
 .cgrm-showcase .gains li { position: relative; padding-left: 32px; font-size: 1.04rem; line-height: 1.4; color: var(--ink); }
 .cgrm-showcase .gains li::before { content: '✓'; position: absolute; left: 0; top: 1px; display: inline-flex; align-items: center; justify-content: center; width: 21px; height: 21px; border-radius: 999px; background: var(--teal); color: #fff; font-size: 0.72rem; font-weight: 700; }
 
-/* ---- Mobile : on empile, le téléphone reste épinglé en haut, réduit ---- */
-@media (max-width: 900px) {
-  .cgrm-showcase .story-inner { grid-template-columns: 1fr; gap: 8px; }
-  .cgrm-showcase .phone-col { position: sticky; top: 64px; height: auto; flex-direction: row; justify-content: center; gap: 18px; padding: 10px 0; z-index: 5; }
-  .cgrm-showcase .phone { width: min(206px, 52vw); padding: 9px; border-radius: 40px; }
-  .cgrm-showcase .phone-screen { border-radius: 31px; }
-  .cgrm-showcase .phone-notch { height: 22px; border-radius: 0 0 14px 14px; gap: 6px; }
-  .cgrm-showcase .phone-notch::before { width: 26px; height: 4px; }
-  .cgrm-showcase .notch-cam { width: 6px; height: 6px; }
-  .cgrm-showcase .dots { flex-direction: column; }
-  .cgrm-showcase .beat { min-height: 62vh; text-align: left; }
+/* ---- Mobile : plus de scroll — bloc fixe, on navigue aux flèches ----
+   Titre au-dessus du téléphone, dots + flèches en dessous (horizontal). ---- */
+@media (max-width: 760px) {
+  .cgrm-showcase .story-mobile { padding: clamp(40px, 8vh, 76px) 0 clamp(20px, 4vh, 44px); }
+  .cgrm-showcase .story-mobile .story-inner { display: block; width: min(560px, 92vw); }
+  .cgrm-showcase .story-mobile .phone-col { position: static; height: auto; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+  .cgrm-showcase .cm-head { text-align: center; max-width: 42ch; animation: cgrm-beat 0.4s ease both; }
+  .cgrm-showcase .cm-head .ey { display: block; color: var(--teal); margin-bottom: 10px; }
+  .cgrm-showcase .cm-head .lead { font-family: var(--title-font); font-weight: 900; font-size: clamp(1.55rem, 6.4vw, 2.25rem); line-height: 1.05; letter-spacing: -0.005em; margin: 0; color: var(--ink-strong); text-transform: uppercase; }
+  .cgrm-showcase .cm-head .lead em { font-style: normal; color: var(--teal); }
+
+  .cgrm-showcase .story-mobile .phone { width: min(204px, 55vw); padding: 8px; border-radius: 40px; }
+  .cgrm-showcase .story-mobile .phone-screen { border-radius: 33px; }
+  .cgrm-showcase .story-mobile .phone-notch { height: 24px; border-radius: 0 0 15px 15px; gap: 6px; }
+  .cgrm-showcase .story-mobile .phone-notch::before { width: 28px; height: 4px; }
+  .cgrm-showcase .story-mobile .notch-cam { width: 6px; height: 6px; }
+
+  .cgrm-showcase .story-mobile .dots { flex-direction: row; gap: 9px; }
+  .cgrm-showcase .cm-arrow { width: 44px; height: 44px; flex: none; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink-strong); font-size: 1.5rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: var(--card-shadow); transition: border-color 0.2s, color 0.2s, opacity 0.2s; }
+  .cgrm-showcase .cm-arrow:hover:not(:disabled) { border-color: var(--teal); color: var(--teal); }
+  .cgrm-showcase .cm-arrow:disabled { opacity: 0.32; cursor: default; }
+
+  .cgrm-showcase .cm-body { text-align: center; max-width: 46ch; margin-top: 2px; animation: cgrm-beat 0.4s ease both; }
+  .cgrm-showcase .cm-body .note { color: var(--ink2); font-size: 1rem; line-height: 1.55; margin: 0; }
+  .cgrm-showcase .cm-body .steps, .cgrm-showcase .cm-body .gains { text-align: left; margin: 20px auto 0; }
+  .cgrm-showcase .cm-body .steps { max-width: none; }
 }
+@keyframes cgrm-beat { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   .cgrm-showcase .scr { transition: none; }
