@@ -425,18 +425,6 @@ export default function TrackItShowcase({ projet }: { projet: Projet }) {
   const { lang } = useLang();
   const rootRef = useRef<HTMLDivElement>(null);
 
-  // Force le thème sombre du site tant que la page est montée (header/footer
-  // collent au fond noir). On mémorise l'état et on restaure au démontage,
-  // sans toucher localStorage (préférence utilisateur préservée).
-  useEffect(() => {
-    const el = document.documentElement;
-    const wasDark = el.classList.contains('dark');
-    if (!wasDark) el.classList.add('dark');
-    return () => {
-      if (!wasDark) el.classList.remove('dark');
-    };
-  }, []);
-
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;

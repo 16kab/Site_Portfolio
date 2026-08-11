@@ -5,6 +5,30 @@
    Signature : suivi d'épisodes interactif. Mockups iPhone (app mobile). */
 
 .trackit-showcase {
+  /* Clair (défaut) — le toggle du site fonctionne. */
+  --tk-bg: #f7f3ee;
+  --tk-surface: #ffffff;
+  --tk-card: #ffffff;
+  --tk-text: #1c1712;
+  --tk-text2: #6a6058;
+  --tk-muted: #948b80;
+  --tk-orange: #d9520b;
+  --tk-green: #159a45;
+  --tk-gold: #a9790a;
+  --tk-border: rgba(28, 23, 18, 0.12);
+  --tk-zinc-border: #e7e0d6;
+  --portfolio-card-bg: #ffffff;
+  --portfolio-card-border: rgba(28, 23, 18, 0.1);
+  --portfolio-text-muted: #7d746a;
+  --title-font: 'Archivo', sans-serif;
+  --mtop: 134px;
+  position: relative;
+  background: var(--tk-bg);
+  color: var(--tk-text);
+  font-family: 'Inter', sans-serif;
+}
+/* Sombre — l'ambiance cinématique d'origine. */
+.dark .trackit-showcase {
   --tk-bg: #0c0a08;
   --tk-surface: #171310;
   --tk-card: #1b1611;
@@ -16,16 +40,24 @@
   --tk-gold: #eab308;
   --tk-border: rgba(255, 255, 255, 0.09);
   --tk-zinc-border: #2a2620;
-  /* Footer partagé accordé au fond chaud (au lieu du gris neutre). */
   --portfolio-card-bg: #171310;
   --portfolio-card-border: rgba(255, 255, 255, 0.08);
   --portfolio-text-muted: #8f877c;
-  --title-font: 'Archivo', sans-serif;
-  --mtop: 134px;
-  position: relative;
-  background: var(--tk-bg);
+}
+/* Le suivi d'épisodes recrée l'app (SOMBRE) → il reste sombre dans les 2 thèmes
+   (comme les captures d'écran de l'app dans les mockups). */
+.trackit-showcase .tracker {
+  --tk-surface: #171310;
+  --tk-card: #1b1611;
+  --tk-text: #f6f4f1;
+  --tk-text2: #a09a90;
+  --tk-muted: #7a736a;
+  --tk-orange: #f56416;
+  --tk-green: #22c55e;
+  --tk-gold: #eab308;
+  --tk-border: rgba(255, 255, 255, 0.09);
+  --tk-zinc-border: #2a2620;
   color: var(--tk-text);
-  font-family: 'Inter', sans-serif;
 }
 
 .trackit-showcase .wrap { width: min(1180px, 90vw); margin-inline: auto; }
@@ -36,7 +68,7 @@
 /* ---- HERO (cible du morph) ---- */
 .trackit-showcase .m-hero { position: relative; width: 100vw; height: 100dvh; display: flex; align-items: flex-end; overflow: hidden; }
 .trackit-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
-.trackit-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, var(--tk-bg) 1%, rgba(10,10,12,0.5) 38%, rgba(10,10,12,0.14) 68%, transparent); }
+.trackit-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, #0c0a08 1%, rgba(10,10,12,0.5) 38%, rgba(10,10,12,0.14) 68%, transparent); }
 .trackit-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: tk-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
 @keyframes tk-fade { from { opacity: 0; } to { opacity: 1; } }
 .trackit-showcase .m-hero .ey { display: flex; gap: 14px; flex-wrap: wrap; color: rgba(255,255,255,0.82); margin-bottom: 18px; }
@@ -151,7 +183,11 @@
   .trackit-showcase .context-grid { grid-template-columns: 1fr; }
   .trackit-showcase .context-phone { order: -1; }
   .trackit-showcase .context-phone .iphone { width: min(260px, 66%); }
-  .trackit-showcase .screens { grid-template-columns: 1fr; max-width: 300px; margin-inline: auto; }
+  /* Section 3 : carrousel horizontal à swiper (façon Mauni). */
+  .trackit-showcase .screens { display: flex; grid-template-columns: none; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; max-width: none; margin: clamp(24px, 4vw, 40px) 0 0; padding: 0 5vw 12px; scrollbar-width: none; }
+  .trackit-showcase .screens::-webkit-scrollbar { display: none; }
+  .trackit-showcase .screen { flex: 0 0 60vw; scroll-snap-align: center; }
+  .trackit-showcase .screen .iphone { max-width: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .trackit-showcase .reveal { opacity: 1 !important; transform: none !important; }
