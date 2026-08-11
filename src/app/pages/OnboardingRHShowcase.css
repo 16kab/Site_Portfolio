@@ -123,6 +123,14 @@
   .onboarding-showcase .feature { grid-template-columns: 1fr; }
   .onboarding-showcase .feature-cards { padding: 30px 40px 80px 0; justify-content: flex-start; }
 }
+/* Mobile : l'éventail « arrivant » (écrans desktop larges) ne tient pas →
+   pile verticale nette, pleine largeur, en couleur. */
+@media (max-width: 720px) {
+  .onboarding-showcase .feature-cards { display: block; padding: 4px 0 20px; }
+  .onboarding-showcase .dstack { display: flex; flex-direction: column; gap: 16px; }
+  .onboarding-showcase .dcard { grid-area: auto; width: 100%; transform: none !important; filter: none !important; }
+  .onboarding-showcase .dcard::before, .onboarding-showcase .dcard::after { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .onboarding-showcase .dcard { transition: filter .6s ease; }
 }

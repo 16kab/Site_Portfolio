@@ -243,6 +243,19 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
 
     function frame() {
       const vh = innerHeight;
+      // Mobile : pas de parallaxe/épinglage (illisible sur petit écran) — on
+      // purge les styles inline pour laisser le CSS linéariser les scènes.
+      if (innerWidth <= 720) {
+        for (const sc of scenes) {
+          if (sc.text) {
+            sc.text.style.opacity = '';
+            sc.text.style.filter = '';
+          }
+          if (sc.stin) sc.stin.style.pointerEvents = '';
+          for (const el of sc.imgs) el.style.transform = '';
+        }
+        return;
+      }
       for (const sc of scenes) {
         const r = sc.el.getBoundingClientRect();
         // Le texte épinglé fait moins d'un écran (pour raccourcir le vide entre

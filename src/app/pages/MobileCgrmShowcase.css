@@ -164,7 +164,7 @@
 @media (max-width: 900px) {
   .cgrm-showcase .story-inner { grid-template-columns: 1fr; gap: 8px; }
   .cgrm-showcase .phone-col { position: sticky; top: 64px; height: auto; flex-direction: row; justify-content: center; gap: 18px; padding: 10px 0; z-index: 5; }
-  .cgrm-showcase .phone { width: min(190px, 42vw); padding: 9px; border-radius: 40px; }
+  .cgrm-showcase .phone { width: min(206px, 52vw); padding: 9px; border-radius: 40px; }
   .cgrm-showcase .phone-screen { border-radius: 31px; }
   .cgrm-showcase .phone-notch { height: 22px; border-radius: 0 0 14px 14px; gap: 6px; }
   .cgrm-showcase .phone-notch::before { width: 26px; height: 4px; }

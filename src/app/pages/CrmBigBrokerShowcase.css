@@ -140,6 +140,14 @@
   .crm-showcase .feature { grid-template-columns: 1fr; }
   .crm-showcase .feature-cards { padding: 30px 40px 80px 0; justify-content: flex-start; }
 }
+/* Mobile : l'éventail « arrivant » (hover, écrans desktop larges) ne tient pas
+   sur petit écran → pile verticale nette, pleine largeur, en couleur. */
+@media (max-width: 720px) {
+  .crm-showcase .feature-cards { display: block; padding: 4px 0 20px; }
+  .crm-showcase .dstack { display: flex; flex-direction: column; gap: 16px; }
+  .crm-showcase .dcard { grid-area: auto; width: 100%; transform: none !important; filter: none !important; }
+  .crm-showcase .dcard::before, .crm-showcase .dcard::after { display: none; }
+}
 
 /* ---- 04 DÉMARCHE ---- */
 .crm-showcase .demarche { list-style: none; margin: clamp(28px, 4vw, 44px) 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 36px); }
