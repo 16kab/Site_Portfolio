@@ -91,6 +91,17 @@
 .parcours-b2c-showcase .stat-arrow { color: var(--portfolio-text-muted); font-size: 1rem; align-self: center; }
 .parcours-b2c-showcase .stat-after { color: var(--spvie-accent); font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; }
 .parcours-b2c-showcase .stat-tile-note { display: block; margin-top: 8px; color: var(--spvie-accent); font-size: 0.82rem; font-weight: 600; }
+/* Mobile : les 3 tuiles chiffrées restent côte à côte (nums empilés pour tenir). */
+@media (max-width: 560px) {
+  .parcours-b2c-showcase .stat-tiles { flex-wrap: nowrap; gap: 8px; }
+  .parcours-b2c-showcase .stat-tile { flex: 1 1 0; min-width: 0; padding: 14px 9px; }
+  .parcours-b2c-showcase .stat-tile-label { font-size: 0.56rem; letter-spacing: 0.1em; }
+  .parcours-b2c-showcase .stat-tile-nums { flex-direction: column; gap: 1px; }
+  .parcours-b2c-showcase .stat-before { font-size: 0.8rem; }
+  .parcours-b2c-showcase .stat-arrow { display: none; }
+  .parcours-b2c-showcase .stat-after { font-size: 1.4rem; }
+  .parcours-b2c-showcase .stat-tile-note { font-size: 0.62rem; margin-top: 5px; }
+}
 
 /* ---- 03 LE PARCOURS : walkthrough ---- */
 /* Largeur plafonnée par la hauteur d'écran : tout le bloc (stepper + cadre
@@ -108,9 +119,14 @@
 .parcours-b2c-showcase .wstep-line.done { background: var(--spvie-accent); }
 /* Mobile : 9 étapes → on resserre pastilles + connecteurs pour tenir en largeur. */
 @media (max-width: 560px) {
-  .parcours-b2c-showcase .wstep { width: 25px; height: 25px; font-size: 0.7rem; border-width: 1.5px; }
-  .parcours-b2c-showcase .wstep.on { transform: scale(1.1); box-shadow: 0 0 0 3px color-mix(in srgb, var(--spvie-accent) 18%, transparent); }
-  .parcours-b2c-showcase .wstep-line { margin: 0 2px; min-width: 2px; }
+  .parcours-b2c-showcase .walk-stepper { padding: 0; }
+  .parcours-b2c-showcase .wstep { width: 23px; height: 23px; font-size: 0.66rem; border-width: 1.5px; }
+  .parcours-b2c-showcase .wstep.on { transform: scale(1.08); box-shadow: 0 0 0 3px color-mix(in srgb, var(--spvie-accent) 18%, transparent); }
+  .parcours-b2c-showcase .wstep-line { margin: 0 2px; min-width: 1px; }
+}
+@media (max-width: 380px) {
+  .parcours-b2c-showcase .wstep { width: 21px; height: 21px; font-size: 0.6rem; }
+  .parcours-b2c-showcase .wstep-line { margin: 0 1.5px; }
 }
 
 .parcours-b2c-showcase .walk-current { text-align: center; margin: 14px 0 12px; }

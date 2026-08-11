@@ -110,6 +110,9 @@
   .crm-showcase .disp-stage { grid-template-columns: 1fr; gap: 26px; }
   .crm-showcase .disp-flow { display: none; }
   .crm-showcase .disp-hub-col { align-items: stretch; }
+  /* Sans les connecteurs SVG, on matérialise le flux sources → moteur →
+     conseillers par un chevron descendant (dessiné, pas d'emoji). */
+  .crm-showcase .disp-sources::after, .crm-showcase .disp-hub-col::after { content: ''; display: block; width: 13px; height: 13px; margin: 14px auto -6px; border-right: 2.5px solid var(--bb-accent); border-bottom: 2.5px solid var(--bb-accent); transform: rotate(45deg); }
 }
 
 /* ---- 03 LES ÉCRANS — pile DisplayCards (design section « arrivant ») ---- */
@@ -147,6 +150,8 @@
   .crm-showcase .dstack { display: flex; flex-direction: column; gap: 16px; }
   .crm-showcase .dcard { grid-area: auto; width: 100%; transform: none !important; filter: none !important; }
   .crm-showcase .dcard::before, .crm-showcase .dcard::after { display: none; }
+  /* La pile de captures rend la section 3 haute → on aère avant la section 4. */
+  .crm-showcase .feature { margin-bottom: clamp(44px, 10vw, 72px); }
 }
 
 /* ---- 04 DÉMARCHE ---- */

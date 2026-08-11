@@ -19,6 +19,18 @@
   --agpt-ink: #3e2028;
   --agpt-ink2: #6b4b53;
   --agpt-line: rgba(94, 28, 51, 0.12);
+  /* La bannière ContactFooter lit les tokens portfolio → on les mappe sur la DA AGPT. */
+  --portfolio-bg: var(--agpt-bg);
+  --portfolio-card-bg: var(--agpt-surface);
+  --portfolio-card-border: var(--agpt-line);
+  --portfolio-button-bg: var(--agpt-heading);
+  --portfolio-button-bg-hover: var(--agpt-rose);
+  --portfolio-button-text: #fff5f9;
+  --portfolio-text-primary: var(--agpt-heading);
+  --portfolio-text-secondary: var(--agpt-ink);
+  --portfolio-text-description: var(--agpt-ink2);
+  --portfolio-text-muted: var(--agpt-ink2);
+  --portfolio-text-large: color-mix(in srgb, var(--agpt-heading) 7%, var(--agpt-surface));
   --serif: 'WsParadose', 'Playfair Display', serif;
   --sans: 'Poppins', 'Manrope', sans-serif;
   --mtop: 134px;
@@ -36,6 +48,16 @@
   --agpt-ink: #efe0e5;
   --agpt-ink2: #c6a6af;
   --agpt-line: rgba(255, 255, 255, 0.13);
+  --portfolio-card-bg: var(--agpt-surface);
+  --portfolio-card-border: var(--agpt-line);
+  --portfolio-button-bg: var(--agpt-rose);
+  --portfolio-button-bg-hover: var(--agpt-heading);
+  --portfolio-button-text: #1a0d10;
+  --portfolio-text-primary: var(--agpt-heading);
+  --portfolio-text-secondary: var(--agpt-ink);
+  --portfolio-text-description: var(--agpt-ink2);
+  --portfolio-text-muted: var(--agpt-ink2);
+  --portfolio-text-large: color-mix(in srgb, #ffffff 6%, var(--agpt-surface));
 }
 
 .agpt-showcase .wrap { width: min(1180px, 90vw); margin-inline: auto; }

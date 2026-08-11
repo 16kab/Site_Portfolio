@@ -140,10 +140,10 @@
    illisible sur petit écran → linéarisation. Chaque scène = son propos puis
    ses visuels en grille, en flux normal (le JS purge ses styles inline). */
 @media (max-width: 720px) {
-  .charte-showcase .scene { height: auto; display: flex; flex-direction: column; padding: 6vh 0; }
+  .charte-showcase .scene { height: auto; display: flex; flex-direction: column; padding: 3vh 0; }
   .charte-showcase .scene-text { position: static; order: 0; height: auto; opacity: 1; filter: none; padding: 0 22px; }
   .charte-showcase .st-in { width: 100%; }
-  .charte-showcase .scene-imgs { position: static; inset: auto; order: 1; pointer-events: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 26px; padding: 0 22px; }
+  .charte-showcase .scene-imgs { position: static; inset: auto; order: 1; pointer-events: auto; display: flex; flex-direction: column; gap: 16px; margin-top: 20px; padding: 0 22px; }
   .charte-showcase .scene-img { position: static; left: auto !important; top: auto !important; width: auto !important; transform: none !important; opacity: 1 !important; filter: none !important; z-index: auto; }
   .charte-showcase .scene-img.t-fond { display: block; }
   .charte-showcase .scene-img img { border-radius: 10px; }

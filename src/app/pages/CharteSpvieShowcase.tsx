@@ -352,7 +352,7 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
             <span>{t.metaYear}</span>
             {projet.pdfUrl && (
               <a href={projet.pdfUrl} target="_blank" rel="noopener noreferrer" className="pdf">
-                {t.pdf} <span aria-hidden="true">↗</span>
+                {t.pdf} <span aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
               </a>
             )}
           </div>
