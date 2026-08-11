@@ -1,0 +1,111 @@
+.project-tile-shell {
+  display: block;
+  height: 100%;
+}
+/* Sans cela, le wrapper interne de BorderGlow se cale sur la hauteur
+   INTRINSÈQUE de l'image et déborde sur la tuile suivante. On le force à
+   remplir la hauteur (définie) de la cellule pour que `height: 100%` se
+   propage jusqu'à l'<img> (object-fit: cover remplit tout le cadre). */
+.project-tile-shell .border-glow-inner {
+  height: 100%;
+  min-height: 0;
+}
+.project-tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+.project-tile .tile-media {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.project-tile .tile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.project-tile:hover .tile-image,
+.project-tile:focus-visible .tile-image {
+  transform: scale(1.045);
+}
+.project-tile .tile-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(6, 10, 14, 0.72) 0%,
+    rgba(6, 10, 14, 0.12) 42%,
+    transparent 70%
+  );
+  transition: opacity 0.4s ease;
+}
+.project-tile .tile-meta {
+  position: absolute;
+  left: 20px;
+  bottom: 18px;
+  right: 20px;
+  z-index: 2;
+}
+.project-tile .tile-cat {
+  display: inline-block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 4px;
+}
+.project-tile .tile-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(1.15rem, 1.6vw, 1.7rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: #fff;
+  margin: 0;
+}
+.project-tile .tile-cta {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 5px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    background-color 0.3s;
+  pointer-events: none;
+}
+.project-tile:hover .tile-cta,
+.project-tile:focus-visible .tile-cta {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-tile .tile-image,
+  .project-tile .tile-cta {
+    transition: none;
+  }
+  .project-tile:hover .tile-image,
+  .project-tile:focus-visible .tile-image {
+    transform: none;
+  }
+}

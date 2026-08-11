@@ -36,6 +36,8 @@ export interface Projet {
   year: string;
   description: string;
   tags: string[];
+  category: 'mobile' | 'web' | 'branding';
+  tileSize?: 'l' | 'm' | 's';
   contexte: string;
   problematique: string;
   role: string;
@@ -56,6 +58,8 @@ export const projetsData: Projet[] = [
   // ─ Nouveaux projets (contenu texte provisoire, à rédiger) ─────
   {
     id: 'mauni',
+    category: 'mobile',
+    tileSize: 'm',
     title: 'Mauni',
     subtitle:
       '[Texte provisoire] Sous-titre du projet Mauni, à rédiger ultérieurement.',
@@ -107,6 +111,8 @@ export const projetsData: Projet[] = [
   },
   {
     id: 'onboarding-rh',
+    category: 'web',
+    tileSize: 'l',
     title: 'Onboarding RH',
     subtitle:
       '[Texte provisoire] Sous-titre du projet Onboarding RH, à rédiger ultérieurement.',
@@ -158,6 +164,8 @@ export const projetsData: Projet[] = [
   },
   {
     id: 'syma',
+    category: 'branding',
+    tileSize: 'm',
     title: 'SYMA',
     subtitle:
       '[Texte provisoire] Sous-titre du projet SYMA, à rédiger ultérieurement.',
@@ -209,6 +217,8 @@ export const projetsData: Projet[] = [
   },
   {
     id: 'trackit',
+    category: 'mobile',
+    tileSize: 'm',
     title: 'TrackIt',
     subtitle: 'Suivi de films & séries — recherche TMDB, épisodes, sync cloud.',
     year: '2025',
@@ -259,6 +269,8 @@ export const projetsData: Projet[] = [
   },
   {
     id: 'parcours-spvieassurances',
+    category: 'web',
+    tileSize: 's',
     title: 'Refonte du parcours de souscription SPVIE',
     subtitle:
       "Un tunnel digital stratégique repensé de l'architecture d'information jusqu'à la signature.",
@@ -323,6 +335,8 @@ export const projetsData: Projet[] = [
   },
   {
     id: 'crm-bigbroker',
+    category: 'web',
+    tileSize: 'l',
     title: 'Conception du CRM interne BigBroker',
     subtitle:
       "Un outil métier conçu pour centraliser les données, structurer l'activité des conseillers et piloter la performance commerciale.",
@@ -382,6 +396,8 @@ export const projetsData: Projet[] = [
   },
   {
     id: 'agpt',
+    category: 'branding',
+    tileSize: 'm',
     title: 'Création de la marque Agir Pour Toutes',
     subtitle:
       'Structurer une marque engagée et concevoir un site permettant de présenter son univers et commercialiser ses clubs.',
@@ -436,6 +452,8 @@ export const projetsData: Projet[] = [
   // ─ Autres Projets (avec pages détail) ─────────────────────────
   {
     id: 'refonte-spvie',
+    category: 'web',
+    tileSize: 'm',
     title: 'Refonte visuelle stratégique du site SPVIE',
     subtitle:
       'Imaginer une nouvelle expérience web capable de clarifier les offres, améliorer la navigation et soutenir la génération de leads.',
@@ -495,6 +513,8 @@ export const projetsData: Projet[] = [
   },
   {
     id: 'charte-spvie',
+    category: 'branding',
+    tileSize: 's',
     title: 'Proposition de refonte de la charte graphique SPVIE',
     subtitle:
       "Repenser la charte graphique du groupe afin d'harmoniser les supports et renforcer la crédibilité de la marque.",
@@ -556,6 +576,8 @@ export const projetsData: Projet[] = [
   },
   {
     id: 'mobile-cgrm',
+    category: 'mobile',
+    tileSize: 'm',
     title: "Refonte de l'application mobile CGRM",
     subtitle:
       "Adapter l'application mobile à une charte plus moderne afin d'améliorer la lisibilité et la cohérence avec l'écosystème digital du groupe.",
@@ -625,6 +647,8 @@ export const tousProjets = projetsData.map((projet, index) => ({
   image: projet.image,
   brand: projet.brand,
   number: String(index + 1).padStart(3, '0'),
+  category: projet.category,
+  tileSize: projet.tileSize ?? 'm',
 }));
 
 // ─ Internationalisation ───────────────────────────────────────────────
@@ -671,5 +695,7 @@ export function getTousProjets(lang: Lang) {
     image: projet.image,
     brand: projet.brand,
     number: String(index + 1).padStart(3, '0'),
+    category: projet.category,
+    tileSize: projet.tileSize ?? 'm',
   }));
 }

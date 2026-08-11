@@ -32,3 +32,6 @@ zz-*.mjs
 
 # Lighthouse CI (local)
 .lighthouseci/
+
+# Superpowers brainstorming (companion visuel)
+.superpowers/

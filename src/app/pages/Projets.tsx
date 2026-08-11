@@ -1,16 +1,18 @@
-import { motion } from 'motion/react';
+import './Projets.css';
+import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import ContactFooter from '../components/ContactFooter';
-import NewProjectCard from '../components/common/NewProjectCard';
+import FilterBar from '../components/common/FilterBar';
+import ProjetTile from '../components/common/ProjetTile';
 import PageMeta from '../components/PageMeta';
 import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
-import { ScrollFadeIn } from '../components/ScrollFadeIn';
 import { getTousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
 import { ROUTE_META } from '../config/seo';
 import { useLang, useT } from '../i18n';
 import { usePageTransition } from '../context/PageTransitionContext';
+import { filterProjets, type FilterValue } from '../utils/filterProjets';
 
 const STRINGS = {
   fr: { eyebrow: 'Mes travaux', title: 'Projets' },
@@ -34,6 +36,8 @@ export default function Projets() {
   const { snapshot, direction, beginReverse, clearTransition } =
     usePageTransition();
   const cardRefs = useRef<{ [key: string]: HTMLImageElement | null }>({});
+  const [filter, setFilter] = useState<FilterValue>('all');
+  const visibles = filterProjets(tousProjets, filter);
   const [isReturnVisit] = useState(
     () =>
       snapshot?.originPath === '/projets' && location.pathname === '/projets',
@@ -148,31 +152,40 @@ export default function Projets() {
             </ScrollRevealTitle>
           </div>
 
-          {/* Tous les projets - List simple */}
-          <div className="space-y-6">
-            {tousProjets.map((projet, index) => (
-              <ScrollFadeIn
-                key={projet.link}
-                delay={Math.min(0.025 + index * 0.025, 0.1)}
-                amount={0.15}
-                margin="0px 0px 10% 0px"
-                disabled={isReturnVisit}
-              >
-                <NewProjectCard
-                  link={projet.link}
-                  number={projet.number}
-                  title={projet.text}
-                  description={projet.description}
-                  tags={projet.tags}
-                  image={projet.image}
-                  priority={index < 2}
-                  ref={(imageElement) => {
-                    cardRefs.current[projet.link] = imageElement;
+          {/* Filtre par discipline */}
+          <FilterBar value={filter} onChange={setFilter} />
+
+          {/* Mosaïque des projets */}
+          <motion.div layout={!reduceReturnMotion} className="projets-mosaic">
+            <AnimatePresence mode="popLayout">
+              {visibles.map((projet, index) => (
+                <motion.div
+                  key={projet.link}
+                  layout
+                  initial={{ opacity: 0, scale: 0.94 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.94 }}
+                  transition={{
+                    duration: reduceReturnMotion ? 0 : 0.35,
+                    ease: [0.16, 1, 0.3, 1],
                   }}
-                />
-              </ScrollFadeIn>
-            ))}
-          </div>
+                  className={`mosaic-cell cell-${projet.tileSize}`}
+                >
+                  <ProjetTile
+                    link={projet.link}
+                    title={projet.text}
+                    category={projet.category}
+                    image={projet.image}
+                    tileSize={projet.tileSize}
+                    priority={index < 2}
+                    ref={(imageElement) => {
+                      cardRefs.current[projet.link] = imageElement;
+                    }}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </div>
       </section>
 
