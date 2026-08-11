@@ -59,7 +59,7 @@ export const projetsData: Projet[] = [
   {
     id: 'mauni',
     category: 'mobile',
-    tileSize: 'l',
+    tileSize: 'm',
     title: 'Mauni',
     subtitle:
       '[Texte provisoire] Sous-titre du projet Mauni, à rédiger ultérieurement.',
@@ -112,7 +112,7 @@ export const projetsData: Projet[] = [
   {
     id: 'onboarding-rh',
     category: 'web',
-    tileSize: 's',
+    tileSize: 'l',
     title: 'Onboarding RH',
     subtitle:
       '[Texte provisoire] Sous-titre du projet Onboarding RH, à rédiger ultérieurement.',
@@ -336,7 +336,7 @@ export const projetsData: Projet[] = [
   {
     id: 'crm-bigbroker',
     category: 'web',
-    tileSize: 'm',
+    tileSize: 'l',
     title: 'Conception du CRM interne BigBroker',
     subtitle:
       "Un outil métier conçu pour centraliser les données, structurer l'activité des conseillers et piloter la performance commerciale.",
@@ -397,7 +397,7 @@ export const projetsData: Projet[] = [
   {
     id: 'agpt',
     category: 'branding',
-    tileSize: 'l',
+    tileSize: 'm',
     title: 'Création de la marque Agir Pour Toutes',
     subtitle:
       'Structurer une marque engagée et concevoir un site permettant de présenter son univers et commercialiser ses clubs.',
@@ -577,7 +577,7 @@ export const projetsData: Projet[] = [
   {
     id: 'mobile-cgrm',
     category: 'mobile',
-    tileSize: 'l',
+    tileSize: 'm',
     title: "Refonte de l'application mobile CGRM",
     subtitle:
       "Adapter l'application mobile à une charte plus moderne afin d'améliorer la lisibilité et la cohérence avec l'écosystème digital du groupe.",

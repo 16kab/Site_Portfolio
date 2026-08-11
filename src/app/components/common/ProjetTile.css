@@ -2,6 +2,14 @@
   display: block;
   height: 100%;
 }
+/* Sans cela, le wrapper interne de BorderGlow se cale sur la hauteur
+   INTRINSÈQUE de l'image et déborde sur la tuile suivante. On le force à
+   remplir la hauteur (définie) de la cellule pour que `height: 100%` se
+   propage jusqu'à l'<img> (object-fit: cover remplit tout le cadre). */
+.project-tile-shell .border-glow-inner {
+  height: 100%;
+  min-height: 0;
+}
 .project-tile {
   position: relative;
   display: block;

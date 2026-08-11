@@ -11,17 +11,18 @@
   position: relative;
   border-radius: 12px;
 }
-/* L = grande (8/12, 3 lignes) · M = moyenne (4/12, 3 lignes) · S = petite
-   (4/12, 2 lignes). L+M tuilent une ligne entière ; les S (plus courtes)
-   sont ré-agencées par `dense` pour combler. */
+/* Rythme éditorial par la LARGEUR, hauteur uniforme (3 lignes) pour un pavage
+   sans trous : L = bannière large (8/12), M et S = tuiles standard (4/12).
+   Chaque rangée se complète toujours à 12 (8+4 ou 4+4+4) → aucun trou
+   vertical, les images remplissent tout leur cadre. */
 .mosaic-cell.cell-l { grid-column: span 8; grid-row: span 3; }
 .mosaic-cell.cell-m { grid-column: span 4; grid-row: span 3; }
-.mosaic-cell.cell-s { grid-column: span 4; grid-row: span 2; }
+.mosaic-cell.cell-s { grid-column: span 4; grid-row: span 3; }
 @media (max-width: 1024px) {
   .projets-mosaic { grid-template-columns: repeat(6, 1fr); grid-auto-rows: clamp(84px, 13vw, 128px); }
   .mosaic-cell.cell-l { grid-column: span 6; grid-row: span 3; }
   .mosaic-cell.cell-m { grid-column: span 3; grid-row: span 3; }
-  .mosaic-cell.cell-s { grid-column: span 3; grid-row: span 2; }
+  .mosaic-cell.cell-s { grid-column: span 3; grid-row: span 3; }
 }
 @media (max-width: 640px) {
   .projets-mosaic { grid-template-columns: 1fr; grid-auto-rows: auto; }
