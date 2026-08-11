@@ -28,7 +28,7 @@
 .parcours-b2c-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO ---- */
-.parcours-b2c-showcase .m-hero { position: relative; width: 100vw; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+.parcours-b2c-showcase .m-hero { position: relative; width: 100vw; height: 100dvh; display: flex; align-items: flex-end; overflow: hidden; }
 .parcours-b2c-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .parcours-b2c-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,10,9,0.86), rgba(6,10,9,0.28) 44%, rgba(6,10,9,0.05) 72%, transparent); }
 .parcours-b2c-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: pb-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
@@ -91,6 +91,17 @@
 .parcours-b2c-showcase .stat-arrow { color: var(--portfolio-text-muted); font-size: 1rem; align-self: center; }
 .parcours-b2c-showcase .stat-after { color: var(--spvie-accent); font-size: 2.1rem; font-weight: 700; letter-spacing: -0.02em; }
 .parcours-b2c-showcase .stat-tile-note { display: block; margin-top: 8px; color: var(--spvie-accent); font-size: 0.82rem; font-weight: 600; }
+/* Mobile : les 3 tuiles chiffrées restent côte à côte (nums empilés pour tenir). */
+@media (max-width: 560px) {
+  .parcours-b2c-showcase .stat-tiles { flex-wrap: nowrap; gap: 8px; }
+  .parcours-b2c-showcase .stat-tile { flex: 1 1 0; min-width: 0; padding: 14px 9px; }
+  .parcours-b2c-showcase .stat-tile-label { font-size: 0.56rem; letter-spacing: 0.1em; }
+  .parcours-b2c-showcase .stat-tile-nums { flex-direction: column; gap: 1px; }
+  .parcours-b2c-showcase .stat-before { font-size: 0.8rem; }
+  .parcours-b2c-showcase .stat-arrow { display: none; }
+  .parcours-b2c-showcase .stat-after { font-size: 1.4rem; }
+  .parcours-b2c-showcase .stat-tile-note { font-size: 0.62rem; margin-top: 5px; }
+}
 
 /* ---- 03 LE PARCOURS : walkthrough ---- */
 /* Largeur plafonnée par la hauteur d'écran : tout le bloc (stepper + cadre
@@ -106,6 +117,17 @@
 .parcours-b2c-showcase .wstep.on { border-color: var(--spvie-accent); background: var(--spvie-accent); color: var(--portfolio-bg); transform: scale(1.14); box-shadow: 0 0 0 5px color-mix(in srgb, var(--spvie-accent) 18%, transparent); }
 .parcours-b2c-showcase .wstep-line { flex: 1; height: 2px; min-width: 8px; margin: 0 7px; border-radius: 2px; background: var(--portfolio-card-border); transition: background .35s ease; }
 .parcours-b2c-showcase .wstep-line.done { background: var(--spvie-accent); }
+/* Mobile : 9 étapes → on resserre pastilles + connecteurs pour tenir en largeur. */
+@media (max-width: 560px) {
+  .parcours-b2c-showcase .walk-stepper { padding: 0; }
+  .parcours-b2c-showcase .wstep { width: 23px; height: 23px; font-size: 0.66rem; border-width: 1.5px; }
+  .parcours-b2c-showcase .wstep.on { transform: scale(1.08); box-shadow: 0 0 0 3px color-mix(in srgb, var(--spvie-accent) 18%, transparent); }
+  .parcours-b2c-showcase .wstep-line { margin: 0 2px; min-width: 1px; }
+}
+@media (max-width: 380px) {
+  .parcours-b2c-showcase .wstep { width: 21px; height: 21px; font-size: 0.6rem; }
+  .parcours-b2c-showcase .wstep-line { margin: 0 1.5px; }
+}
 
 .parcours-b2c-showcase .walk-current { text-align: center; margin: 14px 0 12px; }
 .parcours-b2c-showcase .walk-current-n { display: block; margin-bottom: 5px; color: var(--spvie-accent); }

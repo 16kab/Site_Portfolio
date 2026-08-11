@@ -32,7 +32,7 @@
 .onboarding-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO (cible du morph carte→détail) ---- */
-.onboarding-showcase .m-hero { position: relative; width: 100vw; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+.onboarding-showcase .m-hero { position: relative; width: 100vw; height: 100dvh; display: flex; align-items: flex-end; overflow: hidden; }
 .onboarding-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .onboarding-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,20,14,0.82), rgba(6,20,14,0.2) 42%, rgba(6,20,14,0.04) 70%, transparent); }
 .onboarding-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: onb-hero-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
@@ -123,6 +123,14 @@
   .onboarding-showcase .feature { grid-template-columns: 1fr; }
   .onboarding-showcase .feature-cards { padding: 30px 40px 80px 0; justify-content: flex-start; }
 }
+/* Mobile : l'éventail « arrivant » (écrans desktop larges) ne tient pas →
+   pile verticale nette, pleine largeur, en couleur. */
+@media (max-width: 720px) {
+  .onboarding-showcase .feature-cards { display: block; padding: 4px 0 20px; }
+  .onboarding-showcase .dstack { display: flex; flex-direction: column; gap: 16px; }
+  .onboarding-showcase .dcard { grid-area: auto; width: 100%; transform: none !important; filter: none !important; }
+  .onboarding-showcase .dcard::before, .onboarding-showcase .dcard::after { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   .onboarding-showcase .dcard { transition: filter .6s ease; }
 }
@@ -183,11 +191,16 @@
 /* Repli (mobile / reduce) : liste verticale, une mini-capture par étape. */
 .onboarding-showcase .story-flat .story-pin { position: static; }
 .onboarding-showcase .story-flat .story-pin .lead { font-size: clamp(1.7rem, 4.2vw, 3.2rem); }
-.onboarding-showcase .story-flat .story-steps { grid-template-columns: 1fr; gap: 22px; }
+/* Timeline verticale : une barre continue à gauche qui traverse tous les
+   points, un point (dot) par étape, textes + mini-capture à côté. */
+.onboarding-showcase .story-flat .story-steps { display: flex; flex-direction: column; gap: 30px; position: relative; padding-left: 42px; }
+.onboarding-showcase .story-flat .story-steps::before { content: ''; position: absolute; left: 15px; top: 7px; bottom: 7px; width: 2px; border-radius: 2px; background: var(--portfolio-card-border); }
 .onboarding-showcase .story-flat .story-bar { display: none; }
 .onboarding-showcase .story-flat .story-shot { display: none; }
-.onboarding-showcase .story-flat .story-step { opacity: 1; }
-.onboarding-showcase .story-flat .story-mini { display: block; margin-top: 12px; border-radius: 10px; overflow: hidden; border: 1px solid var(--portfolio-card-border); }
+.onboarding-showcase .story-flat .story-step { position: relative; opacity: 1; }
+.onboarding-showcase .story-flat .story-step::before { content: ''; position: absolute; left: -34px; top: 3px; width: 15px; height: 15px; border-radius: 50%; background: var(--onboarding-accent); box-shadow: 0 0 0 4px var(--portfolio-card-bg); }
+.onboarding-showcase .story-flat .story-num { margin-bottom: 4px; }
+.onboarding-showcase .story-flat .story-mini { display: block; margin-top: 14px; border-radius: 10px; overflow: hidden; border: 1px solid var(--portfolio-card-border); }
 .onboarding-showcase .story-flat .story-mini img { display: block; width: 100%; }
 
 /* ---- Reveal ---- */

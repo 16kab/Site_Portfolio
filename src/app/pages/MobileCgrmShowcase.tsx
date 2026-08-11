@@ -1,5 +1,5 @@
 import './MobileCgrmShowcase.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
 import { useT } from '../i18n';
@@ -32,6 +32,8 @@ const STRINGS = {
     metaRole: 'UX/UI Designer',
     metaClient: 'CGRM – SPVIE Groupe',
     metaYear: '2024',
+    prev: 'Écran précédent',
+    next: 'Écran suivant',
     steps: [
       { t: "Analyse de l'existant", b: 'Repérer les éléments visuels obsolètes et les points de lisibilité.' },
       { t: 'Adaptation à la charte', b: 'Harmoniser l’interface avec les autres produits digitaux du groupe.' },
@@ -60,6 +62,8 @@ const STRINGS = {
     metaRole: 'UX/UI Designer',
     metaClient: 'CGRM – SPVIE Groupe',
     metaYear: '2024',
+    prev: 'Previous screen',
+    next: 'Next screen',
     steps: [
       { t: 'Auditing the existing app', b: 'Spotting the dated visuals and the readability pain points.' },
       { t: 'Applying the brand system', b: 'Harmonising the interface with the group’s other digital products.' },
@@ -85,21 +89,55 @@ const STRINGS = {
   },
 };
 
+function BeatExtra({ b, t }: { b: (typeof BEATS)[number]; t: (typeof STRINGS)['fr'] }) {
+  if (b.extra === 'steps') {
+    return (
+      <ol className="steps">
+        {t.steps.map((s, i) => (
+          <li key={s.t}>
+            <span className="st-n num">{String(i + 1).padStart(2, '0')}</span>
+            <span className="st-t">{s.t}</span>
+            <span className="st-b">{s.b}</span>
+          </li>
+        ))}
+      </ol>
+    );
+  }
+  if (b.extra === 'gains') {
+    return (
+      <ul className="gains">
+        {t.gains.map((g) => (
+          <li key={g}>{g}</li>
+        ))}
+      </ul>
+    );
+  }
+  return null;
+}
+
 export default function MobileCgrmShowcase({ projet }: { projet: Projet }) {
   const t = useT(STRINGS);
   const rootRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const total = BEATS.length;
 
+  // Bascule desktop (scrollytelling) / mobile (navigation par flèches).
   useEffect(() => {
+    const mq = matchMedia('(max-width: 760px)');
+    const up = () => setIsMobile(mq.matches);
+    up();
+    mq.addEventListener('change', up);
+    return () => mq.removeEventListener('change', up);
+  }, []);
+
+  // Desktop : le beat actif = celui dont le centre est le plus proche du centre
+  // de l'écran (piloté au scroll). En mobile, l'actif est piloté par les flèches.
+  useEffect(() => {
+    if (isMobile) return;
     const root = rootRef.current;
     if (!root) return;
-
     const beats = Array.from(root.querySelectorAll<HTMLElement>('.beat'));
-    const screens = Array.from(root.querySelectorAll<HTMLElement>('.scr'));
-    const dots = Array.from(root.querySelectorAll<HTMLElement>('.dot'));
-    let current = -1;
-
-    // Le beat actif = celui dont le centre est le plus proche du centre de
-    // l'écran. On fond alors l'écran correspondant + on avance le rail de dots.
     function frame() {
       const vh = innerHeight;
       let best = 0;
@@ -112,20 +150,8 @@ export default function MobileCgrmShowcase({ projet }: { projet: Projet }) {
           best = i;
         }
       });
-      if (best === current) return;
-      current = best;
-      const screenIdx = Number(beats[best].dataset.screen || 0);
-      screens.forEach((s, i) => {
-        s.classList.toggle('on', i === screenIdx);
-      });
-      dots.forEach((d, i) => {
-        d.classList.toggle('on', i === best);
-      });
-      beats.forEach((b, i) => {
-        b.classList.toggle('active', i === best);
-      });
+      setActive((prev) => (prev === best ? prev : best));
     }
-
     let ticking = false;
     const schedule = () => {
       if (!ticking) {
@@ -143,7 +169,11 @@ export default function MobileCgrmShowcase({ projet }: { projet: Projet }) {
       document.body.removeEventListener('scroll', schedule);
       window.removeEventListener('resize', schedule);
     };
-  }, []);
+  }, [isMobile]);
+
+  const ab = BEATS[active];
+  const abc = t.beats[ab.id as keyof typeof t.beats];
+  const go = (d: number) => setActive((a) => Math.max(0, Math.min(total - 1, a + d)));
 
   return (
     <div className="cgrm-showcase" ref={rootRef} style={{ minHeight: '100vh' }}>
@@ -172,10 +202,20 @@ export default function MobileCgrmShowcase({ projet }: { projet: Projet }) {
         </div>
       </section>
 
-      {/* Scrollytelling : téléphone épinglé (gauche), récit qui défile (droite). */}
-      <section className="story">
+      {/* Desktop : téléphone épinglé + récit qui défile.
+          Mobile : titre au-dessus, téléphone fixe, dots + flèches en dessous. */}
+      <section className={`story${isMobile ? ' story-mobile' : ''}`}>
         <div className="story-inner">
           <div className="phone-col">
+            {isMobile && (
+              <div className="cm-head" key={ab.id}>
+                <span className="ey label">{abc.ey}</span>
+                <h2 className="lead">
+                  {abc.pre}
+                  <em>{abc.k}</em>
+                </h2>
+              </div>
+            )}
             <div className="phone">
               <span className="phone-btn btn-mute" aria-hidden="true" />
               <span className="phone-btn btn-volup" aria-hidden="true" />
@@ -186,50 +226,63 @@ export default function MobileCgrmShowcase({ projet }: { projet: Projet }) {
                   <i className="notch-cam" />
                 </span>
                 {SCREENS.map((src, i) => (
-                  <img key={src} className={`scr${i === 0 ? ' on' : ''}`} src={src} alt="" loading="lazy" decoding="async" />
+                  <img key={src} className={`scr${i === ab.screen ? ' on' : ''}`} src={src} alt="" loading="lazy" decoding="async" />
                 ))}
               </div>
             </div>
-            <div className="dots" aria-hidden="true">
-              {BEATS.map((b, i) => (
-                <span key={b.id} className={`dot${i === 0 ? ' on' : ''}`} />
-              ))}
+            <div className="cm-controls">
+              {isMobile && (
+                <button type="button" className="cm-arrow" onClick={() => go(-1)} disabled={active === 0} aria-label={t.prev}>
+                  ‹
+                </button>
+              )}
+              <div className="dots">
+                {BEATS.map((b, i) => (
+                  <button
+                    key={b.id}
+                    type="button"
+                    className={`dot${i === active ? ' on' : ''}`}
+                    aria-label={t.beats[b.id as keyof typeof t.beats].ey}
+                    aria-current={i === active}
+                    onClick={() => {
+                      setActive(i);
+                      if (!isMobile) rootRef.current?.querySelectorAll<HTMLElement>('.beat')[i]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }}
+                  />
+                ))}
+              </div>
+              {isMobile && (
+                <button type="button" className="cm-arrow" onClick={() => go(1)} disabled={active === total - 1} aria-label={t.next}>
+                  ›
+                </button>
+              )}
             </div>
+            {isMobile && (
+              <div className="cm-body" key={`${ab.id}-b`}>
+                {abc.note && <p className="note">{abc.note}</p>}
+                <BeatExtra b={ab} t={t} />
+              </div>
+            )}
           </div>
 
-          <div className="beats">
-            {BEATS.map((b) => {
-              const bc = t.beats[b.id as keyof typeof t.beats];
-              return (
-                <article className="beat" data-screen={b.screen} key={b.id}>
-                  <span className="ey label">{bc.ey}</span>
-                  <h2 className="lead">
-                    {bc.pre}
-                    <em>{bc.k}</em>
-                  </h2>
-                  {bc.note && <p className="note">{bc.note}</p>}
-                  {b.extra === 'steps' && (
-                    <ol className="steps">
-                      {t.steps.map((s, i) => (
-                        <li key={s.t}>
-                          <span className="st-n num">{String(i + 1).padStart(2, '0')}</span>
-                          <span className="st-t">{s.t}</span>
-                          <span className="st-b">{s.b}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  )}
-                  {b.extra === 'gains' && (
-                    <ul className="gains">
-                      {t.gains.map((g) => (
-                        <li key={g}>{g}</li>
-                      ))}
-                    </ul>
-                  )}
-                </article>
-              );
-            })}
-          </div>
+          {!isMobile && (
+            <div className="beats">
+              {BEATS.map((b, i) => {
+                const bc = t.beats[b.id as keyof typeof t.beats];
+                return (
+                  <article className={`beat${i === active ? ' active' : ''}`} data-screen={b.screen} key={b.id}>
+                    <span className="ey label">{bc.ey}</span>
+                    <h2 className="lead">
+                      {bc.pre}
+                      <em>{bc.k}</em>
+                    </h2>
+                    {bc.note && <p className="note">{bc.note}</p>}
+                    <BeatExtra b={b} t={t} />
+                  </article>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

@@ -19,6 +19,18 @@
   --agpt-ink: #3e2028;
   --agpt-ink2: #6b4b53;
   --agpt-line: rgba(94, 28, 51, 0.12);
+  /* La bannière ContactFooter lit les tokens portfolio → on les mappe sur la DA AGPT. */
+  --portfolio-bg: var(--agpt-bg);
+  --portfolio-card-bg: var(--agpt-surface);
+  --portfolio-card-border: var(--agpt-line);
+  --portfolio-button-bg: var(--agpt-heading);
+  --portfolio-button-bg-hover: var(--agpt-rose);
+  --portfolio-button-text: #fff5f9;
+  --portfolio-text-primary: var(--agpt-heading);
+  --portfolio-text-secondary: var(--agpt-ink);
+  --portfolio-text-description: var(--agpt-ink2);
+  --portfolio-text-muted: var(--agpt-ink2);
+  --portfolio-text-large: color-mix(in srgb, var(--agpt-heading) 7%, var(--agpt-surface));
   --serif: 'WsParadose', 'Playfair Display', serif;
   --sans: 'Poppins', 'Manrope', sans-serif;
   --mtop: 134px;
@@ -36,6 +48,16 @@
   --agpt-ink: #efe0e5;
   --agpt-ink2: #c6a6af;
   --agpt-line: rgba(255, 255, 255, 0.13);
+  --portfolio-card-bg: var(--agpt-surface);
+  --portfolio-card-border: var(--agpt-line);
+  --portfolio-button-bg: var(--agpt-rose);
+  --portfolio-button-bg-hover: var(--agpt-heading);
+  --portfolio-button-text: #1a0d10;
+  --portfolio-text-primary: var(--agpt-heading);
+  --portfolio-text-secondary: var(--agpt-ink);
+  --portfolio-text-description: var(--agpt-ink2);
+  --portfolio-text-muted: var(--agpt-ink2);
+  --portfolio-text-large: color-mix(in srgb, #ffffff 6%, var(--agpt-surface));
 }
 
 .agpt-showcase .wrap { width: min(1180px, 90vw); margin-inline: auto; }
@@ -44,7 +66,7 @@
 .agpt-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO ---- */
-.agpt-showcase .m-hero { position: relative; width: 100vw; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+.agpt-showcase .m-hero { position: relative; width: 100vw; height: 100dvh; display: flex; align-items: flex-end; overflow: hidden; }
 .agpt-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .agpt-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(66,18,38,0.84), rgba(66,18,38,0.3) 44%, rgba(66,18,38,0.05) 74%, transparent); }
 .agpt-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fdeef4; animation: agpt-fade 0.7s cubic-bezier(.16,1,.3,1) both; }

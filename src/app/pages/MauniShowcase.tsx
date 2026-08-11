@@ -13,15 +13,20 @@ import PageMeta from '../components/PageMeta';
 import { ImageLightbox } from '../components/ImageLightbox';
 import { useLang, useT } from '../i18n';
 import type { Projet } from '../data/projetsData';
-import accueil from 'figma:asset/mauni-app-accueil.webp';
-import budget from 'figma:asset/mauni-app-budget.webp';
-import budgetDark from 'figma:asset/mauni-app-budget-dark.webp';
-import repartition from 'figma:asset/mauni-app-repartition.webp';
-import repartitionDark from 'figma:asset/mauni-app-repartition-dark.webp';
-import previsionnel from 'figma:asset/mauni-app-previsionnel.webp';
-import categories from 'figma:asset/mauni-app-categories.webp';
-import parametres from 'figma:asset/mauni-app-parametres.webp';
-import objectifs from 'figma:asset/mauni-app-objectifs.webp';
+import accueilL from 'figma:asset/mauni-accueil-light.webp';
+import accueilD from 'figma:asset/mauni-accueil-dark.webp';
+import budgetL from 'figma:asset/mauni-budget-light.webp';
+import budgetD from 'figma:asset/mauni-budget-dark.webp';
+import repartitionL from 'figma:asset/mauni-repartition-light.webp';
+import repartitionD from 'figma:asset/mauni-repartition-dark.webp';
+import epargneL from 'figma:asset/mauni-epargne-light.webp';
+import epargneD from 'figma:asset/mauni-epargne-dark.webp';
+import previsionnelL from 'figma:asset/mauni-previsionnel-light.webp';
+import previsionnelD from 'figma:asset/mauni-previsionnel-dark.webp';
+import transactionL from 'figma:asset/mauni-transaction-light.webp';
+import transactionD from 'figma:asset/mauni-transaction-dark.webp';
+import reglagesL from 'figma:asset/mauni-reglages-light.webp';
+import reglagesD from 'figma:asset/mauni-reglages-dark.webp';
 
 const MTOP = 134; // doit refléter --mtop dans MauniShowcase.css
 
@@ -56,9 +61,10 @@ const STRINGS = {
       { b: 'Accueil', r: " — le solde, la vue d'ensemble" },
       { b: 'Budget', r: ' — suivi par catégorie' },
       { b: 'Répartition', r: " — l'anneau des dépenses" },
+      { b: 'Épargne', r: ' — les objectifs mis de côté' },
       { b: 'Prévisionnel', r: ' — anticiper la fin de mois' },
-      { b: 'Catégories', r: " — classer d'un geste" },
-      { b: 'Paramètres', r: ' — sobre, sans détour' },
+      { b: 'Transactions', r: " — classées d'un geste" },
+      { b: 'Réglages', r: ' — sobre, sans détour' },
     ],
   },
   en: {
@@ -89,20 +95,22 @@ const STRINGS = {
       { b: 'Home', r: ' — balance, the big picture' },
       { b: 'Budget', r: ' — tracking by category' },
       { b: 'Breakdown', r: ' — the spending ring' },
+      { b: 'Savings', r: ' — goals set aside' },
       { b: 'Forecast', r: ' — anticipate month-end' },
-      { b: 'Categories', r: ' — sort in one tap' },
+      { b: 'Transactions', r: ' — sorted in one tap' },
       { b: 'Settings', r: ' — plain, no detours' },
     ],
   },
 };
 
 const GALLERY = [
-  { src: accueil, dark: null as string | null },
-  { src: budget, dark: budgetDark },
-  { src: repartition, dark: repartitionDark },
-  { src: previsionnel, dark: null },
-  { src: categories, dark: null },
-  { src: parametres, dark: null },
+  { src: accueilL, dark: accueilD as string | null },
+  { src: budgetL, dark: budgetD },
+  { src: repartitionL, dark: repartitionD },
+  { src: epargneL, dark: epargneD },
+  { src: previsionnelL, dark: previsionnelD },
+  { src: transactionL, dark: transactionD },
+  { src: reglagesL, dark: reglagesD },
 ];
 
 // Découpe un segment en mots enveloppés dans des <span.wd> (JSX, pas de
@@ -464,10 +472,12 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
                     >
                       <span className="knob" aria-hidden="true" />
                       <button type="button" data-mode="light" className="on">
-                        ☀ {t.clair}
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+                        {t.clair}
                       </button>
                       <button type="button" data-mode="dark">
-                        ☾ {t.sombre}
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" /></svg>
+                        {t.sombre}
                       </button>
                     </div>
                   </div>
@@ -530,7 +540,8 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
                 <Lead id="m-s4lead" lead={t.s4lead} />
                 <div className="device reveal">
                   <div className="screen">
-                    <img src={repartition} alt="Mauni — répartition" />
+                    <img className="s-l" src={repartitionL} alt="Mauni — répartition" />
+                    <img className="s-d" src={repartitionD} alt="" />
                   </div>
                 </div>
               </div>
@@ -542,7 +553,8 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
                 <Lead id="m-s5lead" lead={t.s5lead} />
                 <div className="device reveal">
                   <div className="screen">
-                    <img src={objectifs} alt="Mauni — objectifs" />
+                    <img className="s-l" src={epargneL} alt="Mauni — épargne" />
+                    <img className="s-d" src={epargneD} alt="" />
                   </div>
                 </div>
               </div>

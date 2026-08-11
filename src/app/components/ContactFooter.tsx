@@ -83,7 +83,7 @@ export default function ContactFooter() {
           <ScrollFadeIn delay={0.2}>
             <Link
               to={ROUTES.CONTACT}
-              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 md:left-auto md:translate-x-0 md:right-8 px-6 py-3 flex items-center gap-2 transition-colors duration-300 top-[165px] md:top-[45px] whitespace-nowrap z-10 cursor-pointer"
+              className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 md:left-auto md:translate-x-0 md:right-8 px-6 py-3 flex items-center gap-2 transition-colors duration-300 top-[155px] md:top-[45px] whitespace-nowrap z-10 cursor-pointer"
               style={{
                 backgroundColor: isContactButtonHovered
                   ? 'var(--portfolio-button-bg-hover)'

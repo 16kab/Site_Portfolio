@@ -29,7 +29,7 @@
 .syma-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO (cible du morph) ---- */
-.syma-showcase .m-hero { position: relative; width: 100vw; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+.syma-showcase .m-hero { position: relative; width: 100vw; height: 100dvh; display: flex; align-items: flex-end; overflow: hidden; }
 .syma-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .syma-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,8,16,0.86), rgba(8,8,16,0.24) 42%, rgba(8,8,16,0.04) 70%, transparent); }
 .syma-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: syma-hero-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
@@ -81,7 +81,11 @@
 .syma-showcase .sw:hover { transform: scale(1.14); }
 .syma-showcase .sw.on { box-shadow: 0 0 0 2px var(--portfolio-bg), 0 0 0 4px var(--syma-accent); }
 .syma-showcase .cmp-note { margin: clamp(22px, 3vw, 34px) 0 0; color: var(--portfolio-text-description); font-size: 0.98rem; max-width: 64ch; line-height: 1.6; }
-@media (max-width: 760px) { .syma-showcase .cmp-cards { grid-template-columns: 1fr; } }
+/* Mobile : un seul comparateur (on masque le 2e panneau, on garde A + sélecteurs). */
+@media (max-width: 760px) {
+  .syma-showcase .cmp-cards { grid-template-columns: 1fr; }
+  .syma-showcase .cmp-cards > *:nth-child(2) { display: none; }
+}
 
 /* ---- RÉCIT : texte gauche + image fixe à droite qui déborde ---- */
 .syma-showcase .story { position: relative; padding: clamp(20px, 4vw, 56px) 0 clamp(56px, 10vw, 130px); }
@@ -101,6 +105,8 @@
 .syma-showcase .story-sticky:focus-visible { outline: 2px solid var(--syma-accent); outline-offset: 3px; }
 .syma-showcase .story-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left center; opacity: 0; transition: opacity .6s ease; }
 .syma-showcase .story-img.on { opacity: 1; }
+/* Image inline par step (mobile uniquement — cf. média collant desktop). */
+.syma-showcase .story-inline { display: none; }
 .syma-showcase .story-zoom { position: absolute; left: 14px; bottom: 14px; width: 34px; height: 34px; border-radius: 9px; background: rgba(0,0,0,0.5); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; opacity: 0; transition: opacity .3s; }
 .syma-showcase .story-sticky:hover .story-zoom, .syma-showcase .story-sticky:focus-visible .story-zoom { opacity: 1; }
 
@@ -108,13 +114,17 @@
 .syma-showcase .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
 .syma-showcase .reveal.in { opacity: 1; transform: none; }
 
+/* Mobile : on abandonne le média collant (qui passait en avant-plan par-dessus
+   le texte) → récit linéaire simple : chaque étape = son texte puis sa capture. */
 @media (max-width: 900px) {
-  .syma-showcase .story-grid { display: flex; flex-direction: column; padding-left: 5vw; padding-right: 5vw; gap: 0; }
-  .syma-showcase .story-media { order: -1; position: sticky; top: calc(var(--mtop) + 8px); height: 40vh; margin-bottom: 24px; }
-  .syma-showcase .story-sticky { width: 100%; border-radius: 16px; }
+  .syma-showcase .story-grid { display: flex; flex-direction: column; padding-left: 6vw; padding-right: 6vw; gap: 0; }
+  .syma-showcase .story-media { display: none; }
   .syma-showcase .story-text { padding: 0; }
-  .syma-showcase .story-text > .ey { margin-bottom: 24px; }
-  .syma-showcase .story-step { min-height: 62vh; }
+  .syma-showcase .story-text > .ey { margin-bottom: 28px; }
+  .syma-showcase .story-step { min-height: 0; opacity: 1; padding: 3.5vh 0; }
+  .syma-showcase .story-inline { display: block; width: 100%; margin-top: 20px; border: 0; padding: 0; background: var(--portfolio-card-bg); border-radius: 16px; overflow: hidden; cursor: zoom-in; box-shadow: 0 34px 64px -42px rgba(0, 0, 0, 0.5); }
+  .syma-showcase .story-inline img { display: block; width: 100%; height: auto; }
+  .syma-showcase .story-inline:focus-visible { outline: 2px solid var(--syma-accent); outline-offset: 3px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .syma-showcase .reveal { opacity: 1 !important; transform: none !important; }

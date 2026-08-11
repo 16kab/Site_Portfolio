@@ -329,6 +329,19 @@ function Story({
               <span className="story-num num">{String(i + 1).padStart(2, '0')}</span>
               <h3 className="story-h title">{s.t}</h3>
               <p className="story-b">{s.b}</p>
+              {/* Mobile uniquement : l'image du step, en flux (le récit collant
+                  desktop reste géré par .story-media). */}
+              <button
+                type="button"
+                className="story-inline"
+                aria-label={enlarge(s.t)}
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  setLb(i);
+                }}
+              >
+                <img src={STORY_IMAGES[i]} alt={s.t} loading="lazy" decoding="async" />
+              </button>
             </div>
           ))}
         </div>
@@ -497,7 +510,7 @@ export default function SymaShowcase({ projet }: { projet: Projet }) {
             ))}
           </dl>
           <a className="visit" href={SITE_URL} target="_blank" rel="noopener noreferrer">
-            {t.visit} <span aria-hidden="true">↗</span>
+            {t.visit} <span aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}><path d="M7 17 17 7" /><path d="M8 7h9v9" /></svg></span>
           </a>
         </div>
       </div>
