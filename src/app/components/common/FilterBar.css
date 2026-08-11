@@ -1,0 +1,6 @@
+.filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin: 0 0 clamp(24px, 4vw, 44px); }
+.filter-chip { font-family: 'Manrope', sans-serif; font-size: 0.85rem; font-weight: 500; padding: 8px 18px; border-radius: 999px; border: 1px solid var(--portfolio-card-border); background: transparent; color: var(--portfolio-text-secondary); cursor: pointer; transition: color .25s, background .25s, border-color .25s; }
+.filter-chip:hover { color: var(--portfolio-text-primary); border-color: var(--portfolio-text-muted); }
+.filter-chip.on { background: var(--portfolio-button-bg); color: var(--portfolio-button-text); border-color: transparent; }
+.filter-chip:focus-visible { outline: 2px solid var(--portfolio-text-primary); outline-offset: 2px; }
+@media (max-width: 640px) { .filter-bar { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; } .filter-bar::-webkit-scrollbar { display: none; } .filter-chip { flex: none; } }
