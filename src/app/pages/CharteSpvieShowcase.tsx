@@ -23,11 +23,6 @@ import marques from 'figma:asset/charte-marques.webp';
 import wealth from 'figma:asset/charte-wealth.webp';
 import international from 'figma:asset/charte-international.webp';
 import epargne from 'figma:asset/charte-epargne.webp';
-import carteVisite from 'figma:asset/charte-carte-visite.webp';
-import papeterie from 'figma:asset/charte-papeterie.webp';
-import socialLinkedin from 'figma:asset/charte-social-linkedin.webp';
-import socialFacebook from 'figma:asset/charte-social-facebook.webp';
-import reseaux from 'figma:asset/charte-reseaux.webp';
 import mockup1 from 'figma:asset/charte-mockup-1.webp';
 import mockup2 from 'figma:asset/charte-mockup-2.webp';
 import mockup3 from 'figma:asset/charte-mockup-3.webp';
@@ -40,8 +35,6 @@ import restrictions from 'figma:asset/charte-restrictions.webp';
 import typoEcriture2 from 'figma:asset/charte-typo-ecriture-2.webp';
 import patternPrint from 'figma:asset/charte-pattern-print.webp';
 import spvieGroupe from 'figma:asset/charte-spvie-groupe.webp';
-import mockupPpt from 'figma:asset/charte-mockup-ppt.webp';
-import slidesPpt from 'figma:asset/charte-slides-ppt.webp';
 
 const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefault();
 
@@ -83,8 +76,8 @@ const SCENES: { id: string; extra?: 'palette' | 'specimen' | 'steps' | 'gains'; 
   { id: 'pattern', v: 5, imgs: [pattern, elements, patternPrint] },
   { id: 'marques', v: 2, imgs: [spvieGroupe, wealth, international, epargne] },
   { id: 'applications', v: 0, imgs: [mockup1, mockup2, mockup3, mockup4] },
-  { id: 'demarche', extra: 'steps', v: 4, imgs: [reseaux, socialLinkedin, papeterie, mockupPpt] },
-  { id: 'impact', extra: 'gains', v: 1, imgs: [carteVisite, socialFacebook, slidesPpt] },
+  { id: 'demarche', extra: 'steps', v: 4, imgs: [] },
+  { id: 'impact', extra: 'gains', v: 1, imgs: [] },
 ];
 
 const STRINGS = {
@@ -363,29 +356,31 @@ export default function CharteSpvieShowcase({ projet }: { projet: Projet }) {
         const sc = t.scenes[scene.id as keyof typeof t.scenes];
         return (
           <section className="scene" key={scene.id}>
-            <div className="scene-imgs">
-              {scene.imgs.map((src, ii) => {
-                const slot = V[scene.v][ii];
-                if (!slot) return null;
-                return (
-                  <button
-                    key={src + ii}
-                    type="button"
-                    className={`scene-img t-${TIER[slot[0]]}`}
-                    data-tier={TIER[slot[0]]}
-                    aria-label={t.zoom}
-                    style={{ left: `${slot[1]}%`, top: `${slot[2]}%`, width: `${slot[3]}vw` }}
-                    onMouseDown={preventFocusScroll}
-                    onClick={(e) => {
-                      e.currentTarget.blur();
-                      openZoom(src, e.currentTarget);
-                    }}
-                  >
-                    <img src={src} alt="" loading="lazy" decoding="async" />
-                  </button>
-                );
-              })}
-            </div>
+            {scene.imgs.length > 0 && (
+              <div className="scene-imgs">
+                {scene.imgs.map((src, ii) => {
+                  const slot = V[scene.v][ii];
+                  if (!slot) return null;
+                  return (
+                    <button
+                      key={src + ii}
+                      type="button"
+                      className={`scene-img t-${TIER[slot[0]]}`}
+                      data-tier={TIER[slot[0]]}
+                      aria-label={t.zoom}
+                      style={{ left: `${slot[1]}%`, top: `${slot[2]}%`, width: `${slot[3]}vw` }}
+                      onMouseDown={preventFocusScroll}
+                      onClick={(e) => {
+                        e.currentTarget.blur();
+                        openZoom(src, e.currentTarget);
+                      }}
+                    >
+                      <img src={src} alt="" loading="lazy" decoding="async" />
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             <div className="scene-text">
               <div className="st-in">
