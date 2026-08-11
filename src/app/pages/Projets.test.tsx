@@ -16,18 +16,7 @@ vi.mock('../components/ScrollRevealTitle', () => ({
   ScrollRevealTitle: ({ children }: PropsWithChildren) => <>{children}</>,
 }));
 
-vi.mock('../components/ScrollFadeIn', () => ({
-  ScrollFadeIn: ({
-    children,
-    disabled = false,
-  }: PropsWithChildren<{ disabled?: boolean }>) => (
-    <div data-testid="scroll-fade" data-disabled={String(disabled)}>
-      {children}
-    </div>
-  ),
-}));
-
-vi.mock('../components/common/NewProjectCard', async () => {
+vi.mock('../components/common/ProjetTile', async () => {
   const { forwardRef } = await import('react');
 
   const setRef = (
@@ -76,6 +65,7 @@ vi.mock('motion/react', async () => {
   const { forwardRef } = await import('react');
 
   return {
+    AnimatePresence: ({ children }: PropsWithChildren) => <>{children}</>,
     motion: {
       div: forwardRef<
         HTMLDivElement,
@@ -241,6 +231,16 @@ function renderReturn(snapshotLink = existingProjectLink) {
   );
 }
 
+function renderProjets() {
+  return render(
+    <MemoryRouter initialEntries={['/projets']}>
+      <PageTransitionProvider>
+        <Projets />
+      </PageTransitionProvider>
+    </MemoryRouter>,
+  );
+}
+
 function seedAndCompleteForward() {
   fireEvent.click(screen.getByRole('button', { name: 'Seed forward' }));
   expect(screen.getByTestId('transition-state')).toHaveTextContent(
@@ -285,12 +285,7 @@ describe('Projets return transition', () => {
       expect(screen.getByTestId('transition-rect')).toHaveTextContent(
         '20,160,350,250',
       );
-      expect(screen.getAllByTestId('scroll-fade')).toHaveLength(
-        tousProjets.length,
-      );
-      screen.getAllByTestId('scroll-fade').forEach((wrapper) => {
-        expect(wrapper).toHaveAttribute('data-disabled', 'true');
-      });
+      expect(screen.getAllByRole('img')).toHaveLength(tousProjets.length);
     },
   );
 
@@ -347,11 +342,11 @@ describe('Projets return transition', () => {
       'idle:none:none',
     );
     expect(screen.getByRole('heading', { name: 'Projets' })).toBeVisible();
-    expect(screen.getByTestId('motion-root')).toHaveAttribute(
+    expect(screen.getAllByTestId('motion-root')[0]).toHaveAttribute(
       'data-animate',
       JSON.stringify({ opacity: 1 }),
     );
-    expect(screen.getByTestId('motion-root')).toHaveAttribute(
+    expect(screen.getAllByTestId('motion-root')[0]).toHaveAttribute(
       'data-transition',
       JSON.stringify({ duration: 0.2 }),
     );
@@ -371,11 +366,11 @@ describe('Projets return transition', () => {
     expect(screen.getByTestId('transition-state')).toHaveTextContent(
       'idle:none:none',
     );
-    expect(screen.getByTestId('motion-root')).toHaveAttribute(
+    expect(screen.getAllByTestId('motion-root')[0]).toHaveAttribute(
       'data-initial',
       'false',
     );
-    expect(screen.getByTestId('motion-root')).toHaveAttribute(
+    expect(screen.getAllByTestId('motion-root')[0]).toHaveAttribute(
       'data-transition',
       JSON.stringify({ duration: 0 }),
     );
@@ -402,5 +397,16 @@ describe('Projets return transition', () => {
     expect(screen.getByTestId('transition-state')).toHaveTextContent(
       `active:forward:${tousProjets[1].link}`,
     );
+  });
+
+  it('filtre la mosaïque par discipline', () => {
+    renderProjets();
+    const mobileCount = tousProjets.filter(
+      (p) => p.category === 'mobile',
+    ).length;
+    fireEvent.click(screen.getByRole('tab', { name: 'Mobile' }));
+    expect(screen.getAllByRole('img')).toHaveLength(mobileCount);
+    fireEvent.click(screen.getByRole('tab', { name: 'Tous' }));
+    expect(screen.getAllByRole('img')).toHaveLength(tousProjets.length);
   });
 });
