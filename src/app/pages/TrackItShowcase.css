@@ -34,7 +34,7 @@
 .trackit-showcase .num { font-variant-numeric: tabular-nums; }
 
 /* ---- HERO (cible du morph) ---- */
-.trackit-showcase .m-hero { position: relative; width: 100vw; height: 100vh; display: flex; align-items: flex-end; overflow: hidden; }
+.trackit-showcase .m-hero { position: relative; width: 100vw; height: 100dvh; display: flex; align-items: flex-end; overflow: hidden; }
 .trackit-showcase .m-hero .cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .trackit-showcase .m-hero .scrim { position: absolute; inset: 0; background: linear-gradient(to top, var(--tk-bg) 1%, rgba(10,10,12,0.5) 38%, rgba(10,10,12,0.14) 68%, transparent); }
 .trackit-showcase .m-hero .in { position: relative; z-index: 2; padding-bottom: clamp(40px, 7vw, 84px); color: #fff; animation: tk-fade 0.7s cubic-bezier(.16,1,.3,1) both; }
