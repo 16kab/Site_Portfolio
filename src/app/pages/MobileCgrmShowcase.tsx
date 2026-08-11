@@ -233,7 +233,9 @@ export default function MobileCgrmShowcase({ projet }: { projet: Projet }) {
             <div className="cm-controls">
               {isMobile && (
                 <button type="button" className="cm-arrow" onClick={() => go(-1)} disabled={active === 0} aria-label={t.prev}>
-                  ‹
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M15 18 9 12l6-6" />
+                  </svg>
                 </button>
               )}
               <div className="dots">
@@ -253,7 +255,9 @@ export default function MobileCgrmShowcase({ projet }: { projet: Projet }) {
               </div>
               {isMobile && (
                 <button type="button" className="cm-arrow" onClick={() => go(1)} disabled={active === total - 1} aria-label={t.next}>
-                  ›
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="m9 6 6 6-6 6" />
+                  </svg>
                 </button>
               )}
             </div>
