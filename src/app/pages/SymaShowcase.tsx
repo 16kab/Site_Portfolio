@@ -329,6 +329,19 @@ function Story({
               <span className="story-num num">{String(i + 1).padStart(2, '0')}</span>
               <h3 className="story-h title">{s.t}</h3>
               <p className="story-b">{s.b}</p>
+              {/* Mobile uniquement : l'image du step, en flux (le récit collant
+                  desktop reste géré par .story-media). */}
+              <button
+                type="button"
+                className="story-inline"
+                aria-label={enlarge(s.t)}
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  setLb(i);
+                }}
+              >
+                <img src={STORY_IMAGES[i]} alt={s.t} loading="lazy" decoding="async" />
+              </button>
             </div>
           ))}
         </div>
