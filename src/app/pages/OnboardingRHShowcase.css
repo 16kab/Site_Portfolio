@@ -191,11 +191,16 @@
 /* Repli (mobile / reduce) : liste verticale, une mini-capture par étape. */
 .onboarding-showcase .story-flat .story-pin { position: static; }
 .onboarding-showcase .story-flat .story-pin .lead { font-size: clamp(1.7rem, 4.2vw, 3.2rem); }
-.onboarding-showcase .story-flat .story-steps { grid-template-columns: 1fr; gap: 22px; }
+/* Timeline verticale : une barre continue à gauche qui traverse tous les
+   points, un point (dot) par étape, textes + mini-capture à côté. */
+.onboarding-showcase .story-flat .story-steps { display: flex; flex-direction: column; gap: 30px; position: relative; padding-left: 42px; }
+.onboarding-showcase .story-flat .story-steps::before { content: ''; position: absolute; left: 15px; top: 7px; bottom: 7px; width: 2px; border-radius: 2px; background: var(--portfolio-card-border); }
 .onboarding-showcase .story-flat .story-bar { display: none; }
 .onboarding-showcase .story-flat .story-shot { display: none; }
-.onboarding-showcase .story-flat .story-step { opacity: 1; }
-.onboarding-showcase .story-flat .story-mini { display: block; margin-top: 12px; border-radius: 10px; overflow: hidden; border: 1px solid var(--portfolio-card-border); }
+.onboarding-showcase .story-flat .story-step { position: relative; opacity: 1; }
+.onboarding-showcase .story-flat .story-step::before { content: ''; position: absolute; left: -34px; top: 3px; width: 15px; height: 15px; border-radius: 50%; background: var(--onboarding-accent); box-shadow: 0 0 0 4px var(--portfolio-card-bg); }
+.onboarding-showcase .story-flat .story-num { margin-bottom: 4px; }
+.onboarding-showcase .story-flat .story-mini { display: block; margin-top: 14px; border-radius: 10px; overflow: hidden; border: 1px solid var(--portfolio-card-border); }
 .onboarding-showcase .story-flat .story-mini img { display: block; width: 100%; }
 
 /* ---- Reveal ---- */
