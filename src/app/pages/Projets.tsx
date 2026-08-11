@@ -156,7 +156,7 @@ export default function Projets() {
           <FilterBar value={filter} onChange={setFilter} />
 
           {/* Mosaïque des projets */}
-          <motion.div layout className="projets-mosaic">
+          <motion.div layout={!reduceReturnMotion} className="projets-mosaic">
             <AnimatePresence mode="popLayout">
               {visibles.map((projet, index) => (
                 <motion.div

@@ -127,8 +127,10 @@ const ProjetTile = forwardRef<HTMLImageElement, ProjetTileProps>(
             preloadProjetDetail();
           }}
           onBlur={() => setIsFocused(false)}
-          className={`project-tile tile-${tileSize} group`}
+          className={`project-tile tile-${tileSize}`}
         >
+          {/* imageContainerRef mesure le cadre image pour le morph d'ouverture ;
+              l'<img> porte le ref externe pour le reverse-morph au retour. */}
           <div ref={imageContainerRef} className="tile-media">
             {image && (
               <img
