@@ -31,12 +31,11 @@ const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefau
 
 const STRINGS = {
   fr: {
-    study: 'Étude de cas',
     heroEyebrow: ['Identité de marque', 'Site web', '2024'],
     thesisPre: 'Une marque chaleureuse ',
     thesisEm: 'pour accompagner les femmes.',
-    metaLabels: ['Rôle', 'Client', 'Nature', 'Année'],
-    metaValues: ['UX/UI & Direction artistique', 'Agir Pour Toutes', 'Marque + plateforme', '2024'],
+    metaLabels: ['Rôle', 'Client', 'Nature', 'Année', 'Outils'],
+    metaValues: ['UX/UI & Direction artistique', 'Agir Pour Toutes', 'Marque + plateforme', '2024', 'Illustrator · Figma'],
     visit: 'Voir le site',
     cue: '↓ étude de cas',
     // 01
@@ -108,12 +107,11 @@ const STRINGS = {
     ],
   },
   en: {
-    study: 'Case study',
     heroEyebrow: ['Brand identity', 'Website', '2024'],
     thesisPre: 'A warm brand ',
     thesisEm: 'to support women.',
-    metaLabels: ['Role', 'Client', 'Type', 'Year'],
-    metaValues: ['UX/UI & Art direction', 'Agir Pour Toutes', 'Brand + platform', '2024'],
+    metaLabels: ['Role', 'Client', 'Type', 'Year', 'Tools'],
+    metaValues: ['UX/UI & Art direction', 'Agir Pour Toutes', 'Brand + platform', '2024', 'Illustrator · Figma'],
     visit: 'Visit the site',
     cue: '↓ case study',
     s1eyebrow: '01 — Context',
@@ -395,7 +393,6 @@ export default function AgptShowcase({ projet }: { projet: Projet }) {
       {/* BARRE MÉTA */}
       <div className="wrap">
         <div className="metabar reveal">
-          <span className="metabar-study label">{t.study}</span>
           <dl className="metabar-meta">
             {t.metaLabels.map((l, i) => (
               <div key={l}>

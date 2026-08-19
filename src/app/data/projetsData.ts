@@ -416,7 +416,7 @@ export const projetsData: Projet[] = [
       "Agir Pour Toutes est une initiative dédiée à l'accompagnement des femmes à différentes étapes de leur vie : grossesse, naissance, post-partum, bien-être et développement personnel.\n\nLes fondatrices souhaitaient créer un site permettant de présenter leur mission et de proposer des clubs thématiques composés de vidéos et de contenus exclusifs.\n\nLe projet partait d'une feuille blanche : aucune identité visuelle, aucun site et aucun univers graphique structuré. L'enjeu était donc de créer une marque cohérente capable d'incarner un univers à la fois chaleureux, premium et accessible.",
     problematique:
       "Le projet nécessitait de construire une marque complète tout en trouvant le bon équilibre entre :\n\n• Dimension émotionnelle liée aux thématiques féminines\n• Crédibilité et sérieux d'une plateforme d'accompagnement\n• Univers visuel différenciant sans tomber dans les clichés de la maternité\n\nIl fallait également concevoir un site capable de présenter clairement les contenus et de permettre la vente des clubs.",
-    role: "UX/UI Designer et responsable de la direction artistique du projet.\n\nJ'ai piloté l'ensemble de la dimension design et j'étais l'interlocuteur principal des fondatrices pour traduire leur vision en univers graphique cohérent.",
+    role: "UX/UI Designer et directeur artistique du projet — seul sur toute la partie design. J'ai piloté l'ensemble du design et j'étais l'interlocuteur principal des fondatrices (les clientes) pour traduire leur vision en un univers graphique cohérent.",
     interventions: [
       "Création de l'identité visuelle",
       'Définition de la direction artistique',
