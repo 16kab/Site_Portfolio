@@ -34,7 +34,6 @@ type Lead = { pre: string; k: string; post: string };
 
 const STRINGS = {
   fr: {
-    study: 'Étude de cas',
     heroEyebrow: ['Application mobile', 'Finances personnelles', '2026'],
     thesisPre: 'Reprendre la main sur son argent — ',
     thesisEm: 'sans y penser.',
@@ -68,7 +67,6 @@ const STRINGS = {
     ],
   },
   en: {
-    study: 'Case study',
     heroEyebrow: ['Mobile app', 'Personal finance', '2026'],
     thesisPre: 'Take back control of your money — ',
     thesisEm: 'without thinking about it.',
@@ -427,7 +425,6 @@ export default function MauniShowcase({ projet }: { projet: Projet }) {
       {/* BARRE MÉTA */}
       <div className="wrap">
         <div className="metabar reveal">
-          <span className="metabar-study label">{t.study}</span>
           <dl className="metabar-meta">
             {t.metaLabels.map((l, i) => (
               <div key={l}>
