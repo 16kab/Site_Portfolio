@@ -102,47 +102,50 @@ export const projetsDataEn: Record<string, ProjetTranslation> = {
   },
   syma: {
     title: 'SYMA',
-    subtitle: '[Placeholder] SYMA project subtitle, to be written later.',
+    subtitle: 'Choosing a brand identity, together.',
     description:
-      '[Placeholder] Short description of the SYMA project shown on the card. To be replaced with the final content.',
-    tags: ['UX/UI Design', 'Product Design', 'To be completed'],
+      'Brand identity (logo, iconography, typography) for SYMA, a communications agency just getting started — plus a custom web tool to compare the directions and decide together.',
+    tags: ['Art Direction', 'Brand Identity', 'Development'],
     brand: 'SYMA',
-    natureProduit: 'Website',
-    utilisateurPrincipal: '[Placeholder]',
-    objectifProduit: '[Placeholder] Product goal to be specified.',
+    natureProduit: 'Brand identity & decision site',
+    utilisateurPrincipal: 'A communications agency just getting started (2 founders)',
+    objectifProduit:
+      'Create SYMA’s identity and a tool to choose it together, on common ground.',
     contexte:
-      '[Placeholder] Context paragraph describing the starting point of the project.\n\nSecond context paragraph to be completed with the actual project information.',
+      'SYMA, a communications agency in the making (two founders), needed an identity — and a way to choose it together.\n\nPicking a logo over emails and screenshots scatters the decision. I gathered the directions in one place: compare, rank, decide.',
     problematique:
-      '[Placeholder] Description of the main problem.\n\nKey points:\n\n• First point to complete\n• Second point to complete\n• Third point to complete',
-    role: '[Placeholder] Description of the role held on the project.',
+      'Deciding on an identity together, without getting lost.\n\nKey points:\n\n• Compare directions side by side, not in an email thread\n• Gather clear feedback (accept, reject, request)\n• Decide on common ground',
+    role: 'Sole hand on it: art direction (logo, iconography, typography — palette provided) then building a custom site to compare, comment on and validate the directions.',
     interventions: [
-      '[Placeholder] First contribution',
-      '[Placeholder] Second contribution',
-      '[Placeholder] Third contribution',
-      '[Placeholder] Fourth contribution',
+      'Art direction (logo, iconography, typography)',
+      'Design of the directions comparator',
+      'UI and live logo recoloring (SVG)',
+      'Development and deployment of the site',
     ],
     demarche: [
       {
-        title: '[Placeholder] Step 1',
-        content: '[Placeholder] Description of the first step of the approach.',
-      },
-      {
-        title: '[Placeholder] Step 2',
+        title: 'Art direction',
         content:
-          '[Placeholder] Description of the second step of the approach.',
+          'Create the logo, iconography and type system (palette provided by the agency).',
       },
       {
-        title: '[Placeholder] Step 3',
-        content: '[Placeholder] Description of the third step of the approach.',
-      },
-      {
-        title: '[Placeholder] Step 4',
+        title: 'The comparator',
         content:
-          '[Placeholder] Description of the fourth step of the approach.',
+          'Design a tool that lines the directions up side by side, recolorable live.',
+      },
+      {
+        title: 'The dialogue',
+        content:
+          'Let them accept, reject with feedback, or request a variant — all in one place.',
+      },
+      {
+        title: 'Development',
+        content:
+          'Code and deploy the site on Claude Code, with real SVGs recolored live.',
       },
     ],
     impact:
-      '[Placeholder] Description of the project impact.\n\n• First result to complete\n• Second result to complete\n• Third result to complete',
+      'A real client project delivered: identity + a tool to choose it.\n\n• A complete identity (logo, iconography, type) for an agency just getting started\n• A custom site to compare and decide together\n• Designed and built solo, online',
   },
   trackit: {
     title: 'TrackIt',

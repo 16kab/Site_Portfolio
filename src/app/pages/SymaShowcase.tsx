@@ -55,12 +55,11 @@ const STORY_IMAGES = [accueil, iconographie, typographies, valider];
 
 const STRINGS = {
   fr: {
-    study: 'Étude de cas',
-    heroEyebrow: ['Site web', 'Studio de marque', '2025'],
+    heroEyebrow: ['Site web', 'Studio de marque', '2026'],
     thesisPre: 'Choisir une identité de marque, ',
     thesisEm: 'à plusieurs.',
-    metaLabels: ['Rôle', 'Nature', 'Portée', 'Année'],
-    metaValues: ['Design & Front', 'Site web', 'Outil de décision', '2025'],
+    metaLabels: ['Rôle', 'Nature', 'Portée', 'Année', 'Outils'],
+    metaValues: ['Identité de marque & dev', 'Site web', 'Outil de décision', '2026', 'Illustrator · Figma · Claude Code'],
     visit: 'Visiter le site',
     cue: '↓ étude de cas',
     // Comparateur
@@ -91,17 +90,16 @@ const STRINGS = {
       },
       {
         t: 'Valider, ensemble',
-        b: 'Le choix acté, partagé, sans ambiguïté. Fini les fils de mails : chacun compare et vote, le studio tranche sur une base commune. [Impact réel à affiner.]',
+        b: 'Le choix acté, partagé, sans ambiguïté. Fini les fils de mails : les fondatrices comparent, votent et tranchent sur une base commune — livré à une agence de com qui se lance.',
       },
     ],
   },
   en: {
-    study: 'Case study',
-    heroEyebrow: ['Website', 'Brand studio', '2025'],
+    heroEyebrow: ['Website', 'Brand studio', '2026'],
     thesisPre: 'Choosing a brand identity, ',
     thesisEm: 'together.',
-    metaLabels: ['Role', 'Type', 'Scope', 'Year'],
-    metaValues: ['Design & Front-end', 'Website', 'Decision tool', '2025'],
+    metaLabels: ['Role', 'Type', 'Scope', 'Year', 'Tools'],
+    metaValues: ['Brand identity & dev', 'Website', 'Decision tool', '2026', 'Illustrator · Figma · Claude Code'],
     visit: 'Visit the site',
     cue: '↓ case study',
     cmpEyebrow: 'The comparator',
@@ -130,7 +128,7 @@ const STRINGS = {
       },
       {
         t: 'Validate, together',
-        b: 'The choice locked in, shared, unambiguous. No more email threads: everyone compares and votes, the studio decides on common ground. [Real impact to refine.]',
+        b: 'The choice locked in, shared, unambiguous. No more email threads: the founders compare, vote and decide on common ground — delivered to a communications agency just getting started.',
       },
     ],
   },
@@ -500,7 +498,6 @@ export default function SymaShowcase({ projet }: { projet: Projet }) {
       {/* BARRE MÉTA */}
       <div className="wrap">
         <div className="metabar reveal">
-          <span className="metabar-study label">{t.study}</span>
           <dl className="metabar-meta">
             {t.metaLabels.map((l, i) => (
               <div key={l}>

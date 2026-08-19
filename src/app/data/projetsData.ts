@@ -167,51 +167,51 @@ export const projetsData: Projet[] = [
     category: 'branding',
     tileSize: 'm',
     title: 'SYMA',
-    subtitle:
-      '[Texte provisoire] Sous-titre du projet SYMA, à rédiger ultérieurement.',
-    year: '2025',
+    subtitle: 'Choisir une identité de marque, à plusieurs.',
+    year: '2026',
     description:
-      '[Texte provisoire] Courte description du projet SYMA affichée sur la carte. À remplacer par le contenu final.',
-    tags: ['UX/UI Design', 'Product Design', 'À compléter'],
+      "Identité de marque (logo, iconographie, typographie) pour SYMA, agence de communication qui se lance — et un outil web sur-mesure pour comparer les directions et trancher à plusieurs.",
+    tags: ['Direction artistique', 'Identité de marque', 'Développement'],
     brand: 'SYMA',
-    natureProduit: 'Site web',
-    utilisateurPrincipal: '[Texte provisoire]',
-    objectifProduit: '[Texte provisoire] Objectif du produit à préciser.',
+    natureProduit: 'Identité de marque & site de décision',
+    utilisateurPrincipal: 'Une agence de communication qui se lance (2 fondatrices)',
+    objectifProduit:
+      "Créer l'identité de SYMA et un outil pour la choisir à plusieurs, sur une base commune.",
     contexte:
-      '[Texte provisoire] Paragraphe de contexte décrivant le point de départ du projet.\n\nSecond paragraphe de contexte à compléter avec les informations réelles du projet.',
+      "SYMA, agence de communication en création (deux fondatrices), avait besoin d'une identité — et d'une façon de la choisir ensemble.\n\nChoisir un logo par mails et captures éparpille la décision. J'ai réuni les directions au même endroit : comparer, classer, trancher.",
     problematique:
-      '[Texte provisoire] Description de la problématique principale.\n\nLes points clés :\n\n• Premier point à compléter\n• Deuxième point à compléter\n• Troisième point à compléter',
-    role: '[Texte provisoire] Description du rôle occupé sur le projet.',
+      "Décider d'une identité à plusieurs, sans se perdre.\n\nLes points clés :\n\n• Comparer les directions côte à côte, pas dans un fil de mails\n• Recueillir des retours clairs (accepter, refuser, demander)\n• Trancher sur une base commune",
+    role: "Seul aux commandes : direction artistique (logo, iconographie, typographie — palette fournie) puis développement d'un site sur-mesure pour comparer, commenter et valider les directions.",
     interventions: [
-      '[Provisoire] Première intervention',
-      '[Provisoire] Deuxième intervention',
-      '[Provisoire] Troisième intervention',
-      '[Provisoire] Quatrième intervention',
+      'Direction artistique (logo, iconographie, typographie)',
+      'Conception du comparateur de directions',
+      'UI et recoloration live des logos (SVG)',
+      'Développement et déploiement du site',
     ],
     demarche: [
       {
-        title: '[Provisoire] Étape 1',
+        title: 'Direction artistique',
         content:
-          '[Texte provisoire] Description de la première étape de la démarche.',
+          "Créer le logo, l'iconographie et le système typographique (palette fournie par l'agence).",
       },
       {
-        title: '[Provisoire] Étape 2',
+        title: 'Le comparateur',
         content:
-          '[Texte provisoire] Description de la deuxième étape de la démarche.',
+          'Concevoir un outil qui aligne les directions côte à côte, recolorables en direct.',
       },
       {
-        title: '[Provisoire] Étape 3',
+        title: 'Le dialogue',
         content:
-          '[Texte provisoire] Description de la troisième étape de la démarche.',
+          "Permettre d'accepter, refuser avec un retour ou demander une variante — au même endroit.",
       },
       {
-        title: '[Provisoire] Étape 4',
+        title: 'Développement',
         content:
-          '[Texte provisoire] Description de la quatrième étape de la démarche.',
+          'Coder et déployer le site sur Claude Code, avec de vrais SVG recolorés en direct.',
       },
     ],
     impact:
-      "[Texte provisoire] Description de l'impact du projet.\n\n• Premier résultat à compléter\n• Deuxième résultat à compléter\n• Troisième résultat à compléter",
+      "Un vrai projet client livré : identité + outil pour la choisir.\n\n• Identité complète (logo, iconographie, typo) pour une agence qui se lance\n• Un site sur-mesure pour comparer et trancher à plusieurs\n• Conçu et développé en solo, en ligne",
     image: symaHeroImage,
     gallery: [symaScreensImage],
   },
