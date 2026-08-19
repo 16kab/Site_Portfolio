@@ -37,15 +37,14 @@ type Cap = { b: string; r: string };
 
 const STRINGS = {
   fr: {
-    study: 'Étude de cas',
-    heroEyebrow: ['Plateforme web interne', 'SPVIE', '2025'],
+    heroEyebrow: ['Plateforme web interne', 'SPVIE', '2026'],
     thesisPre: "Faire d'un premier jour ",
     thesisEm: 'une vraie rencontre.',
     railSub:
       "Plateforme d'onboarding interne — accueillir les nouveaux, piloter côté RH.",
-    metaLabels: ['Rôle', 'Contexte', 'Portée', 'Année'],
-    metaValues: ['Product / UX Design', 'SPVIE · interne', 'Deux espaces', '2025'],
-    nav: ['Contexte', 'Rôle', 'Arrivant', 'RH', 'Impact'],
+    metaLabels: ['Rôle', 'Contexte', 'Portée', 'Année', 'Outils'],
+    metaValues: ['Design produit & dev', 'SPVIE · interne', 'Deux espaces', '2026', 'Claude Code'],
+    nav: ['Contexte', 'Rôle', 'Arrivant', 'RH', "Aujourd'hui"],
     cue: '↓ étude de cas',
     visit: 'Visiter le site',
     s1lead: {
@@ -56,18 +55,18 @@ const STRINGS = {
     s1note:
       "Pas de vue d'ensemble côté RH, pas de repères côté arrivant : le premier jour dépendait de qui s'en occupait.",
     s2lead: {
-      pre: 'Product designer sur le projet, ',
-      k: "du cadrage à l'interface.",
+      pre: 'Seul aux commandes, ',
+      k: 'du cadrage au produit déployé.',
       post: '',
     } as Lead,
     s2note:
-      "Recherche des deux besoins (RH et arrivant), architecture des deux espaces, UI et système de composants — en lien direct avec le développement.",
+      "Recherche du besoin avec les RH, architecture des deux espaces, UI et système de composants — puis le développement : base de données, déploiement, et une première brique de connexion à l'environnement SPVIE.",
     interventionsLabel: 'Interventions',
     interventions: [
-      'Recherche & entretiens (RH, managers, arrivants)',
+      'Cadrage du besoin avec les RH',
       'Architecture des deux espaces et du parcours',
       'UI, système de composants, prototypes',
-      "Suivi de l'intégration avec le développement",
+      'Développement (base de données, déploiement, SSO amorcé)',
     ],
     timelineTitle: 'Le parcours, de bout en bout',
     timeline: [
@@ -107,18 +106,17 @@ const STRINGS = {
       post: '.',
     } as Lead,
     s5note:
-      "Côté RH, une vue claire et zéro étape oubliée. Côté arrivant, de l'autonomie et le sentiment d'être attendu. [Impact réel et chiffres à affiner.]",
+      "Présentée aux RH SPVIE, la plateforme les a convaincus : une solution interne prête à être déclenchée dès que le recrutement repart. Le projet est complet et déployé — il n'attend que le besoin.",
   },
   en: {
-    study: 'Case study',
-    heroEyebrow: ['Internal web platform', 'SPVIE', '2025'],
+    heroEyebrow: ['Internal web platform', 'SPVIE', '2026'],
     thesisPre: 'Turning a first day into ',
     thesisEm: 'a real welcome.',
     railSub:
       'Internal onboarding platform — welcome newcomers, steer it from HR.',
-    metaLabels: ['Role', 'Context', 'Scope', 'Year'],
-    metaValues: ['Product / UX Design', 'SPVIE · internal', 'Two spaces', '2025'],
-    nav: ['Context', 'Role', 'Newcomer', 'HR', 'Impact'],
+    metaLabels: ['Role', 'Context', 'Scope', 'Year', 'Tools'],
+    metaValues: ['Product design & dev', 'SPVIE · internal', 'Two spaces', '2026', 'Claude Code'],
+    nav: ['Context', 'Role', 'Newcomer', 'HR', 'Now'],
     cue: '↓ case study',
     visit: 'Visit the site',
     s1lead: {
@@ -129,18 +127,18 @@ const STRINGS = {
     s1note:
       'No overview for HR, no bearings for the newcomer: day one depended on whoever handled it.',
     s2lead: {
-      pre: 'Product designer on the project, ',
-      k: 'from framing to interface.',
+      pre: 'Solo, ',
+      k: 'from framing to deployed product.',
       post: '',
     } as Lead,
     s2note:
-      'Research on both needs (HR and newcomer), architecture of the two spaces, UI and component system — in direct contact with development.',
+      'Needs framing with HR, architecture of the two spaces, UI and component system — then the development: database, deployment, and a first brick connecting to the SPVIE environment.',
     interventionsLabel: 'Contributions',
     interventions: [
-      'Research & interviews (HR, managers, newcomers)',
+      'Needs framing with HR',
       'Architecture of the two spaces and the journey',
       'UI, component system, prototypes',
-      'Onboarding follow-up with development',
+      'Development (database, deployment, SSO started)',
     ],
     timelineTitle: 'The journey, end to end',
     timeline: [
@@ -180,7 +178,7 @@ const STRINGS = {
       post: '.',
     } as Lead,
     s5note:
-      'For HR, a clear view and zero forgotten step. For the newcomer, autonomy and the feeling of being expected. [Real impact and figures to refine.]',
+      'Presented to SPVIE HR, the platform won them over: an internal solution ready to trigger as soon as hiring picks up again. The project is complete and deployed — it only awaits the need.',
   },
 };
 
@@ -528,7 +526,6 @@ export default function OnboardingRHShowcase({ projet }: { projet: Projet }) {
       {/* BARRE MÉTA */}
       <div className="wrap">
         <div className="metabar reveal">
-          <span className="metabar-study label">{t.study}</span>
           <dl className="metabar-meta">
             {t.metaLabels.map((l, i) => (
               <div key={l}>
