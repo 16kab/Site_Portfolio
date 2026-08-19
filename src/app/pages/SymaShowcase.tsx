@@ -55,11 +55,11 @@ const STORY_IMAGES = [accueil, iconographie, typographies, valider];
 
 const STRINGS = {
   fr: {
-    heroEyebrow: ['Site web', 'Studio de marque', '2026'],
-    thesisPre: 'Choisir une identité de marque, ',
-    thesisEm: 'à plusieurs.',
+    heroEyebrow: ['Site web', 'Identité de marque', '2026'],
+    thesisPre: 'Donner une identité à ',
+    thesisEm: 'une agence qui se lance.',
     metaLabels: ['Rôle', 'Nature', 'Portée', 'Année', 'Outils'],
-    metaValues: ['Identité de marque & dev', 'Site web', 'Outil de décision', '2026', 'Illustrator · Figma · Claude Code'],
+    metaValues: ['Identité de marque & dev', 'Site web', 'Identité + comparateur', '2026', 'Illustrator · Figma · Claude Code'],
     visit: 'Visiter le site',
     cue: '↓ étude de cas',
     // Comparateur
@@ -78,7 +78,7 @@ const STRINGS = {
     steps: [
       {
         t: 'Le contexte',
-        b: 'Choisir un logo par mails et captures, c’est un choix qui s’éparpille. SYMA rassemble les directions au même endroit : on compare, on classe, on tranche — sans perdre le fil des avis.',
+        b: 'Choisir un logo par mails et captures, c’est un choix qui s’éparpille. En plus de l’identité, j’ai construit un comparateur pour fluidifier nos échanges : aligner les directions, comparer, commenter — sans perdre le fil des avis.',
       },
       {
         t: 'L’iconographie',
@@ -95,11 +95,11 @@ const STRINGS = {
     ],
   },
   en: {
-    heroEyebrow: ['Website', 'Brand studio', '2026'],
-    thesisPre: 'Choosing a brand identity, ',
-    thesisEm: 'together.',
+    heroEyebrow: ['Website', 'Brand identity', '2026'],
+    thesisPre: 'Giving an identity to ',
+    thesisEm: 'an agency just getting started.',
     metaLabels: ['Role', 'Type', 'Scope', 'Year', 'Tools'],
-    metaValues: ['Brand identity & dev', 'Website', 'Decision tool', '2026', 'Illustrator · Figma · Claude Code'],
+    metaValues: ['Brand identity & dev', 'Website', 'Identity + comparator', '2026', 'Illustrator · Figma · Claude Code'],
     visit: 'Visit the site',
     cue: '↓ case study',
     cmpEyebrow: 'The comparator',
@@ -116,7 +116,7 @@ const STRINGS = {
     steps: [
       {
         t: 'The context',
-        b: 'Picking a logo over emails and screenshots is a choice that scatters. SYMA gathers the directions in one place: you compare, rank, decide — without losing the thread of opinions.',
+        b: 'Picking a logo over emails and screenshots is a choice that scatters. On top of the identity, I built a comparator to smooth our back-and-forth: line up the directions, compare, comment — without losing the thread of opinions.',
       },
       {
         t: 'Iconography',

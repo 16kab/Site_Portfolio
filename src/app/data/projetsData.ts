@@ -167,7 +167,7 @@ export const projetsData: Projet[] = [
     category: 'branding',
     tileSize: 'm',
     title: 'SYMA',
-    subtitle: 'Choisir une identité de marque, à plusieurs.',
+    subtitle: 'Donner une identité à une agence qui se lance.',
     year: '2026',
     description:
       "Identité de marque (logo, iconographie, typographie) pour SYMA, agence de communication qui se lance — et un outil web sur-mesure pour comparer les directions et trancher à plusieurs.",
@@ -178,7 +178,7 @@ export const projetsData: Projet[] = [
     objectifProduit:
       "Créer l'identité de SYMA et un outil pour la choisir à plusieurs, sur une base commune.",
     contexte:
-      "SYMA, agence de communication en création (deux fondatrices), avait besoin d'une identité — et d'une façon de la choisir ensemble.\n\nChoisir un logo par mails et captures éparpille la décision. J'ai réuni les directions au même endroit : comparer, classer, trancher.",
+      "SYMA, agence de communication en création (deux fondatrices), avait besoin d'une identité — et d'une façon de la choisir ensemble.\n\nChoisir un logo par mails et captures éparpille la décision. En plus de l'identité, j'ai construit un comparateur pour fluidifier les échanges : comparer, commenter, trancher.",
     problematique:
       "Décider d'une identité à plusieurs, sans se perdre.\n\nLes points clés :\n\n• Comparer les directions côte à côte, pas dans un fil de mails\n• Recueillir des retours clairs (accepter, refuser, demander)\n• Trancher sur une base commune",
     role: "Seul aux commandes : direction artistique (logo, iconographie, typographie — palette fournie) puis développement d'un site sur-mesure pour comparer, commenter et valider les directions.",
