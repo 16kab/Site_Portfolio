@@ -64,7 +64,6 @@
 
 /* ---- BARRE MÉTA ---- */
 .refonte-showcase .metabar { display: flex; align-items: center; gap: clamp(20px, 4vw, 56px); flex-wrap: wrap; padding: clamp(24px, 4vw, 40px) 0; border-bottom: 1px solid var(--spv-line); }
-.refonte-showcase .metabar-study { flex: none; }
 .refonte-showcase .metabar-meta { display: flex; gap: clamp(18px, 3vw, 44px); flex-wrap: wrap; margin: 0; flex: 1 1 auto; }
 .refonte-showcase .metabar-meta dd { margin: 4px 0 0; font-family: var(--body-font); font-weight: 600; font-size: 0.95rem; color: var(--spv-ink); }
 
