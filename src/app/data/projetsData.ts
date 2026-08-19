@@ -360,7 +360,7 @@ export const projetsData: Projet[] = [
       "BigBroker dispose d'équipes téléphoniques chargées de contacter et convertir des prospects issus de différents canaux d'acquisition.\n\nAvant ce projet, aucun outil centralisé ne permettait de gérer efficacement ces leads ni de suivre l'activité des conseillers.\n\nL'objectif du projet était de concevoir un CRM interne entièrement développé en interne, permettant aux équipes commerciales de gérer leur portefeuille de clients, suivre leurs leads, piloter leurs performances et centraliser l'ensemble des informations clients.",
     problematique:
       "Les équipes commerciales devaient gérer un volume croissant de leads provenant de différentes sources.\n\nSans outil dédié, plusieurs difficultés apparaissaient :\n\n• Absence de centralisation des données clients\n• Difficulté à suivre les performances des conseillers\n• Gestion complexe du dispatch des leads\n• Manque de visibilité sur les leads non traités\n\nL'enjeu était de concevoir un outil clair, rapide à utiliser et adapté aux contraintes métier des équipes d'appel.",
-    role: "UX/UI Designer au sein de l'équipe produit.\n\nJ'ai participé activement aux ateliers métiers afin de comprendre les besoins des équipes commerciales et traduire ces besoins en interfaces exploitables.",
+    role: "UX/UI Designer — seul designer sur le CRM, au sein de l'équipe produit. J'ai participé activement aux ateliers métiers afin de comprendre les besoins des équipes commerciales et traduire ces besoins en interfaces exploitables.",
     interventions: [
       'Structurer la hiérarchie des données',
       'Définir les statuts et transitions des leads',
