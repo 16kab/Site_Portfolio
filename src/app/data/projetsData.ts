@@ -61,51 +61,51 @@ export const projetsData: Projet[] = [
     category: 'mobile',
     tileSize: 'm',
     title: 'Mauni',
-    subtitle:
-      '[Texte provisoire] Sous-titre du projet Mauni, à rédiger ultérieurement.',
-    year: '2025',
+    subtitle: 'Reprendre la main sur son argent, sans y penser.',
+    year: '2026',
     description:
-      '[Texte provisoire] Courte description du projet Mauni affichée sur la carte. À remplacer par le contenu final.',
-    tags: ['UX/UI Design', 'Product Design', 'À compléter'],
+      'Application de budget conçue et développée en solo — DA, identité et produit. Connexions bancaires réelles et une lecture claire de ce qui rentre, sort et reste.',
+    tags: ['Product Design', 'UX/UI', 'Direction artistique', 'Développement'],
     brand: 'Mauni',
-    natureProduit: 'Application mobile',
-    utilisateurPrincipal: '[Texte provisoire]',
-    objectifProduit: '[Texte provisoire] Objectif du produit à préciser.',
+    natureProduit: 'Application mobile de finances personnelles',
+    utilisateurPrincipal: 'Particulier qui veut suivre son budget sans effort',
+    objectifProduit:
+      "Rendre lisible d'un regard ce qui rentre, ce qui sort et ce qu'il reste — et transformer l'épargne en projet plutôt qu'en contrainte.",
     contexte:
-      '[Texte provisoire] Paragraphe de contexte décrivant le point de départ du projet.\n\nSecond paragraphe de contexte à compléter avec les informations réelles du projet.',
+      "Projet personnel : une app de finances que je voulais réellement utiliser au quotidien. Conçue, dessinée et développée en solo, connectée à de vrais comptes bancaires et déployée en ligne.\n\nUn découvert n'est pas un manque d'argent : c'est un manque de visibilité. Mauni remplace l'angoisse par une lecture claire — ce qui rentre, ce qui sort, ce qu'il reste.",
     problematique:
-      '[Texte provisoire] Description de la problématique principale.\n\nLes points clés :\n\n• Premier point à compléter\n• Deuxième point à compléter\n• Troisième point à compléter',
-    role: '[Texte provisoire] Description du rôle occupé sur le projet.',
+      "Les apps bancaires noient l'essentiel sous les fonctionnalités. Il fallait remettre le solde et la décision au centre.\n\nLes points clés :\n\n• Voir en un regard ce qu'il reste vraiment à dépenser\n• Comprendre ses dépenses sans lire un relevé ligne à ligne\n• Faire de l'épargne un objectif concret, pas une contrainte",
+    role: "Seul aux commandes, du concept au produit en ligne : recherche, architecture de l'information, UI, système de composants, direction de marque, puis développement de l'app (connexions bancaires et authentification réelles).",
     interventions: [
-      '[Provisoire] Première intervention',
-      '[Provisoire] Deuxième intervention',
-      '[Provisoire] Troisième intervention',
-      '[Provisoire] Quatrième intervention',
+      'Direction artistique & identité de marque',
+      "Architecture de l'information & UX",
+      'UI et système de composants',
+      "Développement de l'app (front + intégrations)",
     ],
     demarche: [
       {
-        title: '[Provisoire] Étape 1',
+        title: 'Cadrage',
         content:
-          '[Texte provisoire] Description de la première étape de la démarche.',
+          "Définir la promesse — le solde d'abord, la décision ensuite — et l'architecture des écrans autour.",
       },
       {
-        title: '[Provisoire] Étape 2',
+        title: 'Identité',
         content:
-          '[Texte provisoire] Description de la deuxième étape de la démarche.',
+          'Créer le nom, le logo et la direction artistique : une app calme et lisible, en clair comme en sombre.',
       },
       {
-        title: '[Provisoire] Étape 3',
+        title: 'Design système',
         content:
-          '[Texte provisoire] Description de la troisième étape de la démarche.',
+          "Concevoir l'UI et un système de composants cohérent sur 18 écrans, du budget à la répartition.",
       },
       {
-        title: '[Provisoire] Étape 4',
+        title: 'Développement',
         content:
-          '[Texte provisoire] Description de la quatrième étape de la démarche.',
+          "Coder l'app et brancher les vraies connexions bancaires et l'authentification, jusqu'à la mise en ligne.",
       },
     ],
     impact:
-      "[Texte provisoire] Description de l'impact du projet.\n\n• Premier résultat à compléter\n• Deuxième résultat à compléter\n• Troisième résultat à compléter",
+      "Un concept devenu produit fonctionnel, utilisé au quotidien.\n\n• App complète de 18 écrans, conçue et développée en solo\n• Connexions bancaires et authentification réelles, déployée en ligne\n• Identité de marque créée de A à Z",
     image: mauniHeroImage,
     gallery: [mauniOnboardingImage, mauniLightImage, mauniDarkImage],
   },
