@@ -102,7 +102,7 @@ export const projetsDataEn: Record<string, ProjetTranslation> = {
   },
   syma: {
     title: 'SYMA',
-    subtitle: 'Choosing a brand identity, together.',
+    subtitle: 'Giving an identity to an agency just getting started.',
     description:
       'Brand identity (logo, iconography, typography) for SYMA, a communications agency just getting started — plus a custom web tool to compare the directions and decide together.',
     tags: ['Art Direction', 'Brand Identity', 'Development'],
@@ -112,7 +112,7 @@ export const projetsDataEn: Record<string, ProjetTranslation> = {
     objectifProduit:
       'Create SYMA’s identity and a tool to choose it together, on common ground.',
     contexte:
-      'SYMA, a communications agency in the making (two founders), needed an identity — and a way to choose it together.\n\nPicking a logo over emails and screenshots scatters the decision. I gathered the directions in one place: compare, rank, decide.',
+      'SYMA, a communications agency in the making (two founders), needed an identity — and a way to choose it together.\n\nPicking a logo over emails and screenshots scatters the decision. On top of the identity, I built a comparator to smooth the exchanges: compare, comment, decide.',
     problematique:
       'Deciding on an identity together, without getting lost.\n\nKey points:\n\n• Compare directions side by side, not in an email thread\n• Gather clear feedback (accept, reject, request)\n• Decide on common ground',
     role: 'Sole hand on it: art direction (logo, iconography, typography — palette provided) then building a custom site to compare, comment on and validate the directions.',
