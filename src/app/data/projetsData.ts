@@ -114,51 +114,51 @@ export const projetsData: Projet[] = [
     category: 'web',
     tileSize: 'l',
     title: 'Onboarding RH',
-    subtitle:
-      '[Texte provisoire] Sous-titre du projet Onboarding RH, à rédiger ultérieurement.',
-    year: '2025',
+    subtitle: "Faire d'un premier jour une vraie rencontre.",
+    year: '2026',
     description:
-      '[Texte provisoire] Courte description du projet Onboarding RH affichée sur la carte. À remplacer par le contenu final.',
-    tags: ['UX/UI Design', 'Product Design', 'À compléter'],
+      "Plateforme d'onboarding RH conçue et développée en solo pour SPVIE — deux espaces : un parcours guidé pour l'arrivant, un pilotage clair pour les RH. Prototype complet, déployé et validé par les RH.",
+    tags: ['Product Design', 'UX/UI', 'Développement'],
     brand: 'Onboarding RH',
-    natureProduit: 'Plateforme web interne',
-    utilisateurPrincipal: '[Texte provisoire]',
-    objectifProduit: '[Texte provisoire] Objectif du produit à préciser.',
+    natureProduit: "Plateforme web interne d'onboarding",
+    utilisateurPrincipal: 'RH et nouveaux arrivants',
+    objectifProduit:
+      "Structurer l'intégration : un parcours guidé côté arrivant, un pilotage en un coup d'œil côté RH.",
     contexte:
-      '[Texte provisoire] Paragraphe de contexte décrivant le point de départ du projet.\n\nSecond paragraphe de contexte à compléter avec les informations réelles du projet.',
+      "Projet interne SPVIE : l'intégration se jouait dans les mails et les tableurs, sans vue d'ensemble côté RH ni repères côté arrivant.\n\nJ'ai conçu et développé une plateforme dédiée à deux espaces pour qu'un premier jour ne dépende plus de qui s'en occupe.",
     problematique:
-      '[Texte provisoire] Description de la problématique principale.\n\nLes points clés :\n\n• Premier point à compléter\n• Deuxième point à compléter\n• Troisième point à compléter',
-    role: '[Texte provisoire] Description du rôle occupé sur le projet.',
+      "Le premier jour s'improvisait, faute d'outil commun.\n\nLes points clés :\n\n• Donner aux RH une vue d'ensemble et zéro étape oubliée\n• Guider l'arrivant, étape par étape, sans le noyer\n• Réutiliser le contenu d'accueil et l'adapter par métier",
+    role: "Seul aux commandes, du cadrage au produit déployé : cadrage du besoin avec les RH, architecture des deux espaces, UI et système de composants, puis le développement (base de données, déploiement, amorce de connexion à l'environnement SPVIE).",
     interventions: [
-      '[Provisoire] Première intervention',
-      '[Provisoire] Deuxième intervention',
-      '[Provisoire] Troisième intervention',
-      '[Provisoire] Quatrième intervention',
+      'Cadrage du besoin avec les RH',
+      'Architecture des deux espaces et du parcours',
+      'UI, système de composants, prototypes',
+      'Développement (base de données, déploiement, SSO amorcé)',
     ],
     demarche: [
       {
-        title: '[Provisoire] Étape 1',
+        title: 'Cadrage',
         content:
-          '[Texte provisoire] Description de la première étape de la démarche.',
+          "Cerner le besoin avec les RH et définir les deux espaces : l'arrivant et le pilotage.",
       },
       {
-        title: '[Provisoire] Étape 2',
+        title: 'Architecture',
         content:
-          '[Texte provisoire] Description de la deuxième étape de la démarche.',
+          "Dessiner le parcours de bout en bout (J-7 → J+30) et un tronc commun déclinable par métier.",
       },
       {
-        title: '[Provisoire] Étape 3',
+        title: 'Design système',
         content:
-          '[Texte provisoire] Description de la troisième étape de la démarche.',
+          "Concevoir l'UI et un système de composants partagé entre les deux espaces.",
       },
       {
-        title: '[Provisoire] Étape 4',
+        title: 'Développement',
         content:
-          '[Texte provisoire] Description de la quatrième étape de la démarche.',
+          "Coder la plateforme, la base de données et le déploiement, jusqu'à une démo publique.",
       },
     ],
     impact:
-      "[Texte provisoire] Description de l'impact du projet.\n\n• Premier résultat à compléter\n• Deuxième résultat à compléter\n• Troisième résultat à compléter",
+      "Un prototype complet, présenté et validé par les RH SPVIE.\n\n• Solution interne prête à déclencher dès que le recrutement repart\n• Deux espaces fonctionnels : arrivant guidé, pilotage RH\n• Conçue et développée en solo, déployée en ligne",
     image: onboardingRhHeroImage,
     gallery: [onboardingRhAdminImage, onboardingRhArrivantImage],
   },

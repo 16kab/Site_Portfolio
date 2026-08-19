@@ -55,48 +55,50 @@ export const projetsDataEn: Record<string, ProjetTranslation> = {
   },
   'onboarding-rh': {
     title: 'HR Onboarding',
-    subtitle:
-      '[Placeholder] HR Onboarding project subtitle, to be written later.',
+    subtitle: 'Turning a first day into a real welcome.',
     description:
-      '[Placeholder] Short description of the HR Onboarding project shown on the card. To be replaced with the final content.',
-    tags: ['UX/UI Design', 'Product Design', 'To be completed'],
+      'An HR onboarding platform designed and built solo for SPVIE — two spaces: a guided journey for the newcomer, clear steering for HR. A complete prototype, deployed and validated by HR.',
+    tags: ['Product Design', 'UX/UI', 'Development'],
     brand: 'HR Onboarding',
-    natureProduit: 'Internal web platform',
-    utilisateurPrincipal: '[Placeholder]',
-    objectifProduit: '[Placeholder] Product goal to be specified.',
+    natureProduit: 'Internal onboarding web platform',
+    utilisateurPrincipal: 'HR and new joiners',
+    objectifProduit:
+      'Structure onboarding: a guided journey for the newcomer, at-a-glance steering for HR.',
     contexte:
-      '[Placeholder] Context paragraph describing the starting point of the project.\n\nSecond context paragraph to be completed with the actual project information.',
+      'An internal SPVIE project: onboarding lived in emails and spreadsheets, with no overview for HR and no bearings for the newcomer.\n\nI designed and built a dedicated two-space platform so a first day no longer depends on whoever handles it.',
     problematique:
-      '[Placeholder] Description of the main problem.\n\nKey points:\n\n• First point to complete\n• Second point to complete\n• Third point to complete',
-    role: '[Placeholder] Description of the role held on the project.',
+      'Day one was improvised, for lack of a shared tool.\n\nKey points:\n\n• Give HR an overview and zero forgotten step\n• Guide the newcomer step by step, without overwhelming them\n• Reuse onboarding content and tailor it per role',
+    role: 'Running the whole thing, from framing to deployed product: needs framing with HR, architecture of the two spaces, UI and component system, then the development (database, deployment, a first brick connecting to the SPVIE environment).',
     interventions: [
-      '[Placeholder] First contribution',
-      '[Placeholder] Second contribution',
-      '[Placeholder] Third contribution',
-      '[Placeholder] Fourth contribution',
+      'Needs framing with HR',
+      'Architecture of the two spaces and the journey',
+      'UI, component system, prototypes',
+      'Development (database, deployment, SSO started)',
     ],
     demarche: [
       {
-        title: '[Placeholder] Step 1',
-        content: '[Placeholder] Description of the first step of the approach.',
-      },
-      {
-        title: '[Placeholder] Step 2',
+        title: 'Framing',
         content:
-          '[Placeholder] Description of the second step of the approach.',
+          'Pin down the need with HR and define the two spaces: the newcomer and the steering.',
       },
       {
-        title: '[Placeholder] Step 3',
-        content: '[Placeholder] Description of the third step of the approach.',
-      },
-      {
-        title: '[Placeholder] Step 4',
+        title: 'Architecture',
         content:
-          '[Placeholder] Description of the fourth step of the approach.',
+          'Map the end-to-end journey (D-7 → D+30) and a common trunk that branches per role.',
+      },
+      {
+        title: 'Design system',
+        content:
+          'Design the UI and a component system shared across both spaces.',
+      },
+      {
+        title: 'Development',
+        content:
+          'Code the platform, the database and the deployment, through to a public demo.',
       },
     ],
     impact:
-      '[Placeholder] Description of the project impact.\n\n• First result to complete\n• Second result to complete\n• Third result to complete',
+      'A complete prototype, presented to and validated by SPVIE HR.\n\n• An internal solution ready to trigger as soon as hiring picks up again\n• Two working spaces: guided newcomer, HR steering\n• Designed and built solo, deployed online',
   },
   syma: {
     title: 'SYMA',
