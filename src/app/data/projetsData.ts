@@ -221,49 +221,51 @@ export const projetsData: Projet[] = [
     tileSize: 'm',
     title: 'TrackIt',
     subtitle: 'Suivi de films & séries — recherche TMDB, épisodes, sync cloud.',
-    year: '2025',
+    year: '2026',
     description:
       'Application web mobile-first pour suivre ses films et séries : watchlist, suivi épisode par épisode, statuts, historique et import TV Time, synchronisés dans le cloud. Projet full-stack en solo.',
     tags: ['Design produit', 'React 19', 'Full-stack'],
     brand: 'Trackit',
     natureProduit: 'Application web',
-    utilisateurPrincipal: '[Texte provisoire]',
-    objectifProduit: '[Texte provisoire] Objectif du produit à préciser.',
+    utilisateurPrincipal: 'Moi — et tout sériephile qui jongle entre plateformes',
+    objectifProduit:
+      'Centraliser le suivi de ses films et séries : où on en est, quoi regarder ensuite, sur tous ses écrans.',
     contexte:
-      '[Texte provisoire] Paragraphe de contexte décrivant le point de départ du projet.\n\nSecond paragraphe de contexte à compléter avec les informations réelles du projet.',
+      "Une série sur Netflix, une autre sur Prime, une troisième sur Crunchyroll — et le fil qui se perd. J'utilisais TV Time, mais je voulais mon propre outil, précis et sous mon contrôle.\n\nJ'ai construit TrackIt en full-stack, seul, comme tracker du quotidien.",
     problematique:
-      '[Texte provisoire] Description de la problématique principale.\n\nLes points clés :\n\n• Premier point à compléter\n• Deuxième point à compléter\n• Troisième point à compléter',
-    role: '[Texte provisoire] Description du rôle occupé sur le projet.',
+      "Suivre ce qu'on regarde quand tout est éparpillé.\n\nLes points clés :\n\n• Savoir exactement où on en est, épisode par épisode\n• Retrouver quoi regarder ensuite en un tap\n• Récupérer son historique (import TV Time) et le garder synchronisé",
+    role: "Seul aux commandes, du design au full-stack : UI sombre mobile-first, front React 19 + Tailwind, proxy Express + intégration TMDB, authentification Google et synchronisation Firestore, import TV Time.",
     interventions: [
-      '[Provisoire] Première intervention',
-      '[Provisoire] Deuxième intervention',
-      '[Provisoire] Troisième intervention',
-      '[Provisoire] Quatrième intervention',
+      'Design produit & UI (sombre, mobile-first)',
+      'Front React 19 + Tailwind, animations',
+      'Proxy Express + intégration TMDB',
+      'Auth Google & sync Firestore',
+      "Import TV Time (migration d'historique)",
     ],
     demarche: [
       {
-        title: '[Provisoire] Étape 1',
+        title: 'Cadrage',
         content:
-          '[Texte provisoire] Description de la première étape de la démarche.',
+          "Définir le cœur : le suivi épisode par épisode, pensé pour mobile d'abord.",
       },
       {
-        title: '[Provisoire] Étape 2',
+        title: 'Données',
         content:
-          '[Texte provisoire] Description de la deuxième étape de la démarche.',
+          'Brancher TMDB via un proxy Express pour la recherche et les fiches.',
       },
       {
-        title: '[Provisoire] Étape 3',
+        title: 'Design & front',
         content:
-          '[Texte provisoire] Description de la troisième étape de la démarche.',
+          'Concevoir une UI sombre pensée pour le canapé, en React 19 + Tailwind.',
       },
       {
-        title: '[Provisoire] Étape 4',
+        title: 'Compte & sync',
         content:
-          '[Texte provisoire] Description de la quatrième étape de la démarche.',
+          "Ajouter l'authentification Google, la synchro Firestore et l'import TV Time.",
       },
     ],
     impact:
-      "[Texte provisoire] Description de l'impact du projet.\n\n• Premier résultat à compléter\n• Deuxième résultat à compléter\n• Troisième résultat à compléter",
+      'Mon tracker au quotidien, en remplacement de TV Time.\n\n• Suivi précis, synchronisé sur tous mes écrans\n• Sans pub, sous mon contrôle\n• Projet full-stack conçu et développé en solo',
     image: trackitHeroImage,
     gallery: [trackitScreensImage],
   },

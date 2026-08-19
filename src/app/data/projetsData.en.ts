@@ -155,41 +155,45 @@ export const projetsDataEn: Record<string, ProjetTranslation> = {
     tags: ['Product design', 'React 19', 'Full-stack'],
     brand: 'Trackit',
     natureProduit: 'Web app',
-    utilisateurPrincipal: '[Placeholder]',
-    objectifProduit: '[Placeholder] Product goal to be specified.',
+    utilisateurPrincipal: 'Me — and anyone juggling shows across platforms',
+    objectifProduit:
+      'Centralize tracking of your films and shows: where you are, what to watch next, across all your screens.',
     contexte:
-      '[Placeholder] Context paragraph describing the starting point of the project.\n\nSecond context paragraph to be completed with the actual project information.',
+      'One show on Netflix, another on Prime, a third on Crunchyroll — and you lose the thread. I used TV Time, but I wanted my own tool, precise and under my control.\n\nI built TrackIt full-stack, solo, as my daily tracker.',
     problematique:
-      '[Placeholder] Description of the main problem.\n\nKey points:\n\n• First point to complete\n• Second point to complete\n• Third point to complete',
-    role: '[Placeholder] Description of the role held on the project.',
+      'Keeping track of what you watch when everything is scattered.\n\nKey points:\n\n• Know exactly where you are, episode by episode\n• Find what to watch next in one tap\n• Bring your history over (TV Time import) and keep it synced',
+    role: 'Sole hand on it, from design to full-stack: dark mobile-first UI, React 19 + Tailwind front-end, Express proxy + TMDB integration, Google auth and Firestore sync, TV Time import.',
     interventions: [
-      '[Placeholder] First contribution',
-      '[Placeholder] Second contribution',
-      '[Placeholder] Third contribution',
-      '[Placeholder] Fourth contribution',
+      'Product & UI design (dark, mobile-first)',
+      'React 19 front-end + Tailwind, animations',
+      'Express proxy + TMDB integration',
+      'Google auth & Firestore sync',
+      'TV Time import (history migration)',
     ],
     demarche: [
       {
-        title: '[Placeholder] Step 1',
-        content: '[Placeholder] Description of the first step of the approach.',
-      },
-      {
-        title: '[Placeholder] Step 2',
+        title: 'Framing',
         content:
-          '[Placeholder] Description of the second step of the approach.',
+          'Define the core: episode-by-episode tracking, mobile first.',
       },
       {
-        title: '[Placeholder] Step 3',
-        content: '[Placeholder] Description of the third step of the approach.',
-      },
-      {
-        title: '[Placeholder] Step 4',
+        title: 'Data',
         content:
-          '[Placeholder] Description of the fourth step of the approach.',
+          'Wire up TMDB through an Express proxy for search and details.',
+      },
+      {
+        title: 'Design & front-end',
+        content:
+          'Design a dark UI built for the couch, in React 19 + Tailwind.',
+      },
+      {
+        title: 'Account & sync',
+        content:
+          'Add Google auth, Firestore sync and TV Time import.',
       },
     ],
     impact:
-      '[Placeholder] Description of the project impact.\n\n• First result to complete\n• Second result to complete\n• Third result to complete',
+      'My daily tracker, replacing TV Time.\n\n• Precise tracking, synced across all my screens\n• Ad-free, under my control\n• A full-stack project designed and built solo',
   },
   'parcours-spvieassurances': {
     title: 'Redesign of the SPVIE subscription journey',
