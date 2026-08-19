@@ -216,7 +216,7 @@ export const projetsDataEn: Record<string, ProjetTranslation> = {
       "The SPVIE subscription funnel (comparison, pricing, quote, signature) is the group's most qualified source of leads.\n\nDespite its strategic importance, the journey had not evolved for several years. The dated design, confusing navigation and unclear presentation of the offers harmed both SPVIE's image and the funnel's performance.\n\nBehavioural analysis showed that users frequently hesitated along the way and dropped off at the moment of choosing their plan.\n\nThe goal of the project was therefore to modernise the experience, clarify product understanding and improve conversion up to the quote request.",
     problematique:
       'Matomo analysis identified a major drop-off point at the moment the offers were presented.\n\nSeveral factors explained this behaviour:\n\n• An outdated design that broke trust as soon as users entered the funnel\n• Guarantees presented without hierarchy or explanation\n• Unclear navigation that made decisions difficult\n\nThe funnel also had many steps, giving the impression of a long and complex journey.',
-    role: 'UX/UI Designer, paired with an external consultant.\n\nI carried the UX thinking and the user vision throughout the project.',
+    role: 'UX/UI Designer: I led all the UX/UI on my own in Figma. An external consultant supported the project manager; I carried the UX thinking and the user vision end to end.',
     interventions: [
       'Competitive benchmark',
       'Structuring user flows',

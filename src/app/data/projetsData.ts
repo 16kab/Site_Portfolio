@@ -294,7 +294,7 @@ export const projetsData: Projet[] = [
       "Le tunnel de souscription SPVIE (comparatif, tarification, devis, signature) constitue l'entrée de leads la plus qualifiée du groupe.\n\nMalgré son importance stratégique, le parcours n'avait pas évolué depuis plusieurs années. Le design vieillissant, la navigation confuse et une présentation des offres peu pédagogique nuisaient autant à l'image de SPVIE qu'à la performance du tunnel.\n\nLes analyses comportementales montraient que les utilisateurs hésitaient fréquemment dans le parcours et abandonnaient au moment de choisir leur offre.\n\nL'objectif du projet était donc de moderniser l'expérience, clarifier la compréhension des produits et améliorer la conversion jusqu'à la demande de devis.",
     problematique:
       "Les analyses Matomo ont permis d'identifier un point de drop majeur au moment de la présentation des offres.\n\nPlusieurs facteurs expliquaient ce comportement :\n\n• Un design obsolète qui cassait la confiance dès l'entrée dans le tunnel\n• Des garanties présentées sans hiérarchie ni pédagogie\n• Une navigation peu claire rendant les décisions difficiles\n\nLe tunnel comportait également de nombreuses étapes, donnant l'impression d'un parcours long et complexe.",
-    role: "UX/UI Designer, en binôme avec un consultant externe.\n\nJ'ai porté la réflexion UX et la vision utilisateur tout au long du projet.",
+    role: "UX/UI Designer : j'ai mené toute l'UX/UI en autonomie sur Figma. Un consultant externe accompagnait le chef de projet ; j'ai porté la réflexion UX et la vision utilisateur de bout en bout.",
     interventions: [
       'Benchmark concurrentiel',
       'Structuration des user flows',
