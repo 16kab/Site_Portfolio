@@ -8,47 +8,50 @@ import type { ProjetTranslation } from './projetsData';
 export const projetsDataEn: Record<string, ProjetTranslation> = {
   mauni: {
     title: 'Mauni',
-    subtitle: '[Placeholder] Mauni project subtitle, to be written later.',
+    subtitle: 'Take back control of your money, without thinking about it.',
     description:
-      '[Placeholder] Short description of the Mauni project shown on the card. To be replaced with the final content.',
-    tags: ['UX/UI Design', 'Product Design', 'To be completed'],
+      'A budgeting app designed and built solo — art direction, identity and product. Real bank connections and a clear read of what comes in, goes out and what’s left.',
+    tags: ['Product Design', 'UX/UI', 'Art Direction', 'Development'],
     brand: 'Mauni',
-    natureProduit: 'Mobile app',
-    utilisateurPrincipal: '[Placeholder]',
-    objectifProduit: '[Placeholder] Product goal to be specified.',
+    natureProduit: 'Personal finance mobile app',
+    utilisateurPrincipal: 'Anyone who wants to track their budget effortlessly',
+    objectifProduit:
+      'Make it clear at a glance what comes in, what goes out and what’s left — and turn saving into a project rather than a constraint.',
     contexte:
-      '[Placeholder] Context paragraph describing the starting point of the project.\n\nSecond context paragraph to be completed with the actual project information.',
+      'A personal project: a finance app I actually wanted to use every day. Designed, art-directed and built solo, connected to real bank accounts and deployed online.\n\nAn overdraft isn’t a lack of money: it’s a lack of visibility. Mauni replaces anxiety with a clear read — what comes in, what goes out, what’s left.',
     problematique:
-      '[Placeholder] Description of the main problem.\n\nKey points:\n\n• First point to complete\n• Second point to complete\n• Third point to complete',
-    role: '[Placeholder] Description of the role held on the project.',
+      'Banking apps drown the essentials under features. The balance and the decision had to come back to the center.\n\nKey points:\n\n• See at a glance what’s really left to spend\n• Understand spending without reading a line-by-line statement\n• Make saving a concrete goal, not a constraint',
+    role: 'Running the whole thing, from concept to live product: research, information architecture, UI, component system, brand direction, then building the app itself (real bank connections and authentication).',
     interventions: [
-      '[Placeholder] First contribution',
-      '[Placeholder] Second contribution',
-      '[Placeholder] Third contribution',
-      '[Placeholder] Fourth contribution',
+      'Art direction & brand identity',
+      'Information architecture & UX',
+      'UI and component system',
+      'App development (front-end + integrations)',
     ],
     demarche: [
       {
-        title: '[Placeholder] Step 1',
-        content: '[Placeholder] Description of the first step of the approach.',
-      },
-      {
-        title: '[Placeholder] Step 2',
+        title: 'Framing',
         content:
-          '[Placeholder] Description of the second step of the approach.',
+          'Define the promise — balance first, decision next — and the screen architecture around it.',
       },
       {
-        title: '[Placeholder] Step 3',
-        content: '[Placeholder] Description of the third step of the approach.',
-      },
-      {
-        title: '[Placeholder] Step 4',
+        title: 'Identity',
         content:
-          '[Placeholder] Description of the fourth step of the approach.',
+          'Create the name, logo and art direction: a calm, legible app, in light and dark.',
+      },
+      {
+        title: 'Design system',
+        content:
+          'Design the UI and a coherent component system across 18 screens, from budget to breakdown.',
+      },
+      {
+        title: 'Development',
+        content:
+          'Code the app and wire up the real bank connections and authentication, through to going live.',
       },
     ],
     impact:
-      '[Placeholder] Description of the project impact.\n\n• First result to complete\n• Second result to complete\n• Third result to complete',
+      'A concept turned into a working product, used daily.\n\n• A complete 18-screen app, designed and built solo\n• Real bank connections and authentication, deployed online\n• Brand identity created from scratch',
   },
   'onboarding-rh': {
     title: 'HR Onboarding',
