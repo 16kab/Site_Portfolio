@@ -321,7 +321,7 @@ export const projetsDataEn: Record<string, ProjetTranslation> = {
       'Agir Pour Toutes is an initiative dedicated to supporting women at different stages of their lives: pregnancy, birth, postpartum, wellbeing and personal development.\n\nThe founders wanted to create a site to present their mission and offer themed clubs made up of videos and exclusive content.\n\nThe project started from a blank page: no visual identity, no site and no structured graphic world. The challenge was therefore to create a coherent brand able to embody a world that is at once warm, premium and accessible.',
     problematique:
       "The project required building a complete brand while striking the right balance between:\n\n• The emotional dimension tied to women's themes\n• The credibility and seriousness of a support platform\n• A distinctive visual world without falling into motherhood clichés\n\nIt also required designing a site able to clearly present the content and enable the sale of the clubs.",
-    role: "UX/UI Designer and lead for the project's art direction.\n\nI led the whole design dimension and was the founders' main point of contact to translate their vision into a coherent graphic world.",
+    role: "UX/UI Designer and art director on the project — the sole hand on all the design. I led the whole design side and was the founders' main point of contact (the clients), translating their vision into a coherent visual world.",
     interventions: [
       'Creation of the visual identity',
       'Definition of the art direction',
