@@ -20,12 +20,11 @@ const PAGES = [pCategorie, pOffre];
 
 const STRINGS = {
   fr: {
-    study: 'Étude de cas',
     heroEyebrow: ['Refonte de site', 'SPVIE Assurances', '2025'],
     thesisPre: 'Plus clair, plus crédible, ',
     thesisEm: 'pensé pour convertir.',
-    metaLabels: ['Rôle', 'Client', 'Nature', 'Année'],
-    metaValues: ['UX/UI · à l’initiative', 'SPVIE Assurances', 'Site vitrine', '2025'],
+    metaLabels: ['Rôle', 'Client', 'Nature', 'Année', 'Outils'],
+    metaValues: ['UX/UI · à l’initiative', 'SPVIE Assurances', 'Site vitrine', '2025', 'Figma'],
     cue: '↓ étude de cas',
     // 01
     s1eyebrow: '01 — Contexte',
@@ -89,12 +88,11 @@ const STRINGS = {
     ],
   },
   en: {
-    study: 'Case study',
     heroEyebrow: ['Website redesign', 'SPVIE Assurances', '2025'],
     thesisPre: 'Clearer, more credible, ',
     thesisEm: 'built to convert.',
-    metaLabels: ['Role', 'Client', 'Type', 'Year'],
-    metaValues: ['UX/UI · self-initiated', 'SPVIE Assurances', 'Marketing site', '2025'],
+    metaLabels: ['Role', 'Client', 'Type', 'Year', 'Tools'],
+    metaValues: ['UX/UI · self-initiated', 'SPVIE Assurances', 'Marketing site', '2025', 'Figma'],
     cue: '↓ case study',
     s1eyebrow: '01 — Context',
     s1pre: 'Nearly 280 product pages, ',
@@ -335,7 +333,6 @@ export default function RefonteSpvieShowcase({ projet }: { projet: Projet }) {
       {/* BARRE MÉTA */}
       <div className="wrap">
         <div className="metabar reveal">
-          <span className="metabar-study label">{t.study}</span>
           <dl className="metabar-meta">
             {t.metaLabels.map((l, i) => (
               <div key={l}>
