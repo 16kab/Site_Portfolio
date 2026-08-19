@@ -71,12 +71,11 @@ const TOTAL_EP = SERIES.seasons.reduce((a, s) => a + s.episodes.length, 0);
 
 const STRINGS = {
   fr: {
-    study: 'Étude de cas',
-    heroEyebrow: ['App web', 'Suivi films & séries', '2025'],
+    heroEyebrow: ['App web', 'Suivi films & séries', '2026'],
     thesisPre: 'Ne perdez plus le fil ',
     thesisEm: 'de vos séries.',
-    metaLabels: ['Rôle', 'Nature', 'Portée', 'Année'],
-    metaValues: ['Design & dev full-stack', 'App web · mobile-first', 'Projet perso', '2025'],
+    metaLabels: ['Rôle', 'Nature', 'Portée', 'Année', 'Outils'],
+    metaValues: ['Design & dev full-stack', 'App web · mobile-first', 'Projet perso', '2026', 'Claude Code'],
     cue: '↓ étude de cas',
     interventionsLabel: 'Ce que j’ai construit',
     interventions: [
@@ -124,15 +123,14 @@ const STRINGS = {
     s4pre: 'Une app qu’on ouvre ',
     s4k: 'par réflexe.',
     s4note:
-      'Mon tracker au quotidien, en remplacement de TV Time : suivi précis, synchronisé sur tous mes écrans, sans pub et sous mon contrôle (auto-hébergé). [Chiffres d’usage à ajouter.]',
+      'Mon tracker au quotidien, en remplacement de TV Time : suivi précis, synchronisé sur tous mes écrans, sans pub et sous mon contrôle.',
   },
   en: {
-    study: 'Case study',
-    heroEyebrow: ['Web app', 'Film & TV tracker', '2025'],
+    heroEyebrow: ['Web app', 'Film & TV tracker', '2026'],
     thesisPre: 'Never lose track ',
     thesisEm: 'of your shows.',
-    metaLabels: ['Role', 'Type', 'Scope', 'Year'],
-    metaValues: ['Design & full-stack dev', 'Web app · mobile-first', 'Personal project', '2025'],
+    metaLabels: ['Role', 'Type', 'Scope', 'Year', 'Tools'],
+    metaValues: ['Design & full-stack dev', 'Web app · mobile-first', 'Personal project', '2026', 'Claude Code'],
     cue: '↓ case study',
     interventionsLabel: 'What I built',
     interventions: [
@@ -172,7 +170,7 @@ const STRINGS = {
     s4pre: 'An app you open ',
     s4k: 'on reflex.',
     s4note:
-      'My daily tracker, replacing TV Time: precise tracking, synced across all my screens, ad-free and under my control (self-hosted). [Usage figures to add.]',
+      'My daily tracker, replacing TV Time: precise tracking, synced across all my screens, ad-free and under my control.',
   },
 };
 
@@ -537,7 +535,6 @@ export default function TrackItShowcase({ projet }: { projet: Projet }) {
       {/* BARRE MÉTA */}
       <div className="wrap">
         <div className="metabar reveal">
-          <span className="metabar-study label">{t.study}</span>
           <dl className="metabar-meta">
             {t.metaLabels.map((l, i) => (
               <div key={l}>
