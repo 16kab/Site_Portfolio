@@ -32,6 +32,7 @@ const STRINGS = {
     metaRole: 'UX/UI Designer',
     metaClient: 'CGRM – SPVIE Groupe',
     metaYear: '2024',
+    metaTools: 'Figma',
     prev: 'Écran précédent',
     next: 'Écran suivant',
     steps: [
@@ -62,6 +63,7 @@ const STRINGS = {
     metaRole: 'UX/UI Designer',
     metaClient: 'CGRM – SPVIE Groupe',
     metaYear: '2024',
+    metaTools: 'Figma',
     prev: 'Previous screen',
     next: 'Next screen',
     steps: [
@@ -198,6 +200,7 @@ export default function MobileCgrmShowcase({ projet }: { projet: Projet }) {
             <span>{t.metaRole}</span>
             <span>{t.metaClient}</span>
             <span>{t.metaYear}</span>
+            <span>{t.metaTools}</span>
           </div>
         </div>
       </section>
