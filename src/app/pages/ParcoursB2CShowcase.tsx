@@ -36,12 +36,11 @@ const preventFocusScroll = (e: { preventDefault: () => void }) => e.preventDefau
 
 const STRINGS = {
   fr: {
-    study: 'Étude de cas',
     heroEyebrow: ['Tunnel de conversion', 'SPVIE Assurances', '2024-2025'],
     thesisPre: 'Un tunnel de 30 minutes, ',
     thesisEm: 'ressenti comme 12.',
-    metaLabels: ['Rôle', 'Client', 'Nature', 'Année'],
-    metaValues: ['UX/UI Designer', 'SPVIE Assurances', 'Tunnel de conversion', '2024-2025'],
+    metaLabels: ['Rôle', 'Client', 'Nature', 'Année', 'Outils'],
+    metaValues: ['UX/UI Designer', 'SPVIE Assurances', 'Tunnel de conversion', '2024-2025', 'Figma · ContentSquare · Matomo'],
     cue: '↓ étude de cas',
     // 01 Contexte
     s1eyebrow: '01 — Contexte',
@@ -128,12 +127,11 @@ const STRINGS = {
     ],
   },
   en: {
-    study: 'Case study',
     heroEyebrow: ['Conversion funnel', 'SPVIE Assurances', '2024-2025'],
     thesisPre: 'A 30-minute funnel, ',
     thesisEm: 'that feels like 12.',
-    metaLabels: ['Role', 'Client', 'Type', 'Year'],
-    metaValues: ['UX/UI Designer', 'SPVIE Assurances', 'Conversion funnel', '2024-2025'],
+    metaLabels: ['Role', 'Client', 'Type', 'Year', 'Tools'],
+    metaValues: ['UX/UI Designer', 'SPVIE Assurances', 'Conversion funnel', '2024-2025', 'Figma · ContentSquare · Matomo'],
     cue: '↓ case study',
     s1eyebrow: '01 — Context',
     s1pre: 'The group’s most strategic funnel, ',
@@ -464,7 +462,6 @@ export default function ParcoursB2CShowcase({ projet }: { projet: Projet }) {
       {/* BARRE MÉTA */}
       <div className="wrap">
         <div className="metabar reveal">
-          <span className="metabar-study label">{t.study}</span>
           <dl className="metabar-meta">
             {t.metaLabels.map((l, i) => (
               <div key={l}>
