@@ -271,7 +271,7 @@ export const projetsDataEn: Record<string, ProjetTranslation> = {
       "BigBroker has phone teams tasked with contacting and converting prospects from various acquisition channels.\n\nBefore this project, no centralised tool existed to manage these leads efficiently or to track advisors' activity.\n\nThe goal of the project was to design a fully in-house CRM enabling the sales teams to manage their client portfolio, track their leads, steer their performance and centralise all client information.",
     problematique:
       "The sales teams had to handle a growing volume of leads from different sources.\n\nWithout a dedicated tool, several difficulties arose:\n\n• No centralisation of client data\n• Difficulty tracking advisors' performance\n• Complex lead dispatching\n• Lack of visibility on untreated leads\n\nThe challenge was to design a clear, fast tool suited to the operational constraints of the call teams.",
-    role: "UX/UI Designer within the product team.\n\nI took an active part in the business workshops to understand the sales teams' needs and translate them into workable interfaces.",
+    role: "UX/UI Designer — the sole designer on the CRM, within the product team. I took an active part in the business workshops to understand the sales teams' needs and translate them into workable interfaces.",
     interventions: [
       'Structure the data hierarchy',
       'Define lead statuses and transitions',

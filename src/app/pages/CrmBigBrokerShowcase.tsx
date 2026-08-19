@@ -33,12 +33,11 @@ const ADVISORS = [
 
 const STRINGS = {
   fr: {
-    study: 'Étude de cas',
     heroEyebrow: ['SaaS interne', 'BigBroker · SPVIE', '2024'],
     thesisPre: 'Centraliser les leads, ',
     thesisEm: 'piloter la performance.',
-    metaLabels: ['Rôle', 'Client', 'Nature', 'Année'],
-    metaValues: ['UX/UI Designer', 'BigBroker · SPVIE', 'SaaS interne', '2024'],
+    metaLabels: ['Rôle', 'Client', 'Nature', 'Année', 'Outils'],
+    metaValues: ['UX/UI Designer', 'BigBroker · SPVIE', 'SaaS interne', '2024', 'Figma'],
     cue: '↓ étude de cas',
     // 01
     s1eyebrow: '01 — Contexte',
@@ -113,12 +112,11 @@ const STRINGS = {
     ],
   },
   en: {
-    study: 'Case study',
     heroEyebrow: ['Internal SaaS', 'BigBroker · SPVIE', '2024'],
     thesisPre: 'Centralize the leads, ',
     thesisEm: 'drive performance.',
-    metaLabels: ['Role', 'Client', 'Type', 'Year'],
-    metaValues: ['UX/UI Designer', 'BigBroker · SPVIE', 'Internal SaaS', '2024'],
+    metaLabels: ['Role', 'Client', 'Type', 'Year', 'Tools'],
+    metaValues: ['UX/UI Designer', 'BigBroker · SPVIE', 'Internal SaaS', '2024', 'Figma'],
     cue: '↓ case study',
     s1eyebrow: '01 — Context',
     s1pre: 'A rising volume of leads, ',
@@ -524,7 +522,6 @@ export default function CrmBigBrokerShowcase({ projet }: { projet: Projet }) {
       {/* BARRE MÉTA */}
       <div className="wrap">
         <div className="metabar reveal">
-          <span className="metabar-study label">{t.study}</span>
           <dl className="metabar-meta">
             {t.metaLabels.map((l, i) => (
               <div key={l}>
