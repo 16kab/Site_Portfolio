@@ -280,6 +280,12 @@ export function HeroCarousel({
       </AnimatePresence>
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/45" />
+      {/* Bande de contraste en bas (~28% de la hauteur) : ancre le titre/rail. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0"
+        style={{ height: '28%', background: 'linear-gradient(to top, rgba(0,0,0,0.68), rgba(0,0,0,0))' }}
+      />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.22] mix-blend-overlay"

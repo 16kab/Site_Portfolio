@@ -23,23 +23,23 @@ import {
 } from '../utils/projetsScroll';
 import { preloadProjetDetail } from './preloadProjetDetail';
 
-// Titres COURTS pour le hero-carousel (format « héro » : punchy, sur 1-2 lignes
-// via \n). Les titres complets restent sur les pages détail. Clés = id projet.
+// Titres COURTS pour le hero-carousel (format « héro » : punchy, sur 1 ligne).
+// Les titres complets restent sur les pages détail. Clés = id projet.
 const SHORT_FR: Record<string, string> = {
   mauni: 'Mauni',
-  'onboarding-rh': 'Onboarding\nRH',
+  'onboarding-rh': 'Onboarding RH',
   syma: 'SYMA',
   trackit: 'TrackIt',
-  'parcours-spvieassurances': 'Parcours\nSPVIE',
-  'crm-bigbroker': 'CRM\nBigBroker',
-  agpt: 'Agir Pour\nToutes',
-  'refonte-spvie': 'Refonte\nSPVIE',
-  'charte-spvie': 'Charte\nSPVIE',
-  'mobile-cgrm': 'App\nCGRM',
+  'parcours-spvieassurances': 'Parcours SPVIE',
+  'crm-bigbroker': 'CRM BigBroker',
+  agpt: 'Agir Pour Toutes',
+  'refonte-spvie': 'Refonte SPVIE',
+  'charte-spvie': 'Charte SPVIE',
+  'mobile-cgrm': 'App CGRM',
 };
 const SHORT_EN: Record<string, string> = {
   ...SHORT_FR,
-  'onboarding-rh': 'HR\nOnboarding',
+  'onboarding-rh': 'HR Onboarding',
 };
 
 const STRINGS = {
