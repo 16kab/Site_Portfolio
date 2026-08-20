@@ -57,8 +57,8 @@ export default function Projets() {
     ? Math.max(0, tousProjets.findIndex((p) => p.link === mountSnapshot.projectLink))
     : 0;
   const [index, setIndex] = useState(isReturnVisit ? returnIndex : 0);
-  const focusedImageRef = useRef<HTMLImageElement | null>(null);
   const reverseStartedRef = useRef(false);
+  const activatePendingRef = useRef(false);
 
   const initialScrollRef = useRef(resolveInitialProjetsScroll(snapshot));
   useLayoutEffect(() => {
@@ -77,9 +77,15 @@ export default function Projets() {
   }, []);
 
   // Morph aller : clic sur la carte focus (ou cue CTA) — logique de ProjetTile.
+  // Double garde-fou contre un second déclenchement (double-clic/Entrée
+  // rapide) : `isTransitioning` (état du contexte, retardé d'un rendu) ET
+  // `activatePendingRef` (synchrone, vrai dès le premier appel — jamais
+  // réinitialisé, on navigue de toute façon hors de la page).
   const handleActivate = (i: number, img: HTMLImageElement | null) => {
+    if (activatePendingRef.current || isTransitioning) return;
     const projet = tousProjets[i];
-    if (!projet || !img || isTransitioning) return;
+    if (!projet || !img) return;
+    activatePendingRef.current = true;
     const nextSnapshot = {
       imageSrc: projet.image,
       imageRect: roundTransitionRect(img.getBoundingClientRect()),
@@ -99,7 +105,6 @@ export default function Projets() {
 
   // Morph retour : quand la carte focus (du projet d'origine) expose son image.
   const handleFocusedImageChange = (img: HTMLImageElement | null) => {
-    focusedImageRef.current = img;
     if (!shouldStartReverse || reverseStartedRef.current || !mountSnapshot) return;
     if (img == null || tousProjets[index]?.link !== mountSnapshot.projectLink) return;
     reverseStartedRef.current = true;
