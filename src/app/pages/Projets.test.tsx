@@ -50,35 +50,19 @@ vi.mock('../utils/projectTransition', async (importOriginal) => {
 
 const FOCUS_RECT = { left: 10, top: 20, width: 300, height: 200 };
 
-function makeFocusImage() {
-  const img = document.createElement('img');
-  img.getBoundingClientRect = () =>
-    ({
-      ...FOCUS_RECT,
-      right: FOCUS_RECT.left + FOCUS_RECT.width,
-      bottom: FOCUS_RECT.top + FOCUS_RECT.height,
-      x: FOCUS_RECT.left,
-      y: FOCUS_RECT.top,
-      toJSON: () => ({}),
-    }) as DOMRect;
-  return img;
-}
-
 // Mock du carousel : expose les items + un bouton pour déclencher
 // onItemActivate (morph aller), et reproduit le comportement réel de
-// remontée de l'image de la carte focus (onFocusedImageChange, au montage
-// et à chaque changement d'index) pour piloter le morph retour en test.
+// remontée du rect de la carte focus (onFocusedRectChange, au montage et à
+// chaque changement d'index) pour piloter le morph retour en test.
 // `refire-focus` permet de vérifier que le garde-fou anti double-déclenchement
 // ne se relance pas si le focus est signalé une seconde fois.
 vi.mock('../components/common/HeroCarousel', async () => {
   const React = await import('react');
   return {
-    HeroCarousel: ({ items, index = 0, onItemActivate, onFocusedImageChange }: any) => {
-      const imgRef = React.useRef<HTMLImageElement | null>(null);
-      if (!imgRef.current) imgRef.current = makeFocusImage();
+    HeroCarousel: ({ items, index = 0, onItemActivate, onFocusedRectChange }: any) => {
       React.useEffect(() => {
-        onFocusedImageChange?.(imgRef.current);
-      }, [index, onFocusedImageChange]);
+        onFocusedRectChange?.(FOCUS_RECT);
+      }, [index, onFocusedRectChange]);
       return (
         <div data-testid="carousel">
           <span data-testid="count">{items.length}</span>
@@ -88,7 +72,7 @@ vi.mock('../components/common/HeroCarousel', async () => {
           <button type="button" onClick={() => onItemActivate?.(0, document.createElement('img'))}>
             activate-0
           </button>
-          <button type="button" onClick={() => onFocusedImageChange?.(imgRef.current)}>
+          <button type="button" onClick={() => onFocusedRectChange?.(FOCUS_RECT)}>
             refire-focus
           </button>
         </div>

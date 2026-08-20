@@ -22,6 +22,14 @@ export interface HeroCarouselItem {
   accent?: string;
 }
 
+/** Rect (viewport) de la carte focus, pour le reverse-morph. */
+export interface HeroCarouselRect {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
 export interface HeroCarouselProps {
   items: HeroCarouselItem[];
   index?: number;
@@ -29,8 +37,8 @@ export interface HeroCarouselProps {
   onIndexChange?: (index: number) => void;
   /** Tiré au clic sur la carte DÉJÀ focus (i === index) et sur le cue CTA. */
   onItemActivate?: (index: number, img: HTMLImageElement | null) => void;
-  /** Tiré à chaque changement d'index (+ au montage) avec le <img> de la carte focus. */
-  onFocusedImageChange?: (img: HTMLImageElement | null) => void;
+  /** Tiré (avant peinture) avec le rect calculé de la carte focus, pour le reverse-morph. */
+  onFocusedRectChange?: (rect: HeroCarouselRect | null) => void;
   /** Libellé du cue d'ouverture (ex. « Voir le projet »). Masqué si absent. */
   ctaLabel?: string;
   autoplay?: boolean;
@@ -62,7 +70,7 @@ export function HeroCarousel({
   defaultIndex = 0,
   onIndexChange,
   onItemActivate,
-  onFocusedImageChange,
+  onFocusedRectChange,
   ctaLabel,
   autoplay = false,
   autoplayDelay = 4000,
@@ -87,7 +95,10 @@ export function HeroCarousel({
     [controlled, index, last, onIndexChange],
   );
 
-  React.useEffect(() => {
+  // Mesure SYNCHRONE avant peinture (useLayoutEffect) : à la 1re peinture la
+  // géométrie est déjà réelle, ce qui permet de démarrer le reverse-morph avant
+  // peinture (pas de flash de la liste) avec un rect correct.
+  React.useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
     const read = () => setBox({ w: stage.clientWidth, h: stage.clientHeight });
@@ -121,12 +132,11 @@ export function HeroCarousel({
 
   const didInitRef = React.useRef(false);
   // biome-ignore lint/correctness/useExhaustiveDependencies: spring est recréé à chaque rendu (dépendre dessus relancerait l'anim en boucle) ; reduced est déjà reflété dans spring/target.
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (dragging) return;
     // Premier passage utile (stage mesuré) : placer la pellicule directement
     // sur sa position, sans l'animer (évite un slide d'intro et garantit que
-    // la carte focus est déjà centrée/pleine taille quand onFocusedImageChange
-    // lit son rect juste après).
+    // la carte focus est déjà centrée/pleine taille dès la 1re peinture).
     if (!didInitRef.current) {
       if (box.w === 0) return;
       didInitRef.current = true;
@@ -137,23 +147,23 @@ export function HeroCarousel({
     return () => run.stop();
   }, [target, dragging, reduced, x, box.w]);
 
-  // Remonte l'image de la carte focus au parent (pour le reverse-morph).
-  // Attend que le stage soit mesuré (box.w > 0) : tant que ResizeObserver n'a
-  // pas encore livré la vraie taille, la carte focus n'est ni centrée ni à
-  // sa taille finale et son rect serait inexploitable pour le reverse-morph.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: index/box.w sont les déclencheurs voulus (recalcul au changement de focus ou de mesure) ; onFocusedImageChange est la seule dép. de callback nécessaire.
-  React.useEffect(() => {
-    if (!onFocusedImageChange || box.w === 0) return;
-    // Un frame de délai : laisse motion flusher le transform x (et la
-    // hauteur de la carte) sur le DOM avant de lire getBoundingClientRect().
-    const raf = requestAnimationFrame(() => {
-      const img = stageRef.current?.querySelector<HTMLImageElement>(
-        '[data-hc-card][aria-current="true"] img',
-      );
-      onFocusedImageChange(img ?? null);
+  // Reverse-morph : on calcule le rect de la carte focus GÉOMÉTRIQUEMENT (à
+  // partir du stage mesuré + cardW/fullH), en useLayoutEffect (avant peinture).
+  // Indépendant du spring de position/hauteur de motion (qui flushe en rAF) :
+  // le rect est donc toujours en portrait plein format et correctement centré,
+  // et le morph démarre avant la 1re peinture (pas de flash de la liste).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: index/box.w/box.h sont les déclencheurs voulus ; onFocusedRectChange est la seule dép. de callback.
+  React.useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!onFocusedRectChange || !stage || box.w === 0) return;
+    const sr = stage.getBoundingClientRect();
+    onFocusedRectChange({
+      left: sr.left + box.w / 2 - cardW / 2,
+      top: sr.top + STRIP_TOP * box.h,
+      width: cardW,
+      height: fullH,
     });
-    return () => cancelAnimationFrame(raf);
-  }, [index, box.w, onFocusedImageChange]);
+  }, [index, box.w, box.h, onFocusedRectChange]);
 
   React.useEffect(() => {
     const stage = stageRef.current;
@@ -231,6 +241,12 @@ export function HeroCarousel({
       onPointerLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
+      // Filet : le focus d'une carte peut déclencher un scrollIntoView du stage
+      // (overflow-hidden) qui décale tout le contenu. On annule tout scroll.
+      onScroll={(e) => {
+        e.currentTarget.scrollLeft = 0;
+        e.currentTarget.scrollTop = 0;
+      }}
       style={{ fontFamily: 'Manrope, sans-serif' }}
       className={cn(
         'relative h-full min-h-[24rem] w-full overflow-hidden bg-black text-white select-none',
@@ -257,8 +273,9 @@ export function HeroCarousel({
             animate={{ scale: 1.28 }}
             transition={reduced ? { duration: 0 } : { duration: 6, ease: 'linear' }}
           />
-          <div className="absolute inset-0" style={{ backgroundColor: accent, mixBlendMode: 'color' }} />
-          <div className="absolute inset-0 opacity-55" style={{ backgroundColor: accent, mixBlendMode: 'multiply' }} />
+          {/* Teinte à l'accent, adoucie : on laisse respirer les couleurs de la photo. */}
+          <div className="absolute inset-0" style={{ backgroundColor: accent, mixBlendMode: 'color', opacity: 0.45 }} />
+          <div className="absolute inset-0" style={{ backgroundColor: accent, mixBlendMode: 'multiply', opacity: 0.28 }} />
         </motion.div>
       </AnimatePresence>
 
@@ -280,7 +297,7 @@ export function HeroCarousel({
         }}
       >
         <div className="flex w-full flex-wrap items-end gap-x-[6vw] gap-y-2">
-          <AnimatePresence mode="popLayout" initial={false}>
+          <AnimatePresence initial={false}>
             <motion.h2
               key={index}
               className="font-semibold leading-[0.88] tracking-[-0.03em]"
@@ -290,7 +307,9 @@ export function HeroCarousel({
               exit={{ opacity: 0, transition: { duration: 0.18 } }}
             >
               {lines.map((line, i) => (
-                <span key={i} className="block overflow-hidden">
+                // paddingBottom : évite que les jambages (p, g, q) soient
+                // rognés par overflow-hidden (leading serré 0.88).
+                <span key={i} className="block overflow-hidden" style={{ paddingBottom: '0.16em' }}>
                   <motion.span
                     className="block"
                     initial={{ y: '110%' }}
@@ -372,6 +391,9 @@ export function HeroCarousel({
               data-hc-card
               aria-label={item.title.replace(/\n/g, ' ')}
               aria-current={i === index}
+              // Empêche le focus-au-clic (→ scrollIntoView du stage qui décalait
+              // tout le contenu). Le clic passe toujours ; le clavier aussi.
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 if (i === index) activate();
                 else go(i);
@@ -379,7 +401,10 @@ export function HeroCarousel({
               className="relative shrink-0 overflow-hidden rounded-none bg-white/5"
               style={{ width: cardW }}
               animate={{ height: i === index ? fullH : halfH }}
-              transition={spring}
+              // 1er passage : hauteur posée instantanément (sinon la carte focus
+              // s'ouvre de 96→pleine hauteur en spring, et le reverse-morph la
+              // capterait en paysage). Ensuite : spring normal au changement.
+              transition={didInitRef.current ? spring : { duration: 0 }}
             >
               <img
                 src={item.image}

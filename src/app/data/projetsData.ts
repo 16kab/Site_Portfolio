@@ -652,6 +652,7 @@ export const projetsData: Projet[] = [
 
 // Tous les projets (plus de séparation)
 export const tousProjets = projetsData.map((projet, index) => ({
+  id: projet.id,
   link: ROUTES.PROJET_DETAIL(projet.id),
   text: projet.title,
   year: projet.year,
@@ -701,7 +702,8 @@ export function getProjets(lang: Lang): Projet[] {
 /** Version localisée de `tousProjets` (liste des cartes). */
 export function getTousProjets(lang: Lang) {
   return getProjets(lang).map((projet, index) => ({
-    link: ROUTES.PROJET_DETAIL(projet.id),
+    id: projet.id,
+  link: ROUTES.PROJET_DETAIL(projet.id),
     text: projet.title,
     year: projet.year,
     description: projet.description,

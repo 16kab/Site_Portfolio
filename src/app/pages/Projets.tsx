@@ -1,8 +1,11 @@
 import './Projets.css';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import ContactFooter from '../components/ContactFooter';
-import { HeroCarousel, type HeroCarouselItem } from '../components/common/HeroCarousel';
+import {
+  HeroCarousel,
+  type HeroCarouselItem,
+  type HeroCarouselRect,
+} from '../components/common/HeroCarousel';
 import PageMeta from '../components/PageMeta';
 import { getTousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
@@ -20,9 +23,28 @@ import {
 } from '../utils/projetsScroll';
 import { preloadProjetDetail } from './preloadProjetDetail';
 
+// Titres COURTS pour le hero-carousel (format « héro » : punchy, sur 1-2 lignes
+// via \n). Les titres complets restent sur les pages détail. Clés = id projet.
+const SHORT_FR: Record<string, string> = {
+  mauni: 'Mauni',
+  'onboarding-rh': 'Onboarding\nRH',
+  syma: 'SYMA',
+  trackit: 'TrackIt',
+  'parcours-spvieassurances': 'Parcours\nSPVIE',
+  'crm-bigbroker': 'CRM\nBigBroker',
+  agpt: 'Agir Pour\nToutes',
+  'refonte-spvie': 'Refonte\nSPVIE',
+  'charte-spvie': 'Charte\nSPVIE',
+  'mobile-cgrm': 'App\nCGRM',
+};
+const SHORT_EN: Record<string, string> = {
+  ...SHORT_FR,
+  'onboarding-rh': 'HR\nOnboarding',
+};
+
 const STRINGS = {
-  fr: { cta: 'Voir le projet', cat: { mobile: 'MOBILE', web: 'WEB', branding: 'BRANDING' } },
-  en: { cta: 'View project', cat: { mobile: 'MOBILE', web: 'WEB', branding: 'BRANDING' } },
+  fr: { cta: 'Voir le projet', cat: { mobile: 'MOBILE', web: 'WEB', branding: 'BRANDING' }, short: SHORT_FR },
+  en: { cta: 'View project', cat: { mobile: 'MOBILE', web: 'WEB', branding: 'BRANDING' }, short: SHORT_EN },
 };
 
 export default function Projets() {
@@ -36,7 +58,7 @@ export default function Projets() {
 
   const items: HeroCarouselItem[] = tousProjets.map((p) => ({
     id: p.link,
-    title: p.text,
+    title: t.short[p.id] ?? p.text,
     image: p.image,
     credit: t.cat[p.category],
     meta: [p.year],
@@ -103,16 +125,17 @@ export default function Projets() {
     window.setTimeout(() => navigate(projet.link), timing.navigateDelay);
   };
 
-  // Morph retour : quand la carte focus (du projet d'origine) expose son image.
-  const handleFocusedImageChange = (img: HTMLImageElement | null) => {
+  // Morph retour : le HeroCarousel remonte (avant peinture) le rect calculé de
+  // la carte focus (celle du projet d'origine). On lance le reverse dessus.
+  const handleFocusedRectChange = (rect: HeroCarouselRect | null) => {
     if (!shouldStartReverse || reverseStartedRef.current || !mountSnapshot) return;
-    if (img == null || tousProjets[index]?.link !== mountSnapshot.projectLink) return;
+    if (rect == null || tousProjets[index]?.link !== mountSnapshot.projectLink) return;
     reverseStartedRef.current = true;
     if (reduceReturnMotion) {
       clearTransition();
       return;
     }
-    beginReverse(roundTransitionRect(img.getBoundingClientRect()));
+    beginReverse(roundTransitionRect(rect));
   };
 
   // Filet de sécurité : si l'image de la carte focus n'arrive jamais.
@@ -136,11 +159,10 @@ export default function Projets() {
           index={index}
           onIndexChange={setIndex}
           onItemActivate={handleActivate}
-          onFocusedImageChange={handleFocusedImageChange}
+          onFocusedRectChange={handleFocusedRectChange}
           ctaLabel={t.cta}
         />
       </div>
-      <ContactFooter />
     </div>
   );
 }
