@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { lazy } from 'react';
 import { MemoryRouter, Route, useNavigate } from 'react-router';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { RouteTransition } from './RouteTransition';
@@ -17,7 +18,8 @@ vi.mock('../context/PageTransitionContext', () => ({
 
 let reduced = false;
 vi.mock('../utils/projectTransition', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../utils/projectTransition')>();
+  const actual =
+    await importOriginal<typeof import('../utils/projectTransition')>();
   return { ...actual, prefersReducedProjectMotion: () => reduced };
 });
 
@@ -25,8 +27,12 @@ vi.mock('../utils/projectTransition', async (importOriginal) => {
 vi.mock('./PageVeil', () => ({
   PageVeil: ({ phase, onCovered, onRevealed }: any) => (
     <div data-testid="veil" data-phase={phase}>
-      <button type="button" onClick={onCovered}>fire-covered</button>
-      <button type="button" onClick={onRevealed}>fire-revealed</button>
+      <button type="button" onClick={onCovered}>
+        fire-covered
+      </button>
+      <button type="button" onClick={onRevealed}>
+        fire-revealed
+      </button>
     </div>
   ),
 }));
@@ -35,8 +41,12 @@ function Nav() {
   const navigate = useNavigate();
   return (
     <div>
-      <button type="button" onClick={() => navigate('/projets')}>go</button>
-      <button type="button" onClick={() => navigate('/apropos')}>go-apropos</button>
+      <button type="button" onClick={() => navigate('/projets')}>
+        go
+      </button>
+      <button type="button" onClick={() => navigate('/apropos')}>
+        go-apropos
+      </button>
     </div>
   );
 }
@@ -45,7 +55,15 @@ const renderApp = () =>
   render(
     <MemoryRouter initialEntries={['/']}>
       <RouteTransition>
-        <Route path="/" element={<div>HOME<Nav /></div>} />
+        <Route
+          path="/"
+          element={
+            <div>
+              HOME
+              <Nav />
+            </div>
+          }
+        />
         <Route path="/projets" element={<div>PROJETS</div>} />
         <Route path="/apropos" element={<div>APROPOS</div>} />
       </RouteTransition>
@@ -69,13 +87,17 @@ it('navigation normale : voile joué, la nouvelle page n’apparaît qu’après
   renderApp();
   fireEvent.click(screen.getByText('go'));
   // voile en cours, page encore = HOME (pas de flash)
-  expect(screen.getByTestId('veil').getAttribute('data-phase')).toBe('covering');
+  expect(screen.getByTestId('veil').getAttribute('data-phase')).toBe(
+    'covering',
+  );
   expect(screen.getByText('HOME')).toBeTruthy();
   expect(screen.queryByText('PROJETS')).toBeNull();
   // couverture terminée → swap
   fireEvent.click(screen.getByText('fire-covered'));
   expect(screen.getByText('PROJETS')).toBeTruthy();
-  expect(screen.getByTestId('veil').getAttribute('data-phase')).toBe('revealing');
+  expect(screen.getByTestId('veil').getAttribute('data-phase')).toBe(
+    'revealing',
+  );
   // révélation terminée → voile retiré
   fireEvent.click(screen.getByText('fire-revealed'));
   expect(screen.queryByTestId('veil')).toBeNull();
@@ -111,6 +133,48 @@ it('reset le scroll à 0 sur une navigation hors /projets', () => {
   document.body.scrollTop = 500;
   fireEvent.click(screen.getByText('go-apropos')); // → /apropos : reset à 0
   expect(document.body.scrollTop).toBe(0);
+});
+
+it('page lazy : le voile reste opaque (covering) jusqu’au montage, puis révèle', async () => {
+  let resolveChunk: () => void = () => {};
+  const chunk = new Promise<void>((resolve) => {
+    resolveChunk = resolve;
+  });
+  const Lazy = lazy(() =>
+    chunk.then(() => ({ default: () => <div>LAZY</div> })),
+  );
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <RouteTransition>
+        <Route
+          path="/"
+          element={
+            <div>
+              HOME
+              <Nav />
+            </div>
+          }
+        />
+        <Route path="/apropos" element={<Lazy />} />
+      </RouteTransition>
+    </MemoryRouter>,
+  );
+  fireEvent.click(screen.getByText('go-apropos'));
+  fireEvent.click(screen.getByText('fire-covered'));
+  // Chunk pas encore résolu → on RESTE en 'covering' (voile opaque, pas de flash).
+  expect(screen.getByTestId('veil').getAttribute('data-phase')).toBe(
+    'covering',
+  );
+  expect(screen.queryByText('LAZY')).toBeNull();
+  // Résolution du chunk → la page se monte → on révèle.
+  await act(async () => {
+    resolveChunk();
+    await chunk;
+  });
+  expect(screen.getByText('LAZY')).toBeTruthy();
+  expect(screen.getByTestId('veil').getAttribute('data-phase')).toBe(
+    'revealing',
+  );
 });
 
 it('reverse morph imminent (snapshot ciblant /projets) : swap immédiat, pas de voile', () => {
