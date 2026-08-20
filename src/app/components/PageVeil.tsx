@@ -19,7 +19,7 @@ export function PageVeil({ phase, onCovered, onRevealed }: PageVeilProps) {
   return (
     <motion.div
       aria-hidden="true"
-      className="fixed inset-x-0 top-0 z-[120]"
+      className="fixed inset-x-0 top-0 z-[300]"
       style={{
         height: '200vh',
         // Bande sombre à bords haut/bas fondus (opacité 0) pour un balayage doux.
