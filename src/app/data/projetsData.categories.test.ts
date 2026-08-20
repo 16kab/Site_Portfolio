@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { projetsData, getTousProjets } from './projetsData';
+import { projetsData, getTousProjets, tousProjets } from './projetsData';
 
 const CATS = ['mobile', 'web', 'branding'] as const;
 const EXPECTED: Record<string, (typeof CATS)[number]> = {
@@ -26,5 +26,10 @@ describe('projets — catégories & tailles', () => {
     expect(list).toHaveLength(projetsData.length);
     expect(CATS).toContain(list[0].category);
     expect(list[0]).toHaveProperty('tileSize');
+  });
+  it('chaque projet a un accent hex valide', () => {
+    for (const p of tousProjets) {
+      expect(p.accent, `accent manquant pour ${p.link}`).toMatch(/^#[0-9a-fA-F]{6}$/);
+    }
   });
 });
