@@ -303,7 +303,10 @@ export function HeroCarousel({
         }}
       >
         <div className="flex w-full flex-wrap items-end gap-x-[6vw] gap-y-2">
-          <AnimatePresence initial={false}>
+          {/* popLayout : le titre sortant passe en position absolue (hors flux)
+              → le titre entrant prend sa place à gauche immédiatement, sans être
+              poussé vers le milieu le temps du fondu de sortie. */}
+          <AnimatePresence mode="popLayout" initial={false}>
             <motion.h2
               key={index}
               className="font-semibold leading-[0.88] tracking-[-0.03em]"
