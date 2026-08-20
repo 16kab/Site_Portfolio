@@ -38,6 +38,7 @@ export interface Projet {
   tags: string[];
   category: 'mobile' | 'web' | 'branding';
   tileSize?: 'l' | 'm' | 's';
+  accent?: string;
   contexte: string;
   problematique: string;
   role: string;
@@ -60,6 +61,7 @@ export const projetsData: Projet[] = [
     id: 'mauni',
     category: 'mobile',
     tileSize: 'm',
+    accent: '#E4674F',
     title: 'Mauni',
     subtitle: 'Reprendre la main sur son argent, sans y penser.',
     year: '2026',
@@ -113,6 +115,7 @@ export const projetsData: Projet[] = [
     id: 'onboarding-rh',
     category: 'web',
     tileSize: 'l',
+    accent: '#10B981',
     title: 'Onboarding RH',
     subtitle: "Faire d'un premier jour une vraie rencontre.",
     year: '2026',
@@ -166,6 +169,7 @@ export const projetsData: Projet[] = [
     id: 'syma',
     category: 'branding',
     tileSize: 'm',
+    accent: '#18233F',
     title: 'SYMA',
     subtitle: 'Donner une identité à une agence qui se lance.',
     year: '2026',
@@ -219,6 +223,7 @@ export const projetsData: Projet[] = [
     id: 'trackit',
     category: 'mobile',
     tileSize: 'm',
+    accent: '#F56416',
     title: 'TrackIt',
     subtitle: 'Suivi de films & séries — recherche TMDB, épisodes, sync cloud.',
     year: '2026',
@@ -273,6 +278,7 @@ export const projetsData: Projet[] = [
     id: 'parcours-spvieassurances',
     category: 'web',
     tileSize: 's',
+    accent: '#12C69A',
     title: 'Refonte du parcours de souscription SPVIE',
     subtitle:
       "Un tunnel digital stratégique repensé de l'architecture d'information jusqu'à la signature.",
@@ -339,6 +345,7 @@ export const projetsData: Projet[] = [
     id: 'crm-bigbroker',
     category: 'web',
     tileSize: 'l',
+    accent: '#05D7CD',
     title: 'Conception du CRM interne BigBroker',
     subtitle:
       "Un outil métier conçu pour centraliser les données, structurer l'activité des conseillers et piloter la performance commerciale.",
@@ -400,6 +407,7 @@ export const projetsData: Projet[] = [
     id: 'agpt',
     category: 'branding',
     tileSize: 'm',
+    accent: '#E93C8C',
     title: 'Création de la marque Agir Pour Toutes',
     subtitle:
       'Structurer une marque engagée et concevoir un site permettant de présenter son univers et commercialiser ses clubs.',
@@ -456,6 +464,7 @@ export const projetsData: Projet[] = [
     id: 'refonte-spvie',
     category: 'web',
     tileSize: 'm',
+    accent: '#0A9D7A',
     title: 'Refonte visuelle stratégique du site SPVIE',
     subtitle:
       'Imaginer une nouvelle expérience web capable de clarifier les offres, améliorer la navigation et soutenir la génération de leads.',
@@ -517,6 +526,7 @@ export const projetsData: Projet[] = [
     id: 'charte-spvie',
     category: 'branding',
     tileSize: 's',
+    accent: '#1F6F5C',
     title: 'Proposition de refonte de la charte graphique SPVIE',
     subtitle:
       "Repenser la charte graphique du groupe afin d'harmoniser les supports et renforcer la crédibilité de la marque.",
@@ -580,6 +590,7 @@ export const projetsData: Projet[] = [
     id: 'mobile-cgrm',
     category: 'mobile',
     tileSize: 'm',
+    accent: '#2BB3C0',
     title: "Refonte de l'application mobile CGRM",
     subtitle:
       "Adapter l'application mobile à une charte plus moderne afin d'améliorer la lisibilité et la cohérence avec l'écosystème digital du groupe.",
@@ -641,6 +652,7 @@ export const projetsData: Projet[] = [
 
 // Tous les projets (plus de séparation)
 export const tousProjets = projetsData.map((projet, index) => ({
+  id: projet.id,
   link: ROUTES.PROJET_DETAIL(projet.id),
   text: projet.title,
   year: projet.year,
@@ -651,6 +663,7 @@ export const tousProjets = projetsData.map((projet, index) => ({
   number: String(index + 1).padStart(3, '0'),
   category: projet.category,
   tileSize: projet.tileSize ?? 'm',
+  accent: projet.accent ?? '#8a8a8a',
 }));
 
 // ─ Internationalisation ───────────────────────────────────────────────
@@ -689,7 +702,8 @@ export function getProjets(lang: Lang): Projet[] {
 /** Version localisée de `tousProjets` (liste des cartes). */
 export function getTousProjets(lang: Lang) {
   return getProjets(lang).map((projet, index) => ({
-    link: ROUTES.PROJET_DETAIL(projet.id),
+    id: projet.id,
+  link: ROUTES.PROJET_DETAIL(projet.id),
     text: projet.title,
     year: projet.year,
     description: projet.description,
@@ -699,5 +713,6 @@ export function getTousProjets(lang: Lang) {
     number: String(index + 1).padStart(3, '0'),
     category: projet.category,
     tileSize: projet.tileSize ?? 'm',
+    accent: projet.accent ?? '#8a8a8a',
   }));
 }

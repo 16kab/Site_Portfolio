@@ -1,24 +1,19 @@
 import './Projets.css';
-import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router';
-import ContactFooter from '../components/ContactFooter';
-import FilterBar from '../components/common/FilterBar';
-import ProjetTile from '../components/common/ProjetTile';
+import { useLocation, useNavigate } from 'react-router';
+import {
+  HeroCarousel,
+  type HeroCarouselItem,
+  type HeroCarouselRect,
+} from '../components/common/HeroCarousel';
 import PageMeta from '../components/PageMeta';
-import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
 import { getTousProjets } from '../data/projetsData';
 import { ROUTES } from '../config';
 import { ROUTE_META } from '../config/seo';
 import { useLang, useT } from '../i18n';
 import { usePageTransition } from '../context/PageTransitionContext';
-import { filterProjets, type FilterValue } from '../utils/filterProjets';
-
-const STRINGS = {
-  fr: { eyebrow: 'Mes travaux', title: 'Projets' },
-  en: { eyebrow: 'My work', title: 'Projects' },
-};
 import {
+  getProjectTransitionTiming,
   prefersReducedProjectMotion,
   roundTransitionRect,
 } from '../utils/projectTransition';
@@ -28,169 +23,146 @@ import {
 } from '../utils/projetsScroll';
 import { preloadProjetDetail } from './preloadProjetDetail';
 
+// Titres COURTS pour le hero-carousel (format « héro » : punchy, sur 1 ligne).
+// Les titres complets restent sur les pages détail. Clés = id projet.
+const SHORT_FR: Record<string, string> = {
+  mauni: 'Mauni',
+  'onboarding-rh': 'Onboarding RH',
+  syma: 'SYMA',
+  trackit: 'TrackIt',
+  'parcours-spvieassurances': 'Parcours SPVIE',
+  'crm-bigbroker': 'CRM BigBroker',
+  agpt: 'Agir Pour Toutes',
+  'refonte-spvie': 'Refonte SPVIE',
+  'charte-spvie': 'Charte SPVIE',
+  'mobile-cgrm': 'App CGRM',
+};
+const SHORT_EN: Record<string, string> = {
+  ...SHORT_FR,
+  'onboarding-rh': 'HR Onboarding',
+};
+
+const STRINGS = {
+  fr: { cta: 'Voir le projet', cat: { mobile: 'MOBILE', web: 'WEB', branding: 'BRANDING' }, short: SHORT_FR },
+  en: { cta: 'View project', cat: { mobile: 'MOBILE', web: 'WEB', branding: 'BRANDING' }, short: SHORT_EN },
+};
+
 export default function Projets() {
   const t = useT(STRINGS);
   const { lang } = useLang();
   const tousProjets = getTousProjets(lang);
   const location = useLocation();
-  const { snapshot, direction, beginReverse, clearTransition } =
+  const navigate = useNavigate();
+  const { snapshot, direction, captureSnapshot, beginForward, beginReverse, clearTransition, isTransitioning } =
     usePageTransition();
-  const cardRefs = useRef<{ [key: string]: HTMLImageElement | null }>({});
-  const [filter, setFilter] = useState<FilterValue>('all');
-  const visibles = filterProjets(tousProjets, filter);
+
+  const items: HeroCarouselItem[] = tousProjets.map((p) => ({
+    id: p.link,
+    title: t.short[p.id] ?? p.text,
+    image: p.image,
+    credit: t.cat[p.category],
+    meta: [p.year],
+    accent: p.accent,
+  }));
+
   const [isReturnVisit] = useState(
-    () =>
-      snapshot?.originPath === '/projets' && location.pathname === '/projets',
+    () => snapshot?.originPath === '/projets' && location.pathname === '/projets',
   );
   const [reduceReturnMotion] = useState(() => prefersReducedProjectMotion());
-  // Figés au montage : l'animation de retour ne concerne que l'état présent
-  // à l'arrivée sur la page. Sans cela, un clic de carte depuis une liste
-  // « de retour » (beginForward → nouveau snapshot) relançait cet effet, qui
-  // écrasait l'aller par un reverse (image plein écran repliée sur la carte).
   const [mountSnapshot] = useState(() => snapshot);
   const [mountDirection] = useState(() => direction);
   const shouldStartReverse =
     isReturnVisit && mountSnapshot !== null && mountDirection !== 'reverse';
 
-  // Position de la liste à restaurer, figée au montage. On n'utilise le
-  // scrollTop du snapshot que s'il provient bien de la liste ; sinon (ex.
-  // projet → autre projet → liste, où le snapshot vient d'une page détail)
-  // on s'appuie sur la mémoire dédiée à la liste.
-  const initialScrollRef = useRef(resolveInitialProjetsScroll(snapshot));
+  // Index de départ = carte du projet d'origine si retour, sinon 0.
+  const returnIndex = mountSnapshot
+    ? Math.max(0, tousProjets.findIndex((p) => p.link === mountSnapshot.projectLink))
+    : 0;
+  const [index, setIndex] = useState(isReturnVisit ? returnIndex : 0);
+  const reverseStartedRef = useRef(false);
+  const activatePendingRef = useRef(false);
 
-  // Restaure la position au montage (avant peinture, avant l'éventuel morph)
+  const initialScrollRef = useRef(resolveInitialProjetsScroll(snapshot));
   useLayoutEffect(() => {
     document.body.scrollTop = initialScrollRef.current;
   }, []);
 
-  // Mémorise la position pendant le défilement (pour un retour ultérieur)
   useEffect(() => {
     const onScroll = () => saveProjetsScroll(document.body.scrollTop);
     document.body.addEventListener('scroll', onScroll, { passive: true });
     return () => document.body.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Précharge le chunk de la page détail en tâche de fond : la transition
-  // « morph » ne doit jamais attendre le réseau au moment du clic.
   useEffect(() => {
     const timer = setTimeout(preloadProjetDetail, 300);
     return () => clearTimeout(timer);
   }, []);
 
-  // Animation de retour (morph) — le scroll est déjà restauré ci-dessus.
-  // Ne dépend que de valeurs figées au montage : s'exécute une seule fois.
-  useLayoutEffect(() => {
-    if (!shouldStartReverse || !mountSnapshot) return;
+  // Morph aller : clic sur la carte focus du HeroCarousel (ou cue CTA).
+  // Double garde-fou contre un second déclenchement (double-clic/Entrée
+  // rapide) : `isTransitioning` (état du contexte, retardé d'un rendu) ET
+  // `activatePendingRef` (synchrone, vrai dès le premier appel — jamais
+  // réinitialisé, on navigue de toute façon hors de la page).
+  const handleActivate = (i: number, img: HTMLImageElement | null) => {
+    if (activatePendingRef.current || isTransitioning) return;
+    const projet = tousProjets[i];
+    if (!projet || !img) return;
+    activatePendingRef.current = true;
+    const nextSnapshot = {
+      imageSrc: projet.image,
+      imageRect: roundTransitionRect(img.getBoundingClientRect()),
+      projectLink: projet.link,
+      originPath: location.pathname,
+      scrollTop: document.body.scrollTop,
+    };
+    if (prefersReducedProjectMotion()) {
+      captureSnapshot(nextSnapshot);
+      navigate(projet.link);
+      return;
+    }
+    const timing = getProjectTransitionTiming(window.innerWidth, 'forward');
+    beginForward(nextSnapshot);
+    window.setTimeout(() => navigate(projet.link), timing.navigateDelay);
+  };
 
+  // Morph retour : le HeroCarousel remonte (avant peinture) le rect calculé de
+  // la carte focus (celle du projet d'origine). On lance le reverse dessus.
+  const handleFocusedRectChange = (rect: HeroCarouselRect | null) => {
+    if (!shouldStartReverse || reverseStartedRef.current || !mountSnapshot) return;
+    if (rect == null || tousProjets[index]?.link !== mountSnapshot.projectLink) return;
+    reverseStartedRef.current = true;
     if (reduceReturnMotion) {
       clearTransition();
       return;
     }
+    beginReverse(roundTransitionRect(rect));
+  };
 
-    const image = cardRefs.current[mountSnapshot.projectLink];
-    if (!image) {
-      clearTransition();
-      return;
-    }
-
-    beginReverse(roundTransitionRect(image.getBoundingClientRect()));
-  }, [
-    beginReverse,
-    clearTransition,
-    reduceReturnMotion,
-    shouldStartReverse,
-    mountSnapshot,
-  ]);
+  // Filet de sécurité : si l'image de la carte focus n'arrive jamais.
+  useLayoutEffect(() => {
+    if (!shouldStartReverse) return;
+    const id = window.setTimeout(() => {
+      if (!reverseStartedRef.current) {
+        reverseStartedRef.current = true;
+        clearTransition();
+      }
+    }, 400);
+    return () => window.clearTimeout(id);
+  }, [shouldStartReverse, clearTransition]);
 
   return (
-    <motion.div
-      className="relative min-h-screen projets-page"
-      style={{ backgroundColor: 'var(--portfolio-bg)' }}
-      initial={isReturnVisit && !reduceReturnMotion ? { opacity: 0 } : false}
-      animate={{ opacity: 1 }}
-      transition={{
-        duration: isReturnVisit && !reduceReturnMotion ? 0.2 : 0,
-      }}
-    >
+    <div className="projets-page" style={{ backgroundColor: 'var(--portfolio-bg)' }}>
       <PageMeta {...ROUTE_META[ROUTES.PROJETS]} />
-      {/* Projets Content */}
-      <section
-        style={{ paddingTop: 'var(--page-padding-top)' }}
-        className="pb-32"
-      >
-        <div className="mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24">
-          {/* Header */}
-          <div className="mb-12">
-            <ScrollRevealTitle delay={0}>
-              <p
-                style={{
-                  fontFamily: 'Manrope, sans-serif',
-                  fontWeight: 500,
-                  fontSize: 'clamp(0.8125rem, 0.75rem + 0.3125vw, 0.9375rem)',
-                  lineHeight: '1.6',
-                  color: 'var(--portfolio-text-secondary)',
-                  marginBottom: '0px',
-                  letterSpacing: '0.5px',
-                }}
-              >
-                {t.eyebrow}
-              </p>
-            </ScrollRevealTitle>
-            <ScrollRevealTitle delay={0.05}>
-              <h1
-                style={{
-                  fontFamily: 'Manrope, sans-serif',
-                  fontWeight: 700,
-                  fontSize: 'clamp(2rem, 1rem + 5vw, 3rem)',
-                  lineHeight: '1.1',
-                  letterSpacing: '-1.4px',
-                  color: 'var(--portfolio-text-primary)',
-                }}
-              >
-                {t.title}
-              </h1>
-            </ScrollRevealTitle>
-          </div>
-
-          {/* Filtre par discipline */}
-          <FilterBar value={filter} onChange={setFilter} />
-
-          {/* Mosaïque des projets */}
-          <motion.div layout={!reduceReturnMotion} className="projets-mosaic">
-            <AnimatePresence mode="popLayout">
-              {visibles.map((projet, index) => (
-                <motion.div
-                  key={projet.link}
-                  layout
-                  initial={{ opacity: 0, scale: 0.94 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.94 }}
-                  transition={{
-                    duration: reduceReturnMotion ? 0 : 0.35,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className={`mosaic-cell cell-${projet.tileSize}`}
-                >
-                  <ProjetTile
-                    link={projet.link}
-                    title={projet.text}
-                    category={projet.category}
-                    image={projet.image}
-                    tileSize={projet.tileSize}
-                    priority={index < 2}
-                    ref={(imageElement) => {
-                      cardRefs.current[projet.link] = imageElement;
-                    }}
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Contact Footer */}
-      <ContactFooter />
-    </motion.div>
+      <div className="projets-carousel-stage">
+        <HeroCarousel
+          items={items}
+          index={index}
+          onIndexChange={setIndex}
+          onItemActivate={handleActivate}
+          onFocusedRectChange={handleFocusedRectChange}
+          ctaLabel={t.cta}
+        />
+      </div>
+    </div>
   );
 }
