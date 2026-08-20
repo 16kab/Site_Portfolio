@@ -38,7 +38,7 @@ export default function Projets() {
     id: p.link,
     title: p.text,
     image: p.image,
-    credit: t.cat[p.category as 'mobile' | 'web' | 'branding'],
+    credit: t.cat[p.category],
     meta: [p.year],
     accent: p.accent,
   }));
@@ -76,7 +76,7 @@ export default function Projets() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Morph aller : clic sur la carte focus (ou cue CTA) — logique de ProjetTile.
+  // Morph aller : clic sur la carte focus du HeroCarousel (ou cue CTA).
   // Double garde-fou contre un second déclenchement (double-clic/Entrée
   // rapide) : `isTransitioning` (état du contexte, retardé d'un rendu) ET
   // `activatePendingRef` (synchrone, vrai dès le premier appel — jamais

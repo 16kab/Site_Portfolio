@@ -119,21 +119,40 @@ export function HeroCarousel({
     ? { duration: 0 }
     : { duration: 0.7, ease: 'easeOut' as const };
 
+  const didInitRef = React.useRef(false);
   // biome-ignore lint/correctness/useExhaustiveDependencies: spring est recréé à chaque rendu (dépendre dessus relancerait l'anim en boucle) ; reduced est déjà reflété dans spring/target.
   React.useEffect(() => {
     if (dragging) return;
+    // Premier passage utile (stage mesuré) : placer la pellicule directement
+    // sur sa position, sans l'animer (évite un slide d'intro et garantit que
+    // la carte focus est déjà centrée/pleine taille quand onFocusedImageChange
+    // lit son rect juste après).
+    if (!didInitRef.current) {
+      if (box.w === 0) return;
+      didInitRef.current = true;
+      x.set(target);
+      return;
+    }
     const run = animate(x, target, spring);
     return () => run.stop();
-  }, [target, dragging, reduced, x]);
+  }, [target, dragging, reduced, x, box.w]);
 
   // Remonte l'image de la carte focus au parent (pour le reverse-morph).
+  // Attend que le stage soit mesuré (box.w > 0) : tant que ResizeObserver n'a
+  // pas encore livré la vraie taille, la carte focus n'est ni centrée ni à
+  // sa taille finale et son rect serait inexploitable pour le reverse-morph.
   // biome-ignore lint/correctness/useExhaustiveDependencies: index/box.w sont les déclencheurs voulus (recalcul au changement de focus ou de mesure) ; onFocusedImageChange est la seule dép. de callback nécessaire.
   React.useEffect(() => {
-    if (!onFocusedImageChange) return;
-    const img = stageRef.current?.querySelector<HTMLImageElement>(
-      '[data-hc-card][aria-current="true"] img',
-    );
-    onFocusedImageChange(img ?? null);
+    if (!onFocusedImageChange || box.w === 0) return;
+    // Un frame de délai : laisse motion flusher le transform x (et la
+    // hauteur de la carte) sur le DOM avant de lire getBoundingClientRect().
+    const raf = requestAnimationFrame(() => {
+      const img = stageRef.current?.querySelector<HTMLImageElement>(
+        '[data-hc-card][aria-current="true"] img',
+      );
+      onFocusedImageChange(img ?? null);
+    });
+    return () => cancelAnimationFrame(raf);
   }, [index, box.w, onFocusedImageChange]);
 
   React.useEffect(() => {
