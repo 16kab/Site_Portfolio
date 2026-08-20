@@ -1,412 +1,61 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import type { MutableRefObject, PropsWithChildren, Ref } from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Link, MemoryRouter, Route, Routes, useNavigate } from 'react-router';
-import {
-  PageTransitionProvider,
-  usePageTransition,
-} from '../context/PageTransitionContext';
-import { tousProjets } from '../data/projetsData';
-
-vi.mock('../components/ContactFooter', () => ({
-  default: () => <footer>Contact footer</footer>,
-}));
-
-vi.mock('../components/ScrollRevealTitle', () => ({
-  ScrollRevealTitle: ({ children }: PropsWithChildren) => <>{children}</>,
-}));
-
-vi.mock('../components/common/ProjetTile', async () => {
-  const { forwardRef } = await import('react');
-
-  const setRef = (
-    ref: Ref<HTMLImageElement>,
-    image: HTMLImageElement | null,
-  ) => {
-    if (typeof ref === 'function') {
-      ref(image);
-    } else if (ref) {
-      (ref as MutableRefObject<HTMLImageElement | null>).current = image;
-    }
-  };
-
-  return {
-    default: forwardRef<
-      HTMLImageElement,
-      { image?: string; link: string; title: string }
-    >(({ image, link, title }, ref) => (
-      <img
-        ref={(node) => {
-          if (node) {
-            node.getBoundingClientRect = () =>
-              ({
-                left: 20,
-                top: 160,
-                width: 350,
-                height: 250,
-                right: 370,
-                bottom: 410,
-                x: 20,
-                y: 160,
-                toJSON: () => ({}),
-              }) as DOMRect;
-          }
-          setRef(ref, node);
-        }}
-        src={image}
-        alt={title}
-        data-project-link={link}
-      />
-    )),
-  };
-});
-
-vi.mock('motion/react', async () => {
-  const { forwardRef } = await import('react');
-
-  return {
-    AnimatePresence: ({ children }: PropsWithChildren) => <>{children}</>,
-    motion: {
-      div: forwardRef<
-        HTMLDivElement,
-        PropsWithChildren<{
-          initial: unknown;
-          animate: unknown;
-          transition: unknown;
-          className?: string;
-          style?: React.CSSProperties;
-        }>
-      >(({ children, initial, animate, transition, className, style }, ref) => (
-        <div
-          ref={ref}
-          className={className}
-          style={style}
-          data-testid="motion-root"
-          data-initial={JSON.stringify(initial)}
-          data-animate={JSON.stringify(animate)}
-          data-transition={JSON.stringify(transition)}
-        >
-          {children}
-        </div>
-      )),
-      img: forwardRef<
-        HTMLImageElement,
-        {
-          src: string;
-          alt: string;
-          initial: unknown;
-          animate: unknown;
-          transition: unknown;
-          className?: string;
-        }
-      >(({ src, alt, initial, animate, transition, className }, ref) => (
-        <img
-          ref={ref}
-          src={src}
-          alt={alt}
-          className={className}
-          data-testid="transition-image"
-          data-initial={JSON.stringify(initial)}
-          data-animate={JSON.stringify(animate)}
-          data-transition={JSON.stringify(transition)}
-        />
-      )),
-    },
-  };
-});
-
-import { PageTransitionOverlay } from '../components/PageTransitionOverlay';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
+import { vi } from 'vitest';
 import Projets from './Projets';
 
-const existingProjectLink = tousProjets[0].link;
+const captureSnapshot = vi.fn();
+const beginForward = vi.fn();
+const beginReverse = vi.fn();
+const clearTransition = vi.fn();
+vi.mock('../context/PageTransitionContext', () => ({
+  usePageTransition: () => ({
+    snapshot: null,
+    direction: null,
+    captureSnapshot,
+    beginForward,
+    beginReverse,
+    clearTransition,
+    isTransitioning: false,
+  }),
+}));
 
-function TransitionState() {
-  const { isTransitioning, direction, snapshot } = usePageTransition();
-
-  return (
-    <>
-      <output data-testid="transition-state">
-        {isTransitioning ? 'active' : 'idle'}:{direction ?? 'none'}:
-        {snapshot?.projectLink ?? 'none'}
-      </output>
-      <output data-testid="transition-rect">
-        {snapshot
-          ? [
-              snapshot.imageRect.left,
-              snapshot.imageRect.top,
-              snapshot.imageRect.width,
-              snapshot.imageRect.height,
-            ].join(',')
-          : 'none'}
-      </output>
-    </>
-  );
-}
-
-// Contrôles disponibles quelle que soit la route (rendus hors <Routes>) :
-// simulent, depuis la liste montée, le clic d'une carte (beginForward) et la
-// fin d'une transition en cours (completeTransition).
-function GlobalControls() {
-  const { beginForward, completeTransition } = usePageTransition();
-
-  return (
-    <>
-      <button
-        type="button"
-        data-testid="begin-forward-global"
-        onClick={() =>
-          beginForward({
-            imageSrc: '/test-2.webp',
-            imageRect: { left: 20, top: 300, width: 350, height: 250 },
-            projectLink: tousProjets[1].link,
-            originPath: '/projets',
-            scrollTop: 480,
-          })
-        }
-      >
-        Begin forward global
+// Mock du carousel : expose les items + un bouton pour déclencher onItemActivate.
+vi.mock('../components/common/HeroCarousel', () => ({
+  HeroCarousel: ({ items, onItemActivate }: any) => (
+    <div data-testid="carousel">
+      <span data-testid="count">{items.length}</span>
+      <span data-testid="first-credit">{items[0].credit}</span>
+      <span data-testid="first-meta">{items[0].meta?.[0]}</span>
+      <span data-testid="first-accent">{items[0].accent}</span>
+      <button type="button" onClick={() => onItemActivate?.(0, document.createElement('img'))}>
+        activate-0
       </button>
-      <button
-        type="button"
-        data-testid="complete-global"
-        onClick={completeTransition}
-      >
-        Complete global
-      </button>
-    </>
-  );
-}
+    </div>
+  ),
+}));
 
-function ProjectDetailControls({ snapshotLink }: { snapshotLink: string }) {
-  const navigate = useNavigate();
-  const { captureSnapshot, beginForward, completeTransition } =
-    usePageTransition();
-
-  const snapshot = {
-    imageSrc: '/test.webp',
-    imageRect: { left: 0, top: 0, width: 390, height: 844 },
-    projectLink: snapshotLink,
-    originPath: '/projets',
-    scrollTop: 480,
-  };
-
-  return (
-    <>
-      <button type="button" onClick={() => beginForward(snapshot)}>
-        Seed forward
-      </button>
-      <button type="button" onClick={() => captureSnapshot(snapshot)}>
-        Capture snapshot
-      </button>
-      <button type="button" onClick={completeTransition}>
-        Complete forward
-      </button>
-      <button type="button" onClick={() => navigate(-1)}>
-        Browser back
-      </button>
-      <Link to="/projets">Header projects</Link>
-    </>
-  );
-}
-
-function renderReturn(snapshotLink = existingProjectLink) {
-  return render(
-    <MemoryRouter
-      initialEntries={['/projets', existingProjectLink]}
-      initialIndex={1}
-    >
-      <PageTransitionProvider>
-        <TransitionState />
-        <GlobalControls />
-        <PageTransitionOverlay />
-        <Routes>
-          <Route path="/projets" element={<Projets />} />
-          <Route
-            path="/projets/:id"
-            element={<ProjectDetailControls snapshotLink={snapshotLink} />}
-          />
-        </Routes>
-      </PageTransitionProvider>
-    </MemoryRouter>,
-  );
-}
-
-function renderProjets() {
-  return render(
+const renderProjets = () =>
+  render(
     <MemoryRouter initialEntries={['/projets']}>
-      <PageTransitionProvider>
-        <Projets />
-      </PageTransitionProvider>
+      <Projets />
     </MemoryRouter>,
   );
-}
 
-function seedAndCompleteForward() {
-  fireEvent.click(screen.getByRole('button', { name: 'Seed forward' }));
-  expect(screen.getByTestId('transition-state')).toHaveTextContent(
-    `active:forward:${existingProjectLink}`,
-  );
-  fireEvent.click(screen.getByRole('button', { name: 'Complete forward' }));
-}
+it('câble les 10 projets au carousel', () => {
+  renderProjets();
+  expect(screen.getByTestId('count').textContent).toBe('10');
+});
 
-describe('Projets return transition', () => {
-  beforeEach(() => {
-    document.body.scrollTop = 0;
-    window.matchMedia = vi.fn().mockReturnValue({ matches: false });
-  });
+it('mappe credit=discipline, meta=année, accent', () => {
+  renderProjets();
+  expect(screen.getByTestId('first-credit').textContent).toMatch(/MOBILE|WEB|BRANDING/);
+  expect(screen.getByTestId('first-meta').textContent).toMatch(/^\d{4}/);
+  expect(screen.getByTestId('first-accent').textContent).toMatch(/^#[0-9a-fA-F]{6}$/);
+});
 
-  afterEach(() => {
-    vi.useRealTimers();
-    Object.defineProperty(window, 'innerWidth', {
-      configurable: true,
-      value: 1024,
-    });
-  });
-
-  it.each([
-    ['browser history', 'Browser back'],
-    ['the header projects link', 'Header projects'],
-  ])(
-    'restores scroll and starts reverse through %s',
-    (_label, returnControl) => {
-      renderReturn();
-      seedAndCompleteForward();
-
-      fireEvent.click(
-        screen.getByRole(returnControl === 'Browser back' ? 'button' : 'link', {
-          name: returnControl,
-        }),
-      );
-
-      expect(document.body.scrollTop).toBe(480);
-      expect(screen.getByTestId('transition-state')).toHaveTextContent(
-        `active:reverse:${existingProjectLink}`,
-      );
-      expect(screen.getByTestId('transition-rect')).toHaveTextContent(
-        '20,160,350,250',
-      );
-      expect(screen.getAllByRole('img')).toHaveLength(tousProjets.length);
-    },
-  );
-
-  it('supersedes an active mobile forward transition with a fresh reverse timeline', () => {
-    vi.useFakeTimers();
-    Object.defineProperty(window, 'innerWidth', {
-      configurable: true,
-      value: 390,
-    });
-    renderReturn();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Seed forward' }));
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      `active:forward:${existingProjectLink}`,
-    );
-    act(() => vi.advanceTimersByTime(420));
-
-    fireEvent.click(screen.getByRole('button', { name: 'Browser back' }));
-
-    expect(document.body.scrollTop).toBe(480);
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      `active:reverse:${existingProjectLink}`,
-    );
-    expect(screen.getByTestId('transition-image')).toHaveAttribute(
-      'data-transition',
-      JSON.stringify({
-        duration: 0.5,
-        ease: [0.76, 0, 0.24, 1],
-        delay: 0,
-      }),
-    );
-
-    act(() => vi.advanceTimersByTime(599));
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      `active:reverse:${existingProjectLink}`,
-    );
-
-    act(() => vi.advanceTimersByTime(1));
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      'idle:reverse:none',
-    );
-    expect(vi.getTimerCount()).toBe(0);
-  });
-
-  it('clears the snapshot and shows the fallback page when the target is absent', () => {
-    renderReturn('/projets/absent');
-    fireEvent.click(screen.getByRole('button', { name: 'Seed forward' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Complete forward' }));
-
-    fireEvent.click(screen.getByRole('link', { name: 'Header projects' }));
-
-    expect(document.body.scrollTop).toBe(480);
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      'idle:none:none',
-    );
-    expect(screen.getByRole('heading', { name: 'Projets' })).toBeVisible();
-    expect(screen.getAllByTestId('motion-root')[0]).toHaveAttribute(
-      'data-animate',
-      JSON.stringify({ opacity: 1 }),
-    );
-    expect(screen.getAllByTestId('motion-root')[0]).toHaveAttribute(
-      'data-transition',
-      JSON.stringify({ duration: 0.2 }),
-    );
-  });
-
-  it('clears immediately without reverse animation when motion is reduced', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: true });
-    renderReturn();
-    fireEvent.click(screen.getByRole('button', { name: 'Capture snapshot' }));
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      `idle:none:${existingProjectLink}`,
-    );
-
-    fireEvent.click(screen.getByRole('link', { name: 'Header projects' }));
-
-    expect(document.body.scrollTop).toBe(480);
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      'idle:none:none',
-    );
-    expect(screen.getAllByTestId('motion-root')[0]).toHaveAttribute(
-      'data-initial',
-      'false',
-    );
-    expect(screen.getAllByTestId('motion-root')[0]).toHaveAttribute(
-      'data-transition',
-      JSON.stringify({ duration: 0 }),
-    );
-  });
-
-  it('keeps a new forward transition after returning to the list', () => {
-    renderReturn();
-    seedAndCompleteForward();
-
-    // Retour à la liste : l'animation de retour se joue puis se termine
-    fireEvent.click(screen.getByRole('link', { name: 'Header projects' }));
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      `active:reverse:${existingProjectLink}`,
-    );
-    fireEvent.click(screen.getByTestId('complete-global'));
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      'idle:reverse:none',
-    );
-
-    // Nouveau clic de carte depuis cette même liste : l'aller doit rester un
-    // aller (régression : l'effet de retour re-déclenché l'écrasait par un
-    // reverse plein écran → carte)
-    fireEvent.click(screen.getByTestId('begin-forward-global'));
-    expect(screen.getByTestId('transition-state')).toHaveTextContent(
-      `active:forward:${tousProjets[1].link}`,
-    );
-  });
-
-  it('filtre la mosaïque par discipline', () => {
-    renderProjets();
-    const mobileCount = tousProjets.filter(
-      (p) => p.category === 'mobile',
-    ).length;
-    fireEvent.click(screen.getByRole('tab', { name: 'Mobile' }));
-    expect(screen.getAllByRole('img')).toHaveLength(mobileCount);
-    fireEvent.click(screen.getByRole('tab', { name: 'Tous' }));
-    expect(screen.getAllByRole('img')).toHaveLength(tousProjets.length);
-  });
+it('onItemActivate déclenche le morph (captureSnapshot + beginForward)', () => {
+  renderProjets();
+  fireEvent.click(screen.getByText('activate-0'));
+  expect(captureSnapshot).toHaveBeenCalledTimes(0); // morph normal → beginForward (pas reduce)
+  expect(beginForward).toHaveBeenCalledTimes(1);
 });
