@@ -1,20 +1,21 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
-import { lazy, Suspense, useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
-import Header from './components/Header';
-import Home from './pages/Home';
-import ThemedToaster from './components/ThemedToaster';
-import Grainient from './components/Grainient';
-import { ScrollToTop } from './components/ScrollToTop';
-import { PageTransitionProvider } from './context/PageTransitionContext';
-import { PageTransitionOverlay } from './components/PageTransitionOverlay';
-import SplashScreen from './components/SplashScreen';
+import { lazy, useEffect, useState } from 'react';
+import { BrowserRouter, Route, useLocation } from 'react-router';
 import ErrorBoundary from './components/ErrorBoundary';
+import Grainient from './components/Grainient';
+import Header from './components/Header';
+import { PageTransitionOverlay } from './components/PageTransitionOverlay';
+import { RouteTransition } from './components/RouteTransition';
+import { ScrollToTop } from './components/ScrollToTop';
+import SplashScreen from './components/SplashScreen';
+import ThemedToaster from './components/ThemedToaster';
 import { ROUTES } from './config';
+import { PageTransitionProvider } from './context/PageTransitionContext';
 import { useIsDarkMode } from './hooks';
 import { LanguageProvider, useT } from './i18n';
+import Home from './pages/Home';
 
 function SkipLink() {
   const t = useT({
@@ -49,30 +50,22 @@ export const syncSafariChromeColor = (
 };
 
 export function AppContent({ showSplash }: { showSplash: boolean }) {
-  const location = useLocation();
-
   return (
     <>
       {/* Scroll to top on route change */}
       <ScrollToTop />
 
-      <Suspense fallback={null}>
-        <Routes location={location}>
-          <Route
-            path={ROUTES.HOME}
-            element={<Home showSplash={showSplash} />}
-          />
-          <Route path={ROUTES.CONTACT} element={<Contact />} />
-          <Route path={ROUTES.MENTIONS} element={<MentionsLegales />} />
-          <Route path={ROUTES.APROPOS} element={<APropos />} />
-          <Route path={ROUTES.PROJETS} element={<Projets />} />
-          <Route
-            path={ROUTES.PROJET_DETAIL_PATTERN}
-            element={<ProjetDetail />}
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Suspense>
+      {/* Suspense géré à l'intérieur de RouteTransition (le voile reste au-dessus
+          du chargement lazy — pas de flash au premier rendu d'une page). */}
+      <RouteTransition>
+        <Route path={ROUTES.HOME} element={<Home showSplash={showSplash} />} />
+        <Route path={ROUTES.CONTACT} element={<Contact />} />
+        <Route path={ROUTES.MENTIONS} element={<MentionsLegales />} />
+        <Route path={ROUTES.APROPOS} element={<APropos />} />
+        <Route path={ROUTES.PROJETS} element={<Projets />} />
+        <Route path={ROUTES.PROJET_DETAIL_PATTERN} element={<ProjetDetail />} />
+        <Route path="*" element={<NotFound />} />
+      </RouteTransition>
     </>
   );
 }

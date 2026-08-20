@@ -242,4 +242,18 @@ describe('ScrollToTop', () => {
     expect(screen.getByTestId('snapshot')).toHaveTextContent('none');
     expect(document.body.scrollTop).toBe(480);
   });
+
+  it('ne remet plus le scroll à zéro lui-même (délégué à RouteTransition)', () => {
+    document.body.scrollTop = 300;
+    render(
+      <MemoryRouter initialEntries={['/contact']}>
+        <PageTransitionProvider>
+          <ScrollToTop />
+          <p>Contact page</p>
+        </PageTransitionProvider>
+      </MemoryRouter>,
+    );
+
+    expect(document.body.scrollTop).toBe(300);
+  });
 });
