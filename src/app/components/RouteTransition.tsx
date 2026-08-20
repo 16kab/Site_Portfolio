@@ -11,7 +11,7 @@ function resetScrollFor(pathname: string) {
 
 export function RouteTransition({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const { isTransitioning } = usePageTransition();
+  const { isTransitioning, snapshot } = usePageTransition();
   const [displayed, setDisplayed] = useState<Location>(location);
   const [phase, setPhase] = useState<VeilPhase | null>(null);
   // Location vers laquelle on transitionne (pour un swap correct même si la
@@ -21,7 +21,13 @@ export function RouteTransition({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (location.key === displayed.key) return; // déjà affichée
     pendingRef.current = location;
-    if (isTransitioning || prefersReducedProjectMotion()) {
+    // Reverse morph imminent : la navigation vers `/projets` arrive AVANT
+    // que `beginReverse()` ne soit déclenché (Projets ne l'appelle qu'après
+    // son propre montage). On détecte ce cas via le snapshot déjà présent
+    // (posé par `captureSnapshot`/`beginForward` à l'aller) ciblant cette
+    // destination, comme `Projets.tsx` le fait pour son `isReturnVisit`.
+    const isReverseMorphTarget = snapshot?.originPath === location.pathname;
+    if (isTransitioning || isReverseMorphTarget || prefersReducedProjectMotion()) {
       // Pas de voile : le morph/overlay gère (ou reduced-motion) → swap direct.
       setDisplayed(location);
       resetScrollFor(location.pathname);
@@ -29,7 +35,7 @@ export function RouteTransition({ children }: { children: React.ReactNode }) {
       return;
     }
     setPhase('covering'); // on garde `displayed` (ancienne page) jusqu'à couverture
-  }, [location, displayed, isTransitioning]);
+  }, [location, displayed, isTransitioning, snapshot]);
 
   return (
     <>

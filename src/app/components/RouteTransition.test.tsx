@@ -4,8 +4,15 @@ import { beforeEach, expect, it, vi } from 'vitest';
 import { RouteTransition } from './RouteTransition';
 
 let isTransitioning = false;
+let snapshot: {
+  originPath: string;
+  projectLink?: string;
+  imageSrc?: string;
+  imageRect?: { left: number; top: number; width: number; height: number };
+  scrollTop?: number;
+} | null = null;
 vi.mock('../context/PageTransitionContext', () => ({
-  usePageTransition: () => ({ isTransitioning }),
+  usePageTransition: () => ({ isTransitioning, snapshot }),
 }));
 
 let reduced = false;
@@ -27,7 +34,10 @@ vi.mock('./PageVeil', () => ({
 function Nav() {
   const navigate = useNavigate();
   return (
-    <button type="button" onClick={() => navigate('/projets')}>go</button>
+    <div>
+      <button type="button" onClick={() => navigate('/projets')}>go</button>
+      <button type="button" onClick={() => navigate('/apropos')}>go-apropos</button>
+    </div>
   );
 }
 
@@ -37,12 +47,14 @@ const renderApp = () =>
       <RouteTransition>
         <Route path="/" element={<div>HOME<Nav /></div>} />
         <Route path="/projets" element={<div>PROJETS</div>} />
+        <Route path="/apropos" element={<div>APROPOS</div>} />
       </RouteTransition>
     </MemoryRouter>,
   );
 
 beforeEach(() => {
   isTransitioning = false;
+  snapshot = null;
   reduced = false;
   document.body.scrollTop = 0;
 });
@@ -91,4 +103,26 @@ it('reset le scroll au swap (sauf /projets)', () => {
   document.body.scrollTop = 500;
   fireEvent.click(screen.getByText('go')); // → /projets : PAS de reset
   expect(document.body.scrollTop).toBe(500);
+});
+
+it('reset le scroll à 0 sur une navigation hors /projets', () => {
+  reduced = true; // swap immédiat pour simplifier
+  renderApp();
+  document.body.scrollTop = 500;
+  fireEvent.click(screen.getByText('go-apropos')); // → /apropos : reset à 0
+  expect(document.body.scrollTop).toBe(0);
+});
+
+it('reverse morph imminent (snapshot ciblant /projets) : swap immédiat, pas de voile', () => {
+  snapshot = {
+    originPath: '/projets',
+    projectLink: '/projets/x',
+    imageSrc: '',
+    imageRect: { left: 0, top: 0, width: 0, height: 0 },
+    scrollTop: 0,
+  };
+  renderApp();
+  fireEvent.click(screen.getByText('go'));
+  expect(screen.getByText('PROJETS')).toBeTruthy();
+  expect(screen.queryByTestId('veil')).toBeNull();
 });
