@@ -302,68 +302,59 @@ export function HeroCarousel({
           paddingBottom: Math.round(box.h * 0.028),
         }}
       >
-        <div className="flex w-full flex-wrap items-end gap-x-[6vw] gap-y-2">
-          {/* popLayout : le titre sortant passe en position absolue (hors flux)
-              → le titre entrant prend sa place à gauche immédiatement, sans être
-              poussé vers le milieu le temps du fondu de sortie. */}
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.h2
-              key={index}
-              className="font-semibold leading-[0.88] tracking-[-0.03em]"
-              style={{ fontFamily: 'Manrope, sans-serif', fontSize: Math.max(24, Math.round(box.h * TITLE)) }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.18 } }}
-            >
-              {lines.map((line, i) => (
-                // paddingBottom : évite que les jambages (p, g, q) soient
-                // rognés par overflow-hidden (leading serré 0.88).
-                <span key={i} className="block overflow-hidden" style={{ paddingBottom: '0.16em' }}>
-                  <motion.span
-                    className="block"
-                    initial={{ y: '110%' }}
-                    animate={{ y: 0 }}
-                    transition={
-                      reduced ? { duration: 0 } : { duration: 0.62, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }
-                    }
-                  >
-                    {line}
-                  </motion.span>
-                </span>
-              ))}
-            </motion.h2>
-          </AnimatePresence>
+        {/* Eyebrow : discipline + date AU-DESSUS du titre, à gauche (comme le CTA). */}
+        {active.credit || active.meta?.length ? (
+          <motion.div
+            key={`ey-${index}`}
+            className="mb-3 flex flex-wrap items-center uppercase tracking-[0.14em] opacity-80"
+            style={{
+              fontFamily: MONO,
+              fontSize: label,
+              columnGap: `${Math.max(14, Math.round(box.w * 0.02))}px`,
+              rowGap: '4px',
+            }}
+            initial={reduced ? { opacity: 0.8 } : { opacity: 0, y: 6 }}
+            animate={{ opacity: 0.8, y: 0 }}
+            transition={reduced ? { duration: 0 } : { duration: 0.45, delay: 0.08 }}
+          >
+            {active.credit ? <span>{active.credit}</span> : null}
+            {active.meta?.map((fact) => (
+              <span key={fact} className="whitespace-nowrap">
+                {fact}
+              </span>
+            ))}
+          </motion.div>
+        ) : null}
 
-          {active.credit ? (
-            <motion.p
-              key={`credit-${index}`}
-              className="uppercase tracking-[0.14em] opacity-80"
-              style={{ fontFamily: MONO, fontSize: label }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.8 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              {active.credit}
-            </motion.p>
-          ) : null}
-
-          {active.meta?.length ? (
-            <div className="ml-auto flex items-end" style={{ gap: `${Math.max(16, box.w * 0.055)}px` }}>
-              {active.meta.map((fact, i) => (
+        {/* popLayout : le titre sortant passe en position absolue (hors flux)
+            → le titre entrant prend sa place à gauche immédiatement. */}
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.h2
+            key={index}
+            className="font-semibold leading-[0.88] tracking-[-0.03em]"
+            style={{ fontFamily: 'Manrope, sans-serif', fontSize: Math.max(24, Math.round(box.h * TITLE)) }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.18 } }}
+          >
+            {lines.map((line, i) => (
+              // paddingBottom : évite que les jambages (p, g, q) soient
+              // rognés par overflow-hidden (leading serré 0.88).
+              <span key={i} className="block overflow-hidden" style={{ paddingBottom: '0.16em' }}>
                 <motion.span
-                  key={`${index}-${fact}`}
-                  className="whitespace-nowrap uppercase tracking-[0.14em] opacity-80"
-                  style={{ fontFamily: MONO, fontSize: label }}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 0.8, y: 0 }}
-                  transition={reduced ? { duration: 0 } : { duration: 0.45, delay: 0.12 + i * 0.06 }}
+                  className="block"
+                  initial={{ y: '110%' }}
+                  animate={{ y: 0 }}
+                  transition={
+                    reduced ? { duration: 0 } : { duration: 0.62, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }
+                  }
                 >
-                  {fact}
+                  {line}
                 </motion.span>
-              ))}
-            </div>
-          ) : null}
-        </div>
+              </span>
+            ))}
+          </motion.h2>
+        </AnimatePresence>
 
         {ctaLabel ? (
           <button
