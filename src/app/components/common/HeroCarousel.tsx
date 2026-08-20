@@ -265,7 +265,7 @@ export function HeroCarousel({
             <motion.h2
               key={index}
               className="font-semibold leading-[0.88] tracking-[-0.03em]"
-              style={{ fontSize: Math.max(24, Math.round(box.h * TITLE)) }}
+              style={{ fontFamily: 'Manrope, sans-serif', fontSize: Math.max(24, Math.round(box.h * TITLE)) }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: { duration: 0.18 } }}
