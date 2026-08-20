@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
+import { BrowserRouter, Route, useLocation } from 'react-router';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { lazy, Suspense, useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import ThemedToaster from './components/ThemedToaster';
 import Grainient from './components/Grainient';
 import { ScrollToTop } from './components/ScrollToTop';
+import { RouteTransition } from './components/RouteTransition';
 import { PageTransitionProvider } from './context/PageTransitionContext';
 import { PageTransitionOverlay } from './components/PageTransitionOverlay';
 import SplashScreen from './components/SplashScreen';
@@ -49,15 +50,13 @@ export const syncSafariChromeColor = (
 };
 
 export function AppContent({ showSplash }: { showSplash: boolean }) {
-  const location = useLocation();
-
   return (
     <>
       {/* Scroll to top on route change */}
       <ScrollToTop />
 
       <Suspense fallback={null}>
-        <Routes location={location}>
+        <RouteTransition>
           <Route
             path={ROUTES.HOME}
             element={<Home showSplash={showSplash} />}
@@ -71,7 +70,7 @@ export function AppContent({ showSplash }: { showSplash: boolean }) {
             element={<ProjetDetail />}
           />
           <Route path="*" element={<NotFound />} />
-        </Routes>
+        </RouteTransition>
       </Suspense>
     </>
   );

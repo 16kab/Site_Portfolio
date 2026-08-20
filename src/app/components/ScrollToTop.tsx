@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { usePageTransition } from '../context/PageTransitionContext';
 import type { ProjectTransitionSnapshot } from '../utils/projectTransition';
@@ -22,19 +22,11 @@ export const isTransitionRoute = (
       (pathname === snapshot.originPath || pathname === snapshot.projectLink),
   );
 
+// Le reset du scroll est désormais géré par RouteTransition (au swap). Ce
+// composant ne conserve que le nettoyage d'un snapshot de morph devenu obsolète.
 export function ScrollToTop() {
   const { pathname } = useLocation();
   const { snapshot, clearTransition } = usePageTransition();
-  const handledPathRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (handledPathRef.current === pathname) return;
-
-    handledPathRef.current = pathname;
-    if (!shouldRestoreProjectScroll(pathname)) {
-      document.body.scrollTop = 0;
-    }
-  }, [pathname]);
 
   useEffect(() => {
     if (snapshot && !isTransitionRoute(pathname, snapshot)) {
