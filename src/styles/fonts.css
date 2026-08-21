@@ -10,9 +10,14 @@
 @import '@fontsource/playfair-display/400-italic.css';
 @import '@fontsource/playfair-display/700.css';
 
+/* Bricolage Grotesque — accroche « manifeste » (self-hosted @fontsource) */
+@import '@fontsource/bricolage-grotesque/700.css';
+@import '@fontsource/bricolage-grotesque/800.css';
+
 :root {
   --font-display: 'Playfair Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-sans: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-manifeste: 'Bricolage Grotesque', 'Archivo', var(--font-sans);
 }
 
 body {
