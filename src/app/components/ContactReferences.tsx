@@ -1,57 +1,73 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useState } from 'react';
 import { useLang } from '../i18n';
 
+// Icône LinkedIn en SVG inline (lucide-react ne fournit plus les logos de
+// marque). Monochrome via `currentColor` → suit la couleur du lien, theme-aware.
+function LinkedInIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z" />
+    </svg>
+  );
+}
+
 export interface Reference {
   id: number;
   quote: { fr: string; en: string };
-  name?: string; // absent en placeholder (anti fausse identité)
+  name: string;
   role: { fr: string; en: string };
   company?: { fr: string; en: string };
+  linkedin?: string;
 }
 
-// Placeholder NEUTRE : attributions génériques (rôle + secteur), aucune
-// personne réelle, aucune entreprise réelle. À remplacer par de vraies
-// références (ajouter `name`, vrais `company`) quand elles seront fournies.
+// Placeholder FACTICE (à remplacer par de vraies références) : les noms sont des
+// gabarits (« Prénom Nom »), les liens LinkedIn pointent vers l'accueil LinkedIn,
+// aucune identité réelle. Ne pas laisser tel quel en prod : remplacer name /
+// role / company / linkedin par les vraies valeurs, ou masquer la section.
 export const referencesData: Reference[] = [
   {
     id: 1,
     quote: {
-      fr: `Il transforme un besoin flou en interface claire — et il livre, sans qu'on ait à repasser derrière.`,
-      en: `He turns a fuzzy need into a clear interface — and ships it, without anyone having to redo the work.`,
+      fr: 'Il transforme un besoin flou en interface claire — et il livre, sans qu’on ait à repasser derrière.',
+      en: 'He turns a fuzzy need into a clear interface — and ships it, without anyone having to redo the work.',
     },
+    name: 'Prénom Nom',
     role: { fr: 'Direction Produit', en: 'Head of Product' },
     company: { fr: 'SaaS B2B', en: 'B2B SaaS' },
+    linkedin: 'https://www.linkedin.com/',
   },
   {
     id: 2,
     quote: {
-      fr: `Une identité pensée de bout en bout, cohérente sur chaque support. On s'est senti compris.`,
-      en: `An identity thought through end to end, consistent on every medium. We felt understood.`,
+      fr: 'Une identité pensée de bout en bout, cohérente sur chaque support. On s’est senti compris.',
+      en: 'An identity thought through end to end, consistent on every medium. We felt understood.',
     },
+    name: 'Prénom Nom',
     role: { fr: 'Fondatrice', en: 'Founder' },
     company: { fr: 'Association', en: 'Non-profit' },
+    linkedin: 'https://www.linkedin.com/',
   },
   {
     id: 3,
     quote: {
-      fr: `Rigueur produit et sens du détail visuel dans la même personne — rare et précieux.`,
-      en: `Product rigor and an eye for visual detail in the same person — rare and valuable.`,
+      fr: 'Rigueur produit et sens du détail visuel dans la même personne — rare et précieux.',
+      en: 'Product rigor and an eye for visual detail in the same person — rare and valuable.',
     },
+    name: 'Prénom Nom',
     role: { fr: 'Lead Design', en: 'Design Lead' },
     company: { fr: 'Studio', en: 'Studio' },
+    linkedin: 'https://www.linkedin.com/',
   },
 ];
-
-const LABEL_STYLE = {
-  fontFamily: 'Manrope, sans-serif',
-  fontWeight: 500,
-  fontSize: '13px',
-  letterSpacing: '0.14em',
-  textTransform: 'uppercase' as const,
-  color: 'var(--portfolio-text-muted)',
-};
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -62,38 +78,20 @@ export function ContactReferences() {
   const active = referencesData[index];
   const count = referencesData.length;
 
-  const next = () => setIndex((i) => (i + 1) % count);
+  const go = (dir: 1 | -1) => setIndex((i) => (i + dir + count) % count);
   const trans = (d: number) =>
     reduced ? { duration: 0 } : { duration: d, ease: EASE };
-  const pad2 = (n: number) => String(n).padStart(2, '0');
+
+  const navBtn = {
+    background: 'transparent',
+    border: 'none',
+    color: 'var(--portfolio-text-secondary)',
+  };
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-2 text-center">
-      {/* Contexte (rôle · secteur) */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`ctx-${active.id}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={trans(0.3)}
-          className="mb-8 inline-flex items-center gap-3"
-          style={LABEL_STYLE}
-        >
-          <span
-            aria-hidden="true"
-            style={{
-              width: '32px',
-              height: '1px',
-              backgroundColor: 'var(--portfolio-card-border)',
-            }}
-          />
-          {active.company ? active.company[lang] : ''}
-        </motion.div>
-      </AnimatePresence>
-
+    <div className="mx-auto flex w-full max-w-3xl flex-col items-center px-4 text-center">
       {/* Citation (aria-live pour annoncer le changement) */}
-      <div aria-live="polite" className="relative overflow-hidden">
+      <div aria-live="polite" className="relative w-full overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.blockquote
             key={`quote-${active.id}`}
@@ -121,41 +119,68 @@ export function ContactReferences() {
         </AnimatePresence>
       </div>
 
-      {/* Auteur : (nom ·) rôle · secteur */}
+      {/* Signature : Nom · poste · secteur + LinkedIn */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={`author-${active.id}`}
+          key={`sig-${active.id}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={trans(0.3)}
-          className="mt-10 flex items-center justify-center gap-3"
-          style={{
-            fontFamily: 'Manrope, sans-serif',
-            fontSize: '14px',
-            color: 'var(--portfolio-text-secondary)',
-          }}
+          className="mt-10 flex flex-col items-center gap-1"
         >
-          <span style={{ color: 'var(--portfolio-text-muted)' }}>
-            {pad2(index + 1)} / {pad2(count)}
-          </span>
+          <div className="flex items-center gap-2">
+            <span
+              style={{
+                fontFamily: 'Manrope, sans-serif',
+                fontWeight: 600,
+                fontSize: '15px',
+                color: 'var(--portfolio-text-primary)',
+              }}
+            >
+              {active.name}
+            </span>
+            {active.linkedin ? (
+              <a
+                href={active.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`LinkedIn — ${active.name}`}
+                className="inline-flex transition-opacity hover:opacity-70"
+                style={{ color: 'var(--portfolio-text-muted)' }}
+              >
+                <LinkedInIcon size={16} />
+              </a>
+            ) : null}
+          </div>
           <span
-            aria-hidden="true"
             style={{
-              width: '24px',
-              height: '1px',
-              backgroundColor: 'var(--portfolio-card-border)',
+              fontFamily: 'Manrope, sans-serif',
+              fontWeight: 400,
+              fontSize: '13px',
+              color: 'var(--portfolio-text-muted)',
             }}
-          />
-          <span>
-            {active.name ? `${active.name} · ` : ''}
+          >
             {active.role[lang]}
+            {active.company ? ` · ${active.company[lang]}` : ''}
           </span>
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigation : points + suivant */}
-      <div className="mt-10 flex items-center justify-center gap-6">
+      {/* Navigation : ‹ points › (horizontal, centré) */}
+      <div className="mt-10 flex items-center justify-center gap-4">
+        <button
+          type="button"
+          onClick={() => go(-1)}
+          aria-label={
+            lang === 'fr' ? 'Témoignage précédent' : 'Previous testimonial'
+          }
+          className="cursor-pointer p-1"
+          style={navBtn}
+        >
+          <ChevronLeft size={18} />
+        </button>
+
         <div className="flex items-center gap-3" data-testid="references-dots">
           {referencesData.map((ref, i) => (
             <button
@@ -168,7 +193,7 @@ export function ContactReferences() {
                   : `Go to testimonial ${i + 1}`
               }
               aria-current={i === index ? 'true' : undefined}
-              className="p-1 cursor-pointer"
+              className="cursor-pointer p-1"
               style={{ background: 'transparent', border: 'none' }}
             >
               <span
@@ -180,28 +205,22 @@ export function ContactReferences() {
                   backgroundColor:
                     i === index
                       ? 'var(--portfolio-text-primary)'
-                      : 'var(--portfolio-card-border)',
-                  transform: i === index ? 'scale(1)' : 'scale(0.75)',
+                      : 'var(--portfolio-text-muted)',
+                  transform: i === index ? 'scale(1)' : 'scale(0.8)',
                 }}
               />
             </button>
           ))}
         </div>
+
         <button
           type="button"
-          onClick={next}
-          className="inline-flex items-center gap-1 cursor-pointer"
-          style={{
-            background: 'transparent',
-            border: 'none',
-            fontFamily: 'Manrope, sans-serif',
-            fontSize: '13px',
-            letterSpacing: '0.04em',
-            color: 'var(--portfolio-text-secondary)',
-          }}
+          onClick={() => go(1)}
+          aria-label={lang === 'fr' ? 'Témoignage suivant' : 'Next testimonial'}
+          className="cursor-pointer p-1"
+          style={navBtn}
         >
-          {lang === 'fr' ? 'Suivant' : 'Next'}
-          <ArrowUpRight size={14} />
+          <ChevronRight size={18} />
         </button>
       </div>
     </div>
