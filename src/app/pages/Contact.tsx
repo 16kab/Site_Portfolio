@@ -1,19 +1,21 @@
-import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
-import { ScrollFadeIn } from '../components/ScrollFadeIn';
-import PageMeta from '../components/PageMeta';
-import SuccessPopup from '../components/SuccessPopup';
-import { useEmailForm } from '../hooks';
-import { CONTACT_EMAIL_HREF, ROUTES, SITE_CONTACT } from '../config';
-import { ROUTE_META } from '../config/seo';
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { ContactReferences } from '../components/ContactReferences';
+import PageMeta from '../components/PageMeta';
 import RollingText from '../components/RollingText';
+import { ScrollFadeIn } from '../components/ScrollFadeIn';
+import { ScrollRevealTitle } from '../components/ScrollRevealTitle';
+import SuccessPopup from '../components/SuccessPopup';
+import { CONTACT_EMAIL_HREF, ROUTES, SITE_CONTACT } from '../config';
+import { ROUTE_META } from '../config/seo';
+import { useEmailForm } from '../hooks';
 import { useT } from '../i18n';
 
 const STRINGS = {
   fr: {
     eyebrow: 'Contact',
+    references: '(références)',
     title: 'Travaillons ensemble',
     location: 'Localisation',
     email: 'Email',
@@ -41,6 +43,7 @@ const STRINGS = {
   },
   en: {
     eyebrow: 'Contact',
+    references: '(references)',
     title: "Let's work together",
     location: 'Location',
     email: 'Email',
@@ -139,18 +142,43 @@ export default function Contact() {
             </ScrollRevealTitle>
             <ScrollRevealTitle delay={0.05}>
               <h1
-                style={{
-                  fontFamily: 'Manrope, sans-serif',
-                  fontWeight: 700,
-                  fontSize: 'clamp(2rem, 1rem + 5vw, 3rem)',
-                  lineHeight: '1.1',
-                  letterSpacing: '-1.4px',
-                  color: 'var(--portfolio-text-primary)',
-                }}
+                style={
+                  {
+                    fontFamily: 'var(--font-manifeste)',
+                    fontWeight: 800,
+                    fontSize: 'clamp(2.5rem, 1rem + 7vw, 5rem)',
+                    lineHeight: 1.0,
+                    letterSpacing: '-0.03em',
+                    textWrap: 'balance',
+                    color: 'var(--portfolio-text-primary)',
+                  } as React.CSSProperties
+                }
               >
                 {t.title}
               </h1>
             </ScrollRevealTitle>
+          </div>
+
+          {/* Références (témoignages) */}
+          <div className="mb-16 md:mb-24 lg:mb-28">
+            <ScrollRevealTitle delay={0.1}>
+              <p
+                className="mb-10 text-center"
+                style={{
+                  fontFamily: 'Manrope, sans-serif',
+                  fontWeight: 500,
+                  fontSize: '13px',
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: 'var(--portfolio-text-muted)',
+                }}
+              >
+                {t.references}
+              </p>
+            </ScrollRevealTitle>
+            <ScrollFadeIn delay={0.15}>
+              <ContactReferences />
+            </ScrollFadeIn>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-24">
