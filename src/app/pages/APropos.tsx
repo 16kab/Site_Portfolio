@@ -1,5 +1,6 @@
 import { FileText } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
 import RollingText from '../components/RollingText';
@@ -35,26 +36,44 @@ const SECTION_TITLE_STYLE = {
   color: 'var(--portfolio-text-primary)',
 } as const;
 
-// Une ligne d'index : numéro | (titre + description [+ badges]).
+// Une ligne d'index dépliable : en-tête cliquable (numéro + titre + « + »)
+// qui déplie la description (+ badges) au survol (desktop) ou au clic (mobile).
 function IndexRow({
   item,
   badges,
+  isOpen,
+  onToggle,
+  onHover,
+  reduced,
 }: {
   item: ExpertiseItem | IndexItem;
   badges?: string[];
+  isOpen: boolean;
+  onToggle: () => void;
+  onHover: () => void;
+  reduced: boolean;
 }) {
+  const panelId = `apropos-panel-${item.number}`;
   return (
-    <div
-      className="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-12 py-8"
-      style={{ borderTop: '1px solid var(--portfolio-card-border)' }}
-    >
-      <div className="lg:col-span-4 flex items-baseline gap-4">
+    <div style={{ borderTop: '1px solid var(--portfolio-card-border)' }}>
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        onClick={onToggle}
+        onMouseEnter={onHover}
+        className="w-full text-left flex items-center gap-4 py-6 cursor-pointer"
+        style={{ background: 'transparent', border: 'none' }}
+      >
         <span
           style={{
             fontFamily: 'Manrope, sans-serif',
             fontSize: '13px',
             fontWeight: 400,
-            color: 'var(--portfolio-text-muted)',
+            color: isOpen
+              ? 'var(--portfolio-text-primary)'
+              : 'var(--portfolio-text-muted)',
+            transition: 'color 0.3s',
           }}
         >
           {item.number}
@@ -71,75 +90,134 @@ function IndexRow({
         >
           {item.title}
         </h3>
-      </div>
-      <div className="lg:col-span-8">
-        <p
-          className="text-[15px]"
+        <span
+          aria-hidden="true"
+          className="ml-auto shrink-0"
           style={{
             fontFamily: 'Manrope, sans-serif',
-            fontWeight: 400,
-            lineHeight: 1.6,
-            color: 'var(--portfolio-text-description)',
+            fontSize: '24px',
+            fontWeight: 300,
+            lineHeight: 1,
+            color: 'var(--portfolio-text-muted)',
+            transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+            transition: 'transform 0.3s',
           }}
         >
-          {item.description}
-        </p>
-        {badges && badges.length > 0 ? (
-          <div className="mt-5 flex flex-wrap gap-2">
-            {badges.map((badge) => (
-              <span
-                key={badge}
-                className="rounded-[3px] px-[8px] py-[2px]"
-                style={{
-                  backgroundColor: 'var(--portfolio-badge-bg)',
-                  border: '1px solid var(--portfolio-badge-border)',
-                  fontFamily: 'Manrope, sans-serif',
-                  fontSize: '13px',
-                  fontWeight: 400,
-                  lineHeight: '18px',
-                  color: 'var(--portfolio-text-muted)',
-                }}
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
-        ) : null}
-      </div>
+          +
+        </span>
+      </button>
+      <motion.div
+        id={panelId}
+        initial={false}
+        animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
+        transition={
+          reduced ? { duration: 0 } : { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+        }
+        style={{ overflow: 'hidden' }}
+      >
+        <div className="pb-8 pl-9" style={{ maxWidth: '72ch' }}>
+          <p
+            className="text-[15px]"
+            style={{
+              fontFamily: 'Manrope, sans-serif',
+              fontWeight: 400,
+              lineHeight: 1.6,
+              color: 'var(--portfolio-text-description)',
+            }}
+          >
+            {item.description}
+          </p>
+          {badges && badges.length > 0 ? (
+            <div className="mt-5 flex flex-wrap gap-2">
+              {badges.map((badge) => (
+                <span
+                  key={badge}
+                  className="rounded-[3px] px-[8px] py-[2px]"
+                  style={{
+                    backgroundColor: 'var(--portfolio-badge-bg)',
+                    border: '1px solid var(--portfolio-badge-border)',
+                    fontFamily: 'Manrope, sans-serif',
+                    fontSize: '13px',
+                    fontWeight: 400,
+                    lineHeight: '18px',
+                    color: 'var(--portfolio-text-muted)',
+                  }}
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </motion.div>
     </div>
   );
 }
 
-// Un sous-bloc « index » : label + titre + lignes.
+// Un sous-bloc « index » dépliable : label + titre + lignes. Gère l'état ouvert
+// (une ligne à la fois) : survol sur périphérique « hover », clic partout.
 function IndexSection({
   label,
   title,
-  delay,
-  children,
+  items,
+  withBadges = false,
 }: {
   label: string;
   title: string;
-  delay: number;
-  children: React.ReactNode;
+  items: (ExpertiseItem | IndexItem)[];
+  withBadges?: boolean;
 }) {
+  const reduced = useReducedMotion();
+  // Première ligne ouverte par défaut : donne l'affordance « ça se déplie ».
+  const [openKey, setOpenKey] = useState<string | null>(
+    items[0]?.number ?? null,
+  );
+  const hoverCapableRef = useRef(false);
+  useEffect(() => {
+    hoverCapableRef.current =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(hover: hover)').matches;
+  }, []);
+
   return (
     <section className="pb-16 md:pb-24">
       <div className={CONTAINER}>
-        <ScrollRevealTitle delay={delay}>
+        <ScrollRevealTitle delay={0}>
           <p className="mb-1" style={LABEL_STYLE}>
             {label}
           </p>
         </ScrollRevealTitle>
-        <ScrollRevealTitle delay={delay + 0.05}>
+        <ScrollRevealTitle delay={0.05}>
           <h2 className="mb-8" style={SECTION_TITLE_STYLE}>
             {title}
           </h2>
         </ScrollRevealTitle>
-        <ScrollFadeIn delay={delay + 0.1}>
+        <ScrollFadeIn delay={0.1}>
+          {/* biome-ignore lint/a11y/noStaticElementInteractions: onMouseLeave replie la ligne survolée sur desktop ; chaque ligne reste un <button> focusable/cliquable, ce conteneur ne porte aucune sémantique interactive. */}
           <div
             style={{ borderBottom: '1px solid var(--portfolio-card-border)' }}
+            onMouseLeave={() => {
+              if (hoverCapableRef.current) setOpenKey(null);
+            }}
           >
-            {children}
+            {items.map((item) => (
+              <IndexRow
+                key={item.number}
+                item={item}
+                badges={
+                  withBadges && 'badges' in item ? item.badges : undefined
+                }
+                isOpen={openKey === item.number}
+                onToggle={() =>
+                  setOpenKey((k) => (k === item.number ? null : item.number))
+                }
+                onHover={() => {
+                  if (hoverCapableRef.current) setOpenKey(item.number);
+                }}
+                reduced={!!reduced}
+              />
+            ))}
           </div>
         </ScrollFadeIn>
       </div>
@@ -260,24 +338,25 @@ export default function APropos() {
         </div>
       </section>
 
-      {/* 3. LE COMMENT — index */}
-      <IndexSection label={t.expertiseLabel} title={t.expertiseTitle} delay={0}>
-        {expertises.map((item) => (
-          <IndexRow key={item.number} item={item} badges={item.badges} />
-        ))}
-      </IndexSection>
+      {/* 3. LE COMMENT — index dépliable */}
+      <IndexSection
+        label={t.expertiseLabel}
+        title={t.expertiseTitle}
+        items={expertises}
+        withBadges
+      />
 
-      <IndexSection label={t.principesLabel} title={t.principesTitle} delay={0}>
-        {principles.map((item) => (
-          <IndexRow key={item.number} item={item} />
-        ))}
-      </IndexSection>
+      <IndexSection
+        label={t.principesLabel}
+        title={t.principesTitle}
+        items={principles}
+      />
 
-      <IndexSection label={t.rechercheLabel} title={t.rechercheTitle} delay={0}>
-        {recherche.map((item) => (
-          <IndexRow key={item.number} item={item} />
-        ))}
-      </IndexSection>
+      <IndexSection
+        label={t.rechercheLabel}
+        title={t.rechercheTitle}
+        items={recherche}
+      />
 
       {/* 4. CV — désactivé tant que /cv n'existe pas */}
       <section className="pb-20 md:pb-28">
