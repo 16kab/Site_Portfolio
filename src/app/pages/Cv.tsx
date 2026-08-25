@@ -1,0 +1,147 @@
+import { Printer } from 'lucide-react';
+import { useEffect } from 'react';
+import PageMeta from '../components/PageMeta';
+import { ROUTES } from '../config';
+import { ROUTE_META, type RouteMeta } from '../config/seo';
+import { useLang } from '../i18n';
+import { getCvContent } from './Cv.content';
+import './Cv.css';
+
+// Meta défensive : l'entrée /cv est ajoutée dans seo.ts en Task 3. Fallback en
+// attendant pour que la page compile/teste seule.
+// Note : `ROUTES.CV` n'existe pas encore (ajouté en Task 3), donc l'accès
+// passe par un cast `unknown` pour ne pas casser `tsc --noEmit` d'ici là.
+const CV_ROUTE_PATH = (ROUTES as unknown as Record<string, string>).CV;
+const CV_META: RouteMeta = (
+  ROUTE_META as Record<string, RouteMeta | undefined>
+)[CV_ROUTE_PATH] ?? {
+  path: '/cv',
+  title: 'CV — Alexis Kabiche',
+  description: 'CV d’Alexis Kabiche, Product & Brand Designer.',
+};
+
+export default function Cv() {
+  const { lang } = useLang();
+  const c = getCvContent(lang);
+
+  useEffect(() => {
+    document.body.scrollTop = 0;
+  }, []);
+
+  return (
+    <div className="cv-page">
+      <PageMeta {...CV_META} />
+
+      <div className="cv-toolbar">
+        <button
+          type="button"
+          className="cv-download"
+          onClick={() => window.print()}
+        >
+          <Printer size={16} />
+          {c.download}
+        </button>
+      </div>
+
+      <article className="cv-sheet">
+        <header className="cv-header">
+          <div>
+            <h1 className="cv-name">{c.name}</h1>
+            <p className="cv-title">{c.title}</p>
+            <ul className="cv-contact">
+              <li>
+                <a href={`mailto:${c.contact.email}`}>{c.contact.email}</a>
+              </li>
+              <li>{c.contact.phone}</li>
+              <li>{c.contact.location}</li>
+              <li>
+                {c.contact.linkedin ? (
+                  <a
+                    href={c.contact.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    LinkedIn
+                  </a>
+                ) : (
+                  'LinkedIn'
+                )}
+              </li>
+              <li>{c.contact.site}</li>
+            </ul>
+          </div>
+          {/* Emplacement photo — placeholder tant que l'asset n'est pas fourni */}
+          <div className="cv-photo" aria-hidden="true">
+            photo
+          </div>
+        </header>
+
+        <p className="cv-tagline">{c.tagline}</p>
+
+        {/* Ordre DOM linéaire : Expérience d'abord, puis colonne latérale */}
+        <div className="cv-body">
+          <section className="cv-main">
+            <h2 className="cv-label">{c.labels.experience}</h2>
+            {c.experiences.map((exp) => (
+              <div className="cv-exp" key={`${exp.company}-${exp.role}`}>
+                <div className="cv-exp-head">
+                  <span className="cv-exp-role">{exp.role}</span>
+                  <span className="cv-exp-period">{exp.period}</span>
+                </div>
+                <div className="cv-exp-company">
+                  {exp.company} · {exp.contract}
+                </div>
+                <p className="cv-exp-summary">{exp.summary}</p>
+                <div className="cv-tags">
+                  {exp.tags.map((tag) => (
+                    <span className="cv-tag" key={tag}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </section>
+
+          <aside className="cv-aside">
+            <div className="cv-aside-block">
+              <h2 className="cv-label">{c.labels.skills}</h2>
+              <ul className="cv-list">
+                {c.skills.map((s) => (
+                  <li key={s}>{s}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="cv-aside-block">
+              <h2 className="cv-label">{c.labels.tools}</h2>
+              <ul className="cv-list">
+                {c.tools.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="cv-aside-block">
+              <h2 className="cv-label">{c.labels.education}</h2>
+              {c.education.map((ed) => (
+                <div key={ed.title} style={{ marginBottom: '10px' }}>
+                  <div className="cv-edu-title">{ed.title}</div>
+                  <div className="cv-edu-meta">
+                    {ed.school} · {ed.period}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="cv-aside-block">
+              <h2 className="cv-label">{c.labels.languages}</h2>
+              <ul className="cv-list">
+                {c.languages.map((l) => (
+                  <li key={l}>{l}</li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </article>
+    </div>
+  );
+}

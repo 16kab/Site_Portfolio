@@ -1,0 +1,229 @@
+/* Page CV : cadre thémé (écran) + feuille A4 blanche + impression A4 */
+.cv-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 16px 64px;
+  padding-top: var(--page-padding-top);
+  background: var(--portfolio-bg);
+}
+
+.cv-toolbar {
+  width: min(210mm, 100%);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cv-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  background: var(--portfolio-button-bg);
+  color: var(--portfolio-button-text);
+}
+
+/* La feuille : blanche + noire FIXES (indépendantes du thème et de l'impression) */
+.cv-sheet {
+  width: min(210mm, 100%);
+  background: #fff;
+  color: #1a1a1a;
+  box-sizing: border-box;
+  padding: clamp(20px, 5vw, 14mm);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  font-family: 'Manrope', sans-serif;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.cv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.cv-name {
+  font-family: var(--font-manifeste);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 1.2rem + 3vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #111;
+}
+.cv-title {
+  margin-top: 6px;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: #444;
+}
+.cv-contact {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  list-style: none;
+  padding: 0;
+  font-size: 12px;
+  color: #555;
+}
+.cv-contact a {
+  color: inherit;
+  text-decoration: none;
+}
+.cv-photo {
+  flex: 0 0 auto;
+  width: 28mm;
+  height: 35mm;
+  border-radius: 6px;
+  background: #eee;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 6px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #999;
+}
+.cv-tagline {
+  margin: 14px 0;
+  padding: 14px 0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: clamp(0.95rem, 0.85rem + 0.5vw, 1.15rem);
+  color: #222;
+}
+
+.cv-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+.cv-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 10px;
+}
+.cv-exp {
+  margin-bottom: 14px;
+}
+.cv-exp-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}
+.cv-exp-role {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+.cv-exp-period {
+  font-size: 11px;
+  color: #777;
+  white-space: nowrap;
+}
+.cv-exp-company {
+  font-size: 12px;
+  color: #555;
+  margin-top: 1px;
+}
+.cv-exp-summary {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #333;
+  margin-top: 5px;
+}
+.cv-tags {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.cv-tag {
+  font-size: 10.5px;
+  color: #555;
+  border: 1px solid #e0e0e0;
+  border-radius: 3px;
+  padding: 1px 7px;
+}
+.cv-aside-block {
+  margin-bottom: 18px;
+}
+.cv-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  color: #333;
+  line-height: 1.7;
+}
+.cv-edu-title {
+  font-size: 12.5px;
+  color: #111;
+  font-weight: 600;
+}
+.cv-edu-meta {
+  font-size: 11px;
+  color: #666;
+}
+
+/* Desktop + impression : 2 colonnes (ordre source inchangé) */
+@media (min-width: 861px) {
+  .cv-sheet {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 14mm 16mm;
+  }
+  .cv-body {
+    grid-template-columns: 62% 1fr;
+    gap: 12mm;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  /* Masquer le chrome du site (header fixe direct enfant du conteneur app)
+     + le bouton, sans toucher le <header> du CV (classe cv-header). */
+  .app-container > header {
+    display: none !important;
+  }
+  .cv-toolbar {
+    display: none !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  .cv-page {
+    padding: 0 !important;
+    min-height: 0 !important;
+    background: #fff !important;
+  }
+  .cv-sheet {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 14mm 16mm;
+    box-shadow: none !important;
+    margin: 0 !important;
+  }
+  .cv-body {
+    grid-template-columns: 62% 1fr !important;
+    gap: 12mm;
+  }
+}
