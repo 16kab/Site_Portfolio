@@ -36,10 +36,10 @@ it('chaque expérience a des champs non vides dans les deux langues', () => {
   }
 });
 
-it('contact tiré de SITE_CONTACT ; LinkedIn vide par défaut (pas de lien mort)', () => {
+it('contact tiré de SITE_CONTACT ; LinkedIn renseigné', () => {
   const c = getCvContent('fr').contact;
   expect(c.email).toContain('@');
   expect(c.location.length).toBeGreaterThan(0);
   expect(c.site).toBe('alexiskabiche.com');
-  expect(c.linkedin).toBe(''); // à renseigner plus tard
+  expect(c.linkedin).toContain('linkedin.com/in/');
 });
