@@ -207,19 +207,6 @@
   gap: 12px;
   align-items: center;
 }
-.cv-exp-heading {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  min-width: 0;
-}
-.cv-exp-index {
-  font-family: var(--font-manifeste);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--cv-muted);
-  flex: 0 0 auto;
-}
 .cv-exp-role {
   font-size: 15px;
   font-weight: 700;
@@ -271,6 +258,7 @@
   align-items: center;
   gap: 0 8px;
   font-size: 11px;
+  font-style: italic;
   color: var(--cv-muted);
 }
 .cv-tag {

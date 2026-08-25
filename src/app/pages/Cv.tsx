@@ -98,15 +98,10 @@ export default function Cv() {
         <div className="cv-body">
           <section className="cv-main">
             <h2 className="cv-label">{c.labels.experience}</h2>
-            {c.experiences.map((exp, i) => (
+            {c.experiences.map((exp) => (
               <div className="cv-exp" key={`${exp.company}-${exp.role}`}>
                 <div className="cv-exp-head">
-                  <div className="cv-exp-heading">
-                    <span className="cv-exp-index">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span className="cv-exp-role">{exp.role}</span>
-                  </div>
+                  <span className="cv-exp-role">{exp.role}</span>
                   <span className="cv-exp-period">{exp.period}</span>
                 </div>
                 <div className="cv-exp-company">
