@@ -18,6 +18,10 @@ import {
 const CONTAINER =
   'mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24';
 
+// PDF du CV (générés par scripts/generate-cv-pdf.mjs, servis depuis public/).
+const CV_PDF_FR = '/cv-alexis-kabiche-fr.pdf';
+const CV_PDF_EN = '/cv-alexis-kabiche-en.pdf';
+
 const LABEL_STYLE = {
   fontFamily: 'Manrope, sans-serif',
   fontWeight: 500,
@@ -279,21 +283,21 @@ export default function APropos() {
               </ScrollRevealTitle>
             </div>
 
-            {/* Portrait — placeholder cadré 4:5 (image fournie plus tard) */}
+            {/* Portrait */}
             <div className="lg:col-span-4">
               <ScrollFadeIn delay={0.1}>
-                <div
-                  aria-hidden="true"
-                  className="flex items-end p-4"
+                <img
+                  src="/portrait.webp"
+                  alt="Alexis Kabiche"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full object-cover"
                   style={{
                     aspectRatio: '4 / 5',
-                    backgroundColor: 'var(--portfolio-card-bg)',
                     border: '1px solid var(--portfolio-card-border)',
                     borderRadius: '12px',
                   }}
-                >
-                  <span style={LABEL_STYLE}>portrait</span>
-                </div>
+                />
               </ScrollFadeIn>
             </div>
           </div>
@@ -358,14 +362,14 @@ export default function APropos() {
         items={recherche}
       />
 
-      {/* 4. CV — désactivé tant que /cv n'existe pas */}
+      {/* 4. CV — téléchargement direct du PDF (langue courante), pas de page */}
       <section className="pb-20 md:pb-28">
         <div className={CONTAINER}>
-          {/* biome-ignore lint/a11y/noStaticElementInteractions: pas un contrôle réel (aria-disabled, pas de onClick) — hover ne fait que déclencher l'anim texte, pas de sémantique interactive à porter. */}
-          <div
+          <a
+            href={lang === 'fr' ? CV_PDF_FR : CV_PDF_EN}
+            download="Alexis Kabiche - CV.pdf"
             data-testid="cv-button"
-            aria-disabled="true"
-            className="inline-flex items-center gap-2 px-6 py-3 select-none"
+            className="inline-flex items-center gap-2 px-6 py-3 transition-opacity hover:opacity-80"
             style={{
               backgroundColor: 'var(--portfolio-button-bg)',
               color: 'var(--portfolio-button-text)',
@@ -373,31 +377,18 @@ export default function APropos() {
               fontWeight: 500,
               fontSize: '14px',
               borderRadius: '5px',
-              opacity: 0.55,
-              cursor: 'not-allowed',
+              textDecoration: 'none',
             }}
             onMouseEnter={() => setCvHover(true)}
             onMouseLeave={() => setCvHover(false)}
           >
-            {/* TODO(cv): remplacer par <Link to="/cv"> une fois la page CV créée */}
             <FileText size={18} />
             <RollingText
               text={t.cvButton}
               inView={cvHover}
               transition={{ duration: 0.3, delay: 0.02, ease: 'easeOut' }}
             />
-            <span
-              className="ml-1"
-              style={{
-                fontSize: '12px',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                opacity: 0.8,
-              }}
-            >
-              · {t.cvSoon}
-            </span>
-          </div>
+          </a>
         </div>
       </section>
 

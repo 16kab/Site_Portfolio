@@ -24,7 +24,6 @@ export interface AproposStrings {
   rechercheLabel: string;
   rechercheTitle: string;
   cvButton: string;
-  cvSoon: string;
 }
 
 // ── FR (canonique) ──────────────────────────────────────────────
@@ -162,7 +161,6 @@ export const stringsFr: AproposStrings = {
   rechercheLabel: '(ce que je cherche)',
   rechercheTitle: 'Ce que je recherche',
   cvButton: 'Voir le Curriculum Vitae',
-  cvSoon: 'bientôt',
 };
 
 // ── EN ──────────────────────────────────────────────────────────
@@ -300,7 +298,6 @@ export const stringsEn: AproposStrings = {
   rechercheLabel: "(what I'm after)",
   rechercheTitle: "What I'm looking for",
   cvButton: 'View resume',
-  cvSoon: 'soon',
 };
 
 export function getAproposContent(lang: 'fr' | 'en') {

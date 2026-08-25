@@ -8,6 +8,7 @@ export const ROUTES = {
   PROJETS: '/projets',
   APROPOS: '/apropos',
   CONTACT: '/contact',
+  CV: '/cv',
   MENTIONS: '/mentions-legales',
   /** Motif react-router pour la route de détail (définition de Route) */
   PROJET_DETAIL_PATTERN: '/projets/:id',

@@ -34,6 +34,7 @@ const Projets = lazy(() => import('./pages/Projets'));
 const ProjetDetail = lazy(() => import('./pages/ProjetDetail'));
 const APropos = lazy(() => import('./pages/APropos'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Cv = lazy(() => import('./pages/Cv'));
 const MentionsLegales = lazy(() => import('./pages/MentionsLegales'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
@@ -60,6 +61,7 @@ export function AppContent({ showSplash }: { showSplash: boolean }) {
       <RouteTransition>
         <Route path={ROUTES.HOME} element={<Home showSplash={showSplash} />} />
         <Route path={ROUTES.CONTACT} element={<Contact />} />
+        <Route path={ROUTES.CV} element={<Cv />} />
         <Route path={ROUTES.MENTIONS} element={<MentionsLegales />} />
         <Route path={ROUTES.APROPOS} element={<APropos />} />
         <Route path={ROUTES.PROJETS} element={<Projets />} />

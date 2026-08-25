@@ -48,6 +48,12 @@ export const ROUTE_META = {
     description:
       'Contactez Alexis Kabiche, Product & Brand Designer à Paris, pour un projet, une mission ou une collaboration.',
   },
+  [ROUTES.CV]: {
+    path: ROUTES.CV,
+    title: 'CV — Alexis Kabiche',
+    description:
+      'CV d’Alexis Kabiche, Product & Brand Designer : expérience, compétences et formation. Téléchargeable en PDF.',
+  },
   [ROUTES.MENTIONS]: {
     path: ROUTES.MENTIONS,
     title: 'Mentions légales — Alexis Kabiche',
