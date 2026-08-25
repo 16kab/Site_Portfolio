@@ -113,7 +113,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #888;
+  color: #6b6b6b;
   margin-bottom: 10px;
 }
 .cv-exp {
@@ -132,7 +132,7 @@
 }
 .cv-exp-period {
   font-size: 11px;
-  color: #777;
+  color: #6b6b6b;
   white-space: nowrap;
 }
 .cv-exp-company {
@@ -217,7 +217,7 @@
   }
   .cv-sheet {
     width: 210mm;
-    min-height: 297mm;
+    min-height: auto;
     padding: 14mm 16mm;
     box-shadow: none !important;
     margin: 0 !important;

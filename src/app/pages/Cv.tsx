@@ -2,23 +2,12 @@ import { Printer } from 'lucide-react';
 import { useEffect } from 'react';
 import PageMeta from '../components/PageMeta';
 import { ROUTES } from '../config';
-import { ROUTE_META, type RouteMeta } from '../config/seo';
+import { ROUTE_META } from '../config/seo';
 import { useLang } from '../i18n';
 import { getCvContent } from './Cv.content';
 import './Cv.css';
 
-// Meta défensive : l'entrée /cv est ajoutée dans seo.ts en Task 3. Fallback en
-// attendant pour que la page compile/teste seule.
-// Note : `ROUTES.CV` n'existe pas encore (ajouté en Task 3), donc l'accès
-// passe par un cast `unknown` pour ne pas casser `tsc --noEmit` d'ici là.
-const CV_ROUTE_PATH = (ROUTES as unknown as Record<string, string>).CV;
-const CV_META: RouteMeta = (
-  ROUTE_META as Record<string, RouteMeta | undefined>
-)[CV_ROUTE_PATH] ?? {
-  path: '/cv',
-  title: 'CV — Alexis Kabiche',
-  description: 'CV d’Alexis Kabiche, Product & Brand Designer.',
-};
+const CV_META = ROUTE_META[ROUTES.CV];
 
 export default function Cv() {
   const { lang } = useLang();
