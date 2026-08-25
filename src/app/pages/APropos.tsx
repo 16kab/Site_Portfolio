@@ -287,8 +287,10 @@ export default function APropos() {
             <div className="lg:col-span-4">
               <ScrollFadeIn delay={0.1}>
                 <img
-                  src="/portrait.png"
+                  src="/portrait.webp"
                   alt="Alexis Kabiche"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full object-cover"
                   style={{
                     aspectRatio: '4 / 5',

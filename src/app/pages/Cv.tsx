@@ -61,7 +61,7 @@ export default function Cv() {
               <li>{c.contact.site}</li>
             </ul>
           </div>
-          <img className="cv-photo" src="/cv-photo.png" alt={c.name} />
+          <img className="cv-photo" src="/cv-photo.webp" alt={c.name} />
         </header>
 
         {/* Ordre DOM linéaire : Expérience d'abord, puis colonne latérale */}

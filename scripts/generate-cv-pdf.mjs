@@ -34,10 +34,12 @@ async function waitForServer(url, timeoutMs = 30000) {
   throw new Error('Le serveur de preview ne répond pas.');
 }
 
+// stdio 'ignore' : sinon vite hérite du stdout du script et, s'il survit au
+// cleanup, garde le tuyau ouvert → la commande parente reste bloquée.
 const preview = spawn(
   'npx',
   ['vite', 'preview', '--port', String(PORT), '--strictPort'],
-  { cwd: root, stdio: 'inherit', shell: true },
+  { cwd: root, stdio: 'ignore', shell: true },
 );
 
 try {

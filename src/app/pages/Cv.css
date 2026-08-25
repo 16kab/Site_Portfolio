@@ -116,8 +116,6 @@
   border-radius: 4px;
   border: 1px solid var(--cv-rule);
   object-fit: cover;
-  /* Niveaux de gris pour rester cohérent avec le monochrome du CV */
-  filter: grayscale(1);
 }
 
 /* Corps */
