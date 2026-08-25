@@ -15,50 +15,8 @@
   width: min(210mm, 100%);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
-}
-
-/* Switch clair/sombre de la feuille (indépendant du thème du site) */
-.cv-switch {
-  display: inline-flex;
-  gap: 6px;
-  padding: 5px;
-  border-radius: 999px;
-  border: 1px solid var(--portfolio-card-border);
-  background: var(--portfolio-card-bg);
-}
-.cv-switch-opt {
-  display: inline-flex;
-  padding: 2px;
-  border: none;
-  background: transparent;
-  border-radius: 999px;
-  cursor: pointer;
-  line-height: 0;
-  opacity: 0.45;
-  transition: opacity 0.2s;
-}
-.cv-switch-opt[aria-pressed='true'] {
-  opacity: 1;
-}
-.cv-swatch {
-  display: block;
-  width: 16px;
-  height: 16px;
-  border-radius: 999px;
-}
-.cv-switch-opt[aria-pressed='true'] .cv-swatch {
-  outline: 2px solid var(--portfolio-text-primary);
-  outline-offset: 2px;
-}
-.cv-swatch--light {
-  background: #fff;
-  border: 1px solid #cfcfcf;
-}
-.cv-swatch--dark {
-  background: #111;
-  border: 1px solid #111;
 }
 
 .cv-download {
@@ -99,7 +57,8 @@
   -webkit-print-color-adjust: exact;
 }
 
-.cv-sheet--dark {
+/* Feuille sombre = thème sombre du site (toggle du header) */
+.dark .cv-sheet {
   --cv-bg: #0f0f0f;
   --cv-fg: #f5f5f5;
   --cv-title: #cfcfcf;
@@ -339,9 +298,9 @@
     min-height: 0 !important;
     background: #fff !important;
   }
-  /* Impression TOUJOURS blanche, même si la feuille est en mode sombre à l'écran */
+  /* Impression TOUJOURS blanche, même si le site est en thème sombre à l'écran */
   .cv-sheet,
-  .cv-sheet--dark {
+  .dark .cv-sheet {
     --cv-bg: #ffffff;
     --cv-fg: #111111;
     --cv-title: #444444;

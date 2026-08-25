@@ -1,5 +1,5 @@
 import { Printer } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import PageMeta from '../components/PageMeta';
 import { ROUTES } from '../config';
 import { ROUTE_META } from '../config/seo';
@@ -12,10 +12,6 @@ const CV_META = ROUTE_META[ROUTES.CV];
 export default function Cv() {
   const { lang } = useLang();
   const c = getCvContent(lang);
-  // Apparence LOCALE de la feuille (indépendante du thème du site) :
-  // clair (papier blanc, texte noir) ou sombre (feuille noire, texte blanc).
-  // L'impression force toujours le blanc (voir Cv.css @media print).
-  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     document.body.scrollTop = 0;
@@ -26,27 +22,8 @@ export default function Cv() {
       <PageMeta {...CV_META} />
 
       <div className="cv-toolbar">
-        <div className="cv-switch">
-          <button
-            type="button"
-            className="cv-switch-opt"
-            aria-pressed={!dark}
-            onClick={() => setDark(false)}
-            aria-label={lang === 'fr' ? 'CV clair' : 'Light CV'}
-          >
-            <span className="cv-swatch cv-swatch--light" />
-          </button>
-          <button
-            type="button"
-            className="cv-switch-opt"
-            aria-pressed={dark}
-            onClick={() => setDark(true)}
-            aria-label={lang === 'fr' ? 'CV sombre' : 'Dark CV'}
-          >
-            <span className="cv-swatch cv-swatch--dark" />
-          </button>
-        </div>
-
+        {/* Apparence de la feuille = thème du site (toggle du header) ;
+            l'impression force toujours le blanc (voir Cv.css @media print). */}
         <button
           type="button"
           className="cv-download"
@@ -57,11 +34,7 @@ export default function Cv() {
         </button>
       </div>
 
-      <article
-        className={dark ? 'cv-sheet cv-sheet--dark' : 'cv-sheet'}
-        data-testid="cv-sheet"
-        data-variant={dark ? 'dark' : 'light'}
-      >
+      <article className="cv-sheet">
         <header className="cv-header">
           <div>
             <h1 className="cv-name">{c.name}</h1>
