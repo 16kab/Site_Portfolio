@@ -1,8 +1,7 @@
 import { SITE_CONTACT } from '../config';
 
 export const CV_NAME = 'Alexis Kabiche';
-// TODO(cv): renseigner l'URL du profil LinkedIn (rend le libellé cliquable).
-export const LINKEDIN_URL = '';
+export const LINKEDIN_URL = 'https://www.linkedin.com/in/alexis-kabiche/';
 
 interface Bi {
   fr: string;
