@@ -34,10 +34,12 @@ it('rend les 5 expertises, 4 principes et 3 items recherche', () => {
   expect(screen.queryByText('Culture centrée humain')).toBeNull();
 });
 
-it('affiche le bouton CV mais désactivé (bientôt)', () => {
+it('le bouton CV est un lien actif vers /cv', () => {
   renderPage();
   const cv = screen.getByTestId('cv-button');
-  expect(cv.getAttribute('aria-disabled')).toBe('true');
+  expect(cv.tagName).toBe('A');
+  expect(cv.getAttribute('href')).toBe('/cv');
+  expect(cv.getAttribute('aria-disabled')).toBeNull();
 });
 
 it('ne rend plus le menu sticky de navigation par section', () => {

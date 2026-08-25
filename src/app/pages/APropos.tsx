@@ -1,6 +1,7 @@
 import { FileText } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
 import RollingText from '../components/RollingText';
@@ -358,14 +359,13 @@ export default function APropos() {
         items={recherche}
       />
 
-      {/* 4. CV — désactivé tant que /cv n'existe pas */}
+      {/* 4. CV */}
       <section className="pb-20 md:pb-28">
         <div className={CONTAINER}>
-          {/* biome-ignore lint/a11y/noStaticElementInteractions: pas un contrôle réel (aria-disabled, pas de onClick) — hover ne fait que déclencher l'anim texte, pas de sémantique interactive à porter. */}
-          <div
+          <Link
+            to={ROUTES.CV}
             data-testid="cv-button"
-            aria-disabled="true"
-            className="inline-flex items-center gap-2 px-6 py-3 select-none"
+            className="inline-flex items-center gap-2 px-6 py-3 transition-opacity hover:opacity-80"
             style={{
               backgroundColor: 'var(--portfolio-button-bg)',
               color: 'var(--portfolio-button-text)',
@@ -373,31 +373,18 @@ export default function APropos() {
               fontWeight: 500,
               fontSize: '14px',
               borderRadius: '5px',
-              opacity: 0.55,
-              cursor: 'not-allowed',
+              textDecoration: 'none',
             }}
             onMouseEnter={() => setCvHover(true)}
             onMouseLeave={() => setCvHover(false)}
           >
-            {/* TODO(cv): remplacer par <Link to="/cv"> une fois la page CV créée */}
             <FileText size={18} />
             <RollingText
               text={t.cvButton}
               inView={cvHover}
               transition={{ duration: 0.3, delay: 0.02, ease: 'easeOut' }}
             />
-            <span
-              className="ml-1"
-              style={{
-                fontSize: '12px',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                opacity: 0.8,
-              }}
-            >
-              · {t.cvSoon}
-            </span>
-          </div>
+          </Link>
         </div>
       </section>
 
