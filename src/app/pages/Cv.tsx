@@ -94,8 +94,6 @@ export default function Cv() {
           </div>
         </header>
 
-        <p className="cv-tagline">{c.tagline}</p>
-
         {/* Ordre DOM linéaire : Expérience d'abord, puis colonne latérale */}
         <div className="cv-body">
           <section className="cv-main">
@@ -109,7 +107,11 @@ export default function Cv() {
                 <div className="cv-exp-company">
                   {exp.company} · {exp.contract}
                 </div>
-                <p className="cv-exp-summary">{exp.summary}</p>
+                <ul className="cv-bullets">
+                  {exp.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
                 <div className="cv-tags">
                   {exp.tags.map((tag) => (
                     <span className="cv-tag" key={tag}>

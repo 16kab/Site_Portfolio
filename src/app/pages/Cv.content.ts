@@ -14,7 +14,7 @@ interface CvExperienceRaw {
   company: string;
   contract: Bi;
   period: Bi;
-  summary: Bi;
+  bullets: { fr: string[]; en: string[] };
   tags: { fr: string[]; en: string[] };
 }
 
@@ -30,9 +30,17 @@ const experiencesRaw: CvExperienceRaw[] = [
     company: 'SPVIE Assurances',
     contract: { fr: 'CDI', en: 'Permanent' },
     period: { fr: "Janvier 2024 — Aujourd'hui", en: 'January 2024 — Present' },
-    summary: {
-      fr: "Conception produit de bout en bout (CRM BigBroker, LeadFactory, parcours B2B2C ~15 étapes, Espace Assuré) et mise en place d'un design system multi-produits.",
-      en: 'End-to-end product design (BigBroker CRM, LeadFactory, ~15-step B2B2C journey, policyholder area) and a multi-product design system.',
+    bullets: {
+      fr: [
+        'Conception from scratch du CRM BigBroker et de LeadFactory ; refonte du parcours B2B2C (~15 étapes, devis → tarification → souscription → signature) et de l’Espace Assuré desktop & mobile.',
+        'Acquisition & conversion : landing pages courtiers, tunnels orientés conversion, A/B testing et analyse comportementale (ContentSquare).',
+        'Design system multi-produits scalable, réorganisation des fichiers Figma et contribution à la roadmap UX/UI ; refonte de la charte SPVIE et direction artistique du site Agir Pour Toutes.',
+      ],
+      en: [
+        'BigBroker CRM and LeadFactory designed from scratch; redesign of the B2B2C journey (~15 steps, quote → pricing → subscription → e-signature) and of the policyholder area (desktop & mobile).',
+        'Acquisition & conversion: broker landing pages, conversion-oriented funnels, A/B testing and behavioural analysis (ContentSquare).',
+        'Scalable multi-product design system, Figma files reorganization and contribution to the UX/UI roadmap; SPVIE brand refresh and art direction of the Agir Pour Toutes website.',
+      ],
     },
     tags: {
       fr: ['CRM UX', 'B2B2C', 'Design System', 'Acquisition', 'A/B testing'],
@@ -47,9 +55,15 @@ const experiencesRaw: CvExperienceRaw[] = [
     company: 'SPVIE Assurances',
     contract: { fr: 'Consultant puis CDI', en: 'Consultant then permanent' },
     period: { fr: 'Juillet — Décembre 2023', en: 'July — December 2023' },
-    summary: {
-      fr: "Pilotage de projets digitaux transverses (métier, produit, IT), cadrage fonctionnel et mise en place d'outils.",
-      en: 'Led cross-functional digital projects (business, product, IT), functional scoping and tooling.',
+    bullets: {
+      fr: [
+        'Pilotage de projets digitaux transverses entre les équipes métier, produit et IT ; cadrage fonctionnel en amont de chaque chantier.',
+        'Interface opérationnelle entre décideurs et équipes techniques ; identification des inefficacités process et mise en place d’outils adaptés.',
+      ],
+      en: [
+        'Led cross-functional digital projects across business, product and IT teams; upstream functional scoping of each workstream.',
+        'Operational bridge between decision-makers and technical teams; spotting process inefficiencies and rolling out suitable tools.',
+      ],
     },
     tags: {
       fr: ['Gestion de projet', 'Cadrage', 'Coordination transverse'],
@@ -64,9 +78,15 @@ const experiencesRaw: CvExperienceRaw[] = [
       fr: 'Octobre 2020 — Octobre 2022',
       en: 'October 2020 — October 2022',
     },
-    summary: {
-      fr: "Refonte de l'identité visuelle et du site corporate, architecture des contenus et audit SEO.",
-      en: 'Rebrand of the visual identity and corporate website, content architecture and SEO audit.',
+    bullets: {
+      fr: [
+        'Refonte de l’identité visuelle et du site corporate dans un contexte de modernisation de marque.',
+        'Structuration de l’arborescence et des contenus (logique UX), audit SEO et recommandations d’amélioration.',
+      ],
+      en: [
+        'Rebrand of the visual identity and corporate website in a brand-modernization context.',
+        'Site structure and content architecture (UX-driven), SEO audit and improvement recommendations.',
+      ],
     },
     tags: {
       fr: ['Identité visuelle', "Architecture de l'info", 'SEO'],
@@ -78,9 +98,15 @@ const experiencesRaw: CvExperienceRaw[] = [
     company: 'ShopInCar',
     contract: { fr: 'Stage · 6 mois', en: 'Internship · 6 months' },
     period: { fr: '2020', en: '2020' },
-    summary: {
-      fr: "Refonte de la WebApp mobile et desktop, conception d'interfaces et de supports.",
-      en: 'Redesign of the mobile & desktop web app, interfaces and assets.',
+    bullets: {
+      fr: [
+        'Participation à la refonte de la WebApp mobile & desktop.',
+        'Conception d’interfaces et de supports digitaux, dans une logique d’ergonomie.',
+      ],
+      en: [
+        'Contributed to the redesign of the mobile & desktop web app.',
+        'Design of interfaces and digital assets, with a focus on usability.',
+      ],
     },
     tags: {
       fr: ['UI', 'Responsive', 'Ergonomie'],
@@ -131,7 +157,6 @@ const languagesRaw: Bi[] = [
 const strings = {
   fr: {
     title: 'Product & Brand Designer',
-    tagline: 'Je conçois des produits clairs, qui tiennent dans la durée.',
     download: 'Télécharger le PDF',
     experience: 'Expérience',
     skills: 'Compétences',
@@ -141,7 +166,6 @@ const strings = {
   },
   en: {
     title: 'Product & Brand Designer',
-    tagline: 'I design clear products, built to last.',
     download: 'Download PDF',
     experience: 'Experience',
     skills: 'Skills',
@@ -156,7 +180,7 @@ export interface CvExperience {
   company: string;
   contract: string;
   period: string;
-  summary: string;
+  bullets: string[];
   tags: string[];
 }
 
@@ -169,7 +193,6 @@ export interface CvEducation {
 export interface CvContent {
   name: string;
   title: string;
-  tagline: string;
   labels: {
     experience: string;
     skills: string;
@@ -197,7 +220,6 @@ export function getCvContent(lang: 'fr' | 'en'): CvContent {
   return {
     name: CV_NAME,
     title: s.title,
-    tagline: s.tagline,
     labels: {
       experience: s.experience,
       skills: s.skills,
@@ -218,7 +240,7 @@ export function getCvContent(lang: 'fr' | 'en'): CvContent {
       company: e.company,
       contract: e.contract[lang],
       period: e.period[lang],
-      summary: e.summary[lang],
+      bullets: e.bullets[lang],
       tags: e.tags[lang],
     })),
     education: educationRaw.map((e) => ({

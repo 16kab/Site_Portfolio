@@ -19,8 +19,6 @@ it('nom et libellés cohérents avec la langue', () => {
   expect(CV_NAME).toBe('Alexis Kabiche');
   expect(getCvContent('fr').name).toBe('Alexis Kabiche');
   expect(getCvContent('fr').title).toMatch(/Designer/);
-  expect(getCvContent('fr').tagline).toMatch(/tiennent/);
-  expect(getCvContent('en').tagline).toMatch(/last/);
   expect(getCvContent('fr').labels.experience).toBe('Expérience');
   expect(getCvContent('en').labels.experience).toBe('Experience');
 });
@@ -31,7 +29,8 @@ it('chaque expérience a des champs non vides dans les deux langues', () => {
       expect(exp.role.length).toBeGreaterThan(0);
       expect(exp.company.length).toBeGreaterThan(0);
       expect(exp.period.length).toBeGreaterThan(0);
-      expect(exp.summary.length).toBeGreaterThan(0);
+      expect(exp.bullets.length).toBeGreaterThan(0);
+      for (const b of exp.bullets) expect(b.length).toBeGreaterThan(0);
       expect(exp.tags.length).toBeGreaterThan(0);
     }
   }
