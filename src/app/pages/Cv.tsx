@@ -1,5 +1,5 @@
 import { Printer } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PageMeta from '../components/PageMeta';
 import { ROUTES } from '../config';
 import { ROUTE_META } from '../config/seo';
@@ -12,6 +12,10 @@ const CV_META = ROUTE_META[ROUTES.CV];
 export default function Cv() {
   const { lang } = useLang();
   const c = getCvContent(lang);
+  // Apparence LOCALE de la feuille (indépendante du thème du site) :
+  // clair (papier blanc, texte noir) ou sombre (feuille noire, texte blanc).
+  // L'impression force toujours le blanc (voir Cv.css @media print).
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     document.body.scrollTop = 0;
@@ -22,6 +26,27 @@ export default function Cv() {
       <PageMeta {...CV_META} />
 
       <div className="cv-toolbar">
+        <div className="cv-switch">
+          <button
+            type="button"
+            className="cv-switch-opt"
+            aria-pressed={!dark}
+            onClick={() => setDark(false)}
+            aria-label={lang === 'fr' ? 'CV clair' : 'Light CV'}
+          >
+            <span className="cv-swatch cv-swatch--light" />
+          </button>
+          <button
+            type="button"
+            className="cv-switch-opt"
+            aria-pressed={dark}
+            onClick={() => setDark(true)}
+            aria-label={lang === 'fr' ? 'CV sombre' : 'Dark CV'}
+          >
+            <span className="cv-swatch cv-swatch--dark" />
+          </button>
+        </div>
+
         <button
           type="button"
           className="cv-download"
@@ -32,7 +57,11 @@ export default function Cv() {
         </button>
       </div>
 
-      <article className="cv-sheet">
+      <article
+        className={dark ? 'cv-sheet cv-sheet--dark' : 'cv-sheet'}
+        data-testid="cv-sheet"
+        data-variant={dark ? 'dark' : 'light'}
+      >
         <header className="cv-header">
           <div>
             <h1 className="cv-name">{c.name}</h1>
@@ -112,7 +141,7 @@ export default function Cv() {
             <div className="cv-aside-block">
               <h2 className="cv-label">{c.labels.education}</h2>
               {c.education.map((ed) => (
-                <div key={ed.title} style={{ marginBottom: '10px' }}>
+                <div className="cv-edu" key={ed.title}>
                   <div className="cv-edu-title">{ed.title}</div>
                   <div className="cv-edu-meta">
                     {ed.school} · {ed.period}

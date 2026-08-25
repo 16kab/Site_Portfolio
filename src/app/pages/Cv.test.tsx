@@ -41,3 +41,13 @@ it('pas d’image tant que la photo n’est pas fournie (placeholder)', () => {
   const { container } = renderCv();
   expect(container.querySelector('img')).toBeNull();
 });
+
+it('le switch bascule la feuille en sombre puis en clair', () => {
+  renderCv();
+  const sheet = screen.getByTestId('cv-sheet');
+  expect(sheet.getAttribute('data-variant')).toBe('light');
+  fireEvent.click(screen.getByRole('button', { name: /cv sombre|dark cv/i }));
+  expect(sheet.getAttribute('data-variant')).toBe('dark');
+  fireEvent.click(screen.getByRole('button', { name: /cv clair|light cv/i }));
+  expect(sheet.getAttribute('data-variant')).toBe('light');
+});

@@ -1,10 +1,11 @@
-/* Page CV : cadre thémé (écran) + feuille A4 blanche + impression A4 */
+/* Page CV : cadre thémé (écran) + feuille A4 commutable clair/sombre.
+   L'impression force TOUJOURS le blanc (voir @media print). */
 .cv-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   padding: 24px 16px 64px;
   padding-top: var(--page-padding-top);
   background: var(--portfolio-bg);
@@ -13,7 +14,51 @@
 .cv-toolbar {
   width: min(210mm, 100%);
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Switch clair/sombre de la feuille (indépendant du thème du site) */
+.cv-switch {
+  display: inline-flex;
+  gap: 6px;
+  padding: 5px;
+  border-radius: 999px;
+  border: 1px solid var(--portfolio-card-border);
+  background: var(--portfolio-card-bg);
+}
+.cv-switch-opt {
+  display: inline-flex;
+  padding: 2px;
+  border: none;
+  background: transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  line-height: 0;
+  opacity: 0.45;
+  transition: opacity 0.2s;
+}
+.cv-switch-opt[aria-pressed='true'] {
+  opacity: 1;
+}
+.cv-swatch {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+}
+.cv-switch-opt[aria-pressed='true'] .cv-swatch {
+  outline: 2px solid var(--portfolio-text-primary);
+  outline-offset: 2px;
+}
+.cv-swatch--light {
+  background: #fff;
+  border: 1px solid #cfcfcf;
+}
+.cv-swatch--dark {
+  background: #111;
+  border: 1px solid #111;
 }
 
 .cv-download {
@@ -31,48 +76,73 @@
   color: var(--portfolio-button-text);
 }
 
-/* La feuille : blanche + noire FIXES (indépendantes du thème et de l'impression) */
+/* ── La feuille : palette en variables (clair par défaut) ────────── */
 .cv-sheet {
+  --cv-bg: #ffffff;
+  --cv-fg: #111111;
+  --cv-title: #444444;
+  --cv-body: #333333;
+  --cv-soft: #555555;
+  --cv-muted: #6b6b6b;
+  --cv-rule: #e2e2e2;
+  --cv-photo-bg: #eeeeee;
+  --cv-photo-fg: #999999;
+
   width: min(210mm, 100%);
-  background: #fff;
-  color: #1a1a1a;
+  background: var(--cv-bg);
+  color: var(--cv-fg);
   box-sizing: border-box;
-  padding: clamp(20px, 5vw, 14mm);
+  padding: clamp(24px, 6vw, 15mm);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   font-family: 'Manrope', sans-serif;
   print-color-adjust: exact;
   -webkit-print-color-adjust: exact;
 }
 
+.cv-sheet--dark {
+  --cv-bg: #0f0f0f;
+  --cv-fg: #f5f5f5;
+  --cv-title: #cfcfcf;
+  --cv-body: #d2d2d2;
+  --cv-soft: #b3b3b3;
+  --cv-muted: #8f8f8f;
+  --cv-rule: #2b2b2b;
+  --cv-photo-bg: #1b1b1b;
+  --cv-photo-fg: #777777;
+}
+
+/* En-tête */
 .cv-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
+  gap: 24px;
+  margin-bottom: 30px;
 }
 .cv-name {
   font-family: var(--font-manifeste);
   font-weight: 800;
-  font-size: clamp(1.8rem, 1.2rem + 3vw, 2.6rem);
+  font-size: clamp(2rem, 1.3rem + 3.4vw, 2.9rem);
   line-height: 1;
   letter-spacing: -0.03em;
-  color: #111;
+  color: var(--cv-fg);
 }
 .cv-title {
-  margin-top: 6px;
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  color: #444;
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--cv-title);
 }
 .cv-contact {
-  margin-top: 12px;
+  margin-top: 18px;
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 14px;
+  gap: 4px 16px;
   list-style: none;
   padding: 0;
   font-size: 12px;
-  color: #555;
+  color: var(--cv-soft);
 }
 .cv-contact a {
   color: inherit;
@@ -82,42 +152,54 @@
   flex: 0 0 auto;
   width: 28mm;
   height: 35mm;
-  border-radius: 6px;
-  background: #eee;
-  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: var(--cv-photo-bg);
+  border: 1px solid var(--cv-rule);
   display: flex;
   align-items: flex-end;
   justify-content: center;
   padding: 6px;
-  font-size: 10px;
-  letter-spacing: 0.12em;
+  font-size: 9px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #999;
-}
-.cv-tagline {
-  margin: 14px 0;
-  padding: 14px 0;
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: clamp(0.95rem, 0.85rem + 0.5vw, 1.15rem);
-  color: #222;
+  color: var(--cv-photo-fg);
 }
 
+/* Accroche — de l'air, un seul filet fin au-dessus */
+.cv-tagline {
+  margin: 0 0 34px;
+  padding-top: 20px;
+  border-top: 1px solid var(--cv-rule);
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.2rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--cv-body);
+  max-width: 58ch;
+}
+
+/* Corps */
 .cv-body {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 32px;
 }
+
+/* Label de section (le plus discret de la hiérarchie) */
 .cv-label {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #6b6b6b;
-  margin-bottom: 10px;
+  color: var(--cv-muted);
+  margin-bottom: 18px;
 }
+
+/* Expérience */
 .cv-exp {
-  margin-bottom: 14px;
+  margin-bottom: 22px;
+}
+.cv-exp:last-child {
+  margin-bottom: 0;
 }
 .cv-exp-head {
   display: flex;
@@ -126,58 +208,77 @@
   align-items: baseline;
 }
 .cv-exp-role {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--cv-fg);
 }
 .cv-exp-period {
   font-size: 11px;
-  color: #6b6b6b;
+  color: var(--cv-muted);
   white-space: nowrap;
 }
 .cv-exp-company {
-  font-size: 12px;
-  color: #555;
-  margin-top: 1px;
+  font-size: 12.5px;
+  color: var(--cv-soft);
+  margin-top: 3px;
 }
 .cv-exp-summary {
-  font-size: 12px;
-  line-height: 1.5;
-  color: #333;
-  margin-top: 5px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--cv-body);
+  margin-top: 8px;
 }
 .cv-tags {
-  margin-top: 6px;
+  margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  align-items: center;
+  gap: 0 8px;
+  font-size: 11px;
+  color: var(--cv-muted);
 }
 .cv-tag {
-  font-size: 10.5px;
-  color: #555;
-  border: 1px solid #e0e0e0;
-  border-radius: 3px;
-  padding: 1px 7px;
+  display: inline-flex;
+  align-items: center;
 }
+.cv-tag:not(:last-child)::after {
+  content: '·';
+  margin-left: 8px;
+  color: var(--cv-rule);
+}
+
+/* Colonne latérale */
 .cv-aside-block {
-  margin-bottom: 18px;
+  margin-bottom: 26px;
+}
+.cv-aside-block:last-child {
+  margin-bottom: 0;
 }
 .cv-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  font-size: 12px;
-  color: #333;
-  line-height: 1.7;
+  font-size: 12.5px;
+  color: var(--cv-body);
+  line-height: 1.95;
+}
+.cv-edu {
+  margin-bottom: 12px;
+}
+.cv-edu:last-child {
+  margin-bottom: 0;
 }
 .cv-edu-title {
   font-size: 12.5px;
-  color: #111;
+  color: var(--cv-fg);
   font-weight: 600;
+  line-height: 1.4;
 }
 .cv-edu-meta {
   font-size: 11px;
-  color: #666;
+  color: var(--cv-muted);
+  margin-top: 3px;
 }
 
 /* Desktop + impression : 2 colonnes (ordre source inchangé) */
@@ -185,11 +286,11 @@
   .cv-sheet {
     width: 210mm;
     min-height: 297mm;
-    padding: 14mm 16mm;
+    padding: 15mm 16mm;
   }
   .cv-body {
     grid-template-columns: 62% 1fr;
-    gap: 12mm;
+    gap: 14mm;
   }
 }
 
@@ -198,8 +299,8 @@
     size: A4;
     margin: 0;
   }
-  /* Masquer le chrome du site (header fixe direct enfant du conteneur app)
-     + le bouton, sans toucher le <header> du CV (classe cv-header). */
+  /* Masquer le chrome du site (header fixe, direct enfant du conteneur app)
+     + la barre d'outils, sans toucher le <header> du CV (.cv-header). */
   .app-container > header {
     display: none !important;
   }
@@ -215,15 +316,26 @@
     min-height: 0 !important;
     background: #fff !important;
   }
-  .cv-sheet {
+  /* Impression TOUJOURS blanche, même si la feuille est en mode sombre à l'écran */
+  .cv-sheet,
+  .cv-sheet--dark {
+    --cv-bg: #ffffff;
+    --cv-fg: #111111;
+    --cv-title: #444444;
+    --cv-body: #333333;
+    --cv-soft: #555555;
+    --cv-muted: #6b6b6b;
+    --cv-rule: #e2e2e2;
+    --cv-photo-bg: #eeeeee;
+    --cv-photo-fg: #999999;
     width: 210mm;
     min-height: auto;
-    padding: 14mm 16mm;
+    padding: 15mm 16mm;
     box-shadow: none !important;
     margin: 0 !important;
   }
   .cv-body {
     grid-template-columns: 62% 1fr !important;
-    gap: 12mm;
+    gap: 14mm;
   }
 }
