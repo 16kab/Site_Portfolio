@@ -174,14 +174,24 @@
   gap: 32px;
 }
 
-/* Label de section (le plus discret de la hiérarchie) */
+/* Label de section — mis en avant : police d'affichage + barre d'accent */
 .cv-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--cv-muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-manifeste);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  color: var(--cv-fg);
   margin-bottom: 18px;
+}
+.cv-label::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 22px;
+  height: 2px;
+  background: var(--cv-fg);
 }
 
 /* Expérience */
@@ -195,7 +205,20 @@
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  align-items: center;
+}
+.cv-exp-heading {
+  display: flex;
   align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+.cv-exp-index {
+  font-family: var(--font-manifeste);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cv-muted);
+  flex: 0 0 auto;
 }
 .cv-exp-role {
   font-size: 15px;
@@ -204,9 +227,15 @@
   color: var(--cv-fg);
 }
 .cv-exp-period {
-  font-size: 11px;
+  flex: 0 0 auto;
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
   color: var(--cv-muted);
   white-space: nowrap;
+  border: 1px solid var(--cv-rule);
+  border-radius: 999px;
+  padding: 2px 9px;
 }
 .cv-exp-company {
   font-size: 12.5px;
