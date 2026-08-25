@@ -1,7 +1,6 @@
 import { FileText } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router';
 import ContactFooter from '../components/ContactFooter';
 import PageMeta from '../components/PageMeta';
 import RollingText from '../components/RollingText';
@@ -18,6 +17,10 @@ import {
 
 const CONTAINER =
   'mx-auto w-full max-w-[1920px] px-8 sm:px-12 md:px-16 lg:px-20 xl:px-24';
+
+// PDF du CV (générés par scripts/generate-cv-pdf.mjs, servis depuis public/).
+const CV_PDF_FR = '/cv-alexis-kabiche-fr.pdf';
+const CV_PDF_EN = '/cv-alexis-kabiche-en.pdf';
 
 const LABEL_STYLE = {
   fontFamily: 'Manrope, sans-serif',
@@ -280,21 +283,19 @@ export default function APropos() {
               </ScrollRevealTitle>
             </div>
 
-            {/* Portrait — placeholder cadré 4:5 (image fournie plus tard) */}
+            {/* Portrait */}
             <div className="lg:col-span-4">
               <ScrollFadeIn delay={0.1}>
-                <div
-                  aria-hidden="true"
-                  className="flex items-end p-4"
+                <img
+                  src="/portrait.png"
+                  alt="Alexis Kabiche"
+                  className="w-full object-cover"
                   style={{
                     aspectRatio: '4 / 5',
-                    backgroundColor: 'var(--portfolio-card-bg)',
                     border: '1px solid var(--portfolio-card-border)',
                     borderRadius: '12px',
                   }}
-                >
-                  <span style={LABEL_STYLE}>portrait</span>
-                </div>
+                />
               </ScrollFadeIn>
             </div>
           </div>
@@ -359,11 +360,12 @@ export default function APropos() {
         items={recherche}
       />
 
-      {/* 4. CV */}
+      {/* 4. CV — téléchargement direct du PDF (langue courante), pas de page */}
       <section className="pb-20 md:pb-28">
         <div className={CONTAINER}>
-          <Link
-            to={ROUTES.CV}
+          <a
+            href={lang === 'fr' ? CV_PDF_FR : CV_PDF_EN}
+            download="Alexis Kabiche - CV.pdf"
             data-testid="cv-button"
             className="inline-flex items-center gap-2 px-6 py-3 transition-opacity hover:opacity-80"
             style={{
@@ -384,7 +386,7 @@ export default function APropos() {
               inView={cvHover}
               transition={{ duration: 0.3, delay: 0.02, ease: 'easeOut' }}
             />
-          </Link>
+          </a>
         </div>
       </section>
 

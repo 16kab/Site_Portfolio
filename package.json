@@ -15,7 +15,8 @@
     "test:e2e": "playwright test",
     "test:visual": "playwright test -c playwright.visual.config.ts",
     "budget": "node scripts/check-bundle-budget.mjs",
-    "check:prerender": "node scripts/check-prerender.mjs"
+    "check:prerender": "node scripts/check-prerender.mjs",
+    "cv:pdf": "node scripts/generate-cv-pdf.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

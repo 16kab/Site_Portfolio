@@ -37,7 +37,8 @@ it('le bouton « Télécharger le PDF » déclenche l’impression', () => {
   printSpy.mockRestore();
 });
 
-it('pas d’image tant que la photo n’est pas fournie (placeholder)', () => {
-  const { container } = renderCv();
-  expect(container.querySelector('img')).toBeNull();
+it('affiche la photo (avec alt = nom)', () => {
+  renderCv();
+  const img = screen.getByRole('img', { name: 'Alexis Kabiche' });
+  expect(img.getAttribute('src')).toBe('/cv-photo.png');
 });

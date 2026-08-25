@@ -61,10 +61,7 @@ export default function Cv() {
               <li>{c.contact.site}</li>
             </ul>
           </div>
-          {/* Emplacement photo — placeholder tant que l'asset n'est pas fourni */}
-          <div className="cv-photo" aria-hidden="true">
-            photo
-          </div>
+          <img className="cv-photo" src="/cv-photo.png" alt={c.name} />
         </header>
 
         {/* Ordre DOM linéaire : Expérience d'abord, puis colonne latérale */}

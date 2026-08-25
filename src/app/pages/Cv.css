@@ -114,16 +114,10 @@
   width: 28mm;
   height: 35mm;
   border-radius: 4px;
-  background: var(--cv-photo-bg);
   border: 1px solid var(--cv-rule);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 6px;
-  font-size: 9px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--cv-photo-fg);
+  object-fit: cover;
+  /* Niveaux de gris pour rester cohérent avec le monochrome du CV */
+  filter: grayscale(1);
 }
 
 /* Corps */
