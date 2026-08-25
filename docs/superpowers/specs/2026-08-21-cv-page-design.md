@@ -87,6 +87,23 @@ activé et pointe vers `/cv`.
 Labels de section en petites capitales tracké (langage du site) ; filets fins
 `#E0E0E0` ; tags en style « badge » discret.
 
+### Ordre de lecture / ATS (issu de la veille Behance/Dribbble/Awwwards)
+
+La veille confirme la direction (typo éditoriale display+sans, grille, blanc
+généreux, **tags plutôt que barres de compétences**, monochrome = « calm
+confidence ») et surtout un piège : les CV 2 colonnes image-based cassent les
+**ATS** (Workday/Greenhouse). Notre PDF étant **généré depuis du HTML à texte
+réel**, on neutralise ce piège :
+
+- **Ordre du DOM = ordre de lecture linéaire** : En-tête (nom, titre, contact) →
+  Accroche → Expérience → Compétences → Outils → Formation → Langues. Le rendu
+  2 colonnes est obtenu via CSS (grid/flex) **sans** casser cet ordre source →
+  le flux de texte du PDF reste sain pour un parseur.
+- **Pas de barres de compétences, pas d'icônes porteuses d'info, pas de texte
+  en image** : toute information est du **texte réel** sélectionnable.
+- Monochrome strict (aucun accent) — choix validé par la veille (« 1 accent OU
+  neutres » ; on prend la version neutre, cohérente avec le site).
+
 ## Contenu (bilingue FR/EN — condensé 1 page)
 
 Le contenu exact (FR canonique + EN) sera figé dans le plan, dérivé du parcours
