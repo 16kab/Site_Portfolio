@@ -154,11 +154,11 @@ export const stringsFr: AproposStrings = {
     "Un bon design doit fonctionner de manière autonome au sein de l'entreprise. L'objectif est de construire des solutions que les équipes peuvent s'approprier, maintenir et faire évoluer dans la durée, indépendamment des personnes qui les ont conçues. La plupart des problèmes ne sont pas visuels, ils sont structurels. Le design ne corrige pas une réflexion insuffisante sur ce que le produit doit réellement accomplir.",
   philosophieP2:
     "Le design doit s'effacer au profit de l'usage. Il anticipe les réalités internes : évolution des priorités, contraintes budgétaires, changements d'organisation. S'il dépend en permanence d'un soutien externe ou d'un expert pour fonctionner, alors il n'est pas robuste. Un design pertinent est celui qui s'intègre durablement dans les processus et continue de produire de la valeur sans dépendance.",
-  expertiseLabel: '(ce que je sais faire)',
+  expertiseLabel: '(expertise)',
   expertiseTitle: 'Ce que je sais faire',
-  principesLabel: '(ce qui me guide)',
+  principesLabel: '(principes)',
   principesTitle: 'Ce qui guide mon travail',
-  rechercheLabel: '(ce que je cherche)',
+  rechercheLabel: '(ambition)',
   rechercheTitle: 'Ce que je recherche',
   cvButton: 'Voir le Curriculum Vitae',
 };
@@ -291,11 +291,11 @@ export const stringsEn: AproposStrings = {
     'Good design should work on its own within the company. The goal is to build solutions that teams can own, maintain and evolve over time, independently of the people who designed them. Most problems are not visual, they are structural. Design does not fix insufficient thinking about what the product should actually achieve.',
   philosophieP2:
     'Design should step back in favour of usage. It anticipates internal realities: shifting priorities, budget constraints, organisational change. If it constantly depends on external support or an expert to function, then it is not robust. Relevant design is the kind that integrates durably into processes and keeps producing value without dependency.',
-  expertiseLabel: '(what I do)',
+  expertiseLabel: '(expertise)',
   expertiseTitle: 'What I do',
-  principesLabel: '(what guides me)',
+  principesLabel: '(principles)',
   principesTitle: 'What guides my work',
-  rechercheLabel: "(what I'm after)",
+  rechercheLabel: '(ambition)',
   rechercheTitle: "What I'm looking for",
   cvButton: 'View resume',
 };

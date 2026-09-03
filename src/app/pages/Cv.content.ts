@@ -32,18 +32,36 @@ const experiencesRaw: CvExperienceRaw[] = [
     bullets: {
       fr: [
         'Conception from scratch du CRM BigBroker et de LeadFactory ; refonte du parcours B2B2C (~15 étapes, devis → tarification → souscription → signature) et de l’Espace Assuré desktop & mobile.',
+        'Mise en place d’un environnement de conception assisté par IA (Claude Code) connecté aux design systems des différentes marques du groupe : des pages complètes produites en quelques minutes, directement dans la bonne direction artistique.',
         'Acquisition & conversion : landing pages courtiers, tunnels orientés conversion, A/B testing et analyse comportementale (ContentSquare).',
-        'Design system multi-produits scalable, réorganisation des fichiers Figma et contribution à la roadmap UX/UI ; refonte de la charte SPVIE et direction artistique du site Agir Pour Toutes.',
+        'Refonte de la charte graphique SPVIE — identité, système typographique et chromatique, déclinaisons produit et supports — et direction artistique du site Agir Pour Toutes.',
+        'Design system multi-produits scalable, réorganisation des fichiers Figma et contribution à la roadmap UX/UI.',
       ],
       en: [
         'BigBroker CRM and LeadFactory designed from scratch; redesign of the B2B2C journey (~15 steps, quote → pricing → subscription → e-signature) and of the policyholder area (desktop & mobile).',
+        'Set up an AI-assisted design environment (Claude Code) wired to the design systems of the group’s brands: full pages produced in minutes, already on the right art direction.',
         'Acquisition & conversion: broker landing pages, conversion-oriented funnels, A/B testing and behavioural analysis (ContentSquare).',
-        'Scalable multi-product design system, Figma files reorganization and contribution to the UX/UI roadmap; SPVIE brand refresh and art direction of the Agir Pour Toutes website.',
+        'SPVIE brand guidelines redesign — identity, type and colour system, product and marketing applications — and art direction of the Agir Pour Toutes website.',
+        'Scalable multi-product design system, Figma files reorganization and contribution to the UX/UI roadmap.',
       ],
     },
     tags: {
-      fr: ['CRM UX', 'B2B2C', 'Design System', 'Acquisition', 'A/B testing'],
-      en: ['CRM UX', 'B2B2C', 'Design System', 'Acquisition', 'A/B testing'],
+      fr: [
+        'CRM UX',
+        'B2B2C',
+        'Design System',
+        'Direction artistique',
+        'Acquisition',
+        'Workflows IA',
+      ],
+      en: [
+        'CRM UX',
+        'B2B2C',
+        'Design System',
+        'Art direction',
+        'Acquisition',
+        'AI workflows',
+      ],
     },
   },
   {
@@ -90,26 +108,6 @@ const experiencesRaw: CvExperienceRaw[] = [
     tags: {
       fr: ['Identité visuelle', "Architecture de l'info", 'SEO'],
       en: ['Visual identity', 'Information architecture', 'SEO'],
-    },
-  },
-  {
-    role: { fr: 'Graphiste', en: 'Graphic Designer' },
-    company: 'ShopInCar',
-    contract: { fr: 'Stage · 6 mois', en: 'Internship · 6 months' },
-    period: { fr: '2020', en: '2020' },
-    bullets: {
-      fr: [
-        'Participation à la refonte de la WebApp mobile & desktop.',
-        'Conception d’interfaces et de supports digitaux, dans une logique d’ergonomie.',
-      ],
-      en: [
-        'Contributed to the redesign of the mobile & desktop web app.',
-        'Design of interfaces and digital assets, with a focus on usability.',
-      ],
-    },
-    tags: {
-      fr: ['UI', 'Responsive', 'Ergonomie'],
-      en: ['UI', 'Responsive', 'Usability'],
     },
   },
 ];

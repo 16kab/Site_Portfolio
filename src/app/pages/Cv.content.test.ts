@@ -4,8 +4,8 @@ import { CV_NAME, getCvContent } from './Cv.content';
 it('résout le contenu FR et EN avec parité de listes', () => {
   const fr = getCvContent('fr');
   const en = getCvContent('en');
-  expect(fr.experiences).toHaveLength(4);
-  expect(en.experiences).toHaveLength(4);
+  expect(fr.experiences).toHaveLength(3);
+  expect(en.experiences).toHaveLength(3);
   expect(fr.education).toHaveLength(2);
   expect(en.education).toHaveLength(2);
   expect(fr.skills).toHaveLength(5);
@@ -33,6 +33,22 @@ it('chaque expérience a des champs non vides dans les deux langues', () => {
       for (const b of exp.bullets) expect(b.length).toBeGreaterThan(0);
       expect(exp.tags.length).toBeGreaterThan(0);
     }
+  }
+});
+
+it('le poste actuel couvre produit, marque et workflows IA', () => {
+  const [current] = getCvContent('fr').experiences;
+  expect(current.company).toBe('SPVIE Assurances');
+  expect(current.bullets.join(' ')).toMatch(/charte graphique SPVIE/);
+  expect(current.bullets.join(' ')).toMatch(/Agir Pour Toutes/);
+  expect(current.bullets.join(' ')).toMatch(/Claude Code/);
+  expect(current.tags).toContain('Direction artistique');
+});
+
+it('ShopInCar (2020) ne figure plus dans le CV', () => {
+  for (const lang of ['fr', 'en'] as const) {
+    const companies = getCvContent(lang).experiences.map((e) => e.company);
+    expect(companies).not.toContain('ShopInCar');
   }
 });
 

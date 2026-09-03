@@ -18,13 +18,14 @@ it('affiche le nom en h1 et le titre', () => {
   expect(screen.getByText('Product & Brand Designer')).toBeTruthy();
 });
 
-it('rend les sections et les 4 postes', () => {
+it('rend les sections et les 3 postes', () => {
   renderCv();
   expect(screen.getByText('Expérience')).toBeTruthy();
   expect(screen.getByText('Compétences')).toBeTruthy();
   expect(screen.getByText('Formation')).toBeTruthy();
   expect(screen.getByText('UX/UI Designer')).toBeTruthy();
-  expect(screen.getByText('Graphiste')).toBeTruthy();
+  expect(screen.getByText('Chargé de Communication')).toBeTruthy();
+  expect(screen.queryByText('Graphiste')).toBeNull();
 });
 
 it('le bouton « Télécharger le PDF » déclenche l’impression', () => {
