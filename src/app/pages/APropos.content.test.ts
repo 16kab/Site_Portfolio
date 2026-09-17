@@ -27,8 +27,10 @@ it('recherche condensé = Impact / Collaboration / Maturité', () => {
 });
 
 it('getAproposContent renvoie la langue demandée', () => {
-  expect(getAproposContent('fr').strings.accroche).toMatch(/sans moi/);
-  expect(getAproposContent('en').strings.accroche).toMatch(/without me/);
+  expect(getAproposContent('fr').strings.accroche).toMatch(
+    /besoin d’expliquer/,
+  );
+  expect(getAproposContent('en').strings.accroche).toMatch(/need explaining/);
   expect(getAproposContent('en').recherche.map((r) => r.title)).toEqual([
     'Impact over output',
     'Real collaboration',

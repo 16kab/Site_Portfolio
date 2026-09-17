@@ -45,6 +45,9 @@ export default function Cv() {
               </li>
               <li>{c.contact.phone}</li>
               <li>{c.contact.location}</li>
+              {/* La ligne déborde depuis que LinkedIn s'affiche en entier : on
+                  force la coupure ici, coordonnées puis présence en ligne. */}
+              <li className="cv-contact-break" aria-hidden="true" />
               <li>
                 {c.contact.linkedin ? (
                   <a
@@ -52,10 +55,10 @@ export default function Cv() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    LinkedIn
+                    {c.contact.linkedinLabel}
                   </a>
                 ) : (
-                  'LinkedIn'
+                  c.contact.linkedinLabel
                 )}
               </li>
               <li>{c.contact.site}</li>

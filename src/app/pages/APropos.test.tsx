@@ -13,7 +13,7 @@ const renderPage = () =>
 it('affiche l’accroche manifeste en h1', () => {
   renderPage();
   expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(
-    /tiennent debout sans moi/,
+    /besoin d’expliquer/,
   );
 });
 

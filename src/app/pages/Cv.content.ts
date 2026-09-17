@@ -2,6 +2,8 @@ import { SITE_CONTACT } from '../config';
 
 export const CV_NAME = 'Alexis Kabiche';
 export const LINKEDIN_URL = 'https://www.linkedin.com/in/alexis-kabiche/';
+// Affiché tel quel sur la feuille : un CV imprimé doit rester lisible sans clic.
+export const LINKEDIN_LABEL = 'linkedin.com/in/alexis-kabiche';
 
 interface Bi {
   fr: string;
@@ -135,7 +137,7 @@ const skillsRaw: Bi[] = [
   { fr: 'UX & Product Design', en: 'UX & Product Design' },
   { fr: 'Brand & Visual Design', en: 'Brand & Visual Design' },
   { fr: 'Design Systems & Ops', en: 'Design Systems & Ops' },
-  { fr: "Workflows augmentés par l'IA", en: 'AI-augmented workflows' },
+  { fr: 'Workflows IA', en: 'AI workflows' },
   { fr: 'Recherche & Stratégie', en: 'Research & Strategy' },
 ];
 
@@ -204,6 +206,7 @@ export interface CvContent {
     location: string;
     site: string;
     linkedin: string;
+    linkedinLabel: string;
   };
   experiences: CvExperience[];
   education: CvEducation[];
@@ -231,6 +234,7 @@ export function getCvContent(lang: 'fr' | 'en'): CvContent {
       location: SITE_CONTACT.location,
       site: 'alexiskabiche.com',
       linkedin: LINKEDIN_URL,
+      linkedinLabel: LINKEDIN_LABEL,
     },
     experiences: experiencesRaw.map((e) => ({
       role: e.role[lang],
