@@ -148,7 +148,7 @@ export const rechercheFr: IndexItem[] = [
 
 export const stringsFr: AproposStrings = {
   eyebrow: 'product & brand designer',
-  accroche: 'Je conçois des produits qui tiennent debout sans moi.',
+  accroche: 'Je conçois des produits qu’on n’a pas besoin d’expliquer.',
   whyLabel: '(pourquoi)',
   philosophieP1:
     "Un bon design doit fonctionner de manière autonome au sein de l'entreprise. L'objectif est de construire des solutions que les équipes peuvent s'approprier, maintenir et faire évoluer dans la durée, indépendamment des personnes qui les ont conçues. La plupart des problèmes ne sont pas visuels, ils sont structurels. Le design ne corrige pas une réflexion insuffisante sur ce que le produit doit réellement accomplir.",
@@ -285,7 +285,7 @@ export const rechercheEn: IndexItem[] = [
 
 export const stringsEn: AproposStrings = {
   eyebrow: 'product & brand designer',
-  accroche: 'I design products that stand on their own without me.',
+  accroche: 'I design products that don’t need explaining.',
   whyLabel: '(why)',
   philosophieP1:
     'Good design should work on its own within the company. The goal is to build solutions that teams can own, maintain and evolve over time, independently of the people who designed them. Most problems are not visual, they are structural. Design does not fix insufficient thinking about what the product should actually achieve.',
