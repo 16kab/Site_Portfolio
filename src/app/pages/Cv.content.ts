@@ -133,12 +133,13 @@ const educationRaw: CvEducationRaw[] = [
   },
 ];
 
+// Aligné sur les 5 expertises de la page À propos, même ordre.
 const skillsRaw: Bi[] = [
+  { fr: "Design augmenté par l'IA", en: 'AI-augmented design' },
   { fr: 'UX & Product Design', en: 'UX & Product Design' },
-  { fr: 'Brand & Visual Design', en: 'Brand & Visual Design' },
-  { fr: 'Design Systems & Ops', en: 'Design Systems & Ops' },
-  { fr: 'Workflows IA', en: 'AI workflows' },
-  { fr: 'Recherche & Stratégie', en: 'Research & Strategy' },
+  { fr: 'Brand & Direction artistique', en: 'Brand & Art Direction' },
+  { fr: 'Design systems multi-marques', en: 'Multi-brand design systems' },
+  { fr: 'Culture métier & stratégie', en: 'Business insight & strategy' },
 ];
 
 const tools: string[] = [

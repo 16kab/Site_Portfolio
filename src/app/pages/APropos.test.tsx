@@ -13,7 +13,7 @@ const renderPage = () =>
 it('affiche l’accroche manifeste en h1', () => {
   renderPage();
   expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(
-    /besoin d’expliquer/,
+    /pas une intention/,
   );
 });
 
@@ -21,7 +21,7 @@ it('rend les 5 expertises, 4 principes et 3 items recherche', () => {
   renderPage();
   for (const title of [
     'UX & Product Design',
-    'Design Systems & Ops',
+    'Design systems multi-marques',
     'Moins, mais mieux',
     'Impact plutôt que production',
     'Collaboration réelle',
@@ -50,8 +50,10 @@ it('ne rend plus le menu sticky de navigation par section', () => {
 
 it('index dépliable : cliquer une ligne bascule aria-expanded', () => {
   renderPage();
-  // 1re ligne (UX & Product Design) ouverte par défaut ; la 2e est fermée.
-  const row = screen.getByRole('button', { name: /Brand & Visual Design/ });
+  // 1re ligne (Design augmenté par l'IA) ouverte par défaut ; la 2e est fermée.
+  const row = screen.getByRole('button', {
+    name: /Brand & Direction artistique/,
+  });
   expect(row.getAttribute('aria-expanded')).toBe('false');
   fireEvent.click(row);
   expect(row.getAttribute('aria-expanded')).toBe('true');

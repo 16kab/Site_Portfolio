@@ -30,6 +30,19 @@ export interface AproposStrings {
 export const expertisesFr: ExpertiseItem[] = [
   {
     number: '001',
+    title: "Design augmenté par l'IA",
+    description:
+      "Un environnement de conception connecté aux design systems, capable de produire des pages complètes à la bonne direction artistique en quelques minutes. L'IA exécute ce qui est déjà tranché ; les arbitrages, eux, restent humains et contextualisés.",
+    badges: [
+      'Environnement de conception IA',
+      'Design systems connectés',
+      'Production à la marque',
+      'Prototypage rapide',
+      'Arbitrage humain',
+    ],
+  },
+  {
+    number: '002',
     title: 'UX & Product Design',
     description:
       "Transformer des problématiques floues en interfaces claires et structurées. Intervention sur l'ensemble du cycle produit, de la phase de découverte aux interactions finalisées, avec une attention constante portée aux usages réels.",
@@ -43,8 +56,8 @@ export const expertisesFr: ExpertiseItem[] = [
     ],
   },
   {
-    number: '002',
-    title: 'Brand & Visual Design',
+    number: '003',
+    title: 'Brand & Direction artistique',
     description:
       "Construire et faire évoluer des identités visuelles cohérentes, pensées pour s'intégrer dans des environnements produits. L'objectif n'est pas uniquement esthétique, mais d'assurer lisibilité, différenciation et continuité sur l'ensemble des points de contact.",
     badges: [
@@ -56,40 +69,27 @@ export const expertisesFr: ExpertiseItem[] = [
     ],
   },
   {
-    number: '003',
-    title: "Workflows augmentés par l'IA",
-    description:
-      "Intégrer l'IA comme un outil au service de la réflexion, et non comme une finalité. Elle intervient pour accélérer l'exploration, structurer les idées, identifier des patterns ou challenger des hypothèses, tout en laissant la prise de décision ancrée dans une logique humaine et contextualisée.",
-    badges: [
-      'Outils assistés par IA',
-      "Aide à la structuration et à l'exploration",
-      'Détection de patterns',
-      'Support à la réflexion et à la décision',
-      'Interaction humain–IA',
-    ],
-  },
-  {
     number: '004',
-    title: 'Design Systems & Ops',
+    title: 'Design systems multi-marques',
     description:
-      'Mettre en place les fondations qui rendent le design fiable et reproductible. Bibliothèques de composants, architecture de tokens, modèles de gouvernance — des éléments structurants qui optimisent durablement les processus.',
+      'Faire tenir plusieurs marques sur des fondations communes. Bibliothèques de composants, architecture de tokens, modèles de gouvernance — ce qui permet à une décision prise sur une marque de rester juste sur toutes les autres.',
     badges: [
       'Architecture de composants',
       'Design tokens',
+      'Déclinaison multi-marques',
       'Gouvernance',
       'Modèles de contribution',
-      'Organisation des équipes',
       'Documentation',
     ],
   },
   {
     number: '005',
-    title: 'Recherche & Stratégie',
+    title: 'Culture métier & stratégie',
     description:
-      "Prendre des décisions basées sur des données et des observations, plutôt que sur l'intuition. Transformer des signaux qualitatifs et quantitatifs en orientations exploitables.",
+      "Comprendre le modèle économique, les contraintes réglementaires et les réseaux de distribution avant de dessiner. Transformer des signaux qualitatifs et quantitatifs en orientations exploitables, et ancrer la décision dans des données plutôt que dans l'intuition.",
     badges: [
+      'Compréhension métier',
       'Recherche utilisateur',
-      'Synthèse',
       "Architecture de l'information",
       'Stratégie produit',
       'Décisions pilotées par la donnée',
@@ -115,7 +115,7 @@ export const principlesFr: IndexItem[] = [
     number: '003',
     title: 'Efficacité structurée',
     description:
-      "S'appuyer sur des systèmes scalables, des composants réutilisables et de l'automatisation lorsque c'est pertinent. L'efficacité traduit une bonne utilisation des ressources, pas un raccourci.",
+      "S'appuyer sur des systèmes scalables, des composants réutilisables et sur l'IA lorsqu'elle fait gagner du temps sans coûter en justesse. L'efficacité traduit une bonne utilisation des ressources, pas un raccourci.",
   },
   {
     number: '004',
@@ -142,18 +142,18 @@ export const rechercheFr: IndexItem[] = [
     number: '003',
     title: 'Maturité design',
     description:
-      "Des organisations qui considèrent le design comme un levier stratégique, intégré aux décisions, et non comme une simple couche d'exécution.",
+      "Des organisations qui considèrent le design comme un levier stratégique, intégré aux décisions et pensé à l'échelle de toutes leurs marques, plutôt que comme une simple couche d'exécution.",
   },
 ];
 
 export const stringsFr: AproposStrings = {
   eyebrow: 'product & brand designer',
-  accroche: 'Je conçois des produits qu’on n’a pas besoin d’expliquer.',
+  accroche: 'La cohérence est un travail, pas une intention.',
   whyLabel: '(pourquoi)',
   philosophieP1:
-    "Un bon design doit fonctionner de manière autonome au sein de l'entreprise. L'objectif est de construire des solutions que les équipes peuvent s'approprier, maintenir et faire évoluer dans la durée, indépendamment des personnes qui les ont conçues. La plupart des problèmes ne sont pas visuels, ils sont structurels. Le design ne corrige pas une réflexion insuffisante sur ce que le produit doit réellement accomplir.",
+    "Un produit ne se conçoit pas isolément. Il hérite d'une marque, d'une organisation, de contraintes qui ne se voient pas à l'écran mais qui décident de tout. La plupart des problèmes ne sont pas visuels, ils sont structurels : ils viennent de ce qui n'a pas été tranché en amont, pas de ce qui a été mal dessiné.",
   philosophieP2:
-    "Le design doit s'effacer au profit de l'usage. Il anticipe les réalités internes : évolution des priorités, contraintes budgétaires, changements d'organisation. S'il dépend en permanence d'un soutien externe ou d'un expert pour fonctionner, alors il n'est pas robuste. Un design pertinent est celui qui s'intègre durablement dans les processus et continue de produire de la valeur sans dépendance.",
+    "Comprendre le métier avant de dessiner n'est pas une politesse, c'est la condition. Dans un parcours complexe, chaque étape existe pour une raison : une contrainte réglementaire, un modèle économique, un réseau de distribution. On ne simplifie pas en retirant des étapes, on simplifie en comprenant pourquoi elles existent. C'est la différence entre un écran plus joli et un produit qui fonctionne.",
   expertiseLabel: '(expertise)',
   expertiseTitle: 'Ce que je sais faire',
   principesLabel: '(principes)',
@@ -167,6 +167,19 @@ export const stringsFr: AproposStrings = {
 export const expertisesEn: ExpertiseItem[] = [
   {
     number: '001',
+    title: 'AI-augmented design',
+    description:
+      'A design environment wired to the design systems, able to produce full pages on the right art direction within minutes. AI executes what has already been settled; the judgment calls stay human and contextual.',
+    badges: [
+      'AI design environment',
+      'Connected design systems',
+      'On-brand production',
+      'Rapid prototyping',
+      'Human judgment',
+    ],
+  },
+  {
+    number: '002',
     title: 'UX & Product Design',
     description:
       'Turning fuzzy problems into clear, structured interfaces. Involvement across the whole product cycle, from the discovery phase to finalised interactions, with constant attention to real-world usage.',
@@ -180,8 +193,8 @@ export const expertisesEn: ExpertiseItem[] = [
     ],
   },
   {
-    number: '002',
-    title: 'Brand & Visual Design',
+    number: '003',
+    title: 'Brand & Art Direction',
     description:
       'Building and evolving consistent visual identities, designed to fit within product environments. The goal is not purely aesthetic, but to ensure readability, differentiation and continuity across every touchpoint.',
     badges: [
@@ -193,40 +206,27 @@ export const expertisesEn: ExpertiseItem[] = [
     ],
   },
   {
-    number: '003',
-    title: 'AI-augmented workflows',
-    description:
-      'Bringing AI in as a tool that serves thinking, not as an end in itself. It helps speed up exploration, structure ideas, spot patterns or challenge assumptions, while keeping decision-making grounded in human, contextual reasoning.',
-    badges: [
-      'AI-assisted tools',
-      'Support for structuring and exploration',
-      'Pattern detection',
-      'Support for reasoning and decisions',
-      'Human–AI interaction',
-    ],
-  },
-  {
     number: '004',
-    title: 'Design Systems & Ops',
+    title: 'Multi-brand design systems',
     description:
-      'Putting in place the foundations that make design reliable and repeatable. Component libraries, token architecture, governance models — structuring elements that improve processes over the long term.',
+      'Holding several brands on shared foundations. Component libraries, token architecture, governance models — what lets a decision made on one brand stay right on all the others.',
     badges: [
       'Component architecture',
       'Design tokens',
+      'Multi-brand theming',
       'Governance',
       'Contribution models',
-      'Team organisation',
       'Documentation',
     ],
   },
   {
     number: '005',
-    title: 'Research & Strategy',
+    title: 'Business insight & strategy',
     description:
-      'Making decisions based on data and observation rather than intuition. Turning qualitative and quantitative signals into actionable direction.',
+      'Understanding the business model, the regulatory constraints and the distribution networks before drawing anything. Turning qualitative and quantitative signals into actionable direction, and grounding decisions in data rather than intuition.',
     badges: [
+      'Business insight',
       'User research',
-      'Synthesis',
       'Information architecture',
       'Product strategy',
       'Data-driven decisions',
@@ -252,7 +252,7 @@ export const principlesEn: IndexItem[] = [
     number: '003',
     title: 'Structured efficiency',
     description:
-      'Relying on scalable systems, reusable components and automation where relevant. Efficiency reflects a good use of resources, not a shortcut.',
+      'Relying on scalable systems, reusable components and on AI where it saves time without costing accuracy. Efficiency reflects a good use of resources, not a shortcut.',
   },
   {
     number: '004',
@@ -279,18 +279,18 @@ export const rechercheEn: IndexItem[] = [
     number: '003',
     title: 'Design maturity',
     description:
-      'Organisations that treat design as a strategic lever, embedded in decisions, rather than a mere execution layer.',
+      'Organisations that treat design as a strategic lever, embedded in decisions and thought through at the scale of all their brands, rather than a mere execution layer.',
   },
 ];
 
 export const stringsEn: AproposStrings = {
   eyebrow: 'product & brand designer',
-  accroche: 'I design products that don’t need explaining.',
+  accroche: 'Consistency is work, not intent.',
   whyLabel: '(why)',
   philosophieP1:
-    'Good design should work on its own within the company. The goal is to build solutions that teams can own, maintain and evolve over time, independently of the people who designed them. Most problems are not visual, they are structural. Design does not fix insufficient thinking about what the product should actually achieve.',
+    'A product is never designed in isolation. It inherits a brand, an organisation, constraints that never show on screen yet decide everything. Most problems are not visual, they are structural: they come from what was never settled upstream, not from what was badly drawn.',
   philosophieP2:
-    'Design should step back in favour of usage. It anticipates internal realities: shifting priorities, budget constraints, organisational change. If it constantly depends on external support or an expert to function, then it is not robust. Relevant design is the kind that integrates durably into processes and keeps producing value without dependency.',
+    'Understanding the business before drawing is not a courtesy, it is the condition. In a complex journey, every step exists for a reason: a regulatory constraint, an economic model, a distribution network. You do not simplify by removing steps, you simplify by understanding why they are there. That is the difference between a nicer screen and a product that works.',
   expertiseLabel: '(expertise)',
   expertiseTitle: 'What I do',
   principesLabel: '(principles)',
