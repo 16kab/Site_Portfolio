@@ -1,7 +1,6 @@
 import { Send } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { ContactReferences } from '../components/ContactReferences';
 import PageMeta from '../components/PageMeta';
 import RollingText from '../components/RollingText';
 import { ScrollFadeIn } from '../components/ScrollFadeIn';
@@ -15,7 +14,6 @@ import { useT } from '../i18n';
 const STRINGS = {
   fr: {
     eyebrow: 'Contact',
-    references: '(références)',
     title: 'Travaillons ensemble',
     location: 'Localisation',
     email: 'Email',
@@ -43,7 +41,6 @@ const STRINGS = {
   },
   en: {
     eyebrow: 'Contact',
-    references: '(references)',
     title: "Let's work together",
     location: 'Location',
     email: 'Email',
@@ -157,28 +154,6 @@ export default function Contact() {
                 {t.title}
               </h1>
             </ScrollRevealTitle>
-          </div>
-
-          {/* Références (témoignages) */}
-          <div className="mb-16 md:mb-24 lg:mb-28">
-            <ScrollRevealTitle delay={0.1}>
-              <p
-                className="mb-10 text-center"
-                style={{
-                  fontFamily: 'Manrope, sans-serif',
-                  fontWeight: 500,
-                  fontSize: '13px',
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  color: 'var(--portfolio-text-muted)',
-                }}
-              >
-                {t.references}
-              </p>
-            </ScrollRevealTitle>
-            <ScrollFadeIn delay={0.15}>
-              <ContactReferences />
-            </ScrollFadeIn>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-24">

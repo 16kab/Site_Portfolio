@@ -1,14 +1,19 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { expect, it } from 'vitest';
+import { LanguageProvider } from '../i18n';
 import Contact from './Contact';
 
-const renderPage = () =>
-  render(
+const renderPage = (lang: 'fr' | 'en' = 'fr') => {
+  window.localStorage.setItem('lang', lang);
+  return render(
     <MemoryRouter initialEntries={['/contact']}>
-      <Contact />
+      <LanguageProvider>
+        <Contact />
+      </LanguageProvider>
     </MemoryRouter>,
   );
+};
 
 it('affiche le titre hero « Travaillons ensemble » en h1', () => {
   renderPage();
@@ -17,9 +22,10 @@ it('affiche le titre hero « Travaillons ensemble » en h1', () => {
   );
 });
 
-it('rend la section Références (bouton suivant présent)', () => {
-  renderPage();
-  expect(screen.getByRole('button', { name: /suivant|next/i })).toBeTruthy();
+it.each(['fr', 'en'] as const)('ne rend pas de références en %s', (lang) => {
+  renderPage(lang);
+  expect(screen.queryByText(/\(références\)|\(references\)/i)).toBeNull();
+  expect(screen.queryByRole('button', { name: /suivant|next/i })).toBeNull();
 });
 
 it('conserve les 5 champs du formulaire', () => {
@@ -28,9 +34,4 @@ it('conserve les 5 champs du formulaire', () => {
   for (const name of ['nom', 'prenom', 'email', 'objet', 'message']) {
     expect(form.elements.namedItem(name)).toBeTruthy();
   }
-});
-
-it('la section Références ne contient pas d’image', () => {
-  const { container } = renderPage();
-  expect(container.querySelector('img')).toBeNull();
 });
