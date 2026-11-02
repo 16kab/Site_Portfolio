@@ -158,6 +158,7 @@ export class App {
 
   /** Compiles every shader and renders once before showing anything. */
   async start(): Promise<void> {
+    await this.hand.loadModel();
     // a downloaded apartment, when present, replaces the code room
     if (await this.apartment.load()) {
       this.room.keepFurnitureOnly();

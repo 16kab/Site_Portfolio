@@ -43,7 +43,7 @@ const ATMOSPHERE: Preset = {
     lampIntensity: 6,
     tvIntensity: 14,
     windowIntensity: 4.5,
-    handFill: 0.45,
+    handFill: 0.8,
   },
   look: {
     bloom: 0.85,

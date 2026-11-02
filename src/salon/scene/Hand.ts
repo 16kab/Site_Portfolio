@@ -10,7 +10,9 @@ import {
   TorusGeometry,
   Vector3,
 } from 'three';
+import { config } from '../config';
 import { knit } from './decorTextures';
+import { HandModel } from './HandModel';
 import { paint, palette } from './materials';
 import { type ButtonId, Remote } from './Remote';
 import { TaperedTube } from './TaperedTube';
@@ -50,6 +52,7 @@ function bump(t: number, at: number, width = 0.09): number {
 export class Hand {
   readonly group = new Group();
   readonly remote = new Remote();
+  readonly model = new HandModel();
   /** Everything made of flesh and wool, placed around the remote's middle. */
   private readonly grip = new Group();
   private readonly thumb = new TaperedTube(18, 14, 5);
@@ -60,6 +63,9 @@ export class Hand {
   );
   private readonly tip = REST.clone();
   private timeline: gsap.core.Timeline | null = null;
+  /** Materials of the code hand, hidden once the downloaded hand is in. */
+  private readonly flesh: MeshStandardMaterial[];
+  private readonly tipWorld = new Vector3();
 
   // scratch vectors, reused every frame
   private readonly dir = new Vector3();
@@ -83,6 +89,8 @@ export class Hand {
     const knuckle = paint('#c27560', { roughness: 0.6, impasto: 0.1 });
     this.grip.position.z = GRIP_Z;
     this.group.add(this.remote.group, this.grip);
+    this.grip.add(this.model.root);
+    this.flesh = [skin, nail, knuckle];
 
     // palm cradling the base of the remote (mostly hidden under it)
     const palm = this.ellipsoid(
@@ -206,7 +214,28 @@ export class Hand {
       );
   }
 
+  /**
+   * Swaps the code hand for the downloaded one when it loads (the sleeve,
+   * cuff and watch stay). Resolves false and keeps the code hand otherwise.
+   */
+  async loadModel(): Promise<boolean> {
+    const settings = config.handModel;
+    if (!settings.enabled || !(await this.model.load(settings.url))) {
+      return false;
+    }
+    for (const child of this.grip.children) {
+      if (child instanceof Mesh && this.flesh.includes(child.material)) {
+        child.visible = false;
+      }
+    }
+    return true;
+  }
+
   update(): void {
+    if (this.model.loaded) {
+      this.model.reach(this.grip.localToWorld(this.tipWorld.copy(this.tip)));
+      return;
+    }
     this.solveThumb();
   }
 

@@ -1,26 +1,28 @@
 /**
- * Prepares a downloaded Sketchfab glTF for the salon (scene/Apartment.ts):
- * shrinks the textures, paints the colour textures (Kuwahara filter baked
- * into the image: the paint lives in the material, the real lights of the
- * room do the rest) and recompresses everything as WebP.
+ * Prepares a downloaded Sketchfab glTF for the salon (scene/Apartment.ts,
+ * scene/Hand.ts): shrinks the textures, paints the colour textures
+ * (Kuwahara filter baked into the image: the paint lives in the material,
+ * the real lights of the room do the rest) and recompresses everything as
+ * WebP.
  *
- *   node scripts/build-apartment.mjs <unzipped gltf folder> <output folder>
+ *   node scripts/build-model.mjs <unzipped gltf folder> <output folder> [paint]
  *
- * Example output: public/salon/models/chinatown/
+ * `paint` is the brush radius on the colour textures (default 5; the skin
+ * of the hand takes a softer 3). Example output: public/salon/models/chinatown/
  */
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import sharp from 'sharp';
 
-const [source, output] = process.argv.slice(2);
+const [source, output, brush] = process.argv.slice(2);
 if (!source || !output) {
-  console.error('usage: node scripts/build-apartment.mjs <gltf folder> <output>');
+  console.error('usage: node scripts/build-model.mjs <gltf folder> <output> [paint]');
   process.exit(1);
 }
 
 /** Size and treatment per texture role. */
 const ROLES = {
-  baseColor: { size: 2048, paint: 5, quality: 84 },
+  baseColor: { size: 2048, paint: Number(brush ?? 5), quality: 84 },
   normal: { size: 1024, paint: 0, quality: 88 },
   metallicRoughness: { size: 512, paint: 0, quality: 80 },
   emissive: { size: 512, paint: 0, quality: 80 },

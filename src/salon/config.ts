@@ -131,6 +131,24 @@ export const config = {
     keepClutter: false,
   },
 
+  /**
+   * Downloaded hand (scene/HandModel.ts), fitted on the remote's grip:
+   * wrist position in grip space (m), where the knuckles point from the
+   * wrist and where the back of the hand faces (grip space), finger curl
+   * per joint (degrees, base to tip).
+   */
+  handModel: {
+    enabled: true,
+    url: '/salon/models/hands/scene.gltf',
+    wrist: [0.035, -0.035, 0.06] as [number, number, number],
+    forward: [-0.6, 0, -0.8] as [number, number, number],
+    back: [0.3, -1, 0] as [number, number, number],
+    /** Where the forearm runs from the wrist, under the sleeve. */
+    forearm: [0.15, -0.31, 0.94] as [number, number, number],
+    scale: 1,
+    curl: [70, 80, 50] as [number, number, number],
+  },
+
   audio: {
     master: 0.6,
     /** Room ambience level (city, neighbours, fridge, clock, cat). */
