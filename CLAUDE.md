@@ -38,9 +38,8 @@ Observé sur le gameplay (captures d'une vidéo de 11 h) et appliqué au salon v
 - des surfaces très **chargées** (à venir : plus de bazar et de vécu dans le décor).
 
 ### 2.1 Rendu « peinture à l'huile »
-- Toute la scène 3D passe par un **filtre peinture en post-process** (filtre de Kuwahara anisotrope ou généralisé), qui transforme les formes en coups de pinceau.
-- Par-dessus, une passe de **coups de pinceau visibles** qui suivent l'orientation des formes, avec un léger relief (impasto) qui accroche la lumière, et des **bords cassés**.
-- Les matériaux portent des **textures de touches de pinceau** générées en code.
+- **Comme dans le jeu, la peinture est dans la matière** (DA par défaut « peint dans la matière ») : chaque objet a sa **propre texture peinte** générée en code à partir de sa couleur (`scene/materials.ts` : grandes touches, accents chauds/froids, petites touches, usure peinte sur les arêtes, relief impasto en bump map). Ces surfaces sont **éclairées par de vraies sources de lumière** (lampe avec ombres portées, télé, fenêtre, bougie) : aucun filtre ne repeint l'image après coup.
+- Le **filtre peinture en post-process** (Kuwahara anisotrope + passe de coups de pinceau, bords cassés) reste disponible pour comparer (DA « filtre peinture », touche **L**), mais n'est plus le rendu de référence.
 - Ajouter une légère **texture de toile** (grain de canevas) en overlay, et un très léger grain animé.
 - **L'écran de la télé est exclu du filtre peinture** : il reste net, seulement traité avec l'effet CRT (§2.3). Le contraste « salon peint / écran net » est central dans la DA : la télé doit être hypnotique.
 

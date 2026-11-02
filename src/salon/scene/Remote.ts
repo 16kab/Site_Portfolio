@@ -114,6 +114,7 @@ export class Remote {
         const map = wornPlastic().clone();
         map.repeat.set(9, 9);
         material.map = map;
+        material.color.set('#2a2522');
         return material;
       })(),
     );

@@ -52,6 +52,13 @@ export class Lamp {
 
     this.light = new PointLight(config.lights.lampColor, 1, 7, 2);
     this.light.position.y = 1.36;
+    // real cast shadows, like the torches of the game (cheap-ish map)
+    this.light.castShadow = true;
+    this.light.shadow.mapSize.set(512, 512);
+    this.light.shadow.bias = -0.002;
+    this.light.shadow.normalBias = 0.03;
+    this.light.shadow.camera.near = 0.05;
+    this.light.shadow.camera.far = 7;
 
     this.group.add(base, pole, shade, bulb, this.light);
     this.group.position.copy(layout.lamp);

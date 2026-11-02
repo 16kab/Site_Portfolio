@@ -15,18 +15,18 @@ import { Osd } from '../channels/Osd';
 import { config } from '../config';
 import { ProjectPage } from '../project/ProjectPage';
 import { Composer } from '../render/Composer';
-import { applyLook, toggleLook } from '../render/looks';
-import { Candle } from '../scene/Candle';
-import { Clutter } from '../scene/Clutter';
-import { Dust } from '../scene/Dust';
-import { LightShafts } from '../scene/LightShafts';
 import { createCrtMaterial, updateCrtMaterial } from '../render/CrtMaterial';
+import { applyLook, LOOK_LABELS, toggleLook } from '../render/looks';
+import { Candle } from '../scene/Candle';
 import { Cat } from '../scene/Cat';
 import { CatBrain } from '../scene/CatBrain';
+import { Clutter } from '../scene/Clutter';
+import { Dust } from '../scene/Dust';
 import { Hand } from '../scene/Hand';
 import { HeadCamera } from '../scene/HeadCamera';
 import { Lamp } from '../scene/Lamp';
 import { Lighting } from '../scene/Lighting';
+import { LightShafts } from '../scene/LightShafts';
 import { layout } from '../scene/layout';
 import type { ButtonId } from '../scene/Remote';
 import { Room } from '../scene/Room';
@@ -77,7 +77,7 @@ export class App {
   private readonly projected = new Vector3();
 
   constructor(private readonly container: HTMLElement) {
-    applyLook('wicked');
+    applyLook('matiere');
     this.renderer = new WebGLRenderer({
       antialias: false,
       powerPreference: 'high-performance',
@@ -176,7 +176,7 @@ export class App {
     if (this.state.is('LOADING', 'WAITING_CLICK', 'INTRO')) return;
     if (action.type === 'look') {
       const look = toggleLook();
-      this.toast(look === 'wicked' ? 'DA POUSSÉE' : 'DA ACTUELLE');
+      this.toast(LOOK_LABELS[look]);
       return;
     }
     if (this.state.is('ENTERING', 'EXITING')) return;

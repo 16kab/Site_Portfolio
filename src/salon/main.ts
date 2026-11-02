@@ -29,7 +29,7 @@ function hint(root: HTMLElement): void {
   element.className = 'salon-hint';
   element.innerHTML =
     '<span>↑ ↓ zapper</span><span>1-9 chaîne</span>' +
-    '<span>+ − volume</span><span>M muet</span><span>P power</span><span>L DA</span>';
+    '<span>+ − volume</span><span>M muet</span><span>P power</span><span>L changer de DA</span>';
   root.appendChild(element);
   window.setTimeout(() => element.classList.add('is-hidden'), 7000);
 }

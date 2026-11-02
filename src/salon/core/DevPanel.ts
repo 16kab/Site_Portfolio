@@ -63,8 +63,8 @@ export function createDevPanel(app: App): GUI {
   lights.add(config.lights, 'ambientIntensity', 0, 3, 0.05);
   lights.add(config.lights, 'headlightIntensity', 0, 20, 0.5);
 
-  const look = gui.addFolder('DA poussée (touche L)');
-  look.add({ toggle: () => toggleLook() }, 'toggle').name('basculer la DA');
+  const look = gui.addFolder('DA (touche L)');
+  look.add({ toggle: () => toggleLook() }, 'toggle').name('DA suivante');
   look.add(config.look, 'bloom', 0, 2, 0.01).name('halo');
   look.add(config.look, 'bloomThreshold', 0, 1, 0.01).name('seuil du halo');
   look.add(config.look, 'beams', 0, 3, 0.01).name('rayons');

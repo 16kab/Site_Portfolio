@@ -1,14 +1,18 @@
 import { config } from '../config';
 
 /**
- * Art direction presets, switchable live (key L) to compare.
+ * Art direction presets, switchable live (key L cycles them) to compare.
  *
- * "wicked" pushes toward No Rest for the Wicked as observed in gameplay
- * (CLAUDE.md §2.0): black dominates and light exists only in pools, the
- * blacks themselves are coloured (teal, plum), one complementary pair per
- * place (cold teal TV / warm amber lamp + candle), light visible in the
- * air (shafts, dust), strong glow around sources, a coloured haze swallowing
- * the depth.
+ * "matiere" is the reference look, like No Rest for the Wicked (CLAUDE.md
+ * §2.0): the paint lives in the materials (every surface has its own
+ * painted texture, see scene/materials.ts) and is lit by the real lights
+ * of the room; no filter repaints the image afterwards. Black dominates,
+ * light exists only in pools, the blacks are coloured (teal), cold TV /
+ * window against warm lamp / candle, light visible in the air (shafts,
+ * dust), glow around sources, a coloured haze swallowing the depth.
+ *
+ * "filtre" is the same with the global paint filter (Kuwahara) on top,
+ * "origine" the earlier look, both kept for comparison.
  */
 type Sections = Pick<
   typeof config,
@@ -16,11 +20,16 @@ type Sections = Pick<
 >;
 type Preset = { [K in keyof Sections]?: Partial<Sections[K]> };
 
-export type LookName = 'current' | 'wicked';
+export type LookName = 'matiere' | 'filtre' | 'origine';
 
-const WICKED: Preset = {
+export const LOOK_LABELS: Record<LookName, string> = {
+  matiere: 'PEINT DANS LA MATIÈRE',
+  filtre: 'FILTRE PEINTURE',
+  origine: "DA D'ORIGINE",
+};
+
+const ATMOSPHERE: Preset = {
   render: { exposure: 1.1 },
-  paint: { vignette: 0.88 },
   grade: {
     contrast: 1.32,
     saturation: 1,
@@ -46,22 +55,49 @@ const WICKED: Preset = {
   },
 };
 
-/** Snapshot of the values the "current" look started with. */
-const base: Preset = {};
+const PRESETS: Record<Exclude<LookName, 'origine'>, Preset> = {
+  matiere: {
+    ...ATMOSPHERE,
+    paint: {
+      enabled: false,
+      vignette: 0.88,
+      canvasStrength: 0.12,
+      grainStrength: 0.035,
+    },
+  },
+  filtre: {
+    ...ATMOSPHERE,
+    paint: {
+      enabled: true,
+      vignette: 0.88,
+      canvasStrength: 0.1,
+      grainStrength: 0.04,
+    },
+  },
+};
+
 const sections = ['render', 'paint', 'grade', 'lights', 'look'] as const;
+
+/** Snapshot of every value the presets touch, as the earlier look had it. */
+const origin: Preset = {};
 for (const name of sections) {
+  const keys = new Set<string>();
+  for (const preset of Object.values(PRESETS)) {
+    for (const key of Object.keys(preset[name] ?? {})) keys.add(key);
+  }
   const values: Record<string, unknown> = {};
-  for (const key of Object.keys(WICKED[name] ?? {})) {
+  for (const key of keys) {
     const value = (config[name] as Record<string, unknown>)[key];
     values[key] = Array.isArray(value) ? [...value] : value;
   }
-  (base as Record<string, unknown>)[name] = values;
+  (origin as Record<string, unknown>)[name] = values;
 }
 
-export let currentLook: LookName = 'current';
+const ORDER: LookName[] = ['matiere', 'filtre', 'origine'];
+export let currentLook: LookName = 'origine';
 
 export function applyLook(name: LookName): void {
-  const preset = name === 'wicked' ? WICKED : base;
+  const preset = name === 'origine' ? origin : PRESETS[name];
   for (const section of sections) {
     const values = preset[section];
     if (!values) continue;
@@ -74,7 +110,8 @@ export function applyLook(name: LookName): void {
   currentLook = name;
 }
 
+/** Next look in the cycle; returns its name. */
 export function toggleLook(): LookName {
-  applyLook(currentLook === 'wicked' ? 'current' : 'wicked');
+  applyLook(ORDER[(ORDER.indexOf(currentLook) + 1) % ORDER.length]);
   return currentLook;
 }

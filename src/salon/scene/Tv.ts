@@ -1,16 +1,16 @@
 import {
   BoxGeometry,
   CircleGeometry,
-  DoubleSide,
-  IcosahedronGeometry,
   CylinderGeometry,
+  DoubleSide,
   ExtrudeGeometry,
   Group,
+  IcosahedronGeometry,
   Mesh,
   MeshStandardMaterial,
   PlaneGeometry,
-  Shape,
   type ShaderMaterial,
+  Shape,
   SphereGeometry,
   Vector3,
 } from 'three';
@@ -53,7 +53,7 @@ export class Tv {
 
     const cabinet = new Mesh(
       new RoundedBoxGeometry(CABINET.w, CABINET.h, CABINET.d, 4, 0.07),
-      paint(palette.wood, { wood: true, roughness: 0.5 }),
+      paint(palette.wood, { wood: true, roughness: 0.5, edges: 'worn' }),
     );
     cabinet.position.y = CABINET.h / 2;
     cabinet.castShadow = true;
@@ -196,7 +196,11 @@ export class Tv {
   /** Thick overhanging lid and a dark veneer frame around the tube. */
   private trim(front: number): Group {
     const group = new Group();
-    const dark = paint('#3d2516', { wood: true, roughness: 0.45 });
+    const dark = paint('#3d2516', {
+      wood: true,
+      roughness: 0.45,
+      edges: 'worn',
+    });
     const lid = new Mesh(
       new RoundedBoxGeometry(CABINET.w + 0.04, 0.05, CABINET.d + 0.03, 3, 0.02),
       dark,

@@ -10,9 +10,9 @@ import {
   MeshBasicMaterial,
   MeshStandardMaterial,
   PlaneGeometry,
+  ShaderMaterial,
   Shape,
   ShapeGeometry,
-  ShaderMaterial,
   SphereGeometry,
   type Texture,
   TorusGeometry,
@@ -31,6 +31,7 @@ function wallMaterial(width: number, height: number): MeshStandardMaterial {
   const map = wallpaper().clone();
   map.repeat.set(width / 1.2, height / 1.3);
   material.map = map;
+  material.color.set(palette.wall);
   return material;
 }
 
@@ -209,7 +210,11 @@ export class Room {
   private tvStand(): Group {
     const group = new Group();
     const size = layout.tvStandSize;
-    const wood = paint(palette.woodDark, { wood: true, roughness: 0.6 });
+    const wood = paint(palette.woodDark, {
+      wood: true,
+      roughness: 0.6,
+      edges: 'worn',
+    });
     const body = new Mesh(
       new RoundedBoxGeometry(size.x, size.y - 0.08, size.z, 2, 0.02),
       wood,
@@ -257,7 +262,11 @@ export class Room {
 
   private coffeeTable(): Group {
     const group = new Group();
-    const wood = paint(palette.wood, { wood: true, roughness: 0.88 });
+    const wood = paint(palette.wood, {
+      wood: true,
+      roughness: 0.88,
+      edges: 'worn',
+    });
     const top = new Mesh(
       new RoundedBoxGeometry(1.05, 0.05, 0.58, 2, 0.02),
       wood,
@@ -717,7 +726,7 @@ export class Room {
         art: '#3a4a6a',
       },
     ];
-    const frameMaterial = paint('#2a1a12', { wood: true });
+    const frameMaterial = paint('#2a1a12', { wood: true, edges: 'worn' });
     return specs.map((spec) => {
       const group = new Group();
       const frame = new Mesh(

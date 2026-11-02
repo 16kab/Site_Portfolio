@@ -78,6 +78,7 @@ export class Hand {
     const ribs = knit().clone();
     ribs.repeat.set(10, 3);
     sweater.map = ribs;
+    sweater.color.set(palette.sweater);
     const nail = paint('#e3bfae', { roughness: 0.3, impasto: 0 });
     const knuckle = paint('#c27560', { roughness: 0.6, impasto: 0.1 });
     this.grip.position.z = GRIP_Z;
