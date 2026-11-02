@@ -20,16 +20,17 @@ import { TaperedTube } from './TaperedTube';
 /** Thumb bones (metres) and radii at base / tip. */
 const THUMB = { l1: 0.046, l2: 0.04, base: 0.0128, tip: 0.0096 };
 /**
- * The hand holds the remote around its middle (grip space is shifted toward
- * the tip), so the thumb alone reaches every button, from POWER to CH−,
- * while the palm never moves — like a real hand.
+ * The hand holds the remote around its middle, fingers wrapped round the
+ * lower half, so the thumb rests in the middle of the buttons (by the
+ * CH / OK cross) and stretches up for POWER while the palm never moves —
+ * like a real hand. Grip space is the remote's, shifted by this along Z.
  */
-const GRIP_Z = -0.058;
+const GRIP_Z = -0.032;
 /** Where the thumb leaves the thenar mound, and a point buried inside it. */
 const ROOT = new Vector3(0.03, 0.006, 0.048);
 const ROOT_INSIDE = new Vector3(0.04, -0.012, 0.065);
-/** Resting along the remote, over the lower digits (grip space). */
-const REST = new Vector3(0.004, 0.0235, 0.012);
+/** Resting in the middle of the remote, just above CH+ (grip space). */
+const REST = new Vector3(0.004, 0.0235, 0.024);
 /** Bend direction hint for the thumb joint (outward and a bit up). */
 const POLE = new Vector3(1, 0.5, 0.2).normalize();
 const Z = new Vector3(0, 0, 1);

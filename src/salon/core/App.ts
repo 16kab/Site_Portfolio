@@ -112,7 +112,8 @@ export class App {
       this.tv.screenCenter,
     );
 
-    this.hand.group.position.set(0.13, -0.118, -0.4);
+    // the grip sits on the middle of the remote: lift it a little into view
+    this.hand.group.position.set(0.13, -0.1, -0.42);
     this.hand.group.rotation.set(0.62, 0.32, 0.18);
     this.head.rig.add(this.hand.group);
     this.lighting.handFill.position.set(0.02, 0.05, -0.62);
