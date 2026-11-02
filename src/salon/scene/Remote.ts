@@ -12,6 +12,7 @@ import {
   type Vector3,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { wornPlastic } from './decorTextures';
 import { paint } from './materials';
 
 export type ButtonId =
@@ -107,10 +108,32 @@ export class Remote {
     geometry.translate(0, depth / 2, 0);
     const body = new Mesh(
       geometry,
-      paint('#2a2522', { roughness: 0.45, impasto: 0.08 }),
+      // years in the hand: scratches, rubbed edges (extrude UVs are in metres)
+      (() => {
+        const material = paint('#2a2522', { roughness: 0.45, impasto: 0.08 });
+        const map = wornPlastic().clone();
+        map.repeat.set(9, 9);
+        material.map = map;
+        return material;
+      })(),
     );
     body.castShadow = true;
     this.group.add(body);
+
+    // masking tape wrapped round the base: it holds the battery cover
+    const tape = new Mesh(
+      new RoundedBoxGeometry(
+        BODY.baseW + 0.004,
+        BODY.h + 0.003,
+        0.02,
+        2,
+        0.003,
+      ),
+      paint('#c7b27c', { roughness: 0.9, impasto: 0.3 }),
+    );
+    tape.position.set(0, 0, 0.086);
+    tape.rotation.y = 0.06;
+    this.group.add(tape);
 
     // slightly lighter inset panel behind the buttons
     const panel = new Mesh(
@@ -153,7 +176,8 @@ export class Remote {
     window.position.set(0, 0.001, -l / 2 - 0.0005);
     this.group.add(window);
 
-    const rubber = paint('#5e5852', { roughness: 0.75, impasto: 0.05 });
+    // rubber yellowed with age
+    const rubber = paint('#6c6352', { roughness: 0.75, impasto: 0.05 });
     const red = paint('#b3261b', { roughness: 0.5, impasto: 0.05 });
     const light = paint('#8a837b', { roughness: 0.6, impasto: 0.05 });
     const specs: ButtonSpec[] = [

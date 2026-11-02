@@ -17,6 +17,7 @@ import { ProjectPage } from '../project/ProjectPage';
 import { Composer } from '../render/Composer';
 import { applyLook, toggleLook } from '../render/looks';
 import { Candle } from '../scene/Candle';
+import { Clutter } from '../scene/Clutter';
 import { Dust } from '../scene/Dust';
 import { LightShafts } from '../scene/LightShafts';
 import { createCrtMaterial, updateCrtMaterial } from '../render/CrtMaterial';
@@ -133,6 +134,7 @@ export class App {
       this.sofa.group,
       this.shafts.group,
       this.candle.group,
+      new Clutter().group,
       this.lamp.group,
       this.lighting.group,
       this.cat.group,

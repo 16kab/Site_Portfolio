@@ -1,21 +1,38 @@
 import {
   BoxGeometry,
+  CatmullRomCurve3,
   CylinderGeometry,
   DoubleSide,
   Group,
+  LatheGeometry,
   type Material,
   Mesh,
+  MeshBasicMaterial,
   MeshStandardMaterial,
   PlaneGeometry,
   Shape,
   ShapeGeometry,
   ShaderMaterial,
   SphereGeometry,
+  type Texture,
   TorusGeometry,
+  Vector2,
+  Vector3,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { cornerShadow, crack, wallpaper, waterStain } from './decorTextures';
 import { layout } from './layout';
 import { paint, palette } from './materials';
+import { TaperedTube } from './TaperedTube';
+
+/** Wall material with the old wallpaper, tiled for a wall of that size. */
+function wallMaterial(width: number, height: number): MeshStandardMaterial {
+  const material = paint(palette.wall, { repeat: 3 });
+  const map = wallpaper().clone();
+  map.repeat.set(width / 1.2, height / 1.3);
+  material.map = map;
+  return material;
+}
 
 /** Walls, floor, window with the city outside, and the furniture. */
 export class Room {
@@ -27,7 +44,8 @@ export class Room {
     const { minX, maxX, minZ, maxZ, height } = layout.room;
     const width = maxX - minX;
     const depth = maxZ - minZ;
-    const wall = paint(palette.wall, { repeat: 3 });
+    const wall = wallMaterial(width, height);
+    const sideWall = wallMaterial(depth, height);
 
     const floor = new Mesh(
       new PlaneGeometry(width, depth),
@@ -52,13 +70,22 @@ export class Room {
     back.rotation.y = Math.PI;
     back.position.set(floor.position.x, height / 2, maxZ);
 
-    const left = new Mesh(new PlaneGeometry(depth, height), wall);
+    const left = new Mesh(new PlaneGeometry(depth, height), sideWall);
     left.rotation.y = Math.PI / 2;
     left.position.set(minX, height / 2, floor.position.z);
     left.receiveShadow = true;
 
-    this.group.add(floor, ceiling, front, back, left, this.rightWall(wall));
+    this.group.add(floor, ceiling, front, back, left, this.rightWall(sideWall));
     this.group.add(this.skirting());
+    // the flat has lived: panelling, an old radiator, stains, a shelf
+    this.group.add(
+      this.wainscot(),
+      this.radiator(),
+      this.decay(),
+      this.cornerShadows(),
+      this.shelf(),
+      this.ceilingLamp(),
+    );
 
     this.city = cityMaterial();
     const city = new Mesh(new PlaneGeometry(9, 5), this.city);
@@ -337,6 +364,284 @@ export class Room {
     return group;
   }
 
+  /** Dark wooden panelling up to a chair rail on three walls. */
+  private wainscot(): Group {
+    const { minX, maxX, minZ, maxZ } = layout.room;
+    const group = new Group();
+    const wood = paint('#3a2418', { wood: true, roughness: 0.7, repeat: 3 });
+    const trim = paint('#2a1810', { wood: true, roughness: 0.6 });
+    const railY = 0.92;
+    const walls: { length: number; center: Vector3; ry: number }[] = [
+      {
+        length: maxX - minX,
+        center: new Vector3((minX + maxX) / 2, 0, minZ),
+        ry: 0,
+      },
+      {
+        length: maxZ - minZ,
+        center: new Vector3(minX, 0, (minZ + maxZ) / 2),
+        ry: Math.PI / 2,
+      },
+      {
+        length: maxX - minX,
+        center: new Vector3((minX + maxX) / 2, 0, maxZ),
+        ry: Math.PI,
+      },
+    ];
+    for (const wall of walls) {
+      const side = new Group();
+      const panel = new Mesh(new PlaneGeometry(wall.length, railY), wood);
+      panel.position.set(0, railY / 2, 0.008);
+      const rail = new Mesh(new BoxGeometry(wall.length, 0.05, 0.035), trim);
+      rail.position.set(0, railY, 0.017);
+      side.add(panel, rail);
+      // stiles every 60 cm
+      for (let x = -wall.length / 2 + 0.3; x < wall.length / 2; x += 0.6) {
+        const stile = new Mesh(
+          new BoxGeometry(0.045, railY - 0.12, 0.018),
+          trim,
+        );
+        stile.position.set(x, railY / 2 + 0.04, 0.016);
+        side.add(stile);
+      }
+      side.position.copy(wall.center);
+      side.rotation.y = wall.ry;
+      group.add(side);
+    }
+    return group;
+  }
+
+  /** Cast-iron radiator under the window, its paint flaking. */
+  private radiator(): Group {
+    const { maxX } = layout.room;
+    const group = new Group();
+    const iron = paint('#8f8a7a', {
+      roughness: 0.55,
+      metalness: 0.3,
+      impasto: 0.5,
+    });
+    const rust = paint('#5a3220', { roughness: 0.9, impasto: 0.6 });
+    const columns = 13;
+    for (let i = 0; i < columns; i++) {
+      const column = new Mesh(
+        new RoundedBoxGeometry(0.07, 0.58, 0.055, 3, 0.022),
+        i % 4 === 3 ? rust : iron,
+      );
+      column.position.set(0, 0.42, (i - (columns - 1) / 2) * 0.062);
+      column.castShadow = true;
+      group.add(column);
+    }
+    for (const y of [0.16, 0.68]) {
+      const header = new Mesh(
+        new CylinderGeometry(0.018, 0.018, columns * 0.062, 10),
+        iron,
+      );
+      header.rotation.x = Math.PI / 2;
+      header.position.y = y;
+      group.add(header);
+    }
+    const pipe = new Mesh(new CylinderGeometry(0.014, 0.014, 0.16, 10), rust);
+    pipe.position.set(0, 0.08, (columns / 2) * 0.062 + 0.02);
+    group.add(pipe);
+    group.position.set(maxX - 0.08, 0, layout.window.z);
+    return group;
+  }
+
+  /** Water stains, a crack, a strip of wallpaper peeling off. */
+  private decay(): Group {
+    const { minX, maxX, minZ, height } = layout.room;
+    const group = new Group();
+    const decal = (map: Texture) =>
+      new MeshStandardMaterial({
+        map,
+        transparent: true,
+        depthWrite: false,
+        roughness: 1,
+        polygonOffset: true,
+        polygonOffsetFactor: -2,
+      });
+    const stain = new Mesh(new PlaneGeometry(1.1, 0.9), decal(waterStain()));
+    stain.rotation.x = Math.PI / 2;
+    stain.position.set(minX + 0.9, height - 0.005, minZ + 0.7);
+    const stainWall = new Mesh(
+      new PlaneGeometry(0.7, 0.6),
+      decal(waterStain()),
+    );
+    stainWall.position.set(1.55, height - 0.35, minZ + 0.012);
+    const fissure = new Mesh(new PlaneGeometry(0.3, 0.6), decal(crack()));
+    fissure.position.set(0.55, 2.05, minZ + 0.012);
+    fissure.rotation.z = 0.2;
+    group.add(stain, stainWall, fissure);
+
+    // a strip of wallpaper curling away from the wall, near the corner
+    const strip = new PlaneGeometry(0.42, 0.7, 1, 10);
+    const position = strip.attributes.position;
+    for (let i = 0; i < position.count; i++) {
+      const y = position.getY(i);
+      const t = Math.max(0, (y + 0.35) / 0.7 - 0.35);
+      position.setZ(i, t * t * 0.22);
+    }
+    strip.computeVertexNormals();
+    const paper = wallMaterial(0.42, 0.7);
+    paper.side = DoubleSide;
+    const peel = new Mesh(strip, paper);
+    peel.position.set(maxX - 0.35, height - 0.45, minZ + 0.02);
+    peel.rotation.set(0.05, 0, -0.04);
+    peel.castShadow = true;
+    group.add(peel);
+    return group;
+  }
+
+  /** Painted dark gradients where walls meet the floor and the ceiling. */
+  private cornerShadows(): Group {
+    const { minX, maxX, minZ, maxZ, height } = layout.room;
+    const group = new Group();
+    const material = new MeshBasicMaterial({
+      color: '#05070a',
+      alphaMap: cornerShadow(),
+      transparent: true,
+      depthWrite: false,
+      opacity: 0.85,
+    });
+    const walls: { length: number; at: Vector3; ry: number }[] = [
+      {
+        length: maxX - minX,
+        at: new Vector3((minX + maxX) / 2, 0, minZ + 0.02),
+        ry: 0,
+      },
+      {
+        length: maxZ - minZ,
+        at: new Vector3(minX + 0.02, 0, (minZ + maxZ) / 2),
+        ry: Math.PI / 2,
+      },
+      {
+        length: maxZ - minZ,
+        at: new Vector3(maxX - 0.02, 0, (minZ + maxZ) / 2),
+        ry: -Math.PI / 2,
+      },
+    ];
+    for (const wall of walls) {
+      const floorShade = new Mesh(
+        new PlaneGeometry(wall.length, 0.4),
+        material,
+      );
+      floorShade.position.copy(wall.at).setY(0.2);
+      floorShade.rotation.set(0, wall.ry, Math.PI);
+      const ceilingShade = new Mesh(
+        new PlaneGeometry(wall.length, 0.55),
+        material,
+      );
+      ceilingShade.position.copy(wall.at).setY(height - 0.275);
+      ceilingShade.rotation.y = wall.ry;
+      floorShade.renderOrder = 2;
+      ceilingShade.renderOrder = 2;
+      group.add(floorShade, ceilingShade);
+    }
+    return group;
+  }
+
+  /** Shelf on the left wall: books, bottles, a jar. */
+  private shelf(): Group {
+    const { minX } = layout.room;
+    const group = new Group();
+    const wood = paint('#4a2c1a', { wood: true, roughness: 0.7 });
+    const plank = new Mesh(new BoxGeometry(0.22, 0.03, 1.1), wood);
+    group.add(plank);
+    for (const z of [-0.4, 0.4]) {
+      const bracket = new Mesh(new BoxGeometry(0.15, 0.12, 0.02), wood);
+      bracket.position.set(-0.03, -0.07, z);
+      group.add(bracket);
+    }
+    const bookColors = [
+      '#6b2a22',
+      '#2d3e4a',
+      '#7a6234',
+      '#3c4a2a',
+      '#5a2a40',
+      '#8a7a5a',
+    ];
+    let z = -0.5;
+    for (let i = 0; i < 9; i++) {
+      const h = 0.16 + Math.random() * 0.09;
+      const t = 0.025 + Math.random() * 0.025;
+      const book = new Mesh(
+        new BoxGeometry(0.15, h, t),
+        paint(bookColors[i % bookColors.length], { roughness: 0.8 }),
+      );
+      const lean = i === 6 ? 0.35 : (Math.random() - 0.5) * 0.06;
+      book.position.set(0, 0.015 + h / 2, z);
+      book.rotation.x = lean;
+      book.castShadow = true;
+      group.add(book);
+      z += t + 0.004 + (i === 6 ? 0.05 : 0);
+    }
+    const glass = paint('#2f4a3a', { roughness: 0.15, metalness: 0.1 });
+    const amber = paint('#6a3a14', { roughness: 0.15, metalness: 0.1 });
+    for (const [bz, material, height] of [
+      [0.22, glass, 0.26],
+      [0.3, amber, 0.2],
+    ] as const) {
+      const bottle = new Mesh(
+        new LatheGeometry(
+          [
+            new Vector2(0.032, 0),
+            new Vector2(0.034, height * 0.62),
+            new Vector2(0.012, height * 0.8),
+            new Vector2(0.011, height),
+            new Vector2(0, height),
+          ],
+          16,
+        ),
+        material,
+      );
+      bottle.position.set(0, 0.015, bz);
+      group.add(bottle);
+    }
+    const jar = new Mesh(
+      new CylinderGeometry(0.045, 0.045, 0.11, 16),
+      paint('#b8a27a', { roughness: 0.4 }),
+    );
+    jar.position.set(0, 0.07, 0.43);
+    group.add(jar);
+    group.position.set(minX + 0.12, 1.22, -0.5);
+    return group;
+  }
+
+  /** A bare, switched-off bulb hanging from its cord. */
+  private ceilingLamp(): Group {
+    const { height } = layout.room;
+    const group = new Group();
+    const cord = new TaperedTube(8, 6, 2);
+    cord.update(
+      new CatmullRomCurve3([
+        new Vector3(0, height, 0),
+        new Vector3(0.01, height - 0.2, 0),
+        new Vector3(0, height - 0.42, 0.005),
+      ]),
+      () => 0.004,
+    );
+    group.add(
+      new Mesh(cord.geometry, paint('#151012', { roughness: 0.6, impasto: 0 })),
+    );
+    const socket = new Mesh(
+      new CylinderGeometry(0.018, 0.022, 0.05, 12),
+      paint('#2a2420'),
+    );
+    socket.position.y = height - 0.44;
+    const bulb = new Mesh(
+      new SphereGeometry(0.035, 16, 12),
+      new MeshStandardMaterial({
+        color: '#3a3428',
+        roughness: 0.1,
+        metalness: 0.2,
+      }),
+    );
+    bulb.position.y = height - 0.49;
+    group.add(socket, bulb);
+    group.position.set(0.2, 0, 0.1);
+    return group;
+  }
+
   private plant(): Group {
     const group = new Group();
     const pot = new Mesh(
@@ -380,9 +685,28 @@ export class Room {
       z: number;
       ry: number;
       art: string;
+      tilt?: number;
     }[] = [
-      { w: 0.5, h: 0.65, x: -1.0, y: 1.55, z: minZ, ry: 0, art: '#6a7a5a' },
-      { w: 0.34, h: 0.28, x: 0.95, y: 1.7, z: minZ, ry: 0, art: '#a0583a' },
+      {
+        w: 0.5,
+        h: 0.65,
+        x: -1.0,
+        y: 1.55,
+        z: minZ,
+        ry: 0,
+        art: '#6a7a5a',
+        tilt: 0.035,
+      },
+      {
+        w: 0.34,
+        h: 0.28,
+        x: 0.95,
+        y: 1.7,
+        z: minZ,
+        ry: 0,
+        art: '#a0583a',
+        tilt: -0.06,
+      },
       {
         w: 0.7,
         h: 0.5,
@@ -406,7 +730,7 @@ export class Room {
       );
       art.position.z = 0.016;
       group.add(frame, art);
-      group.rotation.y = spec.ry;
+      group.rotation.set(0, spec.ry, spec.tilt ?? 0);
       group.position.set(
         spec.ry ? spec.x + 0.016 : spec.x,
         spec.y,

@@ -126,7 +126,7 @@ export function paint(
 
 /** Palette (CLAUDE.md §2.5). Shadows come from the grade, not from black. */
 export const palette = {
-  wall: '#3f3442',
+  wall: '#4d4434',
   wallpaperStripe: '#3d2f42',
   floor: '#4e321f',
   ceiling: '#262029',

@@ -1,13 +1,16 @@
 import gsap from 'gsap';
 import {
   CatmullRomCurve3,
+  CylinderGeometry,
   Group,
+  Matrix4,
   Mesh,
-  type MeshStandardMaterial,
+  MeshStandardMaterial,
   SphereGeometry,
   TorusGeometry,
   Vector3,
 } from 'three';
+import { knit } from './decorTextures';
 import { paint, palette } from './materials';
 import { type ButtonId, Remote } from './Remote';
 import { TaperedTube } from './TaperedTube';
@@ -28,6 +31,8 @@ const REST = new Vector3(0.004, 0.0235, 0.012);
 /** Bend direction hint for the thumb joint (outward and a bit up). */
 const POLE = new Vector3(1, 0.5, 0.2).normalize();
 const Z = new Vector3(0, 0, 1);
+const Y = new Vector3(0, 1, 0);
+const sphere = new SphereGeometry(1, 16, 10);
 
 /** Smooth bump centred on `at`, for knuckles. */
 function bump(t: number, at: number, width = 0.09): number {
@@ -60,10 +65,21 @@ export class Hand {
   private readonly dir = new Vector3();
   private readonly bend = new Vector3();
   private readonly target = new Vector3();
+  private readonly thumbNail: Mesh;
+  private readonly nailBasis = new Matrix4();
+  private readonly nailSide = new Vector3();
+  private readonly nailNormal = new Vector3();
+  private readonly nailTangent = new Vector3();
 
   constructor() {
     const skin = paint(palette.skin, { roughness: 0.6, impasto: 0.12 });
     const sweater = paint(palette.sweater, { roughness: 1, impasto: 0.45 });
+    // ribbed knit along the sleeve
+    const ribs = knit().clone();
+    ribs.repeat.set(10, 3);
+    sweater.map = ribs;
+    const nail = paint('#e3bfae', { roughness: 0.3, impasto: 0 });
+    const knuckle = paint('#c27560', { roughness: 0.6, impasto: 0.1 });
     this.grip.position.z = GRIP_Z;
     this.group.add(this.remote.group, this.grip);
 
@@ -100,9 +116,22 @@ export class Hand {
         const knuckles = 0.09 * (bump(t, 0.42) + bump(t, 0.7));
         return r * (1.06 - 0.2 * t + knuckles);
       });
+      // the nail on the back of the fingertip, a reddened knuckle
+      const end = curve.getPoint(1);
+      const tangent = curve.getTangent(1);
+      const outward = new Vector3(end.x, end.y, 0).normalize();
+      this.attachNail(new Mesh(sphere, nail), end, tangent, outward, r * 0.86);
+      const k = curve.getPoint(0.42);
+      const out = new Vector3(k.x, k.y, 0).normalize();
+      const pad = new Mesh(sphere, knuckle);
+      pad.position.copy(k).addScaledVector(out, r * 0.55);
+      pad.scale.setScalar(r * 0.62);
+      this.grip.add(pad);
     }
 
     this.thumbMesh(skin);
+    this.thumbNail = new Mesh(sphere, nail);
+    this.grip.add(this.thumbNail);
 
     // forearm leaving the frame bottom-right, then the sweater sleeve
     const forearm = new CatmullRomCurve3([
@@ -111,6 +140,7 @@ export class Hand {
       new Vector3(0.09, -0.17, 0.5),
     ]);
     this.tube(forearm, skin, (t) => 0.024 + 0.012 * t);
+    this.watch(forearm);
     const sleeve = new CatmullRomCurve3([
       new Vector3(0.044, -0.082, 0.215),
       new Vector3(0.065, -0.125, 0.36),
@@ -235,5 +265,84 @@ export class Hand {
     joint.copy(ROOT).addScaledVector(this.dir, a).addScaledVector(this.bend, h);
     end.copy(ROOT).addScaledVector(this.dir, distance);
     this.thumb.update(this.thumbCurve, this.thumbRadius);
+    // the thumbnail rides on top of the tip
+    this.thumbCurve.getTangent(1, this.nailTangent);
+    this.nailNormal
+      .copy(Y)
+      .addScaledVector(this.nailTangent, -Y.dot(this.nailTangent))
+      .normalize();
+    this.attachNail(
+      this.thumbNail,
+      end,
+      this.nailTangent,
+      this.nailNormal,
+      THUMB.tip,
+    );
+  }
+
+  /**
+   * Places a nail on a fingertip: thin along `normal` (the back of the
+   * finger), long along `tangent`, set back a little from the tip.
+   */
+  private attachNail(
+    mesh: Mesh,
+    tip: Vector3,
+    tangent: Vector3,
+    normal: Vector3,
+    radius: number,
+  ): void {
+    this.nailNormal
+      .copy(normal)
+      .addScaledVector(tangent, -normal.dot(tangent))
+      .normalize();
+    this.nailSide.crossVectors(this.nailNormal, tangent).normalize();
+    this.nailBasis.makeBasis(this.nailSide, this.nailNormal, tangent);
+    mesh.quaternion.setFromRotationMatrix(this.nailBasis);
+    mesh.scale.set(radius * 0.72, radius * 0.22, radius * 0.95);
+    mesh.position
+      .copy(tip)
+      .addScaledVector(this.nailNormal, radius * 0.82)
+      .addScaledVector(tangent, -radius * 0.25);
+    if (!mesh.parent) this.grip.add(mesh);
+  }
+
+  /** An old watch with a leather strap, just below the cuff. */
+  private watch(forearm: CatmullRomCurve3): void {
+    const t = 0.22;
+    const at = forearm.getPoint(t);
+    const along = forearm.getTangent(t);
+    const radius = 0.024 + 0.012 * t;
+    const leather = paint('#3a2216', { roughness: 0.7, impasto: 0.2 });
+    const strap = new Mesh(
+      new TorusGeometry(radius + 0.002, 0.0042, 8, 28),
+      leather,
+    );
+    strap.position.copy(at);
+    strap.quaternion.setFromUnitVectors(Z, along);
+    strap.scale.set(1, 1, 2.2);
+    // the face sits on the back of the wrist (up and outward)
+    const back = new Vector3(0.6, 1, 0)
+      .addScaledVector(along, -new Vector3(0.6, 1, 0).dot(along))
+      .normalize();
+    const face = new Mesh(
+      new CylinderGeometry(0.014, 0.014, 0.006, 20),
+      paint('#b9b19c', { roughness: 0.25, metalness: 0.85, impasto: 0 }),
+    );
+    face.quaternion.setFromUnitVectors(Y, back);
+    face.position.copy(at).addScaledVector(back, radius + 0.004);
+    const glass = new Mesh(
+      new CylinderGeometry(0.011, 0.011, 0.002, 20),
+      new MeshStandardMaterial({
+        color: '#2a2a24',
+        roughness: 0.05,
+        metalness: 0.2,
+      }),
+    );
+    glass.quaternion.copy(face.quaternion);
+    glass.position.copy(at).addScaledVector(back, radius + 0.0075);
+    for (const mesh of [strap, face, glass]) {
+      mesh.castShadow = true;
+      this.grip.add(mesh);
+    }
   }
 }
