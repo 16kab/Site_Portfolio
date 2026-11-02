@@ -6,8 +6,9 @@ const { randFloat } = MathUtils;
 
 /**
  * The room is never silent (CLAUDE.md §4.9, §8): room tone, a fridge that
- * cycles, the wall clock, the city behind the window with cars and a siren
- * now and then, the floor creaking, the upstairs neighbour walking.
+ * cycles, the wall clock, the city behind the window (traffic, cars and
+ * scooters passing, a horn, a siren now and then), the floor creaking, the
+ * upstairs neighbour walking.
  * Everything is synthesised and placed in space.
  */
 export class Ambience {
@@ -18,6 +19,9 @@ export class Ambience {
   private tock = false;
   private sirenTimer = randFloat(70, 140);
   private creakTimer = randFloat(12, 30);
+  private carTimer = randFloat(3, 7);
+  private scooterTimer = randFloat(15, 35);
+  private hornTimer = randFloat(30, 70);
   private readonly clockPanner: PannerNode;
   private readonly cityPanner: PannerNode;
 
@@ -35,14 +39,20 @@ export class Ambience {
     const window = new Vector3(layout.room.maxX + 0.3, 1.5, layout.window.z);
     this.cityPanner = engine.panner(window, ambience, 0.2);
     const rumble = engine.loop(engine.brown);
-    const swell = engine.gain(0.11);
+    const swell = engine.gain(0.2);
     rumble
-      .connect(engine.filter('lowpass', 380))
+      .connect(engine.filter('lowpass', 650))
       .connect(swell)
       .connect(this.cityPanner);
+    // the far-away hiss of a whole city's traffic
+    const hiss = engine.loop(engine.pink);
+    hiss
+      .connect(engine.filter('bandpass', 1100, 0.4))
+      .connect(engine.gain(0.045))
+      .connect(swell);
     const lfo = engine.ctx.createOscillator();
     lfo.frequency.value = 0.07;
-    const depth = engine.gain(0.035);
+    const depth = engine.gain(0.06);
     lfo.connect(depth).connect(swell.gain);
     lfo.start();
 
@@ -81,6 +91,21 @@ export class Ambience {
       this.siren();
       this.sirenTimer = randFloat(110, 260);
     }
+    this.carTimer -= dt;
+    if (this.carTimer <= 0) {
+      this.carPass(randFloat(2.4, 4.5), randFloat(0.35, 0.9));
+      this.carTimer = randFloat(5, 12);
+    }
+    this.scooterTimer -= dt;
+    if (this.scooterTimer <= 0) {
+      this.scooter();
+      this.scooterTimer = randFloat(25, 60);
+    }
+    this.hornTimer -= dt;
+    if (this.hornTimer <= 0) {
+      this.horn();
+      this.hornTimer = randFloat(45, 110);
+    }
     this.creakTimer -= dt;
     if (this.creakTimer <= 0) {
       if (Math.random() < 0.35) this.upstairsSteps();
@@ -89,27 +114,36 @@ export class Ambience {
     }
   }
 
-  /** A car passing in the street (synchronised with the headlight sweep). */
-  carPass(duration = 3.2): void {
+  /**
+   * A car passing in the street (also triggered by the headlight sweep).
+   * @param level 0..1, distance of the car
+   */
+  carPass(duration = 3.2, level = 1): void {
     const e = this.engine;
     const t = e.now;
     const tyres = e.burst(e.brown, t, duration);
-    const band = e.filter('bandpass', 300, 0.8);
-    band.frequency.setValueAtTime(260, t);
-    band.frequency.linearRampToValueAtTime(720, t + duration * 0.5);
-    band.frequency.linearRampToValueAtTime(240, t + duration);
-    const level = e.gain(0);
-    level.gain.setValueAtTime(0, t);
-    level.gain.linearRampToValueAtTime(0.5, t + duration * 0.5);
-    level.gain.linearRampToValueAtTime(0, t + duration);
-    tyres.connect(band).connect(level).connect(this.cityPanner);
+    // tyres on wet asphalt: a band of noise rising then falling (doppler)
+    const band = e.filter('bandpass', 400, 0.6);
+    band.frequency.setValueAtTime(350, t);
+    band.frequency.linearRampToValueAtTime(1300, t + duration * 0.5);
+    band.frequency.linearRampToValueAtTime(320, t + duration);
+    const swell = e.gain(0);
+    swell.gain.setValueAtTime(0, t);
+    swell.gain.linearRampToValueAtTime(0.9 * level, t + duration * 0.5);
+    swell.gain.linearRampToValueAtTime(0, t + duration);
+    tyres.connect(band).connect(swell).connect(this.cityPanner);
+    const spray = e.burst(e.pink, t, duration);
+    spray
+      .connect(e.filter('highpass', 1800))
+      .connect(e.gain(0.25))
+      .connect(swell);
 
     const engineHum = e.ctx.createOscillator();
     engineHum.type = 'sawtooth';
     engineHum.frequency.setValueAtTime(58, t);
     engineHum.frequency.linearRampToValueAtTime(52, t + duration);
     const hum = e.gain(0);
-    hum.gain.linearRampToValueAtTime(0.04, t + duration * 0.5);
+    hum.gain.linearRampToValueAtTime(0.06 * level, t + duration * 0.5);
     hum.gain.linearRampToValueAtTime(0, t + duration);
     engineHum
       .connect(e.filter('lowpass', 200))
@@ -117,6 +151,52 @@ export class Ambience {
       .connect(this.cityPanner);
     engineHum.start(t);
     engineHum.stop(t + duration + 0.1);
+  }
+
+  /** A two-stroke scooter buzzing past, very French. */
+  private scooter(): void {
+    const e = this.engine;
+    const t = e.now;
+    const duration = randFloat(3.5, 5.5);
+    const engine = e.ctx.createOscillator();
+    engine.type = 'sawtooth';
+    const base = randFloat(95, 125);
+    engine.frequency.setValueAtTime(base * 1.08, t);
+    engine.frequency.linearRampToValueAtTime(base * 1.25, t + duration * 0.4);
+    engine.frequency.linearRampToValueAtTime(base * 0.85, t + duration);
+    const rasp = e.filter('bandpass', 900, 1.5);
+    const level = e.gain(0);
+    level.gain.setValueAtTime(0, t);
+    level.gain.linearRampToValueAtTime(0.06, t + duration * 0.45);
+    level.gain.linearRampToValueAtTime(0, t + duration);
+    engine.connect(rasp).connect(level).connect(this.cityPanner);
+    engine.start(t);
+    engine.stop(t + duration + 0.1);
+  }
+
+  /** A short horn somewhere down the street. */
+  private horn(): void {
+    const e = this.engine;
+    const t = e.now;
+    const level = e.gain(0);
+    level.connect(e.filter('lowpass', 1800)).connect(this.cityPanner);
+    const blasts = Math.random() < 0.4 ? 2 : 1;
+    for (let i = 0; i < blasts; i++) {
+      const start = t + i * 0.35;
+      const length = randFloat(0.18, 0.45);
+      for (const frequency of [410, 520]) {
+        const osc = e.ctx.createOscillator();
+        osc.type = 'square';
+        osc.frequency.value = frequency;
+        osc.connect(level);
+        osc.start(start);
+        osc.stop(start + length);
+      }
+      level.gain.setValueAtTime(0, start);
+      level.gain.linearRampToValueAtTime(0.025, start + 0.02);
+      level.gain.setValueAtTime(0.025, start + length - 0.03);
+      level.gain.linearRampToValueAtTime(0, start + length);
+    }
   }
 
   private scheduleClock(): void {

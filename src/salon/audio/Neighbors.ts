@@ -27,7 +27,7 @@ const HER: Voice = { pitch: 205, formantShift: 1.16 };
  */
 export class Neighbors {
   private readonly wall: BiquadFilterNode;
-  private timer = randFloat(22, 40);
+  private timer = randFloat(8, 14);
   private episode: { end: number; start: number; speaker: Voice } | null = null;
   private nextPhrase = 0;
 
@@ -35,7 +35,7 @@ export class Neighbors {
     const where = new Vector3(layout.room.minX - 0.4, 1.4, 0.4);
     const panner = engine.panner(where, engine.ambience, 0.6);
     // plaster + bricks: a steep low-pass with a bit of boom
-    this.wall = engine.filter('lowpass', 420, 0.9);
+    this.wall = engine.filter('lowpass', 560, 0.9);
     const second = engine.filter('lowpass', 900, 0.5);
     const boom = engine.filter('peaking', 180, 1.2);
     boom.gain.value = 5;
@@ -47,7 +47,7 @@ export class Neighbors {
     if (!this.episode) {
       this.timer -= dt;
       if (this.timer <= 0) {
-        const duration = randFloat(14, 32);
+        const duration = randFloat(18, 40);
         this.episode = {
           start: e.now,
           end: e.now + duration,
@@ -61,7 +61,7 @@ export class Neighbors {
     if (e.now > episode.end) {
       if (Math.random() < 0.45) this.doorSlam(e.now + randFloat(0.4, 1.2));
       this.episode = null;
-      this.timer = randFloat(50, 150);
+      this.timer = randFloat(20, 50);
       return;
     }
     // schedule a little ahead of time for a tight rhythm
@@ -86,7 +86,7 @@ export class Neighbors {
     const e = this.engine;
     const syllables = randInt(3, 11);
     const rate = 1 + anger * 0.5;
-    const loud = 0.16 + anger * 0.22;
+    const loud = 0.26 + anger * 0.3;
     const base = voice.pitch * (1 + anger * 0.35);
 
     const source = e.ctx.createOscillator();

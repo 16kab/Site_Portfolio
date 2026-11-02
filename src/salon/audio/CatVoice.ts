@@ -93,7 +93,7 @@ export class CatVoice {
     mouth.frequency.exponentialRampToValueAtTime(1600, t + d);
 
     const env = e.gain(0);
-    const peak = 0.4 * intensity;
+    const peak = 0.13 * intensity;
     env.gain.setValueAtTime(0.0001, t);
     env.gain.exponentialRampToValueAtTime(peak * 0.25, t + d * 0.08);
     env.gain.exponentialRampToValueAtTime(peak, t + d * 0.25);
@@ -136,8 +136,8 @@ export class CatVoice {
 
     const env = e.gain(0);
     env.gain.setValueAtTime(0.0001, t);
-    env.gain.exponentialRampToValueAtTime(0.28, t + 0.04);
-    env.gain.setValueAtTime(0.28, t + d * 0.8);
+    env.gain.exponentialRampToValueAtTime(0.1, t + 0.04);
+    env.gain.setValueAtTime(0.1, t + d * 0.8);
     env.gain.exponentialRampToValueAtTime(0.0001, t + d);
     mouth.connect(roll).connect(env).connect(this.panner);
   }
