@@ -1,5 +1,6 @@
 import GUI from 'lil-gui';
 import { config } from '../config';
+import { toggleLook } from '../render/looks';
 import type { App } from './App';
 
 /** Live tuning panel, development builds only (CLAUDE.md §14). */
@@ -61,6 +62,16 @@ export function createDevPanel(app: App): GUI {
   lights.add(config.lights, 'handFill', 0, 3, 0.05);
   lights.add(config.lights, 'ambientIntensity', 0, 3, 0.05);
   lights.add(config.lights, 'headlightIntensity', 0, 20, 0.5);
+
+  const look = gui.addFolder('DA poussée (touche L)');
+  look.add({ toggle: () => toggleLook() }, 'toggle').name('basculer la DA');
+  look.add(config.look, 'bloom', 0, 2, 0.01).name('halo');
+  look.add(config.look, 'bloomThreshold', 0, 1, 0.01).name('seuil du halo');
+  look.add(config.look, 'beams', 0, 3, 0.01).name('rayons');
+  look.add(config.look, 'dust', 0, 3, 0.01).name('poussière');
+  look.add(config.look, 'fog', 0, 0.5, 0.005).name('brume');
+  look.addColor(config.look, 'fogColor').name('couleur de la brume');
+  look.add(config.look, 'candle').name('bougie');
 
   const sound = gui.addFolder('Mixage (son)');
   sound.add(config.audio, 'master', 0, 1.5, 0.01).name('général');

@@ -48,7 +48,7 @@ export class Lighting {
     this.tv = new SpotLight('#8fb4ff', 1, 9, 1.35, 1, 2);
     this.tv.position.copy(screenCenter);
     this.tv.position.z += 0.08;
-    this.tv.target.position.set(viewer.x, viewer.y - 0.3, viewer.z);
+    this.tv.target.position.set(viewer.x, viewer.y + 0.45, viewer.z);
     this.tv.castShadow = true;
     this.tv.shadow.mapSize.set(512, 512);
     this.tv.shadow.bias = -0.0008;
@@ -69,6 +69,11 @@ export class Lighting {
     this.headlight.position.set(maxX + 0.8, 0.9, layout.window.z);
     this.headlight.target = this.headlightTarget;
     this.group.add(this.headlight, this.headlightTarget);
+  }
+
+  /** Current colour of the TV light (linear), for the light shafts. */
+  get tvLight(): Color {
+    return this.tv.color;
   }
 
   /** Picture colour measured on the screen (sRGB 0..1). */

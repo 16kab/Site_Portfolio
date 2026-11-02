@@ -1,5 +1,7 @@
 import gsap from 'gsap';
 import {
+  Color,
+  FogExp2,
   PCFShadowMap,
   Scene,
   type ShaderMaterial,
@@ -13,6 +15,10 @@ import { Osd } from '../channels/Osd';
 import { config } from '../config';
 import { ProjectPage } from '../project/ProjectPage';
 import { Composer } from '../render/Composer';
+import { applyLook, toggleLook } from '../render/looks';
+import { Candle } from '../scene/Candle';
+import { Dust } from '../scene/Dust';
+import { LightShafts } from '../scene/LightShafts';
 import { createCrtMaterial, updateCrtMaterial } from '../render/CrtMaterial';
 import { Cat } from '../scene/Cat';
 import { CatBrain } from '../scene/CatBrain';
@@ -51,6 +57,15 @@ export class App {
   private readonly cat = new Cat();
   private readonly catBrain: CatBrain;
   private readonly sofa = new Sofa();
+  private readonly shafts: LightShafts;
+  private readonly dust: Dust;
+  private readonly candle = new Candle();
+  /** Drawn after the paint filter (sparkles it would erase). */
+  private readonly overlay = new Scene();
+  private readonly fog = new FogExp2(config.look.fogColor, 0);
+  private readonly dustColors = Array.from({ length: 4 }, () => new Color());
+  private readonly dustPowers = [0, 0, 0, 0];
+  private toastTimer = 0;
   private readonly project: ProjectPage;
   private transition: gsap.core.Timeline | null = null;
   private time = 0;
@@ -61,6 +76,7 @@ export class App {
   private readonly projected = new Vector3();
 
   constructor(private readonly container: HTMLElement) {
+    applyLook('wicked');
     this.renderer = new WebGLRenderer({
       antialias: false,
       powerPreference: 'high-performance',
@@ -103,10 +119,20 @@ export class App {
       .add(new Vector3(0, 0, 0.1));
     this.project = new ProjectPage(container, () => this.exitProject());
 
+    // the pushed look: light shafts, dust, a candle, a coloured haze
+    this.shafts = new LightShafts(this.tv.screenCenter);
+    const { window: street, lampDown, lampUp, tv } = this.shafts.beams;
+    this.dust = new Dust([street, lampDown, lampUp, tv]);
+    this.overlay.add(this.dust.points);
+    this.candle.group.position.set(-0.38, 0.445, 0.12);
+    this.scene.fog = this.fog;
+
     this.scene.add(
       this.room.group,
       this.tv.group,
       this.sofa.group,
+      this.shafts.group,
+      this.candle.group,
       this.lamp.group,
       this.lighting.group,
       this.cat.group,
@@ -146,6 +172,11 @@ export class App {
   private onAction = (action: Action): void => {
     const channels = this.channels;
     if (this.state.is('LOADING', 'WAITING_CLICK', 'INTRO')) return;
+    if (action.type === 'look') {
+      const look = toggleLook();
+      this.toast(look === 'wicked' ? 'DA POUSSÉE' : 'DA ACTUELLE');
+      return;
+    }
     if (this.state.is('ENTERING', 'EXITING')) return;
     if (this.state.is('IN_PROJECT')) {
       this.onProjectAction(action);
@@ -289,6 +320,23 @@ export class App {
       });
   }
 
+  /** Small OSD-style message at the bottom of the screen. */
+  private toast(text: string): void {
+    let element = this.container.querySelector<HTMLElement>('.salon-toast');
+    if (!element) {
+      element = document.createElement('div');
+      element.className = 'salon-toast';
+      this.container.append(element);
+    }
+    element.textContent = text;
+    element.classList.add('is-visible');
+    window.clearTimeout(this.toastTimer);
+    this.toastTimer = window.setTimeout(
+      () => element?.classList.remove('is-visible'),
+      1600,
+    );
+  }
+
   private press(button: ButtonId, effect: () => void): void {
     this.hand.press(button, () => {
       this.audio.click();
@@ -340,6 +388,7 @@ export class App {
     const lightPower =
       signal.signal * signal.collapseX * signal.collapseY + signal.flash * 0.5;
     this.lighting.update(dt, time, lightPower, signal.noise);
+    this.updateAtmosphere(dt, time, lightPower);
 
     const camera = this.head.camera;
     camera.getWorldPosition(this.eye);
@@ -354,6 +403,30 @@ export class App {
       (this.projected.x + 1) / 2,
       (this.projected.y + 1) / 2,
     );
-    this.composer.render(this.scene, this.head.camera, time);
+    this.composer.render(this.scene, this.head.camera, time, this.overlay);
   };
+
+  private updateAtmosphere(dt: number, time: number, tvPower: number): void {
+    const { look, lights } = config;
+    this.fog.density = look.fog;
+    this.fog.color.set(look.fogColor);
+    this.candle.update(dt, time);
+    const lampLevel = this.lamp.level;
+    this.shafts.update(time, this.lighting.tvLight, tvPower, lampLevel);
+    const [street, lampDown, lampUp, tv] = this.dustColors;
+    street.set('#a9c1ff').multiplyScalar(lights.windowIntensity / 4.5);
+    lampDown.set(lights.lampColor);
+    lampUp.copy(lampDown);
+    tv.copy(this.lighting.tvLight);
+    this.dustPowers[0] = 0.9;
+    this.dustPowers[1] = 0.9 * lampLevel;
+    this.dustPowers[2] = 0.6 * lampLevel;
+    this.dustPowers[3] = 0.7 * tvPower;
+    this.dust.update(
+      time,
+      this.renderer.getPixelRatio(),
+      this.dustColors,
+      this.dustPowers,
+    );
+  }
 }

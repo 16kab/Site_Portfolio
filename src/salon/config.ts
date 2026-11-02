@@ -96,6 +96,24 @@ export const config = {
     headlightIntensity: 5,
   },
 
+  /**
+   * Atmosphere effects of the pushed "Wicked" look (render/looks.ts sets
+   * them; 0 / false in the current look).
+   */
+  look: {
+    /** Painted glow around bright sources (lamp, screen, glints). */
+    bloom: 0,
+    bloomThreshold: 0.55,
+    /** Visible light shafts (window, lampshade, TV) in the dusty air. */
+    beams: 0,
+    /** Dust motes sparkling in the light. */
+    dust: 0,
+    /** Coloured depth haze (FogExp2 density). */
+    fog: 0,
+    fogColor: '#0a1619',
+    candle: false,
+  },
+
   audio: {
     master: 0.6,
     /** Room ambience level (city, neighbours, fridge, clock, cat). */

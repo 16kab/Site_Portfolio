@@ -29,6 +29,14 @@ Cible : **desktop uniquement** pour la V1 (clavier + souris). Le mobile viendra 
 - des **ombres froides** (bleu nuit, violet) et des **lumières chaudes et saturées**, une palette terreuse et un peu désaturée entre les deux ;
 - des formes **massives et lisibles**, aux silhouettes fortes, avec des raccords propres (pas de géométrie qui « flotte » ou s'interpénètre visiblement).
 
+Observé sur le gameplay (captures d'une vidéo de 11 h) et appliqué au salon via le préréglage **« DA poussée »** (`render/looks.ts`, touche **L** pour comparer avec l'ancienne) :
+- **le noir domine**, la lumière n'existe qu'en **flaques** (télé bleu-sarcelle, lampe ambre, bougie) ;
+- les **noirs sont colorés** (sarcelle, prune), jamais gris ;
+- **un couple de couleurs opposées** par lieu (ici froid télé/fenêtre contre chaud lampe/bougie) ;
+- la **lumière se voit dans l'air** : rayons obliques (lampadaire par la fenêtre, cônes de l'abat-jour), poussière qui scintille, **halo** autour des sources ;
+- une **brume colorée** avale la profondeur ;
+- des surfaces très **chargées** (à venir : plus de bazar et de vécu dans le décor).
+
 ### 2.1 Rendu « peinture à l'huile »
 - Toute la scène 3D passe par un **filtre peinture en post-process** (filtre de Kuwahara anisotrope ou généralisé), qui transforme les formes en coups de pinceau.
 - Par-dessus, une passe de **coups de pinceau visibles** qui suivent l'orientation des formes, avec un léger relief (impasto) qui accroche la lumière, et des **bords cassés**.

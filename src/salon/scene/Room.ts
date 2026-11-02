@@ -230,7 +230,7 @@ export class Room {
 
   private coffeeTable(): Group {
     const group = new Group();
-    const wood = paint(palette.wood, { wood: true, roughness: 0.55 });
+    const wood = paint(palette.wood, { wood: true, roughness: 0.88 });
     const top = new Mesh(
       new RoundedBoxGeometry(1.05, 0.05, 0.58, 2, 0.02),
       wood,
@@ -263,7 +263,7 @@ export class Room {
     // the key "notice" left on the table
     const notice = new Mesh(
       new PlaneGeometry(0.16, 0.22),
-      paint('#d8cdb4', { roughness: 1 }),
+      paint('#b5a68b', { roughness: 1 }),
     );
     notice.rotation.set(-Math.PI / 2, 0, 0.35);
     notice.position.set(-0.22, 0.446, 0.08);

@@ -7,7 +7,8 @@ export type Action =
   | { type: 'volUp' }
   | { type: 'volDown' }
   | { type: 'power' }
-  | { type: 'mute' };
+  | { type: 'mute' }
+  | { type: 'look' };
 
 type ActionListener = (action: Action) => void;
 
@@ -27,6 +28,7 @@ const KEY_ACTIONS: Record<string, Action> = {
   Minus: { type: 'volDown' },
   KeyP: { type: 'power' },
   KeyM: { type: 'mute' },
+  KeyL: { type: 'look' },
 };
 
 /**
