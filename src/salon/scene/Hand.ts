@@ -33,12 +33,15 @@ function bump(t: number, at: number, width = 0.09): number {
  * Right hand holding the remote. Every part is one smooth volume (tapered
  * tubes with rounded ends, ellipsoids) whose base is buried inside the palm,
  * so the joins stay clean. The thumb is a two-bone chain solved with an
- * analytic IK every frame; its tip is animated by GSAP. Far buttons make
- * the remote slide back in the palm, like a real thumb would.
+ * analytic IK every frame; its tip is animated by GSAP. For far buttons the
+ * whole hand shifts forward along the remote, which stays put — like a real
+ * grip adjusting, never the remote sliding through the fingers.
  */
 export class Hand {
   readonly group = new Group();
   readonly remote = new Remote();
+  /** Everything made of flesh and wool: moves as one along the remote. */
+  private readonly grip = new Group();
   private readonly thumb = new TaperedTube(18, 14, 5);
   private readonly thumbCurve = new CatmullRomCurve3(
     [ROOT_INSIDE.clone(), ROOT.clone(), new Vector3(), new Vector3()],
@@ -57,7 +60,7 @@ export class Hand {
   constructor() {
     const skin = paint(palette.skin, { roughness: 0.6, impasto: 0.12 });
     const sweater = paint(palette.sweater, { roughness: 1, impasto: 0.45 });
-    this.group.add(this.remote.group);
+    this.group.add(this.remote.group, this.grip);
 
     // palm cradling the base of the remote (mostly hidden under it)
     const palm = this.ellipsoid(
@@ -113,7 +116,7 @@ export class Hand {
     const cuff = new Mesh(new TorusGeometry(0.046, 0.0095, 10, 28), sweater);
     cuff.position.copy(sleeve.getPoint(0));
     cuff.quaternion.setFromUnitVectors(Z, sleeve.getTangent(0));
-    this.group.add(cuff);
+    this.grip.add(cuff);
 
     this.solveThumb();
   }
@@ -173,7 +176,8 @@ export class Hand {
   }
 
   update(): void {
-    this.remote.group.position.z = this.slide.z;
+    // the hand reaches forward; the thumb targets are in grip space
+    this.grip.position.z = -this.slide.z;
     this.solveThumb();
   }
 
@@ -186,7 +190,7 @@ export class Hand {
     mesh.position.fromArray(position);
     mesh.scale.fromArray(scale);
     mesh.castShadow = true;
-    this.group.add(mesh);
+    this.grip.add(mesh);
     return mesh;
   }
 
@@ -199,7 +203,7 @@ export class Hand {
     tube.update(curve, radius);
     const mesh = new Mesh(tube.geometry, material);
     mesh.castShadow = true;
-    this.group.add(mesh);
+    this.grip.add(mesh);
     return mesh;
   }
 
@@ -208,7 +212,7 @@ export class Hand {
     mesh.castShadow = true;
     // the geometry is rewritten every frame: keep its bounds conservative
     mesh.frustumCulled = false;
-    this.group.add(mesh);
+    this.grip.add(mesh);
   }
 
   private thumbRadius = (t: number): number =>

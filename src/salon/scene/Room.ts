@@ -21,6 +21,7 @@ import { paint, palette } from './materials';
 export class Room {
   readonly group = new Group();
   private city: ShaderMaterial;
+  private readonly hands: Group[] = [];
 
   constructor() {
     const { minX, maxX, minZ, maxZ, height } = layout.room;
@@ -70,6 +71,7 @@ export class Room {
       this.coffeeTable(),
       this.rug(),
       this.plant(),
+      this.clock(),
       ...this.frames(),
     );
 
@@ -82,6 +84,15 @@ export class Room {
 
   update(time: number): void {
     this.city.uniforms.uTime.value = time;
+    // the wall clock shows the visitor's real time
+    const now = new Date();
+    const seconds = now.getSeconds();
+    const minutes = now.getMinutes() + seconds / 60;
+    const hours = (now.getHours() % 12) + minutes / 60;
+    const [hour, minute, second] = this.hands;
+    hour.rotation.z = (-hours / 12) * Math.PI * 2;
+    minute.rotation.z = (-minutes / 60) * Math.PI * 2;
+    second.rotation.z = (-seconds / 60) * Math.PI * 2;
   }
 
   private rightWall(material: Material): Mesh {
@@ -276,6 +287,53 @@ export class Room {
     inner.position.y = 0.002;
     group.add(outer, inner);
     group.position.set(layout.coffeeTable.x, 0.004, layout.coffeeTable.z - 0.1);
+    return group;
+  }
+
+  private clock(): Group {
+    const group = new Group();
+    const rim = new Mesh(
+      new CylinderGeometry(0.115, 0.115, 0.035, 32),
+      paint(palette.woodDark, { wood: true, roughness: 0.5 }),
+    );
+    rim.rotation.x = Math.PI / 2;
+    const face = new Mesh(
+      new CylinderGeometry(0.098, 0.098, 0.004, 32),
+      paint('#d8cba8', { roughness: 0.8 }),
+    );
+    face.rotation.x = Math.PI / 2;
+    face.position.z = 0.017;
+    group.add(rim, face);
+    const ink = paint('#1c1612', { roughness: 0.6, impasto: 0 });
+    for (let i = 0; i < 12; i++) {
+      const mark = new Mesh(
+        new BoxGeometry(0.006, i % 3 ? 0.012 : 0.02, 0.002),
+        ink,
+      );
+      const angle = (i / 12) * Math.PI * 2;
+      mark.position.set(Math.sin(angle) * 0.08, Math.cos(angle) * 0.08, 0.02);
+      mark.rotation.z = -angle;
+      group.add(mark);
+    }
+    const specs: [number, number, string][] = [
+      [0.05, 0.008, '#1c1612'],
+      [0.075, 0.005, '#1c1612'],
+      [0.08, 0.002, '#9a2a1e'],
+    ];
+    for (const [i, [length, width, color]] of specs.entries()) {
+      const pivot = new Group();
+      const hand = new Mesh(
+        new BoxGeometry(width, length, 0.002),
+        paint(color, { roughness: 0.5, impasto: 0 }),
+      );
+      hand.position.y = length / 2 - 0.01;
+      pivot.add(hand);
+      pivot.position.z = 0.022 + i * 0.002;
+      group.add(pivot);
+      this.hands.push(pivot);
+    }
+    group.position.copy(layout.clock);
+    group.position.z += 0.02;
     return group;
   }
 

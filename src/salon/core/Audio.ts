@@ -1,40 +1,58 @@
+import type { Vector3 } from 'three';
+import { Ambience } from '../audio/Ambience';
+import { CatVoice } from '../audio/CatVoice';
+import { AudioEngine } from '../audio/engine';
+import { Neighbors } from '../audio/Neighbors';
+import { TvSound } from '../audio/TvSound';
 import { config } from '../config';
 
 /**
- * Phase 1 placeholder: the few sounds needed by zapping are synthesised with
- * WebAudio (no files). Howler and the real sound bank come in a later phase;
- * the public methods are the ones the rest of the app will keep using.
+ * Every sound of the experience. Until a real sound bank exists, everything
+ * is synthesised with WebAudio (see src/salon/audio/); each sound can later
+ * be swapped for a recording without touching the callers.
+ * Nothing plays before `unlock()` (browser autoplay policy): before that
+ * every call is a no-op.
  */
 export class Audio {
-  private ctx: AudioContext | null = null;
-  private master!: GainNode;
-  /** TV group, driven by VOL±. */
-  private tv!: GainNode;
-  private fx!: GainNode;
-  private noise!: AudioBuffer;
+  private engine: AudioEngine | null = null;
+  private ambience: Ambience | null = null;
+  private neighbors: Neighbors | null = null;
+  private tvSound: TvSound | null = null;
+  /** The cat's voice, available once audio is unlocked. */
+  cat: CatVoice | null = null;
   private tvVolume = 0.6;
   private muted = false;
+  private tvOn = true;
+  private channel = 0;
+
+  constructor(private readonly tvPosition: Vector3) {}
 
   /** Must be called from a user gesture (autoplay policy). */
   unlock(): void {
-    if (this.ctx) {
-      if (this.ctx.state === 'suspended') void this.ctx.resume();
+    if (this.engine) {
+      if (this.engine.ctx.state === 'suspended') void this.engine.ctx.resume();
       return;
     }
-    const ctx = new AudioContext();
-    this.ctx = ctx;
-    this.master = ctx.createGain();
-    this.master.gain.value = config.audio.master;
-    this.master.connect(ctx.destination);
-    this.tv = ctx.createGain();
-    this.fx = ctx.createGain();
-    this.tv.connect(this.master);
-    this.fx.connect(this.master);
+    const engine = new AudioEngine();
+    this.engine = engine;
+    this.ambience = new Ambience(engine);
+    this.neighbors = new Neighbors(engine);
+    this.tvSound = new TvSound(engine, this.tvPosition);
+    this.cat = new CatVoice(engine);
+    this.tvSound.setChannel(this.channel);
+    this.tvSound.setPower(this.tvOn);
     this.applyTvVolume();
+    this.applyAmbienceLevel();
+  }
 
-    this.noise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
-    const data = this.noise.getChannelData(0);
-    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+  /** Per frame: listener = the viewer's head, schedulers. */
+  update(dt: number, head: Vector3, forward: Vector3, up: Vector3): void {
+    const engine = this.engine;
+    if (engine?.ctx.state !== 'running') return;
+    engine.updateListener(head, forward, up);
+    this.ambience?.update(dt);
+    this.neighbors?.update(dt);
+    this.tvSound?.update();
   }
 
   setTvVolume(volume: number, muted: boolean): void {
@@ -43,76 +61,72 @@ export class Audio {
     this.applyTvVolume();
   }
 
-  /** Short static burst, through a small "TV speaker" band-pass. */
-  static(duration: number, level = 0.55): void {
-    const ctx = this.ctx;
-    if (!ctx) return;
-    const t = ctx.currentTime;
-    const source = ctx.createBufferSource();
-    source.buffer = this.noise;
-    const band = ctx.createBiquadFilter();
-    band.type = 'bandpass';
-    band.frequency.value = 2400;
-    band.Q.value = 0.7;
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0, t);
-    gain.gain.linearRampToValueAtTime(level, t + 0.012);
-    gain.gain.setValueAtTime(level, t + duration * 0.7);
-    gain.gain.linearRampToValueAtTime(0, t + duration);
-    source.connect(band).connect(gain).connect(this.tv);
-    source.start(t, Math.random(), duration + 0.05);
+  setTvChannel(index: number): void {
+    this.channel = index;
+    this.tvSound?.setChannel(index);
+  }
+
+  setTvPower(on: boolean): void {
+    this.tvOn = on;
+    this.tvSound?.setPower(on);
+    this.applyAmbienceLevel();
+  }
+
+  /** Channel change: static burst, programme ducked. */
+  zap(duration: number): void {
+    this.tvSound?.zap(duration);
+  }
+
+  static(duration: number, level = 0.5): void {
+    this.tvSound?.static(duration, level);
+  }
+
+  carPass(): void {
+    this.ambience?.carPass();
   }
 
   /** Plastic click of a remote button. */
   click(): void {
-    const ctx = this.ctx;
-    if (!ctx) return;
-    const t = ctx.currentTime;
-    const source = ctx.createBufferSource();
-    source.buffer = this.noise;
-    const high = ctx.createBiquadFilter();
-    high.type = 'bandpass';
-    high.frequency.value = 3200 + Math.random() * 1400;
-    high.Q.value = 3;
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.9, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
-    source.connect(high).connect(gain).connect(this.fx);
-    source.start(t, Math.random(), 0.05);
+    const e = this.engine;
+    if (!e) return;
+    const t = e.now;
+    const source = e.burst(e.white, t, 0.04);
+    const env = e.gain(0.9);
+    env.gain.setValueAtTime(0.9, t);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+    source
+      .connect(e.filter('bandpass', 3200 + Math.random() * 1400, 3))
+      .connect(env)
+      .connect(e.fx);
   }
 
-  /** High-voltage thump of a CRT turning on / off. */
+  /** High-voltage thump of a CRT turning on / off, plus the whine. */
   thump(on: boolean): void {
-    const ctx = this.ctx;
-    if (!ctx) return;
-    const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
+    const e = this.engine;
+    if (!e) return;
+    const t = e.now;
+    const osc = e.ctx.createOscillator();
     osc.frequency.setValueAtTime(on ? 70 : 90, t);
     osc.frequency.exponentialRampToValueAtTime(on ? 40 : 30, t + 0.25);
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.7, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-    osc.connect(gain).connect(this.fx);
+    const env = e.gain(0.7);
+    env.gain.setValueAtTime(0.7, t);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+    osc.connect(env).connect(e.fx);
     osc.start(t);
     osc.stop(t + 0.32);
-    if (on) {
-      // the famous 15.7 kHz whine, very faint
-      const whine = ctx.createOscillator();
-      whine.frequency.value = 15700;
-      const wGain = ctx.createGain();
-      wGain.gain.setValueAtTime(0, t);
-      wGain.gain.linearRampToValueAtTime(0.025, t + 0.1);
-      wGain.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
-      whine.connect(wGain).connect(this.fx);
-      whine.start(t);
-      whine.stop(t + 1.7);
-    }
   }
 
   private applyTvVolume(): void {
-    if (!this.ctx) return;
-    const value = this.muted ? 0 : this.tvVolume;
-    this.tv.gain.setTargetAtTime(value, this.ctx.currentTime, 0.03);
+    const e = this.engine;
+    if (!e) return;
+    e.tv.gain.setTargetAtTime(this.muted ? 0 : this.tvVolume, e.now, 0.03);
+  }
+
+  /** With the TV off nothing covers the room any more: it comes forward. */
+  private applyAmbienceLevel(): void {
+    const e = this.engine;
+    if (!e) return;
+    const level = config.audio.ambience * (this.tvOn ? 1 : 1.4);
+    e.ambience.gain.setTargetAtTime(level, e.now, 1.5);
   }
 }

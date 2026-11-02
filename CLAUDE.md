@@ -343,6 +343,7 @@ Tant que les vraies vidéos ne sont pas fournies : utiliser des **fausses chaîn
 - Le son de la télé est légèrement **filtré** (passe-bande, petit haut-parleur) pour sonner « vieille télé ».
 - Spatialisation légère selon l'orientation de la tête (panoramique stéréo).
 - Formats : MP3/OGG compressés, sprites audio pour les petits sons.
+- **État actuel** : en attendant une banque de sons, tout est **synthétisé en WebAudio** (`src/salon/audio/`) et spatialisé en 3D (HRTF, l'écoute suit la tête). Chaque son peut être remplacé un par un par un enregistrement sans toucher aux appelants (`core/Audio.ts` est la seule porte d'entrée).
 
 ---
 

@@ -38,6 +38,8 @@ export class Lighting {
   private flicker = 0;
   private nextHeadlight = 8;
   private headlightTime = -1;
+  /** Called when a car passes in the street (to play its sound). */
+  onHeadlight: (() => void) | null = null;
 
   constructor(screenCenter: Vector3, viewer: Vector3) {
     this.ambient = new HemisphereLight('#3a2f5a', '#2a1810', 1);
@@ -122,6 +124,7 @@ export class Lighting {
       this.nextHeadlight -= dt;
       if (this.nextHeadlight <= 0) {
         this.headlightTime = 0;
+        this.onHeadlight?.();
         const [min, max] = lights.headlightEvery;
         this.nextHeadlight = MathUtils.randFloat(min, max);
       }

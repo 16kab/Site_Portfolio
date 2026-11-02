@@ -114,6 +114,7 @@ export class ChannelManager {
       if (!this.state.go('TV_OFF')) return;
       this.osd.clear();
       this.audio.thump(false);
+      this.audio.setTvPower(false);
       // picture collapses to a bright line, then a dot that fades slowly
       this.powerTween = gsap
         .timeline()
@@ -130,6 +131,7 @@ export class ChannelManager {
     } else {
       if (!this.state.go('TV_ON')) return;
       this.audio.thump(true);
+      this.audio.setTvPower(true);
       this.audio.static(0.5, 0.35);
       gsap.set(s, {
         collapseX: 0.012,
@@ -174,7 +176,7 @@ export class ChannelManager {
     const s = this.signal;
     this.zap?.kill();
     this.state.go('ZAPPING');
-    this.audio.static(zapping.duration + 0.05);
+    this.audio.zap(zapping.duration);
     const roll = (Math.random() > 0.5 ? 1 : -1) * zapping.roll;
     // snow + sync loss, the new picture arrives at the middle of the burst
     this.zap = gsap
@@ -182,6 +184,7 @@ export class ChannelManager {
       .to(s, { noise: zapping.noise, roll, duration: zapping.duration * 0.25 })
       .call(() => {
         this.index = target;
+        this.audio.setTvChannel(target);
         this.announce();
       })
       .to(s, {

@@ -97,7 +97,9 @@ export const config = {
   },
 
   audio: {
-    master: 0.5,
+    master: 0.6,
+    /** Room ambience level (city, neighbours, fridge, clock, cat). */
+    ambience: 0.9,
   },
 };
 

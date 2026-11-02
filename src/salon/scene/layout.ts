@@ -14,4 +14,5 @@ export const layout = {
   window: { z: -0.35, width: 1.7, bottom: 0.85, top: 2.25 },
   coffeeTable: new Vector3(0.05, 0, 0.0),
   plant: new Vector3(1.35, 0, -1.3),
+  clock: new Vector3(-0.45, 1.72, -1.7),
 };

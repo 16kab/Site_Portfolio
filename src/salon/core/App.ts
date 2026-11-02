@@ -1,8 +1,9 @@
 import {
-  Timer,
   PCFShadowMap,
   Scene,
   type ShaderMaterial,
+  Timer,
+  Vector3,
   WebGLRenderer,
 } from 'three';
 import { ChannelManager } from '../channels/ChannelManager';
@@ -11,6 +12,8 @@ import { Osd } from '../channels/Osd';
 import { config } from '../config';
 import { Composer } from '../render/Composer';
 import { createCrtMaterial, updateCrtMaterial } from '../render/CrtMaterial';
+import { Cat } from '../scene/Cat';
+import { CatBrain } from '../scene/CatBrain';
 import { Hand } from '../scene/Hand';
 import { HeadCamera } from '../scene/HeadCamera';
 import { Lamp } from '../scene/Lamp';
@@ -28,7 +31,7 @@ import { StateMachine } from './StateMachine';
 export class App {
   readonly renderer: WebGLRenderer;
   readonly input: Input;
-  readonly audio = new Audio();
+  readonly audio: Audio;
   readonly state = new StateMachine('LOADING');
   private readonly scene = new Scene();
   private readonly timer = new Timer();
@@ -43,7 +46,13 @@ export class App {
   private readonly osd = new Osd();
   private readonly channels: ChannelManager;
   private readonly crt: ShaderMaterial;
+  private readonly cat = new Cat();
+  private readonly catBrain: CatBrain;
   private time = 0;
+  // scratch: where the viewer's head is and where it looks
+  private readonly eye = new Vector3();
+  private readonly forward = new Vector3();
+  private readonly up = new Vector3();
 
   constructor(private readonly container: HTMLElement) {
     this.renderer = new WebGLRenderer({
@@ -61,14 +70,21 @@ export class App {
     this.input = new Input(this.renderer.domElement);
     this.head = new HeadCamera(window.innerWidth / window.innerHeight);
     this.composer = new Composer(this.renderer);
-    this.channels = new ChannelManager(this.state, this.osd, this.audio);
 
     this.crt = createCrtMaterial(
       this.channelRenderer.texture,
       this.osd.texture,
     );
     this.tv = new Tv(this.crt);
+    this.audio = new Audio(this.tv.screenCenter);
+    this.channels = new ChannelManager(this.state, this.osd, this.audio);
     this.lighting = new Lighting(this.tv.screenCenter, layout.eye);
+    this.lighting.onHeadlight = () => this.audio.carPass();
+    this.catBrain = new CatBrain(
+      this.cat,
+      () => this.audio.cat,
+      this.tv.screenCenter,
+    );
 
     this.hand.group.position.set(0.13, -0.118, -0.42);
     this.hand.group.rotation.set(0.62, 0.32, 0.18);
@@ -82,6 +98,7 @@ export class App {
       new Sofa().group,
       this.lamp.group,
       this.lighting.group,
+      this.cat.group,
       this.head.rig,
     );
 
@@ -199,6 +216,13 @@ export class App {
     const lightPower =
       signal.signal * signal.collapseX * signal.collapseY + signal.flash * 0.5;
     this.lighting.update(dt, time, lightPower, signal.noise);
+
+    const camera = this.head.camera;
+    camera.getWorldPosition(this.eye);
+    camera.getWorldDirection(this.forward);
+    this.up.set(0, 1, 0).applyQuaternion(camera.quaternion);
+    this.catBrain.update(dt, lightPower, this.eye, this.forward);
+    this.audio.update(dt, this.eye, this.forward, this.up);
 
     this.composer.render(this.scene, this.head.camera, time);
   };
