@@ -110,6 +110,8 @@ export class Audio {
     if (!e) return;
     const t = e.now;
     const tv = e.panner(this.tvPosition, e.fx, 0.3);
+    // switching off: the real sound of a CRT tube collapsing
+    if (!on && e.play('crtOff', tv, { gain: 0.5 })) return;
 
     const tock = e.ctx.createOscillator();
     tock.frequency.setValueAtTime(on ? 140 : 110, t);

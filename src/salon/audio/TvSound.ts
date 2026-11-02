@@ -142,7 +142,9 @@ export class TvSound {
     g.cancelScheduledValues(t);
     g.setTargetAtTime(0, t, 0.01);
     g.setTargetAtTime(1, t + duration, 0.08);
-    this.static(duration + 0.05);
+    // the real zapping crackle; synthetic static covers longer gaps
+    const played = this.engine.play('zapping', this.speaker, { gain: 0.8 });
+    if (!played || duration > 0.35) this.static(duration + 0.05);
   }
 
   static(duration: number, level = 0.5): void {

@@ -1,9 +1,20 @@
 import type { Vector3 } from 'three';
 import { config } from '../config';
+import { SampleBank, type SampleName } from './samples';
+
+type PlayOptions = {
+  when?: number;
+  gain?: number;
+  rate?: number;
+  /** Start offset in seconds (random if 'random'). */
+  offset?: number | 'random';
+  duration?: number;
+};
 
 /**
  * WebAudio plumbing shared by every sound of the room: volume groups
- * (CLAUDE.md §8), a small room reverb, noise buffers and HRTF panners.
+ * (CLAUDE.md §8), a small room reverb, the recorded samples, noise buffers
+ * and HRTF panners.
  * The listener is the viewer's head, so turning the head moves the sounds.
  */
 export class AudioEngine {
@@ -20,6 +31,7 @@ export class AudioEngine {
   readonly white: AudioBuffer;
   readonly pink: AudioBuffer;
   readonly brown: AudioBuffer;
+  readonly samples: SampleBank;
 
   constructor() {
     const ctx = new AudioContext();
@@ -31,6 +43,7 @@ export class AudioEngine {
     limiter.threshold.value = -10;
     limiter.ratio.value = 6;
     this.master.connect(limiter).connect(ctx.destination);
+    this.samples = new SampleBank(ctx);
 
     this.tv = this.bus(1);
     this.ambience = this.bus(config.audio.ambience);
@@ -88,6 +101,47 @@ export class AudioEngine {
     panner.positionX.setTargetAtTime(position.x, t, 0.05);
     panner.positionY.setTargetAtTime(position.y, t, 0.05);
     panner.positionZ.setTargetAtTime(position.z, t, 0.05);
+  }
+
+  /**
+   * One-shot recorded sample into `destination`. Returns null (and plays
+   * nothing) if the file is not decoded yet.
+   */
+  play(
+    name: SampleName,
+    destination: AudioNode,
+    options: PlayOptions = {},
+  ): AudioBufferSourceNode | null {
+    const buffer = this.samples.get(name);
+    if (!buffer) return null;
+    const source = this.ctx.createBufferSource();
+    source.buffer = buffer;
+    source.playbackRate.value = options.rate ?? 1;
+    const level = this.gain(options.gain ?? 1);
+    source.connect(level).connect(destination);
+    const offset =
+      options.offset === 'random'
+        ? Math.random() * Math.max(0, buffer.duration - (options.duration ?? 0))
+        : (options.offset ?? 0);
+    source.start(options.when ?? this.now, offset, options.duration);
+    return source;
+  }
+
+  /**
+   * Seamless loop of a recorded sample, started at a random point as soon
+   * as it is decoded. Returns its level node right away (to fade it).
+   */
+  loopSample(name: SampleName, destination: AudioNode, gain = 1): GainNode {
+    const level = this.gain(gain);
+    level.connect(destination);
+    this.samples.ready(name, (buffer) => {
+      const source = this.ctx.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      source.connect(level);
+      source.start(this.now, Math.random() * buffer.duration);
+    });
+    return level;
   }
 
   /** Looping noise source (started). */

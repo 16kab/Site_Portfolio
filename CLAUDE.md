@@ -343,7 +343,8 @@ Tant que les vraies vidéos ne sont pas fournies : utiliser des **fausses chaîn
 - Le son de la télé est légèrement **filtré** (passe-bande, petit haut-parleur) pour sonner « vieille télé ».
 - Spatialisation légère selon l'orientation de la tête (panoramique stéréo).
 - Formats : MP3/OGG compressés, sprites audio pour les petits sons.
-- **État actuel** : en attendant une banque de sons, tout est **synthétisé en WebAudio** (`src/salon/audio/`) et spatialisé en 3D (HRTF, l'écoute suit la tête). Chaque son peut être remplacé un par un par un enregistrement sans toucher aux appelants (`core/Audio.ts` est la seule porte d'entrée).
+- **État actuel** : les sons sont de **vrais enregistrements CC0** de [BigSoundBank](https://bigsoundbank.com) (`public/salon/audio/`, liste dans `ATTRIBUTIONS.md`), joués et traités en WebAudio (`src/salon/audio/`) et spatialisés en 3D (HRTF, l'écoute suit la tête). Restent synthétisés faute d'enregistrement libre : l'allumage de la télé, le clic de la télécommande, la réception du chat, la neige (bruit blanc), le fond d'air de la pièce et la musique provisoire des chaînes. `core/Audio.ts` est la seule porte d'entrée : remplacer un son ne touche pas aux appelants.
+- Chaque nouveau son doit avoir une licence compatible (CC0 de préférence) et être ajouté à `ATTRIBUTIONS.md`.
 
 ---
 
