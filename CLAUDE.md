@@ -15,7 +15,7 @@ Le portfolio est un **mini jeu vidéo**. Le visiteur est en **vue subjective (PO
 
 L'identité visuelle doit être **extrêmement marquée et singulière**, dans l'esprit de *No Rest for the Wicked* (Moon Studios) : un rendu **peinture à l'huile**, pas du photoréalisme.
 
-Cible : **desktop uniquement** pour la V1 (clavier + souris). Le mobile viendra en V2 avec un concept dédié (voir §13).
+Cible : **desktop uniquement** pour la V1 (clavier + souris). Le mobile viendra en V2 : même expérience, en mode paysage obligatoire (voir §13).
 
 ---
 
@@ -146,7 +146,7 @@ Touche Échap (ou Retour arrière) :
 ### 4.9 Éteindre la télé (Power)
 - Extinction CRT classique : l'image se contracte en ligne puis en point lumineux qui s'éteint lentement.
 - La pièce tombe dans une **pénombre** (seulement la lampe et la fenêtre).
-- **Ambiance sonore « télé éteinte »**, pas angoissante mais présente, intime :
+- L'**ambiance sonore de la pièce** (§8) joue **en permanence, télé allumée comme éteinte**. Quand la télé s'éteint, plus rien ne la couvre : elle ressort nettement, pas angoissante mais présente, intime :
   - rumeur de la ville dehors (voitures au loin, une sirène lointaine de temps en temps) ;
   - **voisins qui se disputent, très étouffés** à travers le mur ;
   - frigo qui ronronne, horloge, plancher qui craque ;
@@ -195,7 +195,7 @@ Règles :
 Pour pouvoir tester la DA sur téléphone pendant le développement :
 - Tête pilotée par le **gyroscope** (DeviceOrientation, avec demande de permission sur iOS).
 - Boutons à l'écran qui reproduisent la télécommande.
-- Ce mode n'est pas la version mobile finale (§13).
+- Ce mode préfigure la version mobile (§13) mais n'est pas finalisé en V1.
 
 ---
 
@@ -327,8 +327,7 @@ Tant que les vraies vidéos ne sont pas fournies : utiliser des **fausses chaîn
 | Télé | neige/grésillement (court et long), changement de chaîne, son des boucles vidéo, extinction CRT, crépitements de surchauffe |
 | Transitions | aspiration (woosh montant), éjection, chute dans le canapé, ressorts |
 | Chat | pas feutrés, miaulement, ronronnement |
-| Ambiance permanente (faible) | pièce, frigo, horloge |
-| Ambiance télé éteinte | ville lointaine, sirène, voisins qui se disputent étouffés, craquements de plancher |
+| Ambiance permanente (faible, télé allumée ou éteinte) | pièce, frigo, horloge, ville lointaine, sirène, voisins qui se disputent étouffés, craquements de plancher |
 
 - Groupes de volume séparés : télé (contrôlée par VOL±), ambiance, effets.
 - Le son de la télé est légèrement **filtré** (passe-bande, petit haut-parleur) pour sonner « vieille télé ».
@@ -400,7 +399,9 @@ Tant que les vraies vidéos ne sont pas fournies : utiliser des **fausses chaîn
 
 ## 13. Version mobile (V2, plus tard)
 
-Concept prévu : toujours en vue subjective, mais **le personnage regarde son téléphone**, et le portfolio s'affiche sur l'écran du téléphone. À ne pas développer en V1, mais l'architecture (états, chaînes, données des projets) doit pouvoir être réutilisée.
+La version mobile est **la même expérience que sur desktop** (salon, télé, chaînes, transitions), avec le **mode paysage obligatoire** : en portrait, un écran (dans la DA) invite à tourner le téléphone. Les contrôles reprennent a priori le mode tactile de test (§5.3) : tête au gyroscope, télécommande tactile.
+
+À ne pas développer en V1, mais l'architecture doit le permettre sans refonte : entrées abstraites (clavier/souris ou tactile/gyroscope), cadrage adaptable aux ratios paysage des téléphones, réglage de qualité automatique (§9) pour les GPU mobiles.
 
 ---
 
