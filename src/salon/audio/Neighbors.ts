@@ -50,7 +50,7 @@ export class Neighbors {
       if (!this.exclaimed && Math.random() < dt * 0.04) {
         this.exclaimed = true;
         e.play('neighborExclamation', this.wall, {
-          gain: randFloat(1.2, 1.8),
+          gain: randFloat(0.4, 0.6),
           rate: randFloat(0.92, 1.02),
         });
       }
@@ -65,7 +65,7 @@ export class Neighbors {
     this.active = true;
     this.exclaimed = false;
     this.episodeEnd = e.now + randFloat(20, 45);
-    this.fade(randFloat(2, 2.8), 2.5);
+    this.fade(randFloat(0.7, 0.95), 2.5);
   }
 
   private fade(to: number, seconds: number): void {
