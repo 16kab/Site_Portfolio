@@ -54,7 +54,14 @@ type Activity = { pose: 'sit' | 'groom' | 'lie' | 'stand'; duration: number };
 type Mode =
   | { kind: 'away'; timer: number }
   | { kind: 'walk'; path: NodeId[] }
-  | { kind: 'jump'; from: Vector3; to: Vector3; time: number; next: NodeId[] }
+  | {
+      kind: 'jump';
+      from: Vector3;
+      to: Vector3;
+      time: number;
+      next: NodeId[];
+      landed: boolean;
+    }
   | {
       kind: 'rest';
       spot: NodeId;
@@ -124,6 +131,7 @@ export class CatBrain {
 
   // scratch
   private readonly toCat = new Vector3();
+  private readonly jumpLook = new Vector3();
 
   constructor(
     private readonly cat: Cat,
@@ -174,7 +182,7 @@ export class CatBrain {
     this.meowedAtViewer = false;
     this.goTo(pick(SPOTS).id);
     if (Math.random() < 0.35) {
-      window.setTimeout(() => this.voice()?.meow(0.7), 1200);
+      window.setTimeout(() => this.voice()?.trill(), 1200);
     }
   }
 
@@ -207,6 +215,7 @@ export class CatBrain {
         to: target.clone(),
         time: 0,
         next: path.slice(1),
+        landed: false,
       };
       return;
     }
@@ -235,47 +244,91 @@ export class CatBrain {
     cat.walk(step, dt);
   }
 
+  /**
+   * A cat jump in four beats: it eyes the target and crouches (a little
+   * hips wiggle before jumping up, a peek over the edge before jumping
+   * down), pushes off, flies along a ballistic arc with the body following
+   * the trajectory, then lands front paws first and absorbs.
+   */
   private jump(dt: number): void {
     if (this.mode.kind !== 'jump') return;
     const mode = this.mode;
     const cat = this.cat;
-    const crouchTime = 0.28;
-    const flight = 0.5;
+    const { from, to } = mode;
+    const up = to.y > from.y + 0.05;
+    const down = to.y < from.y - 0.05;
+    const horizontal = Math.hypot(to.x - from.x, to.z - from.z);
+    const crouchTime = up ? 0.75 : down ? 0.55 : 0.35;
+    const flight = 0.3 + horizontal * 0.3;
+    const landing = 0.35;
     mode.time += dt;
     cat.walk(0, dt);
+    this.jumpLook.copy(to);
+    this.jumpLook.y += 0.05;
 
-    const dx = mode.to.x - mode.from.x;
-    const dz = mode.to.z - mode.from.z;
-    const facing = Math.atan2(dx, dz);
+    const facing = Math.atan2(to.x - from.x, to.z - from.z);
     const turn = Math.atan2(
       Math.sin(facing - cat.group.rotation.y),
       Math.cos(facing - cat.group.rotation.y),
     );
-    cat.group.rotation.y += MathUtils.clamp(turn, -8 * dt, 8 * dt);
+    cat.group.rotation.y += MathUtils.clamp(turn, -6 * dt, 6 * dt);
 
+    // 1. eye the target, crouch, wiggle
     if (mode.time < crouchTime) {
+      const k = mode.time / crouchTime;
       cat.target.crouch = 1;
+      cat.wiggle = up ? Math.sin(Math.PI * k) : 0;
+      cat.jumpPitch = up ? -0.12 * k : down ? 0.3 * k : 0;
       return;
     }
+    cat.wiggle = 0;
+
+    // 2-3. push off and fly: quadratic arc whose apex sits above the
+    // higher end, body pitched along the velocity
     const u = Math.min(1, (mode.time - crouchTime) / flight);
-    cat.target.crouch = 0;
-    const height = Math.abs(mode.to.y - mode.from.y) + 0.16;
-    cat.group.position.lerpVectors(mode.from, mode.to, u);
-    cat.group.position.y += height * 4 * u * (1 - u);
-    const up = mode.to.y > mode.from.y ? 1 : -1;
-    cat.jumpPitch = Math.sin(Math.PI * u) * -0.35 * up;
-    cat.airborne = Math.sin(Math.PI * u);
-    if (u >= 1) {
-      cat.jumpPitch = 0;
-      cat.airborne = 0;
-      cat.pose.crouch = 0.8;
-      this.voice()?.land();
-      this.at = this.nodeAt(mode.to);
-      if (mode.next.length > 0) {
-        this.mode = { kind: 'walk', path: mode.next };
-      } else {
-        this.arrivedAt(this.at);
+    if (u < 1) {
+      cat.target.crouch = 0;
+      cat.pose.crouch *= 0.6;
+      const apex = Math.max(from.y, to.y) + (up ? 0.12 : 0.07);
+      const along = u * u * (3 - 2 * u) * 0.35 + u * 0.65;
+      cat.group.position.x = MathUtils.lerp(from.x, to.x, along);
+      cat.group.position.z = MathUtils.lerp(from.z, to.z, along);
+      cat.group.position.y =
+        (1 - u) * (1 - u) * from.y + 2 * u * (1 - u) * apex + u * u * to.y;
+      const vertical = 2 * (1 - u) * (apex - from.y) + 2 * u * (to.y - apex);
+      cat.jumpPitch = MathUtils.clamp(
+        -Math.atan2(vertical, Math.max(horizontal, 0.05)) * 0.7,
+        -0.8,
+        0.8,
+      );
+      cat.jumpProgress = u;
+      cat.airborne =
+        Math.min(1, u / 0.12) * (1 - MathUtils.smoothstep(u, 0.82, 1));
+      if (!mode.landed && u > 0.97) {
+        mode.landed = true;
+        this.voice()?.land();
       }
+      return;
+    }
+
+    // 4. land on the front paws, absorb, straighten up
+    if (!mode.landed) {
+      mode.landed = true;
+      this.voice()?.land();
+    }
+    cat.group.position.copy(to);
+    cat.airborne = 0;
+    cat.jumpProgress = 0;
+    const k = (mode.time - crouchTime - flight) / landing;
+    cat.target.crouch = k < 0.35 ? 0.9 : 0;
+    cat.jumpPitch = 0.22 * (1 - Math.min(1, k)) ** 2;
+    if (k < 1) return;
+    cat.jumpPitch = 0;
+    this.at = this.nodeAt(to);
+    if (mode.next.length > 0) {
+      this.mode = { kind: 'walk', path: mode.next };
+    } else {
+      this.arrivedAt(this.at);
     }
   }
 
@@ -363,6 +416,11 @@ export class CatBrain {
   /** Easter egg: stare at the cat and it notices you. */
   private watchViewer(dt: number, eye: Vector3, forward: Vector3): void {
     const cat = this.cat;
+    if (this.mode.kind === 'jump') {
+      cat.lookTarget = this.jumpLook;
+      cat.slowBlink = false;
+      return;
+    }
     this.toCat.subVectors(cat.headPosition, eye);
     const distance = this.toCat.length();
     const angle = this.toCat.angleTo(forward);

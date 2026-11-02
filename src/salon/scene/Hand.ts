@@ -13,12 +13,18 @@ import { type ButtonId, Remote } from './Remote';
 import { TaperedTube } from './TaperedTube';
 
 /** Thumb bones (metres) and radii at base / tip. */
-const THUMB = { l1: 0.042, l2: 0.036, base: 0.0128, tip: 0.0096 };
+const THUMB = { l1: 0.046, l2: 0.04, base: 0.0128, tip: 0.0096 };
+/**
+ * The hand holds the remote around its middle (grip space is shifted toward
+ * the tip), so the thumb alone reaches every button, from POWER to CH−,
+ * while the palm never moves — like a real hand.
+ */
+const GRIP_Z = -0.058;
 /** Where the thumb leaves the thenar mound, and a point buried inside it. */
 const ROOT = new Vector3(0.03, 0.006, 0.048);
 const ROOT_INSIDE = new Vector3(0.04, -0.012, 0.065);
-/** Resting on the cross pad. */
-const REST = new Vector3(0.002, 0.0235, 0.012);
+/** Resting along the remote, over the lower digits (grip space). */
+const REST = new Vector3(0.004, 0.0235, 0.012);
 /** Bend direction hint for the thumb joint (outward and a bit up). */
 const POLE = new Vector3(1, 0.5, 0.2).normalize();
 const Z = new Vector3(0, 0, 1);
@@ -33,14 +39,13 @@ function bump(t: number, at: number, width = 0.09): number {
  * Right hand holding the remote. Every part is one smooth volume (tapered
  * tubes with rounded ends, ellipsoids) whose base is buried inside the palm,
  * so the joins stay clean. The thumb is a two-bone chain solved with an
- * analytic IK every frame; its tip is animated by GSAP. For far buttons the
- * whole hand shifts forward along the remote, which stays put — like a real
- * grip adjusting, never the remote sliding through the fingers.
+ * analytic IK every frame; its tip is animated by GSAP. The palm and the
+ * fingers never move: only the thumb stretches or folds to reach a button.
  */
 export class Hand {
   readonly group = new Group();
   readonly remote = new Remote();
-  /** Everything made of flesh and wool: moves as one along the remote. */
+  /** Everything made of flesh and wool, placed around the remote's middle. */
   private readonly grip = new Group();
   private readonly thumb = new TaperedTube(18, 14, 5);
   private readonly thumbCurve = new CatmullRomCurve3(
@@ -49,7 +54,6 @@ export class Hand {
     'centripetal',
   );
   private readonly tip = REST.clone();
-  private readonly slide = { z: 0 };
   private timeline: gsap.core.Timeline | null = null;
 
   // scratch vectors, reused every frame
@@ -60,6 +64,7 @@ export class Hand {
   constructor() {
     const skin = paint(palette.skin, { roughness: 0.6, impasto: 0.12 });
     const sweater = paint(palette.sweater, { roughness: 1, impasto: 0.45 });
+    this.grip.position.z = GRIP_Z;
     this.group.add(this.remote.group, this.grip);
 
     // palm cradling the base of the remote (mostly hidden under it)
@@ -129,8 +134,9 @@ export class Hand {
   press(id: ButtonId, onPress: () => void, nervous = 0): void {
     this.timeline?.kill();
     const speed = 1 + nervous;
+    // button position in grip space
     const button = this.remote.buttonTop(id, this.target);
-    const slideZ = Math.max(0, -0.014 - button.z);
+    button.z -= GRIP_Z;
     const contactY = button.y + THUMB.tip * 0.8;
     const hover = contactY + 0.012;
     const t = this.tip;
@@ -138,17 +144,12 @@ export class Hand {
     this.timeline = gsap
       .timeline()
       .to(
-        this.slide,
-        { z: slideZ, duration: 0.09 / speed, ease: 'power2.out' },
-        0,
-      )
-      .to(
         t,
         {
           x: button.x,
           y: hover,
-          z: button.z + slideZ,
-          duration: 0.07 / speed,
+          z: button.z,
+          duration: 0.08 / speed,
           ease: 'power2.out',
         },
         0,
@@ -171,13 +172,10 @@ export class Hand {
           ease: 'power2.inOut',
         },
         '+=0.12',
-      )
-      .to(this.slide, { z: 0, duration: 0.3, ease: 'power2.inOut' }, '<');
+      );
   }
 
   update(): void {
-    // the hand reaches forward; the thumb targets are in grip space
-    this.grip.position.z = -this.slide.z;
     this.solveThumb();
   }
 

@@ -100,20 +100,45 @@ export class Audio {
       .connect(e.fx);
   }
 
-  /** High-voltage thump of a CRT turning on / off, plus the whine. */
+  /**
+   * CRT turning on / off: a soft relay "tock", the crackle of the high
+   * voltage on the glass and, when turning on, the short degauss hum.
+   * Kept discreet: it is a detail, not an impact.
+   */
   thump(on: boolean): void {
     const e = this.engine;
     if (!e) return;
     const t = e.now;
-    const osc = e.ctx.createOscillator();
-    osc.frequency.setValueAtTime(on ? 70 : 90, t);
-    osc.frequency.exponentialRampToValueAtTime(on ? 40 : 30, t + 0.25);
-    const env = e.gain(0.7);
-    env.gain.setValueAtTime(0.7, t);
-    env.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-    osc.connect(env).connect(e.fx);
-    osc.start(t);
-    osc.stop(t + 0.32);
+    const tv = e.panner(this.tvPosition, e.fx, 0.3);
+
+    const tock = e.ctx.createOscillator();
+    tock.frequency.setValueAtTime(on ? 140 : 110, t);
+    tock.frequency.exponentialRampToValueAtTime(70, t + 0.06);
+    const tockEnv = e.gain(0);
+    tockEnv.gain.setValueAtTime(0.0001, t);
+    tockEnv.gain.exponentialRampToValueAtTime(0.12, t + 0.003);
+    tockEnv.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
+    tock.connect(tockEnv).connect(tv);
+    tock.start(t);
+    tock.stop(t + 0.1);
+
+    const crackle = e.burst(e.white, t + 0.01, 0.12);
+    const crackleEnv = e.gain(0);
+    crackleEnv.gain.setValueAtTime(0.06, t + 0.01);
+    crackleEnv.gain.exponentialRampToValueAtTime(0.0001, t + 0.13);
+    crackle.connect(e.filter('highpass', 2500)).connect(crackleEnv).connect(tv);
+
+    if (!on) return;
+    const hum = e.ctx.createOscillator();
+    hum.type = 'sawtooth';
+    hum.frequency.value = 100;
+    const humEnv = e.gain(0);
+    humEnv.gain.setValueAtTime(0.0001, t + 0.02);
+    humEnv.gain.exponentialRampToValueAtTime(0.035, t + 0.06);
+    humEnv.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+    hum.connect(e.filter('lowpass', 400)).connect(humEnv).connect(tv);
+    hum.start(t);
+    hum.stop(t + 0.75);
   }
 
   private applyTvVolume(): void {
