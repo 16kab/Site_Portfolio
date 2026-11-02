@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
@@ -7,34 +7,54 @@ import { gzipSync } from 'node:zlib';
  * pages lazy-loadées. Le budget est délibérément proche de la mesure
  * réelle : toute dérive significative fait échouer la CI.
  *
+ * Les fichiers mesurés sont ceux que dist/index.html charge réellement :
+ * le script d'entrée et ses chunks préchargés (modulepreload). Depuis que
+ * le build a deux pages (site + /salon/), le code partagé (GSAP) vit dans
+ * un chunk commun : il faut le compter avec l'entrée.
+ *
  * Mesuré au 2026-07-17 : chunk d'entrée ≈ 179 kB gzip.
+ * Mesuré au 2026-11-02 : entrée + chunk partagé ≈ 178 kB gzip.
  */
-const ASSETS_DIR = 'dist/assets';
+const DIST_DIR = 'dist';
 const ENTRY_BUDGET_KB = 190;
 
 function gzipKb(filePath) {
   return gzipSync(readFileSync(filePath)).length / 1024;
 }
 
-const files = readdirSync(ASSETS_DIR);
-const entry = files.find((name) => /^index-.*\.js$/.test(name));
-
-if (!entry) {
+let html;
+try {
+  html = readFileSync(join(DIST_DIR, 'index.html'), 'utf8');
+} catch {
   console.error(
-    `❌ Chunk d'entrée introuvable dans ${ASSETS_DIR} — le build a-t-il tourné ?`,
+    `❌ ${DIST_DIR}/index.html introuvable — le build a-t-il tourné ?`,
   );
   process.exit(1);
 }
 
-const entryKb = gzipKb(join(ASSETS_DIR, entry));
-const rounded = entryKb.toFixed(1);
+const scripts = [
+  ...html.matchAll(/<script[^>]+type="module"[^>]+src="\/([^"]+\.js)"/g),
+  ...html.matchAll(/<link[^>]+rel="modulepreload"[^>]+href="\/([^"]+\.js)"/g),
+].map((match) => match[1]);
 
-console.log(`Chunk d'entrée : ${entry}`);
-console.log(`Poids gzip     : ${rounded} kB (budget ${ENTRY_BUDGET_KB} kB)`);
+if (scripts.length === 0) {
+  console.error("❌ Aucun script d'entrée trouvé dans dist/index.html.");
+  process.exit(1);
+}
 
-if (entryKb > ENTRY_BUDGET_KB) {
+let totalKb = 0;
+for (const file of scripts) {
+  const kb = gzipKb(join(DIST_DIR, file));
+  totalKb += kb;
+  console.log(`Chunk initial  : ${file} (${kb.toFixed(1)} kB)`);
+}
+console.log(
+  `Poids gzip     : ${totalKb.toFixed(1)} kB (budget ${ENTRY_BUDGET_KB} kB)`,
+);
+
+if (totalKb > ENTRY_BUDGET_KB) {
   console.error(
-    `❌ Budget dépassé de ${(entryKb - ENTRY_BUDGET_KB).toFixed(1)} kB.`,
+    `❌ Budget dépassé de ${(totalKb - ENTRY_BUDGET_KB).toFixed(1)} kB.`,
   );
   process.exit(1);
 }

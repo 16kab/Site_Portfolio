@@ -46,5 +46,12 @@ export default defineConfig({
     // Ne pas inliner les petits assets en base64 dans le CSS critique
     // (sinon les sous-ensembles woff2 < 4 Ko y sont embarqués)
     assetsInlineLimit: 0,
+    rollupOptions: {
+      // Deux pages : le site actuel et le prototype « Le Salon » (/salon/)
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        salon: path.resolve(__dirname, 'salon/index.html'),
+      },
+    },
   },
 });
