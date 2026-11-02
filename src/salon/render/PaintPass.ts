@@ -1,6 +1,8 @@
 import {
+  DataTexture,
   HalfFloatType,
   LinearFilter,
+  RepeatWrapping,
   ShaderMaterial,
   type Texture,
   Vector2,
@@ -10,6 +12,7 @@ import {
 } from 'three';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 import { config } from '../config';
+import brush from '../shaders/brush.glsl?raw';
 import grade from '../shaders/grade.glsl?raw';
 import kuwahara from '../shaders/kuwahara.glsl?raw';
 
@@ -24,16 +27,23 @@ export const FULLSCREEN_VERTEX = /* glsl */ `
 export function gradeUniforms() {
   return {
     uExposure: { value: 1 },
+    uContrast: { value: 1 },
+    uSaturation: { value: 1 },
     uShadowTint: { value: new Vector3() },
     uShadowLift: { value: 0 },
+    uHighlightTint: { value: new Vector3(1, 1, 1) },
   };
 }
 
 export function updateGradeUniforms(material: ShaderMaterial): void {
   const u = material.uniforms;
+  const { grade } = config;
   u.uExposure.value = config.render.exposure;
-  u.uShadowTint.value.fromArray(config.paint.shadowTint);
-  u.uShadowLift.value = config.paint.shadowLift;
+  u.uContrast.value = grade.contrast;
+  u.uSaturation.value = grade.saturation;
+  u.uShadowTint.value.fromArray(grade.shadowTint);
+  u.uShadowLift.value = grade.shadowLift;
+  u.uHighlightTint.value.fromArray(grade.highlightTint);
 }
 
 function pass(
@@ -60,16 +70,32 @@ function target(type = HalfFloatType): WebGLRenderTarget {
   });
 }
 
+/** Random values, linearly filtered: value noise for the brush streaks. */
+function noiseTexture(): DataTexture {
+  const size = 256;
+  const data = new Uint8Array(size * size * 4);
+  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 255;
+  const texture = new DataTexture(data, size, size);
+  texture.wrapS = RepeatWrapping;
+  texture.wrapT = RepeatWrapping;
+  texture.minFilter = LinearFilter;
+  texture.magFilter = LinearFilter;
+  texture.needsUpdate = true;
+  return texture;
+}
+
 /**
- * Oil-paint look (CLAUDE.md §2.1), computed at reduced resolution:
- * grade → structure tensor → tensor blur (separable) → anisotropic Kuwahara.
+ * Oil-paint look (CLAUDE.md §2.0-2.1), computed at reduced resolution:
+ * grade → structure tensor → tensor blur (separable) → anisotropic Kuwahara
+ * → brush streaks along the flow (stroke height kept in alpha).
  */
 export class PaintPass {
   private readonly prepared = target();
   private readonly tensor = target();
   private readonly tensorBlur = target();
   private readonly painted = target();
-  private readonly texel = new Vector2();
+  private readonly brushed = target();
+  readonly texel = new Vector2();
 
   private readonly prepare = pass(
     `${grade}
@@ -132,8 +158,19 @@ export class PaintPass {
     uSharpness: { value: 8 },
   });
 
+  private readonly brush = pass(brush, {
+    tColor: { value: null },
+    tTensor: { value: null },
+    tNoise: { value: noiseTexture() },
+    uTexel: { value: new Vector2() },
+    uWidth: { value: 2.5 },
+    uStep: { value: 1.5 },
+    uStrength: { value: 0.3 },
+  });
+
+  /** Painted colour (RGB) and stroke height (A). */
   get texture(): Texture {
-    return this.painted.texture;
+    return this.brushed.texture;
   }
 
   /** @param width,height size of the canvas in CSS pixels */
@@ -145,6 +182,7 @@ export class PaintPass {
       this.tensor,
       this.tensorBlur,
       this.painted,
+      this.brushed,
     ]) {
       rt.setSize(w, h);
     }
@@ -182,6 +220,15 @@ export class PaintPass {
     k.uniforms.uHardness.value = paint.hardness;
     k.uniforms.uSharpness.value = paint.sharpness;
     this.draw(renderer, this.kuwahara, this.painted);
+
+    const b = this.brush.material as ShaderMaterial;
+    b.uniforms.tColor.value = this.painted.texture;
+    b.uniforms.tTensor.value = this.tensor.texture;
+    b.uniforms.uTexel.value.copy(this.texel);
+    b.uniforms.uWidth.value = paint.strokeWidth;
+    b.uniforms.uStep.value = paint.strokeLength / 15;
+    b.uniforms.uStrength.value = paint.strokeStrength;
+    this.draw(renderer, this.brush, this.brushed);
   }
 
   private draw(

@@ -45,6 +45,9 @@ export class Composer {
           uCanvas: { value: 0 },
           uGrain: { value: 0 },
           uVignette: { value: 0 },
+          uPaintTexel: { value: this.paint.texel },
+          uImpasto: { value: 0 },
+          uEdgeBreak: { value: 0 },
           ...gradeUniforms(),
         },
         vertexShader: FULLSCREEN_VERTEX,
@@ -57,6 +60,9 @@ export class Composer {
           uniform float uCanvas;
           uniform float uGrain;
           uniform float uVignette;
+          uniform vec2 uPaintTexel;
+          uniform float uImpasto;
+          uniform float uEdgeBreak;
           varying vec2 vUv;
 
           float hash(vec2 p) {
@@ -76,11 +82,24 @@ export class Composer {
             vec4 scene = texture2D(tScene, vUv);
             vec3 sharp = grade(scene.rgb);
             float screen = 1.0 - scene.a;
-            vec3 painted = uPaint > 0.5 ? texture2D(tPaint, vUv).rgb : sharp;
+            vec2 px = vUv * uResolution;
+            vec3 painted = sharp;
+            if (uPaint > 0.5) {
+              // broken edges: the painted image is sampled with a slow wobble
+              vec2 wobble = vec2(noise(px * 0.035), noise(px.yx * 0.035 + 17.0)) - 0.5;
+              vec2 uv = vUv + wobble * 2.0 * uEdgeBreak * uPaintTexel;
+              vec4 paint = texture2D(tPaint, uv);
+              // impasto: stroke height (alpha) lit from the top left
+              vec2 toLight = vec2(-0.7071, 0.7071) * uPaintTexel;
+              float behind = texture2D(tPaint, uv - toLight).a;
+              float relief = paint.a - behind;
+              float luma = dot(paint.rgb, vec3(0.299, 0.587, 0.114));
+              painted = paint.rgb * (1.0 + relief * uImpasto * 1.6);
+              painted += relief * uImpasto * 0.35 * smoothstep(0.05, 0.6, luma);
+            }
             vec3 col = mix(painted, sharp, screen);
 
             // canvas: woven threads + uneven priming, in screen space
-            vec2 px = vUv * uResolution;
             float warp = sin(px.x * 1.9 + noise(px * 0.08) * 2.0);
             float weft = sin(px.y * 1.9 + noise(px.yx * 0.08) * 2.0);
             float weave = (warp * weft) * 0.5 + 0.5;
@@ -128,6 +147,8 @@ export class Composer {
     u.uCanvas.value = paint.canvasStrength;
     u.uGrain.value = paint.grainStrength;
     u.uVignette.value = paint.vignette;
+    u.uImpasto.value = paint.impasto;
+    u.uEdgeBreak.value = paint.edgeBreak;
     renderer.setRenderTarget(null);
     this.composite.render(renderer);
   }

@@ -7,7 +7,7 @@ export const config = {
   render: {
     maxPixelRatio: 1.5,
     msaaSamples: 4,
-    exposure: 1.3,
+    exposure: 1.2,
   },
 
   head: {
@@ -29,20 +29,35 @@ export const config = {
   paint: {
     enabled: true,
     /** Resolution of the paint pass relative to the canvas. */
-    scale: 0.5,
-    radius: 6,
+    scale: 0.4,
+    radius: 7,
     /** Anisotropy strength of the strokes. */
-    alpha: 1.0,
+    alpha: 1.6,
     hardness: 8,
     sharpness: 8,
     /** Pigment noise injected before the filter, turned into strokes. */
-    strokeNoise: 0.18,
-    canvasStrength: 0.09,
-    grainStrength: 0.045,
-    vignette: 0.55,
+    strokeNoise: 0.22,
+    /** Visible brush streaks along the shapes (in paint-pass pixels). */
+    strokeWidth: 4,
+    strokeLength: 36,
+    strokeStrength: 0.14,
+    /** Relief of the streaks catching the light. */
+    impasto: 0.08,
+    /** Wobble of the painted edges, in paint-pass pixels. */
+    edgeBreak: 1.6,
+    canvasStrength: 0.1,
+    grainStrength: 0.04,
+    vignette: 0.75,
+  },
+
+  /** Colour grade, No Rest for the Wicked style (CLAUDE.md §2.0). */
+  grade: {
+    contrast: 1.12,
+    saturation: 0.92,
     /** Shadows are lifted toward this tint, never pure black. */
-    shadowTint: [0.11, 0.06, 0.13] as [number, number, number],
-    shadowLift: 0.55,
+    shadowTint: [0.05, 0.055, 0.12] as [number, number, number],
+    shadowLift: 0.7,
+    highlightTint: [1.1, 0.97, 0.82] as [number, number, number],
   },
 
   crt: {
@@ -72,11 +87,11 @@ export const config = {
     tvFlicker: 0.12,
     /** How fast the TV light follows the picture color (per second). */
     tvColorFollow: 6,
-    lampIntensity: 5,
-    handFill: 0.35,
+    lampIntensity: 3.6,
+    handFill: 0.55,
     lampColor: '#ffad5c',
-    windowIntensity: 1.6,
-    ambientIntensity: 0.9,
+    windowIntensity: 7,
+    ambientIntensity: 0.6,
     headlightEvery: [14, 30] as [number, number],
     headlightIntensity: 5,
   },

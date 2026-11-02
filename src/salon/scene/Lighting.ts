@@ -57,9 +57,10 @@ export class Lighting {
     this.group.add(this.tv, this.tv.target);
 
     const { maxX } = layout.room;
-    this.window = new SpotLight('#6a86d8', 1, 8, 0.7, 1, 1.5);
+    this.window = new SpotLight('#6a86d8', 1, 8, 0.95, 1, 1.5);
     this.window.position.set(maxX + 1.2, 2.4, layout.window.z);
-    this.window.target.position.set(0, 0, layout.window.z + 0.3);
+    // cold spill on the plant corner and the TV's right flank
+    this.window.target.position.set(0.8, 0.5, -1.1);
     this.group.add(this.window, this.window.target);
 
     this.headlight = new SpotLight('#ffe9c4', 0, 10, 0.35, 0.8, 1.2);

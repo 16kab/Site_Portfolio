@@ -21,8 +21,18 @@ Cible : **desktop uniquement** pour la V1 (clavier + souris). Le mobile viendra 
 
 ## 2. Direction artistique
 
+### 2.0 Référence principale : *No Rest for the Wicked*
+*No Rest for the Wicked* (Moon Studios) est **la** référence de la DA : en cas de doute sur un choix visuel, on se demande « est-ce que ça pourrait être une image du jeu ? ». Ce qu'on en retient :
+- **la peinture se voit** : coups de pinceau épais et orientés (impasto), bords cassés, jamais de rendu lisse ou « 3D propre » ;
+- des **surfaces peintes à la main** (textures faites de touches de pinceau, pas de bruit ni de photo) ;
+- une image **sombre et contrastée** : grandes masses d'ombre, la lumière ne sculpte que ce qui compte ;
+- des **ombres froides** (bleu nuit, violet) et des **lumières chaudes et saturées**, une palette terreuse et un peu désaturée entre les deux ;
+- des formes **massives et lisibles**, aux silhouettes fortes, avec des raccords propres (pas de géométrie qui « flotte » ou s'interpénètre visiblement).
+
 ### 2.1 Rendu « peinture à l'huile »
 - Toute la scène 3D passe par un **filtre peinture en post-process** (filtre de Kuwahara anisotrope ou généralisé), qui transforme les formes en coups de pinceau.
+- Par-dessus, une passe de **coups de pinceau visibles** qui suivent l'orientation des formes, avec un léger relief (impasto) qui accroche la lumière, et des **bords cassés**.
+- Les matériaux portent des **textures de touches de pinceau** générées en code.
 - Ajouter une légère **texture de toile** (grain de canevas) en overlay, et un très léger grain animé.
 - **L'écran de la télé est exclu du filtre peinture** : il reste net, seulement traité avec l'effet CRT (§2.3). Le contraste « salon peint / écran net » est central dans la DA : la télé doit être hypnotique.
 

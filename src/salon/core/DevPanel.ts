@@ -18,10 +18,19 @@ export function createDevPanel(app: App): GUI {
   paint.add(config.paint, 'hardness', 1, 20, 0.5);
   paint.add(config.paint, 'sharpness', 1, 18, 0.5);
   paint.add(config.paint, 'strokeNoise', 0, 0.6, 0.01);
+  paint.add(config.paint, 'strokeWidth', 0.5, 6, 0.1);
+  paint.add(config.paint, 'strokeLength', 4, 60, 1);
+  paint.add(config.paint, 'strokeStrength', 0, 1.2, 0.01);
+  paint.add(config.paint, 'impasto', 0, 2, 0.01);
+  paint.add(config.paint, 'edgeBreak', 0, 5, 0.1);
   paint.add(config.paint, 'canvasStrength', 0, 0.4, 0.005);
   paint.add(config.paint, 'grainStrength', 0, 0.2, 0.005);
   paint.add(config.paint, 'vignette', 0, 1, 0.01);
-  paint.add(config.paint, 'shadowLift', 0, 2, 0.01);
+
+  const grade = gui.addFolder('Étalonnage');
+  grade.add(config.grade, 'contrast', 0.6, 2, 0.01);
+  grade.add(config.grade, 'saturation', 0, 1.6, 0.01);
+  grade.add(config.grade, 'shadowLift', 0, 2, 0.01);
 
   const crt = gui.addFolder('Écran CRT');
   crt.add(config.crt, 'curvature', 0, 0.3, 0.005);
@@ -48,7 +57,7 @@ export function createDevPanel(app: App): GUI {
   lights.add(config.lights, 'tvColorFollow', 0.5, 20, 0.5);
   lights.add(config.lights, 'lampIntensity', 0, 10, 0.1);
   lights.addColor(config.lights, 'lampColor');
-  lights.add(config.lights, 'windowIntensity', 0, 8, 0.1);
+  lights.add(config.lights, 'windowIntensity', 0, 16, 0.1);
   lights.add(config.lights, 'handFill', 0, 3, 0.05);
   lights.add(config.lights, 'ambientIntensity', 0, 3, 0.05);
   lights.add(config.lights, 'headlightIntensity', 0, 20, 0.5);
