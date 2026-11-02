@@ -82,6 +82,8 @@ function midiToHz(note: number): number {
 export class TvSound {
   private readonly speaker: AudioNode;
   private readonly programmeLevel: GainNode;
+  /** Static and zapping crackle, on their own fader. */
+  private readonly noise: GainNode;
   private readonly whine: GainNode;
   private channel = 0;
   private on = true;
@@ -93,7 +95,7 @@ export class TvSound {
     position: Vector3,
   ) {
     const e = engine;
-    const panner = e.panner(position, e.tv, 0.35);
+    const panner = e.busPanner(position, e.tv, 0.35);
     const shaper = e.ctx.createWaveShaper();
     const curve = new Float32Array(1024);
     for (let i = 0; i < curve.length; i++) {
@@ -112,7 +114,9 @@ export class TvSound {
     this.speaker = input;
 
     this.programmeLevel = e.gain(1);
-    this.programmeLevel.connect(this.speaker);
+    this.programmeLevel.connect(e.fader('tvMusic')).connect(this.speaker);
+    this.noise = e.fader('tvStatic');
+    this.noise.connect(this.speaker);
 
     this.whine = e.gain(0.004);
     const osc = e.ctx.createOscillator();
@@ -143,7 +147,7 @@ export class TvSound {
     g.setTargetAtTime(0, t, 0.01);
     g.setTargetAtTime(1, t + duration, 0.08);
     // the real zapping crackle; synthetic static covers longer gaps
-    const played = this.engine.play('zapping', this.speaker, { gain: 0.8 });
+    const played = this.engine.play('zapping', this.noise, { gain: 0.8 });
     if (!played || duration > 0.35) this.static(duration + 0.05);
   }
 
@@ -159,7 +163,7 @@ export class TvSound {
     noise
       .connect(e.filter('bandpass', 2400, 0.6))
       .connect(env)
-      .connect(this.speaker);
+      .connect(this.noise);
   }
 
   update(): void {

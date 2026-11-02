@@ -24,6 +24,7 @@ export class Audio {
   private muted = false;
   private tvOn = true;
   private channel = 0;
+  private ambienceLevel = config.audio.ambience;
 
   constructor(private readonly tvPosition: Vector3) {}
 
@@ -50,6 +51,8 @@ export class Audio {
     const engine = this.engine;
     if (engine?.ctx.state !== 'running') return;
     engine.updateListener(head, forward, up);
+    engine.applyMix();
+    if (config.audio.ambience !== this.ambienceLevel) this.applyAmbienceLevel();
     this.ambience?.update(dt);
     this.neighbors?.update(dt);
     this.tvSound?.update();
@@ -109,7 +112,7 @@ export class Audio {
     const e = this.engine;
     if (!e) return;
     const t = e.now;
-    const tv = e.panner(this.tvPosition, e.fx, 0.3);
+    const tv = e.panner(this.tvPosition, 'tvPower', 0.3);
     // switching off: the real sound of a CRT tube collapsing
     if (!on && e.play('crtOff', tv, { gain: 0.5 })) return;
 
@@ -153,6 +156,7 @@ export class Audio {
   private applyAmbienceLevel(): void {
     const e = this.engine;
     if (!e) return;
+    this.ambienceLevel = config.audio.ambience;
     const level = config.audio.ambience * (this.tvOn ? 1 : 1.4);
     e.ambience.gain.setTargetAtTime(level, e.now, 1.5);
   }

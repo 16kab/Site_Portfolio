@@ -17,7 +17,7 @@ export class CatVoice {
 
   constructor(private readonly engine: AudioEngine) {
     const e = engine;
-    this.panner = e.panner(new Vector3(0, 0.2, 0), e.ambience, 0.35);
+    this.panner = e.panner(new Vector3(0, 0.2, 0), 'cat', 0.35);
     this.panner.refDistance = 0.6;
     // recorded very close to the cat: soften the harsh top
     const soft = e.filter('lowpass', 1400, 0.7);

@@ -22,7 +22,7 @@ export class Neighbors {
   constructor(private readonly engine: AudioEngine) {
     const e = engine;
     const where = new Vector3(layout.room.minX - 0.5, 1.4, 0.3);
-    const panner = e.panner(where, e.ambience, 0.55);
+    const panner = e.panner(where, 'neighbors', 0.55);
     // through the wall: 24 dB/oct above ~330 Hz and a little boom
     const input = e.filter('highpass', 70, 0.7);
     const boom = e.filter('peaking', 150, 1.1);

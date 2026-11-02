@@ -2,6 +2,8 @@ import type { Vector3 } from 'three';
 import { config } from '../config';
 import { SampleBank, type SampleName } from './samples';
 
+export type MixChannel = keyof typeof config.audio.mix;
+
 type PlayOptions = {
   when?: number;
   gain?: number;
@@ -32,6 +34,10 @@ export class AudioEngine {
   readonly pink: AudioBuffer;
   readonly brown: AudioBuffer;
   readonly samples: SampleBank;
+  /** Every fader node, by channel, kept in sync with config.audio.mix. */
+  private readonly faders = new Map<MixChannel, GainNode[]>();
+  private readonly applied = new Map<MixChannel, number>();
+  private appliedMaster = config.audio.master;
 
   constructor() {
     const ctx = new AudioContext();
@@ -79,20 +85,63 @@ export class AudioEngine {
     return this.ctx.currentTime;
   }
 
-  /** HRTF panner at a world position, feeding `bus` (and the reverb). */
-  panner(position: Vector3, bus: AudioNode, reverb = 0.3): PannerNode {
+  /**
+   * A fader of the mix (config.audio.mix[channel]); the caller connects it.
+   * Several nodes can share a channel: they all follow the same value.
+   */
+  fader(channel: MixChannel): GainNode {
+    const node = this.gain(config.audio.mix[channel]);
+    const list = this.faders.get(channel) ?? [];
+    list.push(node);
+    this.faders.set(channel, list);
+    return node;
+  }
+
+  /** Applies the dev-panel values (master + faders) when they change. */
+  applyMix(): void {
+    const t = this.now;
+    if (config.audio.master !== this.appliedMaster) {
+      this.appliedMaster = config.audio.master;
+      this.master.gain.setTargetAtTime(this.appliedMaster, t, 0.05);
+    }
+    for (const [channel, nodes] of this.faders) {
+      const value = config.audio.mix[channel];
+      if (this.applied.get(channel) === value) continue;
+      this.applied.set(channel, value);
+      for (const node of nodes) node.gain.setTargetAtTime(value, t, 0.05);
+    }
+  }
+
+  /**
+   * HRTF panner at a world position, on a mix channel: its fader scales
+   * both the dry sound and its share of the room reverb.
+   */
+  panner(position: Vector3, channel: MixChannel, reverb = 0.3): PannerNode {
+    const bus = channel === 'tvPower' ? this.fx : this.ambience;
     const panner = this.ctx.createPanner();
     panner.panningModel = 'HRTF';
     panner.distanceModel = 'inverse';
     panner.refDistance = 1;
     panner.rolloffFactor = 1;
     this.place(panner, position);
-    panner.connect(bus);
+    const dry = this.fader(channel);
+    panner.connect(dry).connect(bus);
     if (reverb > 0) {
-      const send = this.ctx.createGain();
-      send.gain.value = reverb;
-      panner.connect(send).connect(this.room);
+      const wet = this.fader(channel);
+      wet.connect(this.room);
+      panner.connect(this.gain(reverb)).connect(wet);
     }
+    return panner;
+  }
+
+  /** Panner straight into a bus, without a mix fader (the TV speaker). */
+  busPanner(position: Vector3, bus: AudioNode, reverb = 0.3): PannerNode {
+    const panner = this.ctx.createPanner();
+    panner.panningModel = 'HRTF';
+    panner.distanceModel = 'inverse';
+    this.place(panner, position);
+    panner.connect(bus);
+    if (reverb > 0) panner.connect(this.gain(reverb)).connect(this.room);
     return panner;
   }
 

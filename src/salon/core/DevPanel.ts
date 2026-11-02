@@ -62,6 +62,40 @@ export function createDevPanel(app: App): GUI {
   lights.add(config.lights, 'ambientIntensity', 0, 3, 0.05);
   lights.add(config.lights, 'headlightIntensity', 0, 20, 0.5);
 
+  const sound = gui.addFolder('Mixage (son)');
+  sound.add(config.audio, 'master', 0, 1.5, 0.01).name('général');
+  sound.add(config.audio, 'ambience', 0, 2, 0.01).name('ambiance (tout)');
+  const labels: Record<keyof typeof config.audio.mix, string> = {
+    city: 'ville (fenêtre)',
+    scooter: 'scooter',
+    siren: 'sirène',
+    neighbors: 'voisins',
+    fridge: 'frigo',
+    clock: 'horloge',
+    creaks: 'parquet',
+    upstairs: 'voisin du dessus',
+    roomTone: 'air de la pièce',
+    cat: 'chat',
+    tvMusic: 'télé : programme',
+    tvStatic: 'télé : neige / zapping',
+    tvPower: 'télé : allumage / extinction',
+  };
+  for (const key of Object.keys(labels) as (keyof typeof labels)[]) {
+    sound.add(config.audio.mix, key, 0, 3, 0.01).name(labels[key]);
+  }
+  sound
+    .add(
+      {
+        copy: () => {
+          const values = JSON.stringify({ ...config.audio }, null, 2);
+          void navigator.clipboard?.writeText(values);
+          console.info(`[mix] copied to clipboard:\n${values}`);
+        },
+      },
+      'copy',
+    )
+    .name('copier les réglages');
+
   const zap = gui.addFolder('Zapping');
   zap.add(config.zapping, 'duration', 0.05, 0.8, 0.01);
   zap.add(config.zapping, 'noise', 0, 1, 0.01);

@@ -100,6 +100,22 @@ export const config = {
     master: 0.6,
     /** Room ambience level (city, neighbours, fridge, clock, cat). */
     ambience: 0.9,
+    /** Per-source faders (1 = as designed), tuned from the dev panel. */
+    mix: {
+      city: 1,
+      scooter: 1,
+      siren: 1,
+      neighbors: 1,
+      fridge: 1,
+      clock: 1,
+      creaks: 1,
+      upstairs: 1,
+      roomTone: 1,
+      cat: 1,
+      tvMusic: 1,
+      tvStatic: 1,
+      tvPower: 1,
+    },
   },
 };
 
