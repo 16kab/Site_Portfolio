@@ -37,9 +37,9 @@ export class Ambience {
       .connect(toneFader);
 
     // the city, through the window glass
-    const window = new Vector3(layout.room.maxX + 0.3, 1.5, layout.window.z);
-    this.cityPanner = e.panner(window, 'city', 0.25);
-    this.scooterPanner = e.panner(window, 'scooter', 0.25);
+    const street = layout.street.sound;
+    this.cityPanner = e.panner(street, 'city', 0.25);
+    this.scooterPanner = e.panner(street, 'scooter', 0.25);
     const glass = e.filter('lowpass', 5000, 0.6);
     glass.connect(this.cityPanner);
     e.loopSample('cityClosedWindow', glass, 0.9);
@@ -49,7 +49,7 @@ export class Ambience {
     this.nightLevel = e.loopSample('cityNight', night, 0.45);
 
     // fridge in the kitchen, behind and to the right
-    const kitchen = e.panner(new Vector3(2.2, 0.9, 2.4), 'fridge', 0.4);
+    const kitchen = e.panner(layout.fridge, 'fridge', 0.4);
     this.fridge = e.loopSample('fridge', kitchen, 0);
 
     // pendulum wall clock
@@ -131,8 +131,7 @@ export class Ambience {
   /** Fire brigade passing a few streets away. */
   private siren(): void {
     const e = this.engine;
-    const far = new Vector3(layout.room.maxX + 25, 4, layout.window.z - 20);
-    const panner = e.panner(far, 'siren', 0.15);
+    const panner = e.panner(layout.street.siren, 'siren', 0.15);
     panner.refDistance = 25;
     const distance = e.filter('lowpass', 1800, 0.7);
     distance.connect(panner);

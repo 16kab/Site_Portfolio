@@ -17,17 +17,7 @@ type NodeId =
   | 'stand';
 
 /** Waypoints on the floor and on furniture (y = surface height). */
-const NODES: Record<NodeId, Vector3> = {
-  entryLeft: new Vector3(-2.0, 0, 0.45),
-  entryRight: new Vector3(2.0, 0, 0.3),
-  left: new Vector3(-0.85, 0, 0.15),
-  lamp: new Vector3(-0.85, 0, -0.5),
-  front: new Vector3(0.05, 0, -0.68),
-  rug: new Vector3(0.75, 0, -0.55),
-  right: new Vector3(0.95, 0, 0.15),
-  table: new Vector3(-0.02, 0.445, -0.06),
-  stand: new Vector3(0.6, layout.tvStandSize.y, -1.18),
-};
+const NODES: Record<NodeId, Vector3> = layout.cat;
 
 /** Walkable links; `jump` ones go up or down a piece of furniture. */
 const EDGES: [NodeId, NodeId, boolean][] = [

@@ -58,15 +58,14 @@ export class Lighting {
     this.tv.shadow.camera.far = 8;
     this.group.add(this.tv, this.tv.target);
 
-    const { maxX } = layout.room;
     this.window = new SpotLight('#6a86d8', 1, 8, 0.95, 1, 1.5);
-    this.window.position.set(maxX + 1.2, 2.4, layout.window.z);
+    this.window.position.copy(layout.street.light);
     // cold spill on the plant corner and the TV's right flank
-    this.window.target.position.set(0.8, 0.5, -1.1);
+    this.window.target.position.copy(layout.street.target);
     this.group.add(this.window, this.window.target);
 
     this.headlight = new SpotLight('#ffe9c4', 0, 10, 0.35, 0.8, 1.2);
-    this.headlight.position.set(maxX + 0.8, 0.9, layout.window.z);
+    this.headlight.position.copy(layout.street.headlight);
     this.headlight.target = this.headlightTarget;
     this.group.add(this.headlight, this.headlightTarget);
   }

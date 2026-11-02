@@ -25,3 +25,4 @@ The "Le Salon" prototype (`/salon/`) uses sound recordings by Joseph Sardin from
 | parquet-creak-2.mp3 | [#3053 Squeaking parquet #3](https://bigsoundbank.com/squeaking-parquet-3-s3053.html) |
 | parquet-creak-3.mp3 | [#3059 Squeaking parquet #9](https://bigsoundbank.com/squeaking-parquet-9-s3059.html) |
 | upstairs-floor.mp3 | [#0518 Floating Floor Squeaks](https://bigsoundbank.com/floating-floor-squeaks-s0518.html) |
+The "Le Salon" apartment (`public/salon/models/chinatown/`) is based on ["An Old Cheap Room in Chinatown"](https://sketchfab.com/3d-models/an-old-cheap-room-in-chinatown-9c2ec26be3cb4d9b91d51755e7210fdd) by [Qifan Zhang](https://sketchfab.com/qifanzhang), licensed under [CC BY 4.0](http://creativecommons.org/licenses/by/4.0/). Changes: textures resized, repainted with a Kuwahara filter and converted to WebP (`scripts/build-apartment.mjs`); the desk chair and the backpack are removed at load time.

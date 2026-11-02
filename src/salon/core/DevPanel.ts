@@ -108,6 +108,36 @@ export function createDevPanel(app: App): GUI {
     )
     .name('copier les réglages');
 
+  const flat = gui.addFolder('Appartement');
+  const place = () => app.apartment.applyTransform();
+  const position = config.apartment.position;
+  flat.add(position, '0', -10, 10, 0.01).name('décalage x').onChange(place);
+  flat.add(position, '1', -3, 3, 0.01).name('décalage y').onChange(place);
+  flat.add(position, '2', -10, 10, 0.01).name('décalage z').onChange(place);
+  flat
+    .add(config.apartment, 'rotationY', -180, 180, 1)
+    .name('rotation')
+    .onChange(place);
+  flat
+    .add(config.apartment, 'scale', 0.1, 3, 0.01)
+    .name('échelle')
+    .onChange(place);
+  flat
+    .add(
+      {
+        copy: () =>
+          navigator.clipboard.writeText(
+            JSON.stringify({
+              position: config.apartment.position,
+              rotationY: config.apartment.rotationY,
+              scale: config.apartment.scale,
+            }),
+          ),
+      },
+      'copy',
+    )
+    .name('copier le placement');
+
   const zap = gui.addFolder('Zapping');
   zap.add(config.zapping, 'duration', 0.05, 0.8, 0.01);
   zap.add(config.zapping, 'noise', 0, 1, 0.01);

@@ -9,6 +9,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   MeshStandardMaterial,
+  type Object3D,
   PlaneGeometry,
   ShaderMaterial,
   Shape,
@@ -40,6 +41,14 @@ export class Room {
   readonly group = new Group();
   private city: ShaderMaterial;
   private readonly hands: Group[] = [];
+  private readonly furniture: Object3D[];
+
+  /** Inside the downloaded apartment: only the city, coffee table and rug. */
+  keepFurnitureOnly(): void {
+    for (const child of this.group.children) {
+      child.visible = this.furniture.includes(child);
+    }
+  }
 
   constructor() {
     const { minX, maxX, minZ, maxZ, height } = layout.room;
@@ -90,14 +99,15 @@ export class Room {
 
     this.city = cityMaterial();
     const city = new Mesh(new PlaneGeometry(9, 5), this.city);
-    city.rotation.y = -Math.PI / 2;
-    city.position.set(maxX + 3, 1.6, layout.window.z);
+    city.rotation.y = layout.street.cityTurn;
+    city.position.copy(layout.street.city);
     this.group.add(city, this.windowFrame(), ...this.curtains());
 
+    // what still belongs in front of the sofa inside a downloaded flat
+    this.furniture = [city, this.coffeeTable(), this.rug()];
     this.group.add(
       this.tvStand(),
-      this.coffeeTable(),
-      this.rug(),
+      ...this.furniture,
       this.plant(),
       this.clock(),
       ...this.frames(),

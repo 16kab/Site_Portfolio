@@ -114,12 +114,12 @@ export class LightShafts {
   private readonly tv = material();
 
   constructor(screenCenter: Vector3) {
-    const { maxX, height } = layout.room;
+    const { height } = layout.room;
     const lamp = layout.lamp;
     this.beams = {
       window: {
-        from: new Vector3(maxX + 0.05, 1.75, layout.window.z),
-        to: new Vector3(0.35, 0, 0.05),
+        from: layout.street.shaftFrom.clone(),
+        to: layout.street.shaftTo.clone(),
         rFrom: 0.55,
         rTo: 1.05,
       },

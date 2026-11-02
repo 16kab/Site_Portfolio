@@ -4,6 +4,7 @@ import '@fontsource/vt323/400.css';
 import './salon.css';
 import { config } from './config';
 import { App } from './core/App';
+import { applyApartmentLayout } from './scene/layout';
 
 const container = document.getElementById('salon');
 
@@ -34,6 +35,17 @@ function hint(root: HTMLElement): void {
   window.setTimeout(() => element.classList.add('is-hidden'), 7000);
 }
 
+async function reachable(url: string): Promise<boolean> {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    // the dev server answers unknown paths with the HTML page
+    const type = response.headers.get('content-type') ?? '';
+    return response.ok && !type.includes('text/html');
+  } catch {
+    return false;
+  }
+}
+
 async function boot(root: HTMLElement): Promise<void> {
   if (!webglAvailable()) {
     fallback(root);
@@ -41,6 +53,13 @@ async function boot(root: HTMLElement): Promise<void> {
   }
   // the OSD canvas needs the pixel font before its first draw
   await document.fonts.load('32px VT323').catch(() => undefined);
+  // the downloaded apartment moves the TV, lamp and cat paths: decide
+  // before anything is built (a missing file keeps the code room)
+  if (config.apartment.enabled && (await reachable(config.apartment.url))) {
+    applyApartmentLayout();
+  } else {
+    config.apartment.enabled = false;
+  }
   const app = new App(root);
   await app.start();
   hint(root);

@@ -114,6 +114,23 @@ export const config = {
     candle: false,
   },
 
+  /**
+   * Downloaded apartment replacing the code room (scene/Apartment.ts).
+   * Missing file = the code room stays.
+   */
+  apartment: {
+    enabled: true,
+    url: '/salon/models/chinatown/scene.gltf',
+    /** Model offset (m), turn (degrees) and scale, to fit it round the sofa. */
+    position: [1.35, 0, 1.55] as [number, number, number],
+    rotationY: 180,
+    scale: 1,
+    /** Model objects removed: they stand between the sofa and the TV. */
+    hide: ['chair', 'backpack'],
+    /** Keep our coffee table props (books, pizza box, tapes…). */
+    keepClutter: false,
+  },
+
   audio: {
     master: 0.6,
     /** Room ambience level (city, neighbours, fridge, clock, cat). */

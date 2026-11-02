@@ -17,6 +17,7 @@ import { ProjectPage } from '../project/ProjectPage';
 import { Composer } from '../render/Composer';
 import { createCrtMaterial, updateCrtMaterial } from '../render/CrtMaterial';
 import { applyLook, LOOK_LABELS, toggleLook } from '../render/looks';
+import { Apartment } from '../scene/Apartment';
 import { Candle } from '../scene/Candle';
 import { Cat } from '../scene/Cat';
 import { CatBrain } from '../scene/CatBrain';
@@ -46,6 +47,8 @@ export class App {
   private readonly timer = new Timer();
   private readonly head: HeadCamera;
   private readonly room = new Room();
+  readonly apartment = new Apartment();
+  private readonly clutter = new Clutter();
   private readonly lamp = new Lamp();
   private readonly hand = new Hand();
   private readonly tv: Tv;
@@ -130,11 +133,12 @@ export class App {
 
     this.scene.add(
       this.room.group,
+      this.apartment.group,
       this.tv.group,
       this.sofa.group,
       this.shafts.group,
       this.candle.group,
-      new Clutter().group,
+      this.clutter.group,
       this.lamp.group,
       this.lighting.group,
       this.cat.group,
@@ -154,6 +158,11 @@ export class App {
 
   /** Compiles every shader and renders once before showing anything. */
   async start(): Promise<void> {
+    // a downloaded apartment, when present, replaces the code room
+    if (await this.apartment.load()) {
+      this.room.keepFurnitureOnly();
+      this.clutter.group.visible = config.apartment.keepClutter;
+    }
     this.channelRenderer.render(this.renderer, 0, 0);
     await this.renderer.compileAsync(this.scene, this.head.camera);
     this.frame();
