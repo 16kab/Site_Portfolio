@@ -22,12 +22,23 @@ import {
  * 1. scene → HDR target (the CRT screen writes alpha 0 = its own mask)
  * 2. paint filter at reduced resolution
  * 3. composite: painted room + sharp screen + canvas weave + grain + vignette
+ * 4. transitions on top (CLAUDE.md §4.5, §4.7): radial zoom blur toward the
+ *    TV, chromatic split, white flash — driven by `transition`.
  */
 export class Composer {
   private readonly scene: WebGLRenderTarget;
   private readonly paint = new PaintPass();
   private readonly resolution = new Vector2();
   private readonly composite: FullScreenQuad;
+  /** Transition state, animated by the app (all 0 at rest). */
+  readonly transition = {
+    /** 0..1: zoom blur + chromatic split toward `center`. */
+    warp: 0,
+    /** 0..1: white flash. */
+    flash: 0,
+    /** Screen-space point (0..1) the room is sucked toward. */
+    center: new Vector2(0.5, 0.5),
+  };
 
   constructor(private readonly renderer: WebGLRenderer) {
     this.scene = new WebGLRenderTarget(1, 1, {
@@ -48,6 +59,9 @@ export class Composer {
           uPaintTexel: { value: this.paint.texel },
           uImpasto: { value: 0 },
           uEdgeBreak: { value: 0 },
+          uWarp: { value: 0 },
+          uFlash: { value: 0 },
+          uCenter: { value: this.transition.center },
           ...gradeUniforms(),
         },
         vertexShader: FULLSCREEN_VERTEX,
@@ -63,6 +77,9 @@ export class Composer {
           uniform vec2 uPaintTexel;
           uniform float uImpasto;
           uniform float uEdgeBreak;
+          uniform float uWarp;
+          uniform float uFlash;
+          uniform vec2 uCenter;
           varying vec2 vUv;
 
           float hash(vec2 p) {
@@ -78,16 +95,17 @@ export class Composer {
               mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
           }
 
-          void main() {
-            vec4 scene = texture2D(tScene, vUv);
+          // painted room + sharp screen at a given point; alpha = screen mask
+          vec4 shade(vec2 at) {
+            vec4 scene = texture2D(tScene, at);
             vec3 sharp = grade(scene.rgb);
             float screen = 1.0 - scene.a;
-            vec2 px = vUv * uResolution;
+            vec2 px = at * uResolution;
             vec3 painted = sharp;
             if (uPaint > 0.5) {
               // broken edges: the painted image is sampled with a slow wobble
               vec2 wobble = vec2(noise(px * 0.035), noise(px.yx * 0.035 + 17.0)) - 0.5;
-              vec2 uv = vUv + wobble * 2.0 * uEdgeBreak * uPaintTexel;
+              vec2 uv = at + wobble * 2.0 * uEdgeBreak * uPaintTexel;
               vec4 paint = texture2D(tPaint, uv);
               // impasto: stroke height (alpha) lit from the top left
               vec2 toLight = vec2(-0.7071, 0.7071) * uPaintTexel;
@@ -97,7 +115,27 @@ export class Composer {
               painted = paint.rgb * (1.0 + relief * uImpasto * 1.6);
               painted += relief * uImpasto * 0.35 * smoothstep(0.05, 0.6, luma);
             }
-            vec3 col = mix(painted, sharp, screen);
+            return vec4(mix(painted, sharp, screen), screen);
+          }
+
+          void main() {
+            vec4 base = shade(vUv);
+            vec3 col = base.rgb;
+            float screen = base.a;
+            vec2 px = vUv * uResolution;
+            if (uWarp > 0.001) {
+              // zoom blur toward the TV, red and blue pulled apart
+              vec2 toCenter = vUv - uCenter;
+              vec3 sum = vec3(0.0);
+              for (int i = 0; i < 10; i++) {
+                float k = float(i) / 9.0;
+                float s = 1.0 - uWarp * 0.45 * k;
+                sum.r += shade(uCenter + toCenter * (s + uWarp * 0.02)).r;
+                sum.g += shade(uCenter + toCenter * s).g;
+                sum.b += shade(uCenter + toCenter * (s - uWarp * 0.02)).b;
+              }
+              col = mix(col, sum / 10.0, min(1.0, uWarp * 1.5));
+            }
 
             // canvas: woven threads + uneven priming, in screen space
             float warp = sin(px.x * 1.9 + noise(px * 0.08) * 2.0);
@@ -112,6 +150,7 @@ export class Composer {
             vec2 v = vUv - 0.5;
             v.x *= uResolution.x / uResolution.y;
             col *= mix(1.0, smoothstep(1.15, 0.25, length(v)), uVignette);
+            col = mix(col, vec3(1.0, 0.97, 0.92), uFlash);
 
             gl_FragColor = vec4(col, 1.0);
           }`,
@@ -149,6 +188,8 @@ export class Composer {
     u.uVignette.value = paint.vignette;
     u.uImpasto.value = paint.impasto;
     u.uEdgeBreak.value = paint.edgeBreak;
+    u.uWarp.value = this.transition.warp;
+    u.uFlash.value = this.transition.flash;
     renderer.setRenderTarget(null);
     this.composite.render(renderer);
   }

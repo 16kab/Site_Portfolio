@@ -372,7 +372,7 @@ Tant que les vraies vidéos ne sont pas fournies : utiliser des **fausses chaîn
 
 ## 11. Feuille de route
 
-### Phase 1 — Prototype du cœur
+### Phase 1 — Prototype du cœur ✅
 - Salon de base construit en code, caméra assise, tête à la souris avec inertie.
 - Télé avec shader CRT, fausses chaînes, zapping clavier, grésillement.
 - Main + télécommande avec appui animé sur les boutons.
@@ -381,7 +381,7 @@ Tant que les vraies vidéos ne sont pas fournies : utiliser des **fausses chaîn
 - Mode tactile/gyroscope de test.
 **Critère de validation** : en zappant, l'ambiance doit déjà être grisante.
 
-### Phase 2 — Entrer et sortir
+### Phase 2 — Entrer et sortir ✅
 - Machine à états complète.
 - Aspiration dans la télé, page projet de base, éjection avec les pieds qui se lèvent.
 

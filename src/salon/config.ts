@@ -115,6 +115,7 @@ export const config = {
       tvMusic: 1,
       tvStatic: 1,
       tvPower: 1,
+      transitions: 1,
     },
   },
 };

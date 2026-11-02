@@ -1,3 +1,5 @@
+import '@fontsource/manrope/400.css';
+import '@fontsource/manrope/600.css';
 import '@fontsource/vt323/400.css';
 import './salon.css';
 import { config } from './config';

@@ -79,6 +79,7 @@ export function createDevPanel(app: App): GUI {
     tvMusic: 'télé : programme',
     tvStatic: 'télé : neige / zapping',
     tvPower: 'télé : allumage / extinction',
+    transitions: 'aspiration / éjection',
   };
   for (const key of Object.keys(labels) as (keyof typeof labels)[]) {
     sound.add(config.audio.mix, key, 0, 3, 0.01).name(labels[key]);

@@ -25,6 +25,8 @@ export class Audio {
   private tvOn = true;
   private channel = 0;
   private ambienceLevel = config.audio.ambience;
+  private insideTv = false;
+  private transitions: GainNode | null = null;
 
   constructor(private readonly tvPosition: Vector3) {}
 
@@ -40,6 +42,8 @@ export class Audio {
     this.neighbors = new Neighbors(engine);
     this.tvSound = new TvSound(engine, this.tvPosition);
     this.cat = new CatVoice(engine);
+    this.transitions = engine.fader('transitions');
+    this.transitions.connect(engine.fx);
     this.tvSound.setChannel(this.channel);
     this.tvSound.setPower(this.tvOn);
     this.applyTvVolume();
@@ -146,6 +150,117 @@ export class Audio {
     hum.stop(t + 0.75);
   }
 
+  /** Inside the TV the room fades far away, the channel goes quiet. */
+  setInsideTv(inside: boolean): void {
+    this.insideTv = inside;
+    this.tvSound?.setPower(!inside && this.tvOn);
+    this.applyAmbienceLevel();
+  }
+
+  /** Being sucked into the screen: a rising woosh + electric saturation. */
+  suck(duration: number): void {
+    const e = this.engine;
+    const out = this.transitions;
+    if (!e || !out) return;
+    const t = e.now;
+    const air = e.burst(e.pink, t, duration);
+    const band = e.filter('bandpass', 200, 1.2);
+    band.frequency.setValueAtTime(180, t);
+    band.frequency.exponentialRampToValueAtTime(4500, t + duration);
+    const airLevel = e.gain(0);
+    airLevel.gain.setValueAtTime(0.0001, t);
+    airLevel.gain.exponentialRampToValueAtTime(0.6, t + duration * 0.95);
+    airLevel.gain.linearRampToValueAtTime(0, t + duration + 0.05);
+    air.connect(band).connect(airLevel).connect(out);
+
+    const buzz = e.ctx.createOscillator();
+    buzz.type = 'sawtooth';
+    buzz.frequency.setValueAtTime(45, t);
+    buzz.frequency.exponentialRampToValueAtTime(420, t + duration);
+    const crush = e.ctx.createWaveShaper();
+    const curve = new Float32Array(256);
+    for (let i = 0; i < curve.length; i++) {
+      curve[i] = Math.tanh(((i / 255) * 2 - 1) * 6);
+    }
+    crush.curve = curve;
+    const buzzLevel = e.gain(0);
+    buzzLevel.gain.setValueAtTime(0.0001, t);
+    buzzLevel.gain.exponentialRampToValueAtTime(0.08, t + duration);
+    buzzLevel.gain.linearRampToValueAtTime(0, t + duration + 0.05);
+    buzz
+      .connect(crush)
+      .connect(e.filter('lowpass', 2500))
+      .connect(buzzLevel)
+      .connect(out);
+    buzz.start(t);
+    buzz.stop(t + duration + 0.1);
+  }
+
+  /**
+   * Thrown back out of the screen: falling woosh, then (after `impact`
+   * seconds) the body hitting the cushions and the sofa springs.
+   */
+  eject(impact: number): void {
+    const e = this.engine;
+    const out = this.transitions;
+    if (!e || !out) return;
+    const t = e.now;
+    const air = e.burst(e.pink, t, impact);
+    const band = e.filter('bandpass', 3000, 1.2);
+    band.frequency.setValueAtTime(3500, t);
+    band.frequency.exponentialRampToValueAtTime(200, t + impact);
+    const airLevel = e.gain(0.5);
+    airLevel.gain.setValueAtTime(0.5, t);
+    airLevel.gain.exponentialRampToValueAtTime(0.0001, t + impact);
+    air.connect(band).connect(airLevel).connect(out);
+
+    // "pouf": a big soft mass of fabric and foam
+    const hit = t + impact;
+    const pouf = e.burst(e.brown, hit, 0.35);
+    const poufLevel = e.gain(0);
+    poufLevel.gain.setValueAtTime(0.0001, hit);
+    poufLevel.gain.exponentialRampToValueAtTime(0.9, hit + 0.01);
+    poufLevel.gain.exponentialRampToValueAtTime(0.0001, hit + 0.35);
+    pouf.connect(e.filter('lowpass', 500)).connect(poufLevel).connect(out);
+    const thud = e.ctx.createOscillator();
+    thud.frequency.setValueAtTime(75, hit);
+    thud.frequency.exponentialRampToValueAtTime(40, hit + 0.2);
+    const thudLevel = e.gain(0);
+    thudLevel.gain.setValueAtTime(0.0001, hit);
+    thudLevel.gain.exponentialRampToValueAtTime(0.35, hit + 0.008);
+    thudLevel.gain.exponentialRampToValueAtTime(0.0001, hit + 0.25);
+    thud.connect(thudLevel).connect(out);
+    thud.start(hit);
+    thud.stop(hit + 0.3);
+
+    // old springs: detuned metallic "boing" with a fast wobble
+    for (const [frequency, delay] of [
+      [212, 0.03],
+      [287, 0.06],
+    ] as const) {
+      const at = hit + delay;
+      const spring = e.ctx.createOscillator();
+      spring.type = 'triangle';
+      spring.frequency.setValueAtTime(frequency * 1.15, at);
+      spring.frequency.exponentialRampToValueAtTime(frequency, at + 0.12);
+      const wobble = e.ctx.createOscillator();
+      wobble.frequency.value = 17;
+      wobble.connect(e.gain(frequency * 0.04)).connect(spring.frequency);
+      const level = e.gain(0);
+      level.gain.setValueAtTime(0.0001, at);
+      level.gain.exponentialRampToValueAtTime(0.05, at + 0.01);
+      level.gain.exponentialRampToValueAtTime(0.0001, at + 0.9);
+      spring
+        .connect(e.filter('bandpass', frequency * 2, 3))
+        .connect(level)
+        .connect(out);
+      spring.start(at);
+      wobble.start(at);
+      spring.stop(at + 1);
+      wobble.stop(at + 1);
+    }
+  }
+
   private applyTvVolume(): void {
     const e = this.engine;
     if (!e) return;
@@ -157,7 +272,8 @@ export class Audio {
     const e = this.engine;
     if (!e) return;
     this.ambienceLevel = config.audio.ambience;
-    const level = config.audio.ambience * (this.tvOn ? 1 : 1.4);
+    const level =
+      config.audio.ambience * (this.tvOn ? 1 : 1.4) * (this.insideTv ? 0.3 : 1);
     e.ambience.gain.setTargetAtTime(level, e.now, 1.5);
   }
 }

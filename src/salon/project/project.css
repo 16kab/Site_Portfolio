@@ -1,0 +1,392 @@
+/* Project page, "inside the TV" (CLAUDE.md §4.6) */
+
+.project {
+  --accent: #7dff86;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 35%, #12161a 0%, #07080a 70%);
+  color: #e9e1d2;
+  border-radius: 3vmin / 4vmin;
+  transform-origin: 50% 50%;
+}
+
+.project[hidden] {
+  display: none;
+}
+
+.project.is-on {
+  animation: project-crt-on 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.project.is-off {
+  animation: project-crt-off 0.32s ease-in both;
+}
+
+@keyframes project-crt-on {
+  0% {
+    transform: scale(0.02, 0.004);
+    filter: brightness(6);
+  }
+  30% {
+    transform: scale(1, 0.004);
+    filter: brightness(4);
+  }
+  65% {
+    transform: scale(1, 1.015);
+    filter: brightness(1.5);
+  }
+  100% {
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes project-crt-off {
+  0% {
+    transform: none;
+    filter: none;
+  }
+  55% {
+    transform: scale(1, 0.004);
+    filter: brightness(3);
+  }
+  100% {
+    transform: scale(0, 0.004);
+    filter: brightness(5);
+  }
+}
+
+.project__scroll {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  padding: clamp(72px, 12vh, 120px) 16px 120px;
+  outline: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(125, 255, 134, 0.35) transparent;
+  -webkit-user-select: text;
+  user-select: text;
+  touch-action: pan-y;
+  /* the text fades out under the OSD and the back button */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 clamp(72px, 12vh, 120px),
+    #000 calc(100% - 90px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 clamp(72px, 12vh, 120px),
+    #000 calc(100% - 90px),
+    transparent 100%
+  );
+}
+
+.project__content {
+  max-width: 920px;
+  margin: 0 auto;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+/* the tube: scanlines, dark corners, a faint flicker and grain */
+.project__crt {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.2) 0 1px,
+      transparent 1px 3px
+    ),
+    radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.6) 100%);
+  box-shadow:
+    inset 0 0 140px rgba(0, 0, 0, 0.85),
+    inset 0 0 24px rgba(120, 255, 170, 0.07);
+  animation: project-flicker 3.7s infinite steps(1);
+}
+
+.project__crt::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: project-grain 0.5s steps(3) infinite;
+}
+
+@keyframes project-flicker {
+  0% {
+    opacity: 1;
+  }
+  48% {
+    opacity: 0.93;
+  }
+  52% {
+    opacity: 1;
+  }
+}
+
+@keyframes project-grain {
+  0% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-7%, 4%);
+  }
+  66% {
+    transform: translate(5%, -6%);
+  }
+}
+
+.project__osd {
+  position: absolute;
+  top: clamp(16px, 3.5vh, 32px);
+  left: clamp(16px, 3vw, 40px);
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  font-family: "VT323", monospace;
+  color: #7dff86;
+  text-shadow:
+    0 0 8px rgba(80, 255, 110, 0.8),
+    0 0 2px rgba(0, 30, 0, 0.9);
+  pointer-events: none;
+}
+
+.project__osd-channel {
+  font-size: clamp(34px, 4.5vw, 56px);
+  line-height: 1;
+}
+
+.project__osd-title {
+  font-size: clamp(18px, 2.2vw, 28px);
+}
+
+.project__back {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 16px;
+  font-family: "VT323", monospace;
+  font-size: 22px;
+  color: #7dff86;
+  text-shadow: 0 0 8px rgba(80, 255, 110, 0.7);
+  white-space: nowrap;
+  cursor: pointer;
+  background: rgba(4, 10, 6, 0.7);
+  border: 1px solid rgba(125, 255, 134, 0.35);
+  border-radius: 8px;
+}
+
+.project__video {
+  position: relative;
+  margin: 0 0 44px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #000;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.project__video img,
+.project__video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project__video img {
+  animation: project-drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes project-drift {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.1) translate(-1.5%, -1%);
+  }
+}
+
+.project__soon {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  padding: 2px 8px;
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  color: #7dff86;
+  text-shadow: 0 0 6px rgba(80, 255, 110, 0.7);
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.project__title {
+  margin: 0 0 12px;
+  font-family: "VT323", monospace;
+  font-weight: 400;
+  font-size: clamp(40px, 7vw, 84px);
+  line-height: 0.95;
+  color: #f3ead8;
+  text-shadow: 0 0 22px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.project__subtitle {
+  margin: 0 0 24px;
+  font-size: clamp(18px, 2.2vw, 24px);
+  line-height: 1.35;
+  color: #cfc6b4;
+}
+
+.project__meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 18px;
+  margin: 0 0 20px;
+  font-size: 15px;
+}
+
+.project__meta dt {
+  font-family: "VT323", monospace;
+  font-size: 19px;
+  color: var(--accent);
+}
+
+.project__meta dd {
+  margin: 0;
+  color: #d9d0be;
+}
+
+.project__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project__tags li {
+  padding: 3px 12px;
+  font-size: 13px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 999px;
+}
+
+.project__section {
+  margin-top: 52px;
+}
+
+.project__label {
+  margin: 0 0 10px;
+  font-family: "VT323", monospace;
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.project__text p {
+  margin: 0 0 14px;
+}
+
+.project__text ul,
+.project__interventions {
+  margin: 0 0 14px;
+  padding-left: 1.2em;
+}
+
+.project__steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.project__steps li {
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.project__steps li::before {
+  counter-increment: step;
+  content: counter(step, decimal-leading-zero);
+  font-family: "VT323", monospace;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+.project__steps h3 {
+  margin: 2px 0 4px;
+  font-family: "VT323", monospace;
+  font-weight: 400;
+  font-size: 24px;
+  color: #f3ead8;
+}
+
+.project__steps p {
+  margin: 0;
+  font-size: 15px;
+  color: #cfc6b4;
+}
+
+.project__gallery {
+  display: grid;
+  gap: 14px;
+}
+
+.project__gallery img {
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.project__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 56px;
+}
+
+.project__links a {
+  padding: 8px 18px;
+  font-family: "VT323", monospace;
+  font-size: 22px;
+  color: #07080a;
+  text-decoration: none;
+  background: var(--accent);
+  border-radius: 8px;
+}
+
+.project__links a:focus-visible,
+.project__back:focus-visible {
+  outline: 2px solid #7dff86;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project.is-on,
+  .project.is-off {
+    animation-duration: 0.01s;
+  }
+  .project__video img,
+  .project__crt,
+  .project__crt::after {
+    animation: none;
+  }
+}

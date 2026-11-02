@@ -1,3 +1,4 @@
+import gsap from 'gsap';
 import {
   PCFShadowMap,
   Scene,
@@ -10,6 +11,7 @@ import { ChannelManager } from '../channels/ChannelManager';
 import { ChannelRenderer } from '../channels/ChannelRenderer';
 import { Osd } from '../channels/Osd';
 import { config } from '../config';
+import { ProjectPage } from '../project/ProjectPage';
 import { Composer } from '../render/Composer';
 import { createCrtMaterial, updateCrtMaterial } from '../render/CrtMaterial';
 import { Cat } from '../scene/Cat';
@@ -48,11 +50,15 @@ export class App {
   private readonly crt: ShaderMaterial;
   private readonly cat = new Cat();
   private readonly catBrain: CatBrain;
+  private readonly sofa = new Sofa();
+  private readonly project: ProjectPage;
+  private transition: gsap.core.Timeline | null = null;
   private time = 0;
   // scratch: where the viewer's head is and where it looks
   private readonly eye = new Vector3();
   private readonly forward = new Vector3();
   private readonly up = new Vector3();
+  private readonly projected = new Vector3();
 
   constructor(private readonly container: HTMLElement) {
     this.renderer = new WebGLRenderer({
@@ -91,11 +97,16 @@ export class App {
     this.head.rig.add(this.hand.group);
     this.lighting.handFill.position.set(0.02, 0.05, -0.62);
     this.head.rig.add(this.lighting.handFill);
+    // being sucked in ends a few centimetres in front of the glass
+    this.head.travelTarget
+      .copy(this.tv.screenCenter)
+      .add(new Vector3(0, 0, 0.1));
+    this.project = new ProjectPage(container, () => this.exitProject());
 
     this.scene.add(
       this.room.group,
       this.tv.group,
-      new Sofa().group,
+      this.sofa.group,
       this.lamp.group,
       this.lighting.group,
       this.cat.group,
@@ -135,6 +146,11 @@ export class App {
   private onAction = (action: Action): void => {
     const channels = this.channels;
     if (this.state.is('LOADING', 'WAITING_CLICK', 'INTRO')) return;
+    if (this.state.is('ENTERING', 'EXITING')) return;
+    if (this.state.is('IN_PROJECT')) {
+      this.onProjectAction(action);
+      return;
+    }
     // with the TV off, only the power button does something
     if (!channels.isOn && action.type !== 'power') return;
     switch (action.type) {
@@ -163,13 +179,115 @@ export class App {
         });
         break;
       case 'enter':
-        // entering a project comes in Phase 2: for now, show the channel info
-        this.press('ok', () => channels.announce());
+        if (this.state.is('TV_ON')) this.press('ok', () => this.enterProject());
         break;
       case 'back':
         break;
     }
   };
+
+  /** Inside a project the keyboard reads the page; Esc goes back. */
+  private onProjectAction(action: Action): void {
+    switch (action.type) {
+      case 'chUp':
+        this.project.scrollBy(-160);
+        break;
+      case 'chDown':
+        this.project.scrollBy(160);
+        break;
+      case 'enter':
+        this.project.scrollPage(1);
+        break;
+      case 'back':
+        this.exitProject();
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Sucked into the screen (CLAUDE.md §4.5): the head recentres, a shake
+   * builds up, then a brutal accelerating zoom into the glass — FOV
+   * widening, the room stretching, CRT snow — and a white flash.
+   */
+  private enterProject(): void {
+    if (!this.channels.isOn || !this.state.go('ENTERING')) return;
+    const head = this.head;
+    const fx = this.composer.transition;
+    const signal = this.channels.signal;
+    const duration = 1.2;
+    this.audio.suck(duration);
+    this.transition?.kill();
+    this.transition = gsap
+      .timeline({
+        onUpdate: () => {
+          const progress = this.transition?.progress() ?? 0;
+          head.shake(0.004 + progress * progress * 0.035);
+        },
+      })
+      .to(head, { recenter: 1, duration: 0.4, ease: 'power2.out' }, 0)
+      .to(head, { travel: 1, duration, ease: 'expo.in' }, 0)
+      .to(head, { fovBoost: 38, duration, ease: 'power3.in' }, 0)
+      .to(fx, { warp: 1, duration, ease: 'power3.in' }, 0)
+      .to(signal, { noise: 0.6, duration: duration * 0.4 }, duration * 0.6)
+      .to(fx, { flash: 1, duration: 0.14, ease: 'power2.in' }, duration - 0.12)
+      .call(() => this.arriveInProject());
+  }
+
+  private arriveInProject(): void {
+    this.state.go('IN_PROJECT');
+    this.audio.setInsideTv(true);
+    this.project.open(this.channels.current);
+  }
+
+  /**
+   * Thrown back out (CLAUDE.md §4.7): the page collapses, the camera is
+   * spat out of the glass and lands in the cushions — pushed back and up,
+   * the feet flying into view — then bounces and settles on the channel.
+   */
+  private async exitProject(): Promise<void> {
+    if (!this.state.go('EXITING')) return;
+    await this.project.close();
+    const head = this.head;
+    const fx = this.composer.transition;
+    const legs = this.sofa.legs.rotation;
+    const impact = 0.45;
+    this.audio.setInsideTv(false);
+    this.audio.eject(impact);
+    this.channels.signal.noise = 0;
+    this.transition?.kill();
+    this.transition = gsap
+      .timeline()
+      .to(fx, { flash: 0, duration: 0.35, ease: 'power2.out' }, 0)
+      .to(fx, { warp: 0, duration: 0.5, ease: 'power2.out' }, 0)
+      .to(head, { travel: 0, duration: impact, ease: 'power4.out' }, 0)
+      .to(head, { fovBoost: 0, duration: 0.6, ease: 'power2.out' }, 0)
+      .to(
+        head.offset,
+        { z: 0.22, y: 0.1, duration: impact, ease: 'power3.out' },
+        0,
+      )
+      .to(head, { pitchOffset: 0.2, duration: impact, ease: 'power3.out' }, 0)
+      .to(legs, { x: 1.15, duration: 0.4, ease: 'power3.out' }, 0.18)
+      .call(() => head.shake(0.05), [], impact)
+      .to(
+        head.offset,
+        { z: 0, y: 0, duration: 0.9, ease: 'elastic.out(1, 0.45)' },
+        impact + 0.05,
+      )
+      .to(
+        head,
+        { pitchOffset: 0, duration: 0.9, ease: 'elastic.out(1, 0.5)' },
+        impact + 0.05,
+      )
+      .to(legs, { x: 0, duration: 0.9, ease: 'bounce.out' }, impact + 0.1)
+      .to(head, { recenter: 0, duration: 0.6 }, impact + 0.5)
+      .call(() => {
+        this.state.go('TV_ON');
+        this.channels.announce();
+      });
+  }
 
   private press(button: ButtonId, effect: () => void): void {
     this.hand.press(button, () => {
@@ -193,6 +311,12 @@ export class App {
     const dt = Math.min(this.timer.getDelta(), 1 / 20);
     this.time += dt;
     const time = this.time;
+
+    // inside a project the room is not visible: only the sound lives on
+    if (this.state.is('IN_PROJECT')) {
+      this.audio.update(dt, this.eye, this.forward, this.up);
+      return;
+    }
 
     this.head.update(dt, this.input.head);
     this.hand.update();
@@ -224,6 +348,12 @@ export class App {
     this.catBrain.update(dt, lightPower, this.eye, this.forward);
     this.audio.update(dt, this.eye, this.forward, this.up);
 
+    // where the TV is on screen: the transitions suck the room toward it
+    this.projected.copy(this.tv.screenCenter).project(camera);
+    this.composer.transition.center.set(
+      (this.projected.x + 1) / 2,
+      (this.projected.y + 1) / 2,
+    );
     this.composer.render(this.scene, this.head.camera, time);
   };
 }

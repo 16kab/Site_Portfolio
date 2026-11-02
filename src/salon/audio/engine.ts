@@ -117,7 +117,10 @@ export class AudioEngine {
    * both the dry sound and its share of the room reverb.
    */
   panner(position: Vector3, channel: MixChannel, reverb = 0.3): PannerNode {
-    const bus = channel === 'tvPower' ? this.fx : this.ambience;
+    const bus =
+      channel === 'tvPower' || channel === 'transitions'
+        ? this.fx
+        : this.ambience;
     const panner = this.ctx.createPanner();
     panner.panningModel = 'HRTF';
     panner.distanceModel = 'inverse';
